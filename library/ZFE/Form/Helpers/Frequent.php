@@ -66,10 +66,10 @@ trait ZFE_Form_Helpers_Frequent
      *
      * @return Zend_Form
      */
-    public function addSubmitElement()
+    public function addSubmitElement($label = 'Сохранить')
     {
         return $this->addElement('submit', 'submit', [
-            'label' => 'Сохранить',
+            'label' => $label,
             'class' => 'btn-primary',
         ]);
     }
