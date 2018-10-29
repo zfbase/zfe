@@ -1,0 +1,36 @@
+{
+  "name": "zfe",
+  "version": "0.147",
+  "description": "ZFE – платформа для построения редакторских интерфейсов",
+  "author": [
+    "Ilya Serdyuk <ilya@serdyuk.pro>",
+    "Dmitriy Demin <dma01x@gmail.com>",
+    "Dmitriy Stepanov <stepdi@gmail.com>",
+    "Alexey Sumin"
+  ],
+  "main": "src/js/zfe.js",
+  "module": "src/js/zfe.js",
+  "dependencies": {
+    "@zfbase/typeahead.js": "git+https://github.com/zfbase/typeahead.js.git",
+    "autosize": "^4.0.2",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "bloodhound-js": "^1.2.2",
+    "html5sortable": "^0.9.3",
+    "jquery": "^1.12.4",
+    "webpack": "^4.14.0",
+    "webpack-cli": "^3.0.8"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack --watch",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0"
+  }
+}

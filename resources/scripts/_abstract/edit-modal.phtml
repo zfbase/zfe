@@ -1,0 +1,10 @@
+<? if ($this->item->exists()): ?>
+    <div class="pull-right" style="margin-bottom: 10px;">
+        <a href="<?= $this->item->getEditUrl() ?>" target="_blank">
+            <span class="glyphicon glyphicon-share-alt"></span>
+        </a>
+    </div>
+<? endif; ?>
+<div class="clearfix"></div>
+<?= $this->alerts(); ?>
+<?= $this->form ?>

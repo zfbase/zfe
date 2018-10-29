@@ -1,0 +1,74 @@
+<?
+    $item = $this->item; /* @var $item ZFE_Model_AbstractRecord */
+    $acl = Zend_Registry::get('acl'); /* @var $acl ZFE_Acl */
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+?>
+
+<ul class="nav nav-tabs" style="margin-bottom: 20px;"><?
+    
+    foreach ($this->controlTabs as $tab) {
+        if ( ! $acl->isAllowedMe($this->controllerName, $tab['action'])) {
+            continue;
+        }
+        
+        $onlyRegistered = array_key_exists('onlyRegistered', $tab)
+            ? $tab['onlyRegistered']
+            : false;
+        
+        $onlyValid = array_key_exists('onlyValid', $tab)
+            ? $tab['onlyValid']
+            : false;
+        
+        $isActive = $this->actionName == $tab['action'];
+        if ($isActive && ! empty($tab['params'])) {
+            foreach ($tab['params'] as $param => $value) {
+                if ($request->getParam($param) != $value) {
+                    $isActive = false;
+                    break;
+                }
+            }
+        }
+        
+        $isDisabled = ($onlyRegistered && ! $item->exists())
+                   || ($onlyValid && $item->isDeleted());
+
+        $class = array ();
+        $class[] = array_key_exists('class', $tab) ? $tab['class'] : '';
+        $class[] = $isActive ? 'active' : '';
+        $class[] = $isDisabled ? 'disabled' : '';
+        $class = array_diff($class, ['']);
+        if (count($class)) {
+            print '<li class="' . implode(' ', $class) . '">';
+        } else {
+            print '<li>';
+        }
+
+        if ($isActive || $isDisabled) {
+            print '<a>';
+        } else {
+            $module = $request->getModuleName();
+            $url = '/' . $this->controllerName . '/' . $tab['action'] . '/id/' . $item->id;
+            
+            if ($module) {
+                $url = '/' . $module . $url;
+            }
+            
+            if ( ! empty($tab['params'])) {
+                foreach ($tab['params'] as $param => $value) {
+                    $url .= '/' . $param . '/' . $value;
+                }
+            }
+            $url .= $this->hopsHistory()->getSideHash('?');
+            
+            $rn = $request->getParam('rn');
+            if ($rn) {
+                $url .= '&rn=' . $rn; 
+            }
+            
+            print '<a href="' . $url . '">';
+        }
+
+        print $tab['title'] . '</a></li>';
+    }
+    
+?></ul>

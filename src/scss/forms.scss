@@ -1,0 +1,134 @@
+form.indexSearch {
+  margin: 15px 0;
+  float: left;
+}
+
+.form-inline-plus {
+  .form-group {
+    min-width: 100px;
+    margin-right: 15px;
+    float: left;
+  }
+
+  .tt-icon-right {
+    width: 250px;
+  }
+
+  .btn {
+    margin-top: 25px;
+  }
+}
+
+.btn-static,
+.btn-static:active,
+.btn-static:focus,
+.btn-static:hover {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+.btn-default.btn-static,
+.btn-default.btn-static:active,
+.btn-default.btn-static:focus,
+.btn-default.btn-static:hover {
+  background-color: #eaeaea;
+  background-image: none;
+  border-color: #ddd;
+}
+
+.has-warning .will-be-created {
+  display: block;
+}
+
+legend small {
+  font-size: 75%;
+  color: #777;
+}
+
+.image-uploaded {
+  display: inline-block;
+  padding: 3px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 2px;
+
+  .image {
+    display: inline-block;
+    height: 120px;
+    width: 120px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .text-danger {
+    position: absolute;
+    margin-top: 2px;
+    margin-left: -25px;
+    background: #fff;
+    padding: 2px 5px 1px;
+    border-radius: 50%;
+  }
+}
+
+.formfile-current-file p {
+  display: inline-block;
+}
+
+.form-horizontal {
+  .help-block:first-child {
+    margin-top: 7px;
+  }
+
+  .form-control-static .help-block:first-child {
+    margin-top: 0;
+  }
+}
+
+
+/*
+ * Bootstrap 3 patch
+ * @source https://github.com/IlyaSerdyuk/zend1-bootstrap3/tree/master/Twitter/Bootstrap3
+ */
+.form-vertical {
+  label + .checkbox,
+  label + .radio {
+    margin-top: 0;
+  }
+
+  label + .form-control-static {
+    padding-top: 0;
+  }
+
+  .form-control-static:last-child {
+    padding-bottom: 0;
+  }
+}
+
+input[type=range]:after {
+  padding-left: 0.5em;
+  content: attr(data-value);
+}
+
+
+/* @see https://stackoverflow.com/a/34895728 */
+.checkbox-inline,
+.checkbox-inline + .checkbox-inline,
+.checkbox-inline + .radio-inline,
+.radio-inline,
+.radio-inline + .checkbox-inline,
+.radio-inline + .radio-inline {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.checkbox-inline:last-child,
+.radio-inline:last-child {
+  margin-right: 0;
+}
+
+label.required:after {
+    content: ' *';
+    color: #a94442;
+}

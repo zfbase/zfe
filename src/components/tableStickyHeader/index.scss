@@ -1,0 +1,6 @@
+table .header-fixed {
+  position: fixed;
+  z-index: 1020; /* 10 less than .navbar-fixed to prevent any overlap */
+  border-radius: 0;
+  background-color: #fff;
+}

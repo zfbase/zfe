@@ -1,0 +1,96 @@
+<?
+    $modelName = $this->modelName;
+    $tableInstance = Doctrine_Core::getTable($modelName);
+    $allColumns = $tableInstance->getColumnNames();
+    $serviceFields = $modelName::getServiceFields();
+    $columns = array_diff($allColumns, $serviceFields);
+?>
+
+<div>
+    <a role="button" class="btn btn-xs btn-default" href="<?= $this->returnTo ?>">
+        Вернуться
+        <span class="glyphicon glyphicon-arrow-up"></span>
+    </a>
+</div>
+
+<h2>
+    <?= $this->listName ?>
+    <small>(объединение записей)</small>
+</h2>
+
+<form class="table-responsive zfe-merge-helper" method="post">
+    <input type="hidden" name="returnTo" value="<?= $this->returnTo ?>">
+    <input type="hidden" name="ids" value="<?= implode(',', $this->ids) ?>" class="slaves-ids">
+    <div class="form-group">
+        <a class="btn btn-sm btn-default btn-show-equal">
+            <span class="glyphicon glyphicon-chevron-down"></span>
+            Показать совпадающие поля
+        </a>
+        <a class="btn btn-sm btn-default btn-hide-equal">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+            Скрыть совпадающие поля
+        </a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            
+            <? if ($tableInstance->hasColumn('editor_id') || $tableInstance->hasColumn('datetime_edited')): ?>
+            <tr>
+                <th>Последнее изменение</th>
+                <? foreach ($this->items as $item): ?>
+                <?= $this->lastEditedCell($item) ?>
+                <? endforeach; ?>
+            </tr>
+            <? endif; ?>
+            
+            <tr>
+                <th>Вес</th>
+                <? foreach ($this->items as $item): ?>
+                <td class="text-center <?= $item->weight ?: 'empty' ?>">
+                    <?= $item->weight ?>
+                </td>
+                <? endforeach; ?>
+            </tr>
+        </thead>
+        <tbody>
+            <? foreach ($columns as $columnName): ?>
+            <tr>
+                <th><?= $modelName::getFieldName($columnName) ?></th>
+                <? foreach ($this->items as $item): ?>
+                <td class="<?= null === $item->$columnName ? 'null-value' : '' ?>">
+                    <input type="radio" name="field[<?= $columnName ?>]" value="<?= $item->id ?>" />
+                    <?= $this->autoFormat($item->$columnName, $columnName, $modelName) ?>
+                </td>
+                <? endforeach; ?>
+            </tr>
+            <? endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <? foreach ($this->items as $item): ?>
+                <td class="text-center">
+                    <a class="btn btn-xs btn-default btn-remove" data-id="<?= $item->id ?>">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Не объединять
+                    </a>
+                </td>
+                <? endforeach; ?>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="form-group">
+        <a class="btn btn-sm btn-default btn-show-equal">
+            <span class="glyphicon glyphicon-chevron-down"></span>
+            Показать совпадающие поля
+        </a>
+        <a class="btn btn-sm btn-default btn-hide-equal">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+            Скрыть совпадающие поля
+        </a>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Объединить</button>
+        <a role="button" class="btn btn-link" href="<?= $this->returnTo ?>">Отменить</a>
+    </div>
+</form>

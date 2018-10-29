@@ -1,0 +1,131 @@
+<?
+    $config = Zend_Registry::get('config');
+    
+    // @todo нужно переделать склонение по нормальному
+    $actionLabel = [
+        History::ACTION_TYPE_INSERT => [
+            AbstractRecord::SEX_MALE => 'добавлен',
+            AbstractRecord::SEX_FEMALE => 'добавлена',
+            AbstractRecord::SEX_NEUTER => 'добавлено',
+        ],
+        History::ACTION_TYPE_UPDATE => [
+            AbstractRecord::SEX_MALE => 'отредактирован',
+            AbstractRecord::SEX_FEMALE => 'отредактирована',
+            AbstractRecord::SEX_NEUTER => 'отредактировано',
+        ],
+        History::ACTION_TYPE_LINK => [
+            AbstractRecord::SEX_MALE => 'привязан',
+            AbstractRecord::SEX_FEMALE => 'привязана',
+            AbstractRecord::SEX_NEUTER => 'привязано',
+        ],
+        History::ACTION_TYPE_DELETE => [
+            AbstractRecord::SEX_MALE => 'удален',
+            AbstractRecord::SEX_FEMALE => 'удалена',
+            AbstractRecord::SEX_NEUTER => 'удалено',
+        ],
+        History::ACTION_TYPE_UNLINK => [
+            AbstractRecord::SEX_MALE => 'отвязан',
+            AbstractRecord::SEX_FEMALE => 'отвязана',
+            AbstractRecord::SEX_NEUTER => 'отвязано',
+        ],
+        History::ACTION_TYPE_UNDELETE => [
+            AbstractRecord::SEX_MALE => 'восстановлен',
+            AbstractRecord::SEX_FEMALE => 'восстановлена',
+            AbstractRecord::SEX_NEUTER => 'восстановлено',
+        ],
+        History::ACTION_TYPE_RESTORE => [
+            AbstractRecord::SEX_MALE => 'откатан к предыдущей версии',
+            AbstractRecord::SEX_FEMALE => 'откатана к предыдущей версии',
+            AbstractRecord::SEX_NEUTER => 'откатано к предыдущей версии',
+        ],
+        History::ACTION_TYPE_MERGE => [
+            AbstractRecord::SEX_MALE => 'объединен',
+            AbstractRecord::SEX_FEMALE => 'объединена',
+            AbstractRecord::SEX_NEUTER => 'объединено',
+        ],
+    ];
+?>
+
+<h2><?= is_string($config->brand) ? $config->brand : $config->brand->full ?></h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Ваши последние изменения</h3>
+        <? if (count($this->myHistory)): ?>
+        <dl><?
+            foreach ($this->myHistory as $event) { /** @var History $event */
+                $modelName = AbstractRecord::getModelNameByTableName($event->table_name);
+                if (class_exists($modelName)) {
+                    $item = $modelName::hardFind($event->content_id);
+
+                    echo '<dt>';
+                    echo $this->DateTime($event->datetime_action);
+                    echo ' ' . $actionLabel[$event->action_type][$modelName::$sex] . ' ';
+                    echo mb_strtolower($modelName::$nameSingular);
+                    echo ':</dt>';
+
+                    if (empty($item)) {
+                        echo '<dd class="empty">Запись не найдена.</dd>';
+                    } else if ($item->contains('deleted') && $item->deleted) {
+                        echo '<dd>' . $item->getTitle() . '</dd>';
+                    } else {
+                        ?><dd>
+                            <a href="<?= $item->getEditUrl() ?>">
+                                <i class="glyphicon glyphicon-edit"></i>
+                                <?= $item ?>
+                            </a>
+                        </dd><?
+                    }
+                } else {
+                    echo '<dt>';
+                    echo $this->DateTime($event->datetime_action);
+                    echo ' ' . $actionLabel[$event->action_type][AbstractRecord::SEX_MALE] . ' неизвестный объект</dt>';
+                    echo '<dd>Класс объекта: «' . $modelName . '»</dd>';
+                }
+            }
+        ?></dl>
+        <? else: ?>
+        <p class="empty">За последний месяц вы ничего не изменяли и не добавляли.</p>
+        <? endif; ?>
+    </div>
+    <div class="col-md-6">
+        <h3>Последние изменения после ваших</h3>
+        <? if (count($this->otherHistory)): ?>
+        <dl><?
+            foreach ($this->otherHistory as $event) { /** @var History $event */
+                $modelName = AbstractRecord::getModelNameByTableName($event->table_name);
+                if (class_exists($modelName)) {
+                    $item = $modelName::hardFind($event->content_id);
+
+                    echo '<dt>';
+                    echo $this->DateTime($event->datetime_action);
+                    echo ' ' . $actionLabel[$event->action_type][$modelName::$sex] . ' ';
+                    echo mb_strtolower($modelName::$nameSingular);
+                    echo ' (' . $event->Editors->getShortName() . ')';
+                    echo ':</dt>';
+
+                    if (empty($item)) {
+                        echo '<dd class="empty">Запись не найдена.</dd>';
+                    } else if ($item->contains('deleted') && $item->deleted) {
+                        echo '<dd>' . $item->getTitle() . '</dd>';
+                    } else {
+                        ?><dd>
+                            <a href="<?= $item->getEditUrl() ?>">
+                                <i class="glyphicon glyphicon-edit"></i>
+                                <?= $item ?>
+                            </a>
+                        </dd><?
+                    }
+                } else {
+                    echo '<dt>';
+                    echo $this->DateTime($event->datetime_action);
+                    echo ' ' . $actionLabel[$event->action_type][AbstractRecord::SEX_MALE] . ' неизвестный объект</dt>';
+                    echo '<dd>Класс объекта: «' . $modelName . '»</dd>';
+                }
+            }
+        ?></dl>
+        <? else: ?>
+        <p class="empty">За последний месяц после вас ничего не изменяли и не добавляли.</p>
+        <? endif; ?>
+    </div>
+</div>

@@ -1,0 +1,156 @@
+.twitter-typeahead {
+  width: 100%;
+}
+
+.tt-menu {
+  text-align: left;
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+#multiple-datasets .league-name {
+  margin: 0 20px 5px;
+  padding: 3px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+#scrollable-dropdown-menu .tt-menu {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+#rtl-support .tt-menu {
+  text-align: right;
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+
+  &:hover,
+  &.tt-cursor {
+    color: #fff;
+    background-color: #0097cf;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.twitter-typeahead .tt-hint {
+  color: #aaa;
+}
+
+.multiac-wrap {
+  padding: 5px 0 0;
+}
+
+.multiac-wrap:empty {
+  padding: 0;
+}
+
+.linked-entity {
+  display: inline-block;
+  display: inline-flex;
+  margin: 0 4px 6px 0;
+  position: relative;
+  vertical-align: middle;
+}
+
+.linked-entity .btn,
+.linked-entity .title {
+  position: relative;
+  float: left;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  padding: 1px 6px;
+}
+
+.linked-entity .title {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  cursor: default;
+}
+
+.multiac-wrap.disabled .btn,
+.multiac-wrap.disabled .title {
+  background-color: #eee;
+}
+
+.linked-entity .btn:last-child,
+.linked-entity .title:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.linked-entity .btn {
+  margin-left: -1px;
+}
+
+.linked-entity .btn:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+.linked-entity .btn .glyphicon {
+  font-size: 11px;
+}
+
+.linked-entity-new {
+  border-radius: 4px;
+  box-shadow: 0 0 5px #f0ad4e;
+}
+
+.multiac-wrap .sortable-placeholder {
+  display: inline-block;
+  border: 1px dashed #CCC;
+  margin: 0 4px 6px 0;
+  position: relative;
+  vertical-align: middle;
+  height: 24px;
+  width: 100px;
+}
+
+.tt-icon-left,
+.tt-icon-right {
+  position: relative;
+}
+
+.tt-icon-left > i,
+.tt-icon-right > i {
+  position: absolute;
+  padding: 10px 12px;
+  cursor: default;
+  z-index: 1;
+}
+
+.tt-icon-left input {
+  padding-left: 30px;
+}
+
+.tt-icon-right input {
+  padding-right: 30px;
+}
+
+.tt-icon-right > i {
+  right: 0;
+}
+
+.has-feedback .tt-icon-right > i {
+  right: 18px;
+}

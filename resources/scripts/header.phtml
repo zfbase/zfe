@@ -1,0 +1,68 @@
+<?
+    $config = Zend_Registry::get('config');
+    $user = Zend_Registry::get('user');
+?>
+<nav class="navbar navbar-fixed-top navbar-default" role="navigation">
+    <div class="<?= $this->containerClass ?>">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-menu">
+                <span class="sr-only">Меню</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/" title="<?= is_string($config->brand) ? $config->brand : $config->brand->full ?>">
+                <span class="brand-logo"></span>
+                <span class="brand-title"><?= is_string($config->brand) ? $config->brand : $config->brand->short ?></span>
+            </a>
+        </div>
+        <div id="main-menu" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <?= $this->menuItems($config->menu) ?>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <?
+                    if ($config->menuRight) {
+                        echo $this->menuItems($config->menuRight);
+                    }
+                ?><li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-user"></i>
+                        <span class="navbar-user-name"><?= $user->displayName ?></span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <?
+                            if ($config->menuUser) {
+                                echo $this->menuItems($config->menuUser);
+                            }
+                            
+                            if ($user->canSwitchRoles) {
+                                $items = array ();
+                                
+                                if ($config->menuUser) {
+                                    $items['rolesHeader']['divider'] = 1;
+                                }
+                                
+                                $items['rolesHeader']['itemsHeader'] = 'Сменить роль';
+                                
+                                foreach (Editors::$roles as $name => $label) {
+                                    $items[$name]['label'] = $label;
+                                    $items[$name]['uri'] = '/auth/setrole/role/' . $name;
+                                    
+                                    if ($user->role == $name) {
+                                        $items[$name]['active'] = true;
+                                    }
+                                }
+                                
+                                $items['rolesAfterDevider']['divider'] = '';
+                                
+                                echo $this->menuItems($items, false, true);
+                            }
+                        ?><li><a href="/auth/logout">Выход</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

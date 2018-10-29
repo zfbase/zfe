@@ -1,0 +1,45 @@
+<? if (count($this->items)): ?>
+    <?= $this->paginator() ?>
+    <div class="clearfix"></div>
+    <div class="table-responsive">
+        <table class="table table-hover table-sticky-header">
+            <thead>
+                <th>Редактор и время</th>
+                <th>Событие</th>
+                <th>Тип объекта</th>
+                <th>Название объекта</th>
+                <th>Версия</th>
+                <th>Действия</th>
+            </thead>
+            <tbody>
+            <? foreach ($this->items as $item): ?>
+                <? $itemModelName = AbstractRecord::getModelNameByTableName($item->table_name); ?>
+                <? $obj = $itemModelName::hardFind($item->content_id); ?>
+                <tr>
+                    <td class="last-edited">
+                        <?= $this->dateTimeCompact($item->datetime_action) ?>
+                        <div class="editor"><?= $item->Editors ?></div>
+                    </td>
+                    <td><?= History::$actionTypes[$item->action_type] ?></td>
+                    <td><?= $itemModelName::$namePlural ?></td>
+                    <td><?= $obj ?: 'ID: ' . $item->content_id ?></td>
+                    <td><?= $item->content_version ?></td>
+                    <? if (empty($obj)): ?>
+                    <td class="empty">Не доступно</td>
+                    <? else: ?>
+                    <td>
+                        <a href="<?= $item->getDiffUrl() . $this->hopsHistory()->getDownHash('К результатам поиска', '?') ?>" class="btn btn-xs btn-primary">
+                            <span class="glyphicon glyphicon-transfer"></span>
+                            Сравнить
+                        </a>
+                    </td>
+                    <? endif; ?>
+                </tr>
+            <? endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?= $this->paginator() ?>
+<? else: ?>
+    <p class="empty" style="clear:both;">Записи не найдены.</p>
+<? endif; ?>

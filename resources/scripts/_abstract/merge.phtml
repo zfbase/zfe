@@ -1,0 +1,42 @@
+<?
+    $modelName = $this->modelName;
+?>
+
+<div>
+    <?= $this->hopsHistory()->getUpBtn() ?>
+</div>
+
+<h2>
+    <?= $this->listName ?>
+    <small>(объединение записей)</small>
+</h2>
+
+<div class="zfe-merge">
+
+<form method="post" class="form-group clearfix pull-right" action="<?= $modelName::getMergeHelperUrl() ?>">
+    <?= $this->abstractRender('_merge_selected.phtml') ?>
+    <input type="hidden" name="returnTo" value="<?= $modelName::getMergingUrl() ?>" />
+    <input type="submit" class="zfe-merge-exec btn btn-primary" value="Объединить выбранное" disabled />
+</form>
+
+<div class="search-group">
+    <div class="form-group">
+        <label class="sr-only" for="searchInput">Поиск</label>
+        <input class="form-control zfe-merge-search"
+               id="<?= uniqid('zfe-merge-search-') ?>"
+               placeholder="Название"
+               data-path="<?= $modelName::getMergeSearchUrl() ?>">
+    </div>
+    <div class="params form-control">
+        <label class="checkbox-inline">
+            <input class="zfe-merge-post-clear" type="checkbox">
+            Очищать после добавления
+        </label>
+    </div>
+</div>
+
+<div class="zfe-merge-suggest"></div>
+
+<a class="btn btn-default hide zfe-merge-select-all">Выбрать все</a>
+
+</div>

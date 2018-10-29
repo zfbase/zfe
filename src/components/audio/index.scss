@@ -1,0 +1,24 @@
+.zfe-audio {
+  margin-bottom: 10px;
+
+  audio {
+    display: none;
+  }
+}
+
+.zfe-audio-play-pause-btn        .glyphicon-pause { display: none; }
+.zfe-audio-play-pause-btn.active .glyphicon-pause { display: inline-block; }
+.zfe-audio-play-pause-btn.active .glyphicon-play  { display: none; }
+
+.zfe-audio-mute-btn        .glyphicon-volume-off { display: none; }
+.zfe-audio-mute-btn.active .glyphicon-volume-off { display: inline-block; }
+.zfe-audio-mute-btn.active .glyphicon-volume-up  { display: none; }
+
+.zfe-audio-track-container {
+  width: auto;
+  height: 30px;
+}
+
+.zfe-audio-track:after {
+  display: none;
+}

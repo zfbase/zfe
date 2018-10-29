@@ -1,0 +1,32 @@
+<?
+    $item = $this->item; /* @var $item ZFE_Model_AbstractRecord */
+    $sideHash = $this->hopsHistory()->getSideHash('?');
+?>
+
+<?= $this->abstractRender('_header.phtml') ?>
+
+<form method="POST" enctype="multipart/form-data" class="form-horizontal form-edit <?= $this->form->getAttrib('class') ?>">
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <?= $this->historyMeta($item) ?>
+        </div>
+    </div>
+    <?= $this->form ?>
+    <? if ( ! $this->readonly): ?>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" id="submit" value="Сохранить" class="btn btn-primary" />
+                
+                <? if ($this->canDelete && ! $item->isDeleted() && $item->exists()): ?>
+                    <a data-confirm="Вы уверены, что хотите удалить <?= $item::$nameSingular ?> «<?= $this->escape($item->getTitle()) ?>»?"
+                       href="<?= $item->getDeleteUrl() . $sideHash ?>"
+                       class="btn btn-link">Удалить</a>
+                <? endif; ?>
+                
+                <? if ($this->canRestore && $item->isDeleted()): ?>
+                <a class="btn btn-default" href="<?= $item->getUndeleteUrl() . $sideHash ?>">Восстановить</a>
+                <? endif; ?>
+            </div>
+        </div>
+    <? endif; ?>
+</form>

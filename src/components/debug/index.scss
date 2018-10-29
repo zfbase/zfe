@@ -1,0 +1,48 @@
+#DevelClearFix {
+  height: 30px;
+  visibility: hidden;
+}
+
+#DevelSqlProfiler {
+  pre {
+    border: 0 none;
+    background: none;
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .modal-footer {
+    text-align: left;
+  }
+
+  .sqlHide {
+    display: block;
+  }
+
+  .sqlShow {
+    display: none;
+  }
+
+  .collapsed .sqlHide {
+    display: none;
+  }
+
+  .collapsed .sqlShow {
+    display: block;
+  }
+
+  .backtrace {
+    word-break: break-word;
+    word-wrap: break-word;
+    margin-top: 18px;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.42857143;
+
+    @media (min-width: 992px) {
+      width: 590px;
+      overflow: auto;
+      white-space: nowrap;
+    }
+  }
+}

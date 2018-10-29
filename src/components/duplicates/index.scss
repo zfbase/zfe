@@ -1,0 +1,31 @@
+.panel-footer .alert {
+  margin-left: 20px;
+  padding: 5px 10px;
+}
+
+.panel-wrap {
+  position: relative;
+}
+
+.loader-mock {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  z-index: 200;
+  display: none;
+}
+
+.panel-loading .loader-mock {
+  display: initial;
+}
+
+.message-loading {
+  display: none;
+}
+
+.panel-loading .message-loading {
+  display: inline;
+}

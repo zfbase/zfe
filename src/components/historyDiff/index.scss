@@ -1,0 +1,33 @@
+td.diff-left,
+thead .diff-left {
+  border-right: 1px solid #ddd;
+}
+
+td.diff-right,
+thead .diff-right {
+  border-left: 1px solid #ddd;
+}
+
+th.diff-right {
+  text-align: right;
+}
+
+.info {
+  margin: 24px 8px;
+}
+
+.info .title {
+  font-weight: bold;
+}
+
+.action-diff .editedBy span {
+  font-size: inherit;
+}
+
+thead div {
+  color: #999;
+  font-size: 95%;
+  font-weight: normal;
+  text-align: left;
+  padding: 9px 0 0 9px;
+}

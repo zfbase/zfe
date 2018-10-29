@@ -1,0 +1,51 @@
+{
+    "name": "zfbase/zfe",
+    "description": "ZFE – платформа для построения редакторских интерфейсов",
+    "version": "0.147",
+    "type": "library",
+    "time": "2016-02-05",
+    "authors": [
+        {
+            "name": "Ilya Serdyuk",
+            "email": "ilya@serdyuk.pro",
+            "role": "Developer"
+        },
+        {
+            "name": "Dmitriy Demin",
+            "email": "dma01x@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Dmitriy Stepanov",
+            "email": "stepdi@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Alexey Sumin",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "ZFE_": "library/"
+        }
+    },
+    "require": {
+        "php": ">=5.6",
+        "zendframework/zendframework1": "~1",
+        "zfbase/doctrine1": "dev-zfe",
+        "zfbase/zend1-bootstrap3": "~1",
+        "jdorn/sql-formatter": "~1",
+        "judev/php-htmltruncator": "^1.1",
+        "greenlion/php-sql-parser": "^4.1",
+        "ltd-beget/sphinx-configuration-tokenizer": "^1.0"
+    },
+    "suggest": {
+        "phpoffice/phpspreadsheet": "PhpOffice\\PhpSpreadsheet for SendExcel2007 action helper",
+        "phpoffice/phpword": "PhpOffice\\PhpWord dev-FBnil-patch-blocks for SendWord2007 & SendWord2007Template action helpers",
+        "foolz/sphinxql-query-builder": "^1.2"
+    },
+    "include-path": [
+        "library/"
+    ]
+}

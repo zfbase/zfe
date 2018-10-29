@@ -1,0 +1,16 @@
+<div class="alert alert-danger">
+    <? if ($this->displayExceptionMessage): ?>
+        <div><?= $this->escape($this->message) ?></div>
+        <h4 style="margin: 4px 0 0;"><?= $this->escape($this->exception->getMessage()) ?></h4>
+    <? else: ?>
+        <h4 style="margin: 0;"><?= $this->escape($this->message) ?></h4>
+    <? endif; ?>
+</div>
+
+<? if ($this->displayException): ?>
+    <h3>Стек вызовов</h3>
+    <pre><?= $this->exception->getTraceAsString() ?></pre>
+    
+    <h3>Параметры запроса</h3>
+    <pre><?= $this->escape(var_export($this->request->getParams(), true)) ?></pre>
+<? endif; ?>

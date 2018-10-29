@@ -1,0 +1,23 @@
+.zfe-upload-ajax-loader > div,
+.zfe-upload-ajax-preview > div {
+  margin: 0 0 10px;
+}
+
+.zfe-upload-ajax-loader .title {
+  padding: 0 10px;
+}
+
+.zfe-upload-ajax {
+  .alert,
+  .progress {
+    margin: 5px 0 0;
+  }
+
+  .alert {
+    padding: 5px 10px;
+  }
+
+  .alert .close {
+    line-height: 0.8;
+  }
+}

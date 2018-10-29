@@ -1,0 +1,25 @@
+<?
+    $item = $this->item;
+    $modelName = $this->modelName;
+?>
+
+<div>
+    <?= $this->hopsHistory()->getUpBtn() ?>
+    <?= $this->searchPages()->getStepBtns() ?>
+    
+    <? if ($this->canCreate && ! $this->readonly): ?>
+    <a role="button" class="btn btn-xs btn-default" href="<?= $modelName::getNewUrl() . $this->hopsHistory()->getSideHash('?') ?>">
+        Добавить
+        <span class="glyphicon glyphicon-plus">
+    </a>
+    <? endif; ?>
+</div>
+
+<h2>
+    <?= $item->getTitle() ?>
+    <small>(<?= mb_strtolower($this->itemName) ?>)</small>
+</h2>
+
+<?= $this->abstractRender('_header/tabs.phtml') ?>
+
+<div class="clearfix"></div>

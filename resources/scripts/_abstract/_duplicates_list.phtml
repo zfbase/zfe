@@ -1,0 +1,86 @@
+<?
+    $modelName = $this->modelName;
+    $tableInstance = Doctrine_Core::getTable($modelName);
+    $hasEdited = $tableInstance->hasColumn('datetime_edited');
+?>
+
+<form>
+<? foreach ($this->groups as $group): /* @var $group Doctrine_Collection */ ?>
+    <? $gid = uniqid(); ?>
+    <fieldset class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><?= $group->getFirst() ?></h3>
+        </div>
+        <div class="panel-wrap">
+            <div class="loader-mock"></div>
+            <table class="table table-hover" style="width: fit-content;">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox"
+                                   data-action="check-all"
+                                   data-target="input[data-group='<?= $gid ?>']"
+                                   checked></th>
+                        <th></th>
+                        <th style="width: 100%;"><?= $modelName::getFieldName('title') ?></th>
+                        <th class="text-right"><abbr title="Число ссылок на <?= $this->itemName ?>">Вес</abbr></th>
+                        <? if ($hasEdited): ?>
+                            <th class="text-nowrap">Последняя правка</th>
+                        <? endif; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                <? foreach ($group as $item): ?>
+                    <tr data-item-id="<?= $item->id ?>">
+                        <th><input type="checkbox" checked data-group="<?= $gid ?>"></th>
+                        <td class="item-details">
+                            <span class="glyphicon glyphicon-info-sign item-details-icon"
+                                  data-title="<?= $this->escape($item->getTitle()) ?>"
+                                  data-trigger="hover"
+                                  data-html="true"></span>
+                            <div class="item-details-body">
+                                <?= $this->abstractPartial('_view.phtml', [
+                                    'modelName' => $modelName,
+                                    'item' => $item,
+                                ]) ?>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="<?= $item->getEditUrl() ?>" target="_blank">
+                                <?= $item ?>
+                            </a>
+                        </td>
+                        <td class="text-right"><?= $item->weight ?></td>
+                        <?= $hasEdited ? $this->lastEditedCell($item, 'text-nowrap') : '' ?>
+                    </tr>
+                <? endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            <input class="btn btn-default btn-sm btn-merge"
+                   data-url="<?= $modelName::getMergeHelperUrl() ?>"
+                   data-group="<?= $gid ?>"
+                   type="button"
+                   value="Объединить">
+            <input class="btn btn-default btn-sm btn-hide"
+                   type="button"
+                   value="Скрыть">
+
+            <span class="alert alert-info message-loading">Выполняется объединение</span>
+            <span class="alert alert-error message-error hide">Ошибка!</span>
+        </div>            
+    </fieldset>
+<? endforeach; ?>
+</form>
+
+<a href="<?= $modelName::getSearchDuplicatesUrl() ?>" class="btn btn-primary btn-more">Найти еще дубликаты</a>
+
+<script class="zfe-duplications-alert" type="text/x-jquery-tmpl">
+    <div class="alert alert-${type} alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>${title}</strong>
+        ${message}
+    </div>
+</script>

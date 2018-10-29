@@ -1,0 +1,62 @@
+<?
+    $tableInstance = Doctrine_Core::getTable($this->modelName);
+    $hasStatus = $tableInstance->hasColumn('status');
+    $hasEdited = $tableInstance->hasColumn('datetime_edited');
+    $downHash = $this->hopsHistory()->getDownHash('К результатам поиска', '?', ['totalResults' => ZFE_Paginator::getInstance()->getNumResults()]);
+?>
+<? if (count($this->items)): ?>
+    <?= $this->paginator() ?>
+    <div class="clearfix"></div>
+    <div class="table-responsive">
+        <table class="table table-hover table-sticky-header">
+            <thead>
+                <tr>
+                    <?= $this->sortableHeadCell('id') ?>
+                    <?= $this->sortableHeadCell('title') ?>
+                    <?= $hasStatus ? $this->sortableHeadCell('status') : '' ?>
+                    <?= $hasEdited ? $this->sortableHeadCell('datetime_edited', 'Последнее изменение') : '' ?>
+                    <th class="text-right">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <? $rowIndex = 0; foreach ($this->items as $item): ++$rowIndex; /* @var $item ZFE_Model_AbstractRecord */ ?>
+                    <tr>
+                        <td><?= $item->id ?></td>
+                        <td>
+                            <a href="<?= $item->getEditUrl() . $downHash . $this->searchPages()->getHash($rowIndex, '&') ?>">
+                                <i class="glyphicon glyphicon-edit"></i>
+                                <?= $item->getTitle() ?>
+                            </a>
+                        </td>
+                        <? if ($hasStatus): ?>
+                            <td><?= $item->getStatus() ?></td>
+                        <? endif; ?>
+                        <?= $hasEdited ? $this->lastEditedCell($item) : '' ?>
+                        <td class="text-right">
+                            
+                            <? if ($this->canDelete && ! $item->isDeleted()): ?>
+                                <a data-confirm="Вы уверены, что хотите удалить <?= $item::$nameSingular ?> «<?= $this->escape($item->getTitle()) ?>»?"
+                                   href="<?= $item->getDeleteUrl() . $downHash ?>"
+                                   class="btn btn-link btn-xs">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                    Удалить
+                                </a>
+                            <? endif; ?>
+                            
+                            <? if ($this->canRestore && $item->isDeleted()): ?>
+                                <a href="<?= $item->getUndeleteUrl() . $downHash ?>" class="btn btn-link btn-xs">
+                                    <i class="glyphicon glyphicon-repeat"></i>
+                                    Восстановить
+                                </a>
+                            <? endif; ?>
+                            
+                        </td>
+                    </tr>
+                <? endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?= $this->paginator() ?>
+<? else: ?>
+    <p class="empty" style="clear: both;"><?= $this->listName ?> не найдены.</p>
+<? endif; ?>

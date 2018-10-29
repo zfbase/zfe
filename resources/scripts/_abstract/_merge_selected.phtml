@@ -1,0 +1,48 @@
+<?
+    $modelName = $this->modelName;
+    $tableInstance = Doctrine_Core::getTable($modelName);
+    $hasEdited = $tableInstance->hasColumn('datetime_edited');
+?>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th style="width: 99%;"><?= $modelName::getFieldName('title') ?></th>
+                <th>Вес</th>
+                <? if ($hasEdited): ?>
+                    <th class="text-nowrap">Последняя правка</th>
+                <? endif; ?>
+                <th class="text-center">Отказаться</th>
+            </tr>
+        </thead>
+        <tbody class="zfe-merge-items">
+            <tr class="zfe-merge-empty">
+                <td colspan="5" class="empty"><?= $this->listName ?> для склейки не выбраны</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script class="zfe-merge-tmpl" type="text/x-jquery-tmpl">
+    <tr data-id="${id}">
+        <td class="item-details">
+            <span class="glyphicon glyphicon-info-sign item-details-icon"
+                  data-title="${title}"
+                  data-trigger="hover"
+                  data-html="true"></span>
+            <div class="item-details-body">${details}</div>
+        </td>
+        <td>${title}</td>
+        <td class="text-right">${weight}</td>
+        <? if ($hasEdited): ?>
+            <td class="last-edited text-nowrap">{%html lastEdited %}</td>
+        <? endif; ?>
+        <td class="text-center">
+            <input type="hidden" name="ids[]" value="${id}"/>
+            <a href="#" class="btn btn-xs btn-link">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+        </td>
+    </tr>
+</script>

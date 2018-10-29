@@ -1,0 +1,145 @@
+@import 'forms';
+@import '../components/audio/index';
+@import '../components/auth/login';
+@import '../components/auth/forcePasswordChange';
+@import '../components/autocomplete/index';
+@import '../components/dashboard/index';
+@import '../components/debug/index';
+@import '../components/duplicates/index';
+@import '../components/historyDiff/index';
+@import '../components/merge/index';
+@import '../components/mergeHelper/index';
+@import '../components/navTree/index';
+@import '../components/tableStickyHeader/index';
+@import '../components/uploadAjax/index';
+
+body {
+    padding-top: 70px;
+    padding-bottom: 30px;
+}
+
+.brand-logo {
+    display: inline-block;
+    vertical-align: middle;
+    background-size: cover;
+    height: 30px;
+    margin-top: -5px;
+}
+
+$navbar-min-shortcut: $grid-float-breakpoint !default;
+$navbar-max-shortcut: $screen-desktop !default;
+@media (min-width: $navbar-min-shortcut) and (max-width: $navbar-max-shortcut) {
+    .brand-title,
+    .navbar-user-name {
+        display: none;
+    }
+}
+
+.empty {
+    color: #bbb;
+    font-style: italic;
+}
+
+.pagination {
+    margin: 15px 0;
+}
+
+th.sortable a {
+    display: block;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+th.sortable a span {
+    border-bottom: 1px dotted;
+}
+
+th.sortable a:hover span {
+    border-bottom: 0 none;
+}
+
+.date-time-compact {
+    font-size: 10px;
+    float: right;
+    text-align: right;
+    width: 70px;
+    margin: -3px 0 -6px;
+    cursor: default;
+    white-space: nowrap;
+}
+
+.date-time-compact .time {
+    color: #999;
+}
+
+.last-edited .editor {
+    margin-right: 70px;
+}
+
+.editedBy span {
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.editedBy .caption {
+    font-weight: bolder;
+}
+
+.will-be-created {
+    display: none;
+}
+
+tr[role="button"] {
+    cursor: pointer;
+}
+
+.panel > .table > thead > tr > th:first-child,
+.panel > .table > thead > tr > td:first-child,
+.panel > .table > tbody > tr > td:first-child,
+.panel > .table > tbody > tr > th:first-child,
+.panel > .table > tfoot > tr > td:first-child,
+.panel > .table > tfoot > tr > th:first-child {
+    padding-left: 15px;
+}
+
+.panel > .table > thead > tr > th:last-child,
+.panel > .table > thead > tr > td:last-child,
+.panel > .table > tbody > tr > td:last-child,
+.panel > .table > tbody > tr > th:last-child,
+.panel > .table > tfoot > tr > td:last-child,
+.panel > .table > tfoot > tr > th:last-child {
+    padding-right: 15px;
+}
+
+.popover-content > table:last-child {
+    margin-bottom: 0;
+}
+
+.item-details .popover {
+    width: fit-content;
+    max-width: 60%;
+}
+.item-details-body {
+    display: none;
+}
+
+@media (max-height: 500px) {
+    .navbar-fixed-top {
+        position: absolute;
+    }
+
+    .navbar-fixed-bottom {
+        position: relative;
+    }
+
+    body {
+        padding-bottom: 0;
+    }
+}
+
+.badge-primary { background-color: $brand-primary; }
+.badge-success { background-color: $brand-success; }
+.badge-info { background-color: $brand-info; }
+.badge-warning { background-color: $brand-warning; }
+.badge-danger { background-color: $brand-danger; }

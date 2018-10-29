@@ -1,0 +1,35 @@
+.zfe-merge {
+  .search-group .form-group {
+    margin-bottom: 0;
+  }
+
+  .search-group .form-group input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .search-group .params {
+    border-top-width: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .zfe-merge-suggest {
+    margin-top: 10px;
+  }
+
+  .zfe-merge-suggest td {
+    cursor: pointer;
+  }
+
+  .zfe-merge-empty td {
+    cursor: default;
+  }
+
+  .zfe-merge-items label {
+    display: block;
+    padding: 5px;
+    margin: 0;
+    text-align: center;
+  }
+}

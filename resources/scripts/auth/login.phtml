@@ -1,0 +1,18 @@
+<?
+    $config = Zend_Registry::get('config');
+?>
+<form class="form-signin" action="/auth/login" method="POST">
+    <h2 class="form-signin-heading">
+        <?= is_string($config->brand) ? $config->brand : $config->brand->full ?>
+    </h2>
+    <?= $this->form->login ?>
+    <?= $this->form->password ?>
+    <?= $this->form->submit ?>
+    <input type="hidden" name="redirect" value="<?= $this->redirect ?>" />
+    <div class="checkbox">
+        <label><?= $this->form->remember ?> Оставаться в системе</label>
+    </div>
+    <? if (isset($this->error)): ?>
+        <div class="alert alert-danger"><?= $this->error ?></div>
+    <? endif; ?>
+</form>

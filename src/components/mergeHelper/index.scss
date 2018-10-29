@@ -1,0 +1,23 @@
+.zfe-merge-helper {
+  tbody input {
+    display: none;
+  }
+
+  .btn-show-equal {
+    display: none;
+  }
+
+  &.hide-equal-rows {
+    .btn-show-equal {
+      display: inline-block;
+    }
+
+    .btn-hide-equal {
+      display: none;
+    }
+
+    .equal-rows {
+      display: none;
+    }
+  }
+}

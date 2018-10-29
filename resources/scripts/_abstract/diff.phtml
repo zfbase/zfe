@@ -1,0 +1,15 @@
+<?
+    $item = $this->item = $this->curItem;
+    
+    $this->controlTabs[] = [
+        'action' => 'diff',
+        'title' => 'Сравнение версий',
+        'class' => 'pull-right',
+    ];
+    echo $this->abstractRender('_header.phtml');
+    
+    if (file_exists(APPLICATION_PATH . '/views/scripts/' . $this->resource . '/_diff.phtml')) {
+        echo $this->render($this->resource . '/_diff.phtml');
+    } else {
+        echo $this->render('_abstract/_diff.phtml');
+    }

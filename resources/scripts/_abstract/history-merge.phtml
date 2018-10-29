@@ -1,0 +1,30 @@
+<?
+    $modelName = $this->modelName;
+    $tableInstance = Doctrine_Core::getTable($modelName);
+    $allColumns = $tableInstance->getColumnNames();
+    $serviceFields = $modelName::getServiceFields();
+    $columns = array_diff($allColumns, $serviceFields);
+    $this->controlTabs[] = [
+        'action' => 'history-merge',
+        'title' => 'Объединенные записи',
+        'class' => 'pull-right',
+    ];
+    $downHash = $this->hopsHistory()->getDownHash('К истории', '?');
+?>
+
+<?= $this->abstractRender('_header.phtml') ?>
+
+<table class="table table-bordered">
+    <tbody>
+        <? foreach ($columns as $columnName): ?>
+        <tr>
+            <th><?= $modelName::getFieldName($columnName) ?></th>
+            <? foreach ($this->slaves as $item): ?>
+            <td class="<?= $this->item->$columnName === $item->$columnName ? 'bg-success' : '' ?>">
+                <?= $this->autoFormat($item->$columnName, $columnName, $modelName) ?>
+            </td>
+            <? endforeach; ?>
+        </tr>
+        <? endforeach; ?>
+    </tbody>
+</table>

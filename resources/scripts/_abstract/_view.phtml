@@ -1,0 +1,29 @@
+<? 
+    $modelName = $this->modelName;
+    $item = $this->item; /* @var $item Doctrine_Record */
+    $table = Doctrine_Core::getTable($modelName);
+    $columns = array_diff($item->getTable()->getColumnNames(), $modelName::getServiceFields());
+?>
+
+<table class="table table-condensed">
+    <tbody>
+        <? foreach ($columns as $columnName): ?>
+        <? if ( ! empty($item->$columnName)): ?>
+        <tr>
+            <th><?= $modelName::getFieldName($columnName) ?></th>
+            <td><?= ZFE::shortenText($this->autoFormat($item->$columnName, $columnName, $modelName), 400) ?></td>
+        </tr>
+        <? endif; ?>
+        <? endforeach; ?>
+        
+        <? foreach ($modelName::$multiAutocompleteCols as $column => $options): ?>
+        <? $relation = $options['relAlias']; ?>
+        <? if ($item->$relation->count()): ?>
+        <tr>
+            <th><?= $modelName::getFieldName(strtolower($relation)) ?></th>
+            <td><?= $this->showTitles($item->$relation) ?></td>
+        </tr>
+        <? endif; ?>
+        <? endforeach; ?>
+    </tbody>
+</table>

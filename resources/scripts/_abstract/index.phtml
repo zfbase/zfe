@@ -1,0 +1,51 @@
+<?
+    $modelName = $this->modelName;
+    $downHash = $this->hopsHistory()->getDownHash('К результатам поиска', '?', ['totalResults' => ZFE_Paginator::getInstance()->getNumResults()]);
+?>
+
+<h2>
+    <?= $this->listName ?>
+    
+    <small>(<?= number_format(ZFE_Paginator::getInstance()->getNumResults(), 0, ',', '&nbsp;') ?>)</small>
+    
+    <?
+        if ( ! $this->readonly) {
+            $buttons = [];
+            
+            if ($this->canCreate) {
+                $buttons[] = [
+                    'ico' => 'glyphicon glyphicon-plus',
+                    'label' => 'Добавить',
+                    'url' => $modelName::getNewUrl() . $downHash,
+                ];
+            }
+            
+            if ($this->canMerge) {
+                $buttons[] = [
+                    'label' => 'Объединить',
+                    'url' => $modelName::getMergingUrl(),
+                ];
+                $buttons[] = [
+                    'label' => 'Найти дубликаты',
+                    'url' => $modelName::getSearchDuplicatesUrl(),
+                ];
+            }
+            
+            if (count($buttons)) {
+                echo '&nbsp; ' . $this->crazyButtons($buttons);
+            }
+        }
+    ?>
+    
+    <? if ( ! $this->readonly && $this->canRestore): ?>
+        <a href="<?= $modelName::getIndexUrl() . ($this->deleted != 1 ? '/deleted/1' : '') ?>" 
+           class="btn btn-default pull-right<?= $this->deleted == 1 ? ' active' : '' ?>">
+            <span class="glyphicon glyphicon-trash"></span>
+            Корзина
+        </a>
+    <? endif; ?>
+</h2>
+
+<?= $this->abstractRender('_search.phtml') ?>
+
+<?= $this->abstractRender('_list.phtml') ?>
