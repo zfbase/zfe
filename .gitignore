@@ -4,5 +4,6 @@
 .npmrc
 nbproject
 /composer.lock
+/package-lock.json
 /node_modules
 /vendor
