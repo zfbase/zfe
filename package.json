@@ -1,13 +1,14 @@
 {
   "name": "zfe",
-  "version": "0.147",
+  "version": "1.27.0",
   "description": "ZFE – платформа для построения редакторских интерфейсов",
-  "author": [
+  "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
     "Dmitriy Demin <dma01x@gmail.com>",
     "Dmitriy Stepanov <stepdi@gmail.com>",
     "Alexey Sumin"
   ],
+  "license": "MIT",
   "main": "src/js/zfe.js",
   "module": "src/js/zfe.js",
   "dependencies": {
