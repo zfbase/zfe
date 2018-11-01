@@ -1,6 +1,6 @@
 {
     "name": "zfbase/zfe",
-    "version": "1.27.2",
+    "version": "1.27.3",
     "description": "ZFE – платформа для построения редакторских интерфейсов",
     "type": "library",
     "license": "MIT",

@@ -143,3 +143,9 @@ tr[role="button"] {
 .badge-info { background-color: $brand-info; }
 .badge-warning { background-color: $brand-warning; }
 .badge-danger { background-color: $brand-danger; }
+
+.small-header {
+    display: block;
+    font-size: 80%;
+    opacity: 0.9;
+}
