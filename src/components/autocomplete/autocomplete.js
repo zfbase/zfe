@@ -97,7 +97,7 @@ class ZFEAutocomplete {
     const { idInput, titleInput, canCreate } = this.settings;
 
     // Обработка клика по иконке
-    $('i', this.group).on('click', () => {
+    $('i', group).on('click', () => {
       input.trigger($.Event('keydown', { keyCode: 40 }));
       input.focus();
     });

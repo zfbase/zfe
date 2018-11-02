@@ -13,7 +13,8 @@ const defaults = {
 class ZFEMultiAutocomplete {
   constructor(element, options) {
     this.input = $(element);
-    this.wrap = this.input.closest('.multiac-wrap').find('.multiac-linked-wrap');
+    this.group = this.input.closest('.multiac-wrap');
+    this.wrap = this.group.find('.multiac-linked-wrap');
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
   }
