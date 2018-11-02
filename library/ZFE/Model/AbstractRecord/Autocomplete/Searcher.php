@@ -53,6 +53,8 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
             $doctrineQuery->andWhereIn('x.id', $ids);
             $doctrineQuery->removeDqlQueryPart('orderby');
             $doctrineQuery->orderByField('x.id', $ids);
+        } else {
+            return [];
         }
 
         return array_map(
