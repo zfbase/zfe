@@ -15,7 +15,7 @@ class ZFE_View_Helper_LastEditedCell extends Zend_View_Helper_Abstract
      * Генерировать ячейку с информацией о последнем изменении записи.
      *
      * @param AbstractRecord $item
-     * @param mixed          $class
+     * @param string         $class
      *
      * @return string
      */

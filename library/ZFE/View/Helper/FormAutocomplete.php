@@ -17,8 +17,8 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
      * Сгенерировать элемент автокомплита одного значения.
      *
      * @param string $name
-     * @param mixed  $value
-     * @param mixed  $attribs
+     * @param array  $value
+     * @param array  $attribs
      *
      * @return string
      */

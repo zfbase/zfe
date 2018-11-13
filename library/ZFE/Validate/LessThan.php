@@ -41,7 +41,7 @@ class ZFE_Validate_LessThan extends Zend_Validate_Abstract
     /**
      * Maximum value.
      *
-     * @var mixed
+     * @var float|int
      */
     protected $_max;
 
@@ -59,7 +59,7 @@ class ZFE_Validate_LessThan extends Zend_Validate_Abstract
      * Sets validator options.
      *
      * @param array|Zend_Config $options            Accepts the following option keys:
-     * @param int               $options[max]       maximum border
+     * @param float|int         $options[max]       maximum border
      * @param bool              $options[inclusive] inclusive border values
      */
     public function __construct($options)
@@ -92,7 +92,7 @@ class ZFE_Validate_LessThan extends Zend_Validate_Abstract
     /**
      * Returns the max option.
      *
-     * @return mixed
+     * @return float|int
      */
     public function getMax()
     {
@@ -102,7 +102,7 @@ class ZFE_Validate_LessThan extends Zend_Validate_Abstract
     /**
      * Sets the max option.
      *
-     * @param mixed $max
+     * @param float|int $max
      *
      * @return Zend_Validate_LessThan Provides a fluent interface
      */
@@ -140,7 +140,7 @@ class ZFE_Validate_LessThan extends Zend_Validate_Abstract
      *
      * Returns true if and only if $value is less than max option
      *
-     * @param mixed $value
+     * @param float|int $value
      *
      * @return bool
      */

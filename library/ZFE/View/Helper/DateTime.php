@@ -21,9 +21,8 @@ class ZFE_View_Helper_DateTime extends Zend_View_Helper_Abstract
     /**
      * Форматировать дату (и время).
      *
-     * @param string $mixedDateTime
+     * @param string $stringDateTime
      * @param bool   $time
-     * @param mixed  $stringDateTime
      *
      * @return string
      */

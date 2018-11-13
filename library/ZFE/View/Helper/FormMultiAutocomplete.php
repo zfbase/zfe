@@ -17,8 +17,8 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
      * Сгенерировать элемент автокомплита нескольких значений.
      *
      * @param string $name
-     * @param mixed  $value
-     * @param mixed  $attribs
+     * @param array  $value
+     * @param array  $attribs
      *
      * @return string
      */

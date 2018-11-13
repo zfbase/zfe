@@ -181,7 +181,7 @@ abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
      * Добавить условие.
      *
      * @param string $where
-     * @param mixed  $params
+     * @param array  $params
      *
      * @return ZFE_Validate_Db_Abstract
      */

@@ -213,8 +213,8 @@ class ZFE_Paginator
     /**
      * Выполнить запрос
      *
-     * @param mixed $query
-     * @param array $params
+     * @param Doctrine_Query $query
+     * @param array          $params
      *
      * @return Doctrine_Collection
      */

@@ -23,7 +23,7 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
      * @param string $buttons[][label] название ссылки
      * @param string $buttons[][url]   адрес ссылки
      * @param string $buttons[][ico]   класс иконки (если не указан иконки не будет добавлено)
-     * @param mixed  $class
+     * @param string $class
      *
      * @return string
      */

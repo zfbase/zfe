@@ -41,7 +41,7 @@ class ZFE_Validate_GreaterThan extends Zend_Validate_Abstract
     /**
      * Minimum value.
      *
-     * @var mixed
+     * @var float|int
      */
     protected $_min;
 
@@ -93,7 +93,7 @@ class ZFE_Validate_GreaterThan extends Zend_Validate_Abstract
     /**
      * Returns the min option.
      *
-     * @return mixed
+     * @return float|int
      */
     public function getMin()
     {
@@ -103,7 +103,7 @@ class ZFE_Validate_GreaterThan extends Zend_Validate_Abstract
     /**
      * Sets the min option.
      *
-     * @param mixed $min
+     * @param float|int $min
      *
      * @return Zend_Validate_GreaterThan Provides a fluent interface
      */
@@ -141,7 +141,7 @@ class ZFE_Validate_GreaterThan extends Zend_Validate_Abstract
      *
      * Returns true if and only if $value is greater than min option
      *
-     * @param mixed $value
+     * @param float|int $value
      *
      * @return bool
      */

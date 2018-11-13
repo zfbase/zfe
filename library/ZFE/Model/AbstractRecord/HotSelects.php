@@ -185,8 +185,8 @@ trait ZFE_Model_AbstractRecord_HotSelects
     /**
      * Поддержка магических методов таблиц для статического вызова.
      *
-     * @param mixed $method
-     * @param mixed $arguments
+     * @param string $method
+     * @param array  $arguments
      */
     public static function __callStatic($method, $arguments)
     {

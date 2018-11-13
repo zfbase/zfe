@@ -50,14 +50,14 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      *
      * Если включено отображение ошибок, то будет отображено сообщение и стек вызовов функций.
      *
-     * @param int             $status  статус
-     * @param array           $data    данные
-     * @param string          $message сообщение
-     * @param Exception|mixed $log     стек вызовов функций, приведших к ошибке:
-     *                                 из Exception возьмется $e->getTrace();
-     *                                 если будет передан true, будут использовано debug_backtrace();
-     *                                 если будет передано false, поле передаваться не будет;
-     *                                 остальные значения будут переданы «как есть»
+     * @param int    $status  статус
+     * @param array  $data    данные
+     * @param string $message сообщение
+     * @param mixed  $log     стек вызовов функций, приведших к ошибке:
+     *                        из Exception возьмется $e->getTrace();
+     *                        если будет передан true, будут использовано debug_backtrace();
+     *                        если будет передано false, поле передаваться не будет;
+     *                        остальные значения будут переданы «как есть»
      */
     protected function _json($status, array $data = [], $message = null, $log = true)
     {
@@ -88,8 +88,8 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     /**
      * Прерывает обработку запроса, возвращая соответствующий HTTP-код.
      *
-     * @param int        $code
-     * @param null|mixed $customMessage
+     * @param int    $code
+     * @param string $customMessage
      */
     public function abort($code = 500, $customMessage = null)
     {

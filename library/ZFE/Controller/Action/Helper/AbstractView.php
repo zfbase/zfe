@@ -14,8 +14,8 @@ class ZFE_Controller_Action_Helper_AbstractView extends Zend_Controller_Action_H
     /**
      * Использовать абстрактные вьюшки, если нету собственных.
      *
-     * @param string     $action
-     * @param null|mixed $controller
+     * @param string $action
+     * @param string $controller
      */
     public function direct($action = null, $controller = null)
     {

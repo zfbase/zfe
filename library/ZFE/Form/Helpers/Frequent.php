@@ -64,6 +64,8 @@ trait ZFE_Form_Helpers_Frequent
     /**
      * Добавить стандартную кнопку отправки формы «Сохранить».
      *
+     * @param string $label
+     *
      * @return Zend_Form
      */
     public function addSubmitElement($label = 'Сохранить')
