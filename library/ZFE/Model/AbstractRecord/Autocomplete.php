@@ -79,11 +79,14 @@ trait ZFE_Model_AbstractRecord_Autocomplete
      *
      * @return array
      */
-    public static function autocompleteItemToArray($item)
+    public static function autocompleteItemToArray(ZFE_Model_AbstractRecord $item)
     {
         $data = [];
+        $table = Doctrine_Core::getTable(static::class);
         foreach (static::$autocompleteSelectCols as $col) {
-            $data[$col] = $item[$col];
+            if ($table->hasField($col)) {
+                $data[$col] = $item[$col];
+            }
         }
         return $data;
     }
