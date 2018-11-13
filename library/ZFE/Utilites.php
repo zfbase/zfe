@@ -99,21 +99,6 @@ class ZFE_Utilites
     }
 
     /**
-     * Получить версию zfe_static.
-     *
-     * @return string
-     */
-    public static function getVersionStatic()
-    {
-        $config = Zend_Registry::get('config');
-        if ($config && $config->zfestatic && $config->zfestatic->version) {
-            return $config->zfestatic->version;
-        }
-
-        return date('ymdH');
-    }
-
-    /**
      * Загрузить короткий псевдоним класса.
      */
     public static function loadShortAlias()

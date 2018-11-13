@@ -10,11 +10,6 @@
 class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     /**
-     * Версия библиотеки.
-     */
-    const VERSION = '0.14';
-
-    /**
      * Загружаем короткий псевдоним для класса утилит
      */
     protected function _initShortAlias()
@@ -225,11 +220,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
         $view = $layout->getView();
-
-        $view->version = $config->view->version;
-
         $view->addBasePath($zfeResourcesPath);
-
         $view
             ->addHelperPath('Twitter/Bootstrap3/View/Helper', 'Twitter_Bootstrap3_View_Helper_')
             ->addHelperPath('ZFE/View/Helper', 'ZFE_View_Helper_')
