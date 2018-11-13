@@ -146,7 +146,9 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
 
         // Add select custom fields
         foreach (static::$autocompleteSelectCols as $col) {
-            $q->addSelect("x.{$col}");
+            if ($table->hasField($col)) {
+                $q->addSelect("x.{$col}");
+            }
         }
 
         return $q;
