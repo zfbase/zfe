@@ -15,8 +15,8 @@ class ZFE_Debug extends Zend_Debug
      * Форматирует и оборачивает результат работы var_dump().
      *
      * @param mixed  $var   Переменная для дампа
-     * @param string $label OPTIONAL Название переменной
-     * @param bool   $echo  OPTIONAL Вывести на экран вместо возваращения?
+     * @param string $label Название переменной
+     * @param bool   $echo  Вывести на экран вместо возвращения?
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class ZFE_Debug extends Zend_Debug
      * Форматирует и оборачивает SQL-запрос
      *
      * @param string|ZFE_Query $sql  Строка запроса
-     * @param bool             $echo Вывести на экран вместо возваращения?
+     * @param bool             $echo Вывести на экран вместо возвращения?
      *
      * @return string
      */

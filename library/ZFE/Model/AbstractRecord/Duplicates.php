@@ -15,9 +15,9 @@ trait ZFE_Model_AbstractRecord_Duplicates
     {
         $groups = [];
 
-        $dublicates = static::_getDuplicates();
-        foreach ($dublicates as $dublicate) {
-            $groups[] = static::_getGroupsByDuplicate($dublicate);
+        $duplicates = static::_getDuplicates();
+        foreach ($duplicates as $duplicate) {
+            $groups[] = static::_getGroupsByDuplicate($duplicate);
         }
 
         return $groups;
@@ -37,7 +37,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
         return $q->execute();
     }
 
-    protected static function _getGroupsByDuplicate($dublicate)
+    protected static function _getGroupsByDuplicate($duplicate)
     {
         $modelName = get_called_class();
         $tableInstance = Doctrine_Core::getTable($modelName);
@@ -46,7 +46,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from($modelName . ' x')
-            ->where(static::$titleField . ' = ?', $dublicate['title'])
+            ->where(static::$titleField . ' = ?', $duplicate['title'])
             ->orderBy('weight DESC')
             ->groupBy('x.id')
             ;
@@ -156,7 +156,7 @@ SQL;
                 $stmt = $conn->prepare($q1);
                 $stmt->execute([]);
 
-                // Удаляем оставшие связи со слейв-тегом объекта
+                // Удаляем оставшиеся связи со слейв-тегом объекта
                 // К сожалению, на уровне запроса определить поддержку мягкого удаления не возможно
                 $q2 = ZFE_Query::create($conn)
                     ->from($relation->getClass())

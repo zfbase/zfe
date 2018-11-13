@@ -107,7 +107,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
             return false;
         }
 
-        // Автоматически определяем значния по умолчанию
+        // Автоматически определяем значения по умолчанию
         /** @var $table ZFE_Model_Table */
         $table = Doctrine_Core::getTable(static::class);
         $relAlias = $table->getModelNameForColumn($field);
@@ -219,7 +219,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
 
     /**
      * Привязать по полям id и title.
-     * Если поле id не опрделено создать новую запись со значением title и привязать его.
+     * Если поле id не определено создать новую запись со значением title и привязать его.
      *
      * @param string     $alias
      * @param int|string $id
@@ -362,7 +362,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
     }
 
     /**
-     * Обновить перичень привязанных записей по указанной связи и ID актуальных записей.
+     * Обновить перечень привязанных записей по указанной связи и ID актуальных записей.
      *
      * @param string $alias
      * @param array  $new_ids

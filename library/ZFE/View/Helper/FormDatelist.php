@@ -22,7 +22,7 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
             $disabled = ' disabled="disabled"';
         }
 
-        // Определяем перичень классов
+        // Определяем перечень классов
         if (isset($attribs['class'])) {
             $classes = explode(' ', $attribs['class']);
             if ( ! in_array('form-control', $classes, true)) {

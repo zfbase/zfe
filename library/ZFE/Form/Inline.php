@@ -18,7 +18,7 @@ class ZFE_Form_Inline extends Twitter_Bootstrap3_Form_Inline
      * Отрисовать форму.
      *
      * Для элементов, у которых не указан placeholder, в placeholder будет указан label.
-     * Что бы placholder не был указан, необходимо указать его равным FALSE.
+     * Что бы placeholder не был указан, необходимо указать его равным FALSE.
      *
      * @param Zend_View_Interface $view
      *

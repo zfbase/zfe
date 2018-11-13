@@ -5,7 +5,7 @@
  */
 
 /**
- * Cтандартный контроллер Ajax-методов CkeditorCkeditor.
+ * Стандартный контроллер Ajax-методов CkeditorCkeditor.
  *
  * @category  ZFE
  */
@@ -30,18 +30,18 @@ class ZFE_Controller_Default_Ckeditor extends Controller_Abstract
         $adapter->setDestination($fullDir);
         $fileName = $adapter->getFileName('upload', false);
 
-        $responce = [
+        $response = [
             'uploaded' => 1,
             'fileName' => $fileName,
             'url' => $baseUrl . '/' . $localDir . '/' . $fileName,
         ];
 
         if ( ! $adapter->receive()) {
-            $responce['error'] = [
+            $response['error'] = [
                 'message' => implode("\n", $adapter->getMessages()),
             ];
         }
 
-        $this->_helper->json($responce);
+        $this->_helper->json($response);
     }
 }

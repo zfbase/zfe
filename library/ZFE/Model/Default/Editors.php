@@ -13,7 +13,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
 {
     // Переопределяем AbstractRecords
     /**
-     * Половая пренадлежность записи.
+     * Половая принадлежность записи.
      *
      * @var int
      */
@@ -89,7 +89,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     const STATUS_DISABLED = 1;
 
     /**
-     * Статусы записей модели в зависимости от половой пренадлежности записи.
+     * Статусы записей модели в зависимости от половой принадлежности записи.
      *
      * @var array
      */

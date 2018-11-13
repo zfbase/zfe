@@ -21,7 +21,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
     protected static $_sphinxSelect = 'id';
 
     /**
-     * Сводная страница с перичнем объектов.
+     * Сводная страница с перечнем объектов.
      */
     public function indexAction()
     {
@@ -173,7 +173,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
     }
 
     /**
-     * Помошник для сортировки.
+     * Помощник для сортировки.
      *
      * @param SphinxQL $q
      * @param string   $field     поле для сортировки

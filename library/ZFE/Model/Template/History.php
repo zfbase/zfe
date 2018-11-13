@@ -57,17 +57,17 @@ class ZFE_Model_Template_History extends Doctrine_Template
     }
 
     /**
-     * Установить флаг записи и учитывания истории.
+     * Установить флаг записи и учета истории.
      *
      * @param bool $mode      историю писать и учитывать?
-     * @param bool $noWarning не показывать предупреждение при невозможнсоти выполнения
+     * @param bool $noWarning не показывать предупреждение при невозможности выполнения
      */
     public function saveHistory($mode, $noWarning = false)
     {
         if ($this->_listener) {
             $this->_listener->saveHistory($mode);
         } elseif ( ! $noWarning) {
-            trigger_error('Не возможно установить флаг записи и учитывания истории '
+            trigger_error('Не возможно установить флаг записи и учета истории '
                         . 'при отключенном обработчике истории.', E_USER_WARNING);
         }
     }

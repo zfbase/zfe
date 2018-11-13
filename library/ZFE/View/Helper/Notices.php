@@ -12,7 +12,7 @@
 class ZFE_View_Helper_Notices extends Zend_View_Helper_Abstract
 {
     /**
-     * Вернуть код выода нотификации.
+     * Вернуть код вывода нотификации.
      *
      * @return string
      */

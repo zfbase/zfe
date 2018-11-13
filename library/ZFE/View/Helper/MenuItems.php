@@ -20,7 +20,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
      *
      * @param array|Zend_Config $pages          структура меню
      * @param bool              $autoActive     автоматически выбирать активный пункт?
-     * @param bool              $disabledAcl    игнорировать настройки безопастности?
+     * @param bool              $disabledAcl    игнорировать настройки безопасности?
      * @param bool              $dropdownEnable делать дочерние уровни выпадающими?
      *
      * @return string
@@ -176,8 +176,8 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
 
         $resource = null;
         $privilege = 'index';
-        // Если хотя бы одна превилегия ресурса запрещена,
-        // то без указания превилегии, ресурс тоже будет считаться запрященным
+        // Если хотя бы одна привилегия ресурса запрещена,
+        // то без указания привилегии, ресурс тоже будет считаться запрещенным
 
         if (isset($page->resource) && $acl->hasResource($page->resource)) {
             $resource = $page->resource;
@@ -205,8 +205,8 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
      *
      * Узел считается активным в том числе если активен его потомок.
      *
-     * @param ArrayObject|Zend_Config $page       - проверяемый узел
-     * @param bool                    $autoActive – автоматически выбирать активный узел?
+     * @param ArrayObject|Zend_Config $page       проверяемый узел
+     * @param bool                    $autoActive автоматически выбирать активный узел?
      *
      * @return bool
      */

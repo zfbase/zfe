@@ -14,8 +14,8 @@ class ZFE_View_Helper_AbstractRender extends Zend_View_Helper_Abstract
     /**
      * Отрендерить наиболее подходящий шаблон по имени.
      *
-     * Поис будет осуществляться сначало в директории шаблонов приложения, потом в директориях библиотек.
-     * В каждом из них сначало в папке контроллера, потом в асбстрактной.
+     * Поиск будет осуществляться сначала в директории шаблонов приложения, потом в директориях библиотек.
+     * В каждом из них сначала в папке контроллера, потом в абстрактной.
      * Пример поиска для адреса /articles/index по убыванию приоритета:
      * 1) application/views/scripts/articles/index.phtml
      * 2) application/views/scripts/_abstract/index.phtml
@@ -35,11 +35,11 @@ class ZFE_View_Helper_AbstractRender extends Zend_View_Helper_Abstract
         }
 
         foreach ($this->view->getScriptPaths() as $path) {
-            $basepath = realpath($path);
-            if (file_exists($basepath . '/' . $controller . '/' . $file)) {
+            $basePath = realpath($path);
+            if (file_exists($basePath . '/' . $controller . '/' . $file)) {
                 return $this->view->render($controller . '/' . $file);
             }
-            if (file_exists($basepath . '/' . $file)) {
+            if (file_exists($basePath . '/' . $file)) {
                 return $this->view->render($file);
             }
         }

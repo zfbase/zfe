@@ -62,7 +62,7 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
             $disabled = ' disabled="disabled"';
         }
 
-        // Определяем перичень классов
+        // Определяем перечень классов
         if (isset($attribs['class'])) {
             $classes = explode(' ', $attribs['class']);
             if ( ! in_array('multiac', $classes, true)) {

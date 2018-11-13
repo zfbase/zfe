@@ -15,7 +15,7 @@ class ZFE_View_Helper_ShowTitles
      * Вывести список значений поля коллекции записей.
      *
      * @param array|Doctrine_Collection|Traversable $items
-     * @param string                                $field       используемле поле для элементов
+     * @param string                                $field       используемое поле для элементов
      * @param string                                $separator   разделитель
      * @param int                                   $maxElements максимальное число выводимых элементов
      * @param callback|string                       $linkMethod  генератор адреса ссылки

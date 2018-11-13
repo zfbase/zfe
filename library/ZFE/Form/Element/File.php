@@ -69,6 +69,7 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
         return $this->_dataType;
     }
 
+
     //
     // Ограничения по расширениям файлов
     //
@@ -136,6 +137,7 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
         return $this->_allowExtensions;
     }
 
+
     //
     // Ограничения по MIME-типам
     //
@@ -196,6 +198,7 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
         return $this->_allowMimeTypes;
     }
 
+
     //
     // Для элемента загрузки одного файла
     //
@@ -229,6 +232,7 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
     {
         return $this->_file;
     }
+
 
     //
     // Для элемента загрузки нескольких файлов

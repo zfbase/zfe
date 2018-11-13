@@ -5,14 +5,14 @@
  */
 
 /**
- * Форматрировать период.
+ * Форматировать период.
  *
  * @category  ZFE
  */
 class ZFE_View_Helper_Period extends Zend_View_Helper_Abstract
 {
     /**
-     * Форматрировать период.
+     * Форматировать период.
      *
      * @param DateTime|string $start
      * @param DateTime|string $end

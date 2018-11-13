@@ -144,7 +144,7 @@ trait ZFE_Controller_AbstractResource_Index
             return;
         }
 
-        $revertHash = $this->getparam('rh');
+        $revertHash = $this->getParam('rh');
         if (empty($revertHash)) {
             return;
         }
@@ -158,7 +158,7 @@ trait ZFE_Controller_AbstractResource_Index
     }
 
     /**
-     * Сводная страница с перичнем объектов.
+     * Сводная страница с перечнем объектов.
      *
      * @throws Zend_Controller_Action_Exception
      */
@@ -189,7 +189,7 @@ trait ZFE_Controller_AbstractResource_Index
     }
 
     /**
-     * Возращает параметр ids.
+     * Возвращает параметр ids.
      * Параметр может содержать числа, разделенные запятыми, которые преобразуются в массив.
      */
     protected function _getIdsParam()

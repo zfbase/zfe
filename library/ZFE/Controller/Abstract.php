@@ -56,7 +56,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      * @param Exception|mixed $log     стек вызовов функций, приведших к ошибке:
      *                                 из Exception возьмется $e->getTrace();
      *                                 если будет передан true, будут использовано debug_backtrace();
-     *                                 если будет передано false, поле передоваться не будет;
+     *                                 если будет передано false, поле передаваться не будет;
      *                                 остальные значения будут переданы «как есть»
      */
     protected function _json($status, array $data = [], $message = null, $log = true)

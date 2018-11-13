@@ -12,7 +12,7 @@
 abstract class ZFE_Model_Default_History extends BaseHistory
 {
     /**
-     * Половая пренадлежность записи.
+     * Половая принадлежность записи.
      *
      * @var int
      */

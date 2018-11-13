@@ -12,7 +12,7 @@
 class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
 {
     /**
-     * Получить экземпляр помошника.
+     * Получить экземпляр помощника.
      *
      * @return ZFE_View_Helper_SearchPages
      */
@@ -47,7 +47,7 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
     }
 
     /**
-     * Получить группу кнопок перехода к предыдущему и следущему результату поиска.
+     * Получить группу кнопок перехода к предыдущему и следующему результату поиска.
      *
      * @param string $containerClass
      * @param string $btnSize

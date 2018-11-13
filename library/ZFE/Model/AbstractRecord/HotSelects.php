@@ -21,7 +21,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      *
      * <code>
      * Editors::find(100);
-     * Dayes::find('2013-02-12');
+     * Days::find('2013-02-12');
      * Tokens::find('EX-eeb8ho4g');
      * EditorsRoles::find([100, 4]);
      * Tags::find(4, Doctrine_Core::HYDRATE_RECORD);

@@ -5,7 +5,7 @@
  */
 
 /**
- * Раширенные возможности форм.
+ * Расширенные возможности форм.
  *
  * @category  ZFE
  */
@@ -156,7 +156,7 @@ trait ZFE_Form_Extensions
     {
         $this->_disabled = (bool) $disabled;
 
-        // раставляем свойство всем уже добавленным элементам и суб-формам
+        // Расставляем свойство всем уже добавленным элементам и суб-формам
         foreach ($this->getElements() as $key => $element) {
             $this->{$key}->disabled = $this->_disabled;
             $this->{$key}->disable = $this->_disabled;

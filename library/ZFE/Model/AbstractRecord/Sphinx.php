@@ -26,7 +26,7 @@ trait ZFE_Model_AbstractRecord_Sphinx
     protected static $_sphinxIndexSqlPath = [];
 
     /**
-     * Обновить запись в RT-индексе Shinx.
+     * Обновить запись в RT-индексе Sphinx.
      */
     public function updateSphinxRtIndex()
     {
@@ -101,7 +101,7 @@ trait ZFE_Model_AbstractRecord_Sphinx
     }
 
     /**
-     * Подготовить сырые данные для Sphinx-индекса для зашгрузки в Sphinx.
+     * Подготовить сырые данные для Sphinx-индекса для загрузки в Sphinx.
      *
      * @param array $data
      *

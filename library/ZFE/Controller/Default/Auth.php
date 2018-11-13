@@ -28,7 +28,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
     {
         $auth = Zend_Auth::getInstance();
 
-        // Страница доступна только для неавторихованных порльзователей.
+        // Страница доступна только для неавторизованных пользователей.
         // Авторизованных сразу перенаправляем на внутреннюю по умолчанию.
         if ($auth->hasIdentity()) {
             $module = $this->getRequest()->getModuleName();
@@ -69,7 +69,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
                     $this->onAuthSuccess($data);
 
-                    // исполнение требования принудительной смены пароля
+                    // Исполнение требования принудительной смены пароля
                     if ( ! empty($data->request_password_change)) {
                         $passwordCheck = $this->_getCheckPasswordSession($data->id);
                         $passwordCheck->setExpirationSeconds(120);
@@ -157,7 +157,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
         $this->view->form = $form = new ZFE_Form_Default_ForcePasswordChange();
         if ($passwordCheck) {
-            // если после авторизации прошло менее 2 минут, спрашивать только что введенный пароль не требуется
+            // Если после авторизации прошло менее 2 минут, спрашивать только что введенный пароль не требуется
             $form->removeElement('password');
         }
         if ($this->_request->isPost()) {

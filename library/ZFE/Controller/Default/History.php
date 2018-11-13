@@ -56,7 +56,7 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
     protected static $_searchFormName = 'Application_Form_Search_History';
 
     /**
-     * Определям запрос поиска по истории.
+     * Определяем запрос поиска по истории.
      *
      * @return ZFE_Query
      */
@@ -107,7 +107,7 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
 
         $this->view->resource = $resource = $this->getParam('resource');
 
-        try {  // если класс не удалось создать, либо он не потомок абстрактной модели, то что-то тут не то
+        try {  // Если класс не удалось создать, либо он не потомок абстрактной модели, то что-то тут не то
             $this->view->modelName = $modelName = AbstractRecord::getModelNameByTableName($resource);
             if ( ! (new $modelName() instanceof AbstractRecord)) {
                 throw new Exception();

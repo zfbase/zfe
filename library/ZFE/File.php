@@ -706,8 +706,8 @@ class ZFE_File
      *
      * Настраивать права на все папки от базовой до конкретной.
      *
-     * @param string $basePath – базовая директория
-     * @param string $subPath  – конкретная директория
+     * @param string $basePath базовая директория
+     * @param string $subPath  конкретная директория
      */
     public static function fixPath($basePath, $subPath = null)
     {

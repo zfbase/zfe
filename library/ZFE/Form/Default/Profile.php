@@ -83,7 +83,7 @@ class ZFE_Form_Default_Profile extends ZFE_Form_Horizontal
 
     public function isValid($data)
     {
-        // да, костыль, но без него не работает, а делать в ручную очень многословно
+        // Да, костыль, но без него не работает, а делать в ручную очень многословно
         if ( ! empty($data['password_new'])) {
             $this->getElement('password_new2')->setRequired(true);
         }

@@ -373,7 +373,7 @@ class ZFE_Model_Table extends Doctrine_Table
     }
 
     /**
-     * Получить псевдоним внешнего ключа, соответствующиго столбцу базы.
+     * Получить псевдоним внешнего ключа, соответствующего столбцу базы.
      *
      * @param string $columnName
      *
@@ -390,7 +390,7 @@ class ZFE_Model_Table extends Doctrine_Table
     }
 
     /**
-     * Столбец связан внешним ключем?
+     * Столбец связан внешним ключом?
      *
      * @param string $columnName
      *

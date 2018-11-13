@@ -33,8 +33,8 @@ trait ZFE_Controller_AbstractResource_Edit
      * * params          – параметры запроса
      * * title           – заголовок вкладки
      * * class           – класс элемента li вкладки
-     * * onlyRegistered  – только для зарегистрированных (если есть id), по умолчнию false
-     * * onlyValid       - только не удаленные (deleted != 0), по умолчнию false
+     * * onlyRegistered  – только для зарегистрированных (если есть id), по умолчанию false
+     * * onlyValid       - только не удаленные (deleted != 0), по умолчанию false
      *
      * @var array
      */
@@ -54,8 +54,8 @@ trait ZFE_Controller_AbstractResource_Edit
     /**
      * Редактор записи.
      *
-     * @param bool|string $redirectUrl Адрес для перенаправления в случае успеха; если адрес равен FALSE, то перенаправление не произойдет
-     * @param array       $formOptions Конфигурация формы редактирования (по умолчанию содержит класс редактируемой записи
+     * @param bool|string $redirectUrl адрес для перенаправления в случае успеха; если адрес равен FALSE, то перенаправление не произойдет
+     * @param array       $formOptions конфигурация формы редактирования (по умолчанию содержит класс редактируемой записи
      *
      * @throws Zend_Controller_Action_Exception
      * @throws ZFE_Controller_Exception

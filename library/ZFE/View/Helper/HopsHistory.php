@@ -50,7 +50,7 @@ class ZFE_View_Helper_HopsHistory extends Zend_View_Helper_Abstract
     }
 
     /**
-     * Получить экземпляр помошника.
+     * Получить экземпляр помощника.
      *
      * @return ZFE_View_Helper_HopsHistory
      */

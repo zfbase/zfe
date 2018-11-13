@@ -5,7 +5,7 @@
  */
 
 /**
- * Валиатор URL.
+ * Валидатор URL.
  *
  * @category  ZFE
  *
@@ -49,7 +49,7 @@ class ZFE_Validate_Url extends Zend_Validate_Abstract
                    // IP address dotted notation octets
                    // excludes loopback network 0.0.0.0
                    // excludes reserved space >= 224.0.0.0
-                   // excludes network & broacast addresses
+                   // excludes network & broadcast addresses
                    // (first & last IP address of each class)
                  . '(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])'
                  . '(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}'

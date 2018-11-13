@@ -12,7 +12,7 @@
 class ZFE_Form_Element_MultiAutocomplete extends Zend_Form_Element_Xhtml
 {
     /**
-     * Помошник представления для элемента.
+     * Помощник представления для элемента.
      *
      * @var string
      */

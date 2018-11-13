@@ -13,7 +13,7 @@
  */
 abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
 {
-    // Подключаем сгрупированные по типам методы базовой модели
+    // Подключаем сгруппированные по типам методы базовой модели
     use ZFE_Model_AbstractRecord_Urls;                 // Геттеры адресов модели
     use ZFE_Model_AbstractRecord_Files;                // Средства связи записей с их файлами
     use ZFE_Model_AbstractRecord_Getters;              // Геттеры данных модели и записи
@@ -32,7 +32,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     const SEX_NEUTER = 3;
 
     /**
-     * Названия новой записи в зависимости от половой пренадлежности записи.
+     * Названия новой записи в зависимости от половой принадлежности записи.
      *
      * @var array
      */
@@ -43,7 +43,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     ];
 
     /**
-     * Половая пренадлежность записи.
+     * Половая принадлежность записи.
      *
      * @var int
      */
@@ -108,7 +108,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $controller;
 
     /**
-     * Записи могут быть объеденены стандартным способом?
+     * Записи могут быть объединены стандартным способом?
      *
      * @var bool
      */
@@ -317,7 +317,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     }
 
     /**
-     * Записи могут быть объеденены стандартным способом?
+     * Записи могут быть объединены стандартным способом?
      *
      * @return bool
      */
@@ -341,7 +341,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     }
 
     /**
-     * Записи модели можно восстановливать после удаления?
+     * Записи модели можно восстанавливать после удаления?
      *
      * @return bool
      */

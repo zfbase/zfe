@@ -15,17 +15,15 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
      * Вывести кнопки.
      *
      * В зависимости от переданного числа конфигураций кнопок будет отображена
-     * (1) группа кнопок, где первая отображается всеглда, а остальные выпадают,
+     * (1) группа кнопок, где первая отображается всегда, а остальные выпадают,
      * (2) одна обычная кнопка,
-     * (3) или будет выведено ничего.
+     * (3) или будет ничего не выведено.
      *
-     * Поддерживаются параметры:
-     * - label – название ссылки
-     * - url   – адрес ссылки
-     * - ico   – класс иконки (если не указан иконки не будет добавлено)
-     *
-     * @param mixed $buttons
-     * @param mixed $class
+     * @param array  $buttons
+     * @param string $buttons[][label] название ссылки
+     * @param string $buttons[][url]   адрес ссылки
+     * @param string $buttons[][ico]   класс иконки (если не указан иконки не будет добавлено)
+     * @param mixed  $class
      *
      * @return string
      */
@@ -86,11 +84,14 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
      * Вывести обычную кнопку.
      *
      * @param array  $button
+     * @param string $button[label] название ссылки
+     * @param string $button[url]   адрес ссылки
+     * @param string $button[ico]   класс иконки (если не указан иконки не будет добавлено)
      * @param string $class
      *
      * @return string
      */
-    public function one($button, $class = 'btn btn-default')
+    public function one(array $button, $class = 'btn btn-default')
     {
         $label = $button['label'];
 

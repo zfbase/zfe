@@ -17,7 +17,7 @@ class ZFE_Query extends Doctrine_Query
     protected static $_driverName = null;
 
     /**
-     * Это "жеский" запрос (без учета истории)?
+     * Это "жесткий" запрос (без учета истории)?
      *
      * @var bool
      */

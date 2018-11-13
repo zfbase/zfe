@@ -42,9 +42,9 @@ trait ZFE_Form_Helpers_Generator
     /**
      * Добавить элемент, соответствующий полю основной модели формы.
      *
-     * @param string $columnName    – название поля модели
-     * @param array  $customOptions – специальные параметры элемента
-     * @param string $elementName   – название элемента формы (если отличается от названия поля)
+     * @param string $columnName    название поля модели
+     * @param array  $customOptions специальные параметры элемента
+     * @param string $elementName   название элемента формы (если отличается от названия поля)
      *
      * @return Zend_Form
      */
