@@ -23,8 +23,7 @@
                     <tr>
                         <td><?= $item->id ?></td>
                         <td>
-                            <a href="<?= $item->getEditUrl() . $downHash . $this->searchPages()->getHash($rowIndex, '&') ?>">
-                                <i class="glyphicon glyphicon-edit"></i>
+                            <a href="<?= $item->getUrl() . $downHash . $this->searchPages()->getHash($rowIndex, '&') ?>">
                                 <?= $item->getTitle() ?>
                             </a>
                         </td>
