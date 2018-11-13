@@ -9,8 +9,6 @@
  *
  * Хуки добавления, изменения и удаления записи предшествующие действию,
  * модифицируют сохраняемые значения, а выполняющиеся после действия записывают его в историю.
- *
- * @category  ZFE
  */
 class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
 {

@@ -6,8 +6,6 @@
 
 /**
  * Clearfix для использования в формах.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_FormClearfix extends Zend_View_Helper_FormElement
 {

@@ -6,8 +6,6 @@
 
 /**
  * Элемент формы текстовое поле с автодополнением.
- *
- * @category  ZFE
  */
 class ZFE_Form_Element_Autocomplete extends Zend_Form_Element_Xhtml
 {

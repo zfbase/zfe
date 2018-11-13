@@ -6,8 +6,6 @@
 
 /**
  * Помощник для работы с автокомпликтными элементами в поиске.
- *
- * @category  ZFE
  */
 trait ZFE_Form_Search_PostPopulateHelper
 {

@@ -6,8 +6,6 @@
 
 /**
  * Форма редактирования собственного профиля пользователем.
- *
- * @category  ZFE
  */
 class ZFE_Form_Default_Profile extends ZFE_Form_Horizontal
 {

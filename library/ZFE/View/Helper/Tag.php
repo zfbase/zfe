@@ -6,8 +6,6 @@
 
 /**
  * Генератор HTML-тегов.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_Tag extends Zend_View_Helper_HtmlElement
 {

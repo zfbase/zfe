@@ -9,8 +9,6 @@
  *
  * @see https://gist.github.com/jgornick/200256
  *
- * @category  ZFE
- *
  * @author    Joe Gornick <joe@joegornick.com>
  * @author    Ilya Serdyuk <ilya@serdyuk.pro>
  */

@@ -6,8 +6,6 @@
 
 /**
  * Класс-связка между моделью и помощником вида, в архитектуре ZF+Doctrine (singleton).
- *
- * @category  ZFE
  */
 class ZFE_Paginator
 {

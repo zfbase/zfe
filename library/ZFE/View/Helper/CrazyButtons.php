@@ -6,8 +6,6 @@
 
 /**
  * Помощник вывода кнопки, объединяющей несколько кнопок.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
 {

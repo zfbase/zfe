@@ -10,8 +10,6 @@
  * Скопирован без изменений с Zend_Auth_Adapter_Doctrine_Table
  * http://framework.zend.com/wiki/pages/viewpage.action?pageId=3866950
  * Единственное исправление – опечатка в комментарии к конструктору.
- *
- * @category  ZFE
  */
 class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
 {

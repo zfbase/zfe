@@ -6,8 +6,6 @@
 
 /**
  * Человеческое написание даты.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_DateForHuman extends Zend_View_Helper_Abstract
 {

@@ -9,8 +9,6 @@
  *
  * Зависимости:
  * # ZFE_Form_Helpers
- *
- * @category  ZFE
  */
 trait ZFE_Form_Helpers_Templates
 {

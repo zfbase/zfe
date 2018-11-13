@@ -7,9 +7,7 @@
 /**
  * Помощник отправки файла средствами веб-сервера Apache через авторизацию приложения.
  *
- * @category  ZFE
- *
- * @todo Переделать на получение параметром объекта соответствующего интерфейсу файла
+ * @todo Переделать на получение параметром объекта соответствующего интерфейсу файла.
  */
 class ZFE_Controller_Action_Helper_DownloadApache extends Zend_Controller_Action_Helper_Abstract
 {

@@ -6,8 +6,6 @@
 
 /**
  * Форма принудительной смены пароля.
- *
- * @category  ZFE
  */
 class ZFE_Form_Default_ForcePasswordChange extends ZFE_Form
 {

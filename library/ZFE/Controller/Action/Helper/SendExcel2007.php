@@ -8,8 +8,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet as PHPSpreadsheet;
 
 /**
  * Помощник отправки файла Excel из объекта PHPExcel.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_Helper_Abstract
 {

@@ -6,8 +6,6 @@
 
 /**
  * Управление пользователей своим профилем.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Default_Profile extends Controller_Abstract
 {

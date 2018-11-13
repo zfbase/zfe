@@ -6,8 +6,6 @@
 
 /**
  * Генератор ячейки заголовка сортируемого поля таблицы.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
 {

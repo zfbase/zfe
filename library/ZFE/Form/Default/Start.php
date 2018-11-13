@@ -6,8 +6,6 @@
 
 /**
  * Форма для создания первого пользователя системы.
- *
- * @category  ZFE
  */
 class ZFE_Form_Default_Start extends ZFE_Form_Default_Edit_Editor
 {

@@ -8,8 +8,6 @@
  * Помощник отображения пагинатора.
  *
  * При необходимости добавления
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
 {

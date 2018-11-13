@@ -6,8 +6,6 @@
 
 /**
  * Средства связи записей с их файлами.
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_Files
 {

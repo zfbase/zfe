@@ -5,9 +5,7 @@
  */
 
 /**
- * Стандартный контроллер Ajax-методов CkeditorCkeditor.
- *
- * @category  ZFE
+ * Стандартный контроллер Ajax-методов CKEditor.
  */
 class ZFE_Controller_Default_Ckeditor extends Controller_Abstract
 {

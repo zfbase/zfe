@@ -6,8 +6,6 @@
 
 /**
  * Рендер абстрактной вьюшки в собственной области видимости.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_AbstractPartial extends Zend_View_Helper_Partial
 {

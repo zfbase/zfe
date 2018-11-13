@@ -6,8 +6,6 @@
 
 /**
  * Форма авторизации на входе в систему.
- *
- * @category  ZFE
  */
 class ZFE_Form_Default_Login extends Zend_Form
 {

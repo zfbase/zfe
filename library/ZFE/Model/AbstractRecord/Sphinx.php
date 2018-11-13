@@ -6,8 +6,6 @@
 
 /**
  * Функционал для Sphinx.
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_Sphinx
 {

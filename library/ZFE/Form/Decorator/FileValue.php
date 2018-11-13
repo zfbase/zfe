@@ -6,8 +6,6 @@
 
 /**
  * Отображает загруженный файл и элементы управления им для элемента загрузки файла.
- *
- * @category  ZFE
  */
 class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
 {

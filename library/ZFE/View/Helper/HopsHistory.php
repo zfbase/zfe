@@ -6,8 +6,6 @@
 
 /**
  * Оператор истории переходов.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_HopsHistory extends Zend_View_Helper_Abstract
 {

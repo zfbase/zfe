@@ -10,8 +10,6 @@
  * В настоящей версии отсутствует поддержка модулей.
  * Генератор поддерживает синтаксис Zend_Navigation_Page.
  * Подробнее о возможностях генератора читайте в документации.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
 {

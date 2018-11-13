@@ -11,8 +11,6 @@
  * и в других местах, где используется автоматизированная работа с полями.
  *
  * Пример переопределения см. в ZFE_Model_Default_Editors
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_ServiceFields
 {

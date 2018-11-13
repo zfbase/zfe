@@ -9,8 +9,6 @@
  *
  * Основано на примере:
  * http://stackoverflow.com/questions/5209671/zend-framework-need-typical-example-of-acl
- *
- * @category  ZFE
  */
 class ZFE_Query extends Doctrine_Query
 {

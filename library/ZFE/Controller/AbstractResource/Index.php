@@ -6,8 +6,6 @@
 
 /**
  * Стандартные обработчики поиска по списку записей.
- *
- * @category  ZFE
  */
 trait ZFE_Controller_AbstractResource_Index
 {

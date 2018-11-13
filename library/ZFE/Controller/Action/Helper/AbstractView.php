@@ -6,8 +6,6 @@
 
 /**
  * Помощник использования абстрактных вьюшек.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Action_Helper_AbstractView extends Zend_Controller_Action_Helper_Abstract
 {

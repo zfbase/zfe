@@ -8,8 +8,6 @@
  * Базовая модель ресурса.
  *
  * Определяет основные и наиболее часто используемые операции над записями.
- *
- * @category  ZFE
  */
 abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
 {

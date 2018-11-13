@@ -6,8 +6,6 @@
 
 /**
  * Средство поиска и объединения дубликатов.
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_Duplicates
 {

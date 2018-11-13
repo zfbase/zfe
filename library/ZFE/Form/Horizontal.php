@@ -6,8 +6,6 @@
 
 /**
  * Базовая горизонтальная форма ZFE.
- *
- * @category  ZFE
  */
 class ZFE_Form_Horizontal extends Twitter_Bootstrap3_Form_Horizontal
 {

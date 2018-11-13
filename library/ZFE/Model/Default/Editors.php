@@ -6,8 +6,6 @@
 
 /**
  * Стандартная модель редакторов.
- *
- * @category  ZFE
  */
 abstract class ZFE_Model_Default_Editors extends BaseEditors
 {

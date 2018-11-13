@@ -6,8 +6,6 @@
 
 /**
  * Расширение группы элементов.
- *
- * @category  ZFE
  */
 class ZFE_Form_Decorator_Fieldset extends Zend_Form_Decorator_Fieldset
 {

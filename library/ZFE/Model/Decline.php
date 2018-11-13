@@ -6,8 +6,6 @@
 
 /**
  * Склонения сообщений.
- *
- * @category  ZFE
  */
 trait ZFE_Model_Decline
 {

@@ -6,8 +6,6 @@
 
 /**
  * Генератор ячейки с информацией о последнем изменении записи.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_LastEditedCell extends Zend_View_Helper_Abstract
 {

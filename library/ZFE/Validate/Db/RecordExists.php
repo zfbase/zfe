@@ -6,8 +6,6 @@
 
 /**
  * Валидатор наличия в БД записи средствами Doctrine.
- *
- * @category  ZFE
  */
 class ZFE_Validate_Db_RecordExists extends ZFE_Validate_Db_Abstract
 {

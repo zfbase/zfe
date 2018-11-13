@@ -8,8 +8,6 @@
  * Фильтрация времени.
  *
  * Необходима для работы элемента формы HTML5.
- *
- * @category  ZFE
  */
 class ZFE_Filter_Time implements Zend_Filter_Interface
 {

@@ -6,8 +6,6 @@
 
 /**
  * Форматировщик массивов.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_FormatArray extends Zend_View_Helper_Abstract
 {

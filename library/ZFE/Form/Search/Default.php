@@ -6,8 +6,6 @@
 
 /**
  * Стандартный поиск по записям модели для списка записей.
- *
- * @category  ZFE
  */
 class ZFE_Form_Search_Default extends ZFE_Form_Search_AbstractInline
 {

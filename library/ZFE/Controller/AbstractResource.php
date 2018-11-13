@@ -7,8 +7,6 @@
 /**
  * Основной базовый контроллер приложения,
  * определяющий типовой порядок управления ресурсами.
- *
- * @category  ZFE
  */
 abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 {

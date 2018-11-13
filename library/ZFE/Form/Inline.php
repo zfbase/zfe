@@ -6,8 +6,6 @@
 
 /**
  * Базовая строковая форма ZFE.
- *
- * @category  ZFE
  */
 class ZFE_Form_Inline extends Twitter_Bootstrap3_Form_Inline
 {

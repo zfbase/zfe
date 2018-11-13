@@ -6,8 +6,6 @@
 
 /**
  * Модификация Doctrine_Table для авто генерации элементов форм.
- *
- * @category  ZFE
  */
 class ZFE_Model_Table extends Doctrine_Table
 {

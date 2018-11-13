@@ -6,8 +6,6 @@
 
 /**
  * Форма редактирования пользователей.
- *
- * @category  ZFE
  */
 class ZFE_Form_Default_Edit_Editor extends ZFE_Form_Edit_AutoGeneration
 {

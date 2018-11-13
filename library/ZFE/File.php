@@ -6,8 +6,6 @@
 
 /**
  * Библиотека по работе с файлами.
- *
- * @category  ZFE
  */
 class ZFE_File
 {

@@ -6,8 +6,6 @@
 
 /**
  * Генератор списка значений поля коллекции записей.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_ShowTitles
 {

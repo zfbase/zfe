@@ -10,8 +10,6 @@
  * Зависимости:
  * # ZFE_Form_Helpers
  * # ZFE_Form_Helpers_Templates
- *
- * @category  ZFE
  */
 trait ZFE_Form_Helpers_Frequent
 {

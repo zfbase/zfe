@@ -6,8 +6,6 @@
 
 /**
  * Помощник отправки файла средствами веб-сервера через авторизацию приложения.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helper_Abstract
 {

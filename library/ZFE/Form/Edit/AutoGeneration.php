@@ -9,8 +9,6 @@
  *
  * Зависимости
  * # ZFE_Form_Helpers_Generator
- *
- * @category  ZFE
  */
 class ZFE_Form_Edit_AutoGeneration extends ZFE_Form_Horizontal
 {

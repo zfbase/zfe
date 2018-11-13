@@ -6,8 +6,6 @@
 
 /**
  * Шаблон поисковой формы.
- *
- * @category  ZFE
  */
 abstract class ZFE_Form_Search_AbstractInline extends ZFE_Form_Inline
 {

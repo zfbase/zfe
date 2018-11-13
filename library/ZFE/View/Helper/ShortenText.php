@@ -6,8 +6,6 @@
 
 /**
  * Укоротитель текста до определенного размера.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_ShortenText extends Zend_View_Helper_Abstract
 {

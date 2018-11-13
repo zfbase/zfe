@@ -7,8 +7,6 @@
 /**
  * Валидатор URL.
  *
- * @category  ZFE
- *
  * @author    Diego Perini <diego.perini@gmail.com>
  * @author    Ilya Serdyuk <ilya@serdyuk.pro>
  */

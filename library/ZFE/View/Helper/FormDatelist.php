@@ -6,8 +6,6 @@
 
 /**
  * Элемент формы для перечисления дат.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
 {

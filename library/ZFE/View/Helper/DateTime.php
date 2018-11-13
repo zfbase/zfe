@@ -6,8 +6,6 @@
 
 /**
  * Форматирование даты и времени.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_DateTime extends Zend_View_Helper_Abstract
 {

@@ -6,8 +6,6 @@
 
 /**
  * Исключение области форм ZFE.
- *
- * @category  ZFE
  */
 class ZFE_Form_Exception extends ZFE_Exception
 {

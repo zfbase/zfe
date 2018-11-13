@@ -6,8 +6,6 @@
 
 /**
  * Кнопки для перехода к предыдущему и следующему результату поиска.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
 {

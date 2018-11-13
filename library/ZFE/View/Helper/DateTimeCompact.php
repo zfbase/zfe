@@ -6,8 +6,6 @@
 
 /**
  * Помощник преобразования системной даты и времени в удобную для человека короткую запись.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_DateTimeCompact extends Zend_View_Helper_Abstract
 {

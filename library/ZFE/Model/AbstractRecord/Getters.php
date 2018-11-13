@@ -6,8 +6,6 @@
 
 /**
  * Геттеры данных модели и записи.
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_Getters
 {

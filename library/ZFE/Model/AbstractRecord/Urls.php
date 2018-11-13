@@ -6,8 +6,6 @@
 
 /**
  * Генераторы адресов модели.
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_Urls
 {

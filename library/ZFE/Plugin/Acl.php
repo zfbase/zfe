@@ -5,9 +5,7 @@
  */
 
 /**
- * Плагин авторизации и расделения прав.
- *
- * @category  ZFE
+ * Плагин авторизации и разделения прав.
  */
 class ZFE_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 {

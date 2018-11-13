@@ -6,8 +6,6 @@
 
 /**
  * Поддержка multiCheckbox и multiSelect.
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
 {

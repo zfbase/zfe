@@ -6,8 +6,6 @@
 
 /**
  * Утилиты.
- *
- * @category  ZFE
  */
 class ZFE_Utilites
 {

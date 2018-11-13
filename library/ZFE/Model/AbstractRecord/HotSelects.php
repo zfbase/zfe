@@ -6,8 +6,6 @@
 
 /**
  * Статические методы для наиболее частых выборок.
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_HotSelects
 {

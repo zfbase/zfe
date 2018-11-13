@@ -6,8 +6,6 @@
 
 /**
  * Управление редакторами.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Default_Editors extends Controller_AbstractResource
 {

@@ -6,8 +6,6 @@
 
 /**
  * Стандартные обработчики удаления и восстановления записи.
- *
- * @category  ZFE
  */
 trait ZFE_Controller_AbstractResource_Merge
 {

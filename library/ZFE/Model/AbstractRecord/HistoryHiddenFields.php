@@ -8,8 +8,6 @@
  * Управление списком полей модели, для которых в истории скрываются значения.
  *
  * Пример переопределения см. в ZFE_Model_Default_Editors
- *
- * @category  ZFE
  */
 trait ZFE_Model_AbstractRecord_HistoryHiddenFields
 {

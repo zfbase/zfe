@@ -6,8 +6,6 @@
 
 /**
  * Менеджер нотификаций.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper_Abstract
 {

@@ -6,8 +6,6 @@
 
 /**
  * Помощник отправки файла Word из объекта PHPWord.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Action_Helper_SendWord2007 extends Zend_Controller_Action_Helper_Abstract
 {

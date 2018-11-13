@@ -6,8 +6,6 @@
 
 /**
  * Обработка ошибок.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Default_Error extends Controller_Abstract
 {

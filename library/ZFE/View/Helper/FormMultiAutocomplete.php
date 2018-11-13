@@ -8,8 +8,6 @@
  * Элемент формы автокомплита нескольких значений.
  *
  * Для использование своего JS-обработчика на клиенте, необходимо передать класс custom-engine.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
 {

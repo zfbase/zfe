@@ -6,8 +6,6 @@
 
 /**
  * Модификация Doctrine_Collection.
- *
- * @category  ZFE
  */
 class ZFE_Model_Collection extends Doctrine_Collection
 {

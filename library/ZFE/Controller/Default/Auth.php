@@ -6,8 +6,6 @@
 
 /**
  * Контроллер авторизации.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Default_Auth extends Controller_Abstract
 {

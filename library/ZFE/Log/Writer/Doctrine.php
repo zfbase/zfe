@@ -6,8 +6,6 @@
 
 /**
  * Писатель логов в Doctrine.
- *
- * @category  ZFE
  */
 class ZFE_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
 {

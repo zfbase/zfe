@@ -9,8 +9,6 @@
  *
  * Поддерживаются названия цветов и HEX.
  * HEX должен начинаться с символа # и содержать 3 или 6 символов.
- *
- * @category  ZFE
  */
 class ZFE_Validate_Color extends Zend_Validate_Abstract
 {

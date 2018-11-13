@@ -6,8 +6,6 @@
 
 /**
  * Валидатор отсутствия в БД записи средствами Doctrine.
- *
- * @category  ZFE
  */
 class ZFE_Validate_Db_NoRecordExists extends ZFE_Validate_Db_Abstract
 {

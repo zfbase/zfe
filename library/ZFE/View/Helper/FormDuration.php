@@ -6,8 +6,6 @@
 
 /**
  * Элемент формы для продолжительности в секундах.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_FormDuration extends Twitter_Bootstrap3_View_Helper_FormText
 {

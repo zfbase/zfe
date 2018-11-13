@@ -6,8 +6,6 @@
 
 /**
  * Стандартный ZFE Bootstrap.
- *
- * @category  ZFE
  */
 class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {

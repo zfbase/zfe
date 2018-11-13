@@ -6,8 +6,6 @@
 
 /**
  * Вывод сведений о создании и последнем редактирование записи.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
 {

@@ -6,8 +6,6 @@
 
 /**
  * Автоматическое форматирование значения по ключевым префиксам названия.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
 {

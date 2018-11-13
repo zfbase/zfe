@@ -7,9 +7,7 @@
 /**
  * Помощник подключения таблиц стилей.
  *
- * @deprecated Используй webpack для сборки всех JS и CSS
- *
- * @category  ZFE
+ * @deprecated Используй webpack для сборки всех JS и CSS.
  */
 class ZFE_Controller_Action_Helper_AttachStylesheet extends Zend_Controller_Action_Helper_Abstract
 {

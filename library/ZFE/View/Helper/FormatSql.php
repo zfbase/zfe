@@ -6,8 +6,6 @@
 
 /**
  * Форматировщик текстов SQL- запросов.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_FormatSql extends Zend_View_Helper_Abstract
 {

@@ -6,8 +6,6 @@
 
 /**
  * Форма поиска записей истории.
- *
- * @category  ZFE
  */
 class ZFE_Form_Default_Search_History extends ZFE_Form_Inline
 {

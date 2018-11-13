@@ -6,8 +6,6 @@
 
 /**
  * Расширенные возможности форм.
- *
- * @category  ZFE
  */
 trait ZFE_Form_Extensions
 {

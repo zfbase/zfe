@@ -6,8 +6,6 @@
 
 /**
  * Декоратор, который решит проблему с autocomplete="off" там, где это потребуется.
- *
- * @category  ZFE
  */
 class ZFE_Form_Decorator_AutocompleteOff extends Zend_Form_Decorator_Abstract
 {

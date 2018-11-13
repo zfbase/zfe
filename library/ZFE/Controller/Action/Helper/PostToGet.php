@@ -6,8 +6,6 @@
 
 /**
  * Помощник преобразования POST- данные в ЧПУ.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Action_Helper_PostToGet extends Zend_Controller_Action_Helper_Abstract
 {

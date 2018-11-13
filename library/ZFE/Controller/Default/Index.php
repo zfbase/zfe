@@ -6,8 +6,6 @@
 
 /**
  * Стартовый экран для авторизованного пользователя.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Default_Index extends Controller_Abstract
 {

@@ -6,8 +6,6 @@
 
 /**
  * Просмотр истории.
- *
- * @category  ZFE
  */
 class ZFE_Controller_Default_History extends Controller_AbstractResource
 {

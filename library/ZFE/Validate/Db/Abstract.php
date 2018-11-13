@@ -6,8 +6,6 @@
 
 /**
  * Абстрактный валидатор наличия записи в БД через Doctrine.
- *
- * @category  ZFE
  */
 abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
 {

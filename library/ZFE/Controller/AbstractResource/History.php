@@ -6,8 +6,6 @@
 
 /**
  * Работа с историей.
- *
- * @category  ZFE
  */
 trait ZFE_Controller_AbstractResource_History
 {

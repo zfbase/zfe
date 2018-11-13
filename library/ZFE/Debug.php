@@ -6,8 +6,6 @@
 
 /**
  * Расширение Zend_Debug для сворачивая вложенных уровней кода.
- *
- * @category  ZFE
  */
 class ZFE_Debug extends Zend_Debug
 {

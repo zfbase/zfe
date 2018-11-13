@@ -6,8 +6,6 @@
 
 /**
  * Вывод нотификаций.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_Notices extends Zend_View_Helper_Abstract
 {

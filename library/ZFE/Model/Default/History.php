@@ -6,8 +6,6 @@
 
 /**
  * Стандартная модель истории.
- *
- * @category  ZFE
  */
 abstract class ZFE_Model_Default_History extends BaseHistory
 {

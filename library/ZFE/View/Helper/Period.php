@@ -6,8 +6,6 @@
 
 /**
  * Форматировать период.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_Period extends Zend_View_Helper_Abstract
 {

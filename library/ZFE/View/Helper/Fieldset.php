@@ -6,8 +6,6 @@
 
 /**
  * Группа элементов формы.
- *
- * @category  ZFE
  */
 class ZFE_View_Helper_Fieldset extends Zend_View_Helper_FormElement
 {

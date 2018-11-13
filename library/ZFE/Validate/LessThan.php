@@ -11,8 +11,6 @@
  *
  * @see Zend/Validate/LessThan.php
  * @see Zend/Validate/Between.php
- *
- * @category  ZFE
  */
 class ZFE_Validate_LessThan extends Zend_Validate_Abstract
 {
