@@ -38,14 +38,23 @@ class ZFEMultiAutocomplete {
     if (!this.settings.sourceUrl) {
       throw new Error(`No sourceUrl specified for zfeMultiAutocomplete name=${this.settings.name}`);
     }
+
+    this.replaceFeedback();
+
     if (this.isDisabled()) {
       return;
     }
+    
     this.startSortable();
     this.initBloodhound();
     this.initTypeahead();
     this.initHandlers();
     this.renderItems();
+  }
+
+  replaceFeedback() { // @todo Хорошо бы делать на сервере, а не при клиенте
+    this.group.closest('.has-feedback').find('.form-control-feedback')
+      .appendTo(this.group.find('.tt-icon-right'));
   }
 
   isDisabled() {
