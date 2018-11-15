@@ -6,6 +6,8 @@
 
 /**
  * Стандартные обработчики поиска по списку записей.
+ *
+ * @deprecated 1.30.0
  */
 trait ZFE_Controller_AbstractResource_Index
 {
@@ -179,6 +181,9 @@ trait ZFE_Controller_AbstractResource_Index
         $this->_searchPages($q);
 
         $this->view->items = ZFE_Paginator::execute($q);
+
+        trigger_error('Трейт ZFE_Controller_AbstractResource_Index устарел. '
+                    . 'Используйте современное решение с ZFE_Searcher_Sphinx. ', E_USER_DEPRECATED);
     }
 
     /**

@@ -8,6 +8,8 @@ use Foolz\SphinxQL\SphinxQL;
 
 /**
  * Основной базовый контроллер приложения, для поддержки работы со Sphinx.
+ *
+ * @deprecated 1.30.0
  */
 abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_AbstractResource
 {
@@ -54,6 +56,9 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
         } else {
             $this->view->items = [];
         }
+
+        trigger_error('Класс ZFE_Controller_AbstractResourceSphinx устарел. '
+                    . 'Используйте современное решение с ZFE_Searcher_Sphinx. ', E_USER_DEPRECATED);
     }
 
     /**

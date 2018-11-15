@@ -11,11 +11,18 @@
 abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 {
     /**
-     * Класс основной модели объекта.
+     * Класс модели основного объекта.
      *
      * @var string
      */
     protected static $_modelName;
+
+    /**
+     * Класс главной поисковой формы (indexAction).
+     *
+     * @var string
+     */
+    protected static $_searchFormName = 'ZFE_Form_Search_Default';
 
     /**
      * Включенные стандартные экшены.
@@ -40,6 +47,29 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
      */
     protected static $_readonly = false;
 
+    /**
+     * Поисковой движок основной модели.
+     *
+     * @var ZFE_Searcher_Interface
+     */
+    protected static $_searcher;
+
+    /**
+     * Получить настроенный поисковой движок основной модели.
+     *
+     * @return ZFE_Searcher_Interface
+     */
+    public static function getSearcher()
+    {
+        if ( ! static::$_searcher) {
+            static::$_searcher = new ZFE_Searcher_Default(static::$_modelName);
+        }
+        return static::$_searcher;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function init()
     {
         parent::init();
@@ -62,7 +92,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
     }
 
     /**
-     * Выполняется до того, как диспетчером будет вызвано действие.
+     * {@inheritdoc}
      */
     public function preDispatch()
     {
@@ -105,13 +135,45 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
     }
 
     /**
-     * Выполняется после того, как диспетчером будет вызвано действие.
+     * {@inheritdoc}
      */
     public function postDispatch()
     {
         $this->_helper->abstractView();
 
         parent::postDispatch();
+    }
+
+    /**
+     * Главная страница модели с просмотром перечня и поиском по модели.
+     *
+     * @return ZFE_Searcher_Interface
+     */
+    public function indexAction()
+    {
+        if ( ! in_array('index', static::$_enableActions, true)) {
+            $this->abort(404);
+        }
+
+        $this->_helper->postToGet();
+
+        $rowParams = $this->getAllParams();
+
+        if ( ! empty(static::$_searchFormName)) {
+            $searchForm = new static::$_searchFormName();
+            if ('1' === $this->getParam('deleted')) {
+                $searchForm->addElement('hidden', 'deleted', ['value' => 1]);
+            }
+            $searchForm->setAction((static::$_modelName)::getIndexUrl());
+            $searchForm->populate($rowParams);
+            $this->view->searchForm = $searchForm;
+
+            $params = array_merge($rowParams, $searchForm->getValues());
+        } else {
+            $params = $rowParams;
+        }
+
+        $this->view->items = static::getSearcher()->search($params);
     }
 
     /**
@@ -124,7 +186,6 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         return static::$_modelName;
     }
 
-    use ZFE_Controller_AbstractResource_Index;
     use ZFE_Controller_AbstractResource_Edit;
     use ZFE_Controller_AbstractResource_Delete;
     use ZFE_Controller_AbstractResource_History;

@@ -22,7 +22,7 @@ class ZFE_Sphinx_Paginator extends ZFE_Paginator
 
         if (null !== $count) {
             $instance->_pager = new ZFE_Sphinx_Fake_Pager(
-                new ZFE_Sphinx_FakeQuery(),
+                new ZFE_Sphinx_Fake_Query(),
                 $instance->getPageNumber(),
                 $instance->_itemsPerPage,
                 $count
