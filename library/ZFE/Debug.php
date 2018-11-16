@@ -56,4 +56,32 @@ class ZFE_Debug extends Zend_Debug
 
         return $output;
     }
+
+    /**
+     * Помощник для распечатки текущей строчки.
+     *
+     * @param boolean $echo Вывести на экран вместо возвращения?
+     * @param boolean $exit Завершить выполнение?
+     * @return string
+     */
+    public static function trace($echo = true, $exit = false)
+    {
+        list($place) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+
+        if ('cli' === self::getSapi()) {
+            $output = PHP_EOL . $place['file'] . ':' . $place['line'] . PHP_EOL;
+        } else {
+            $output = '<pre>' . $place['file'] . ':' . $place['line'] . '</pre>';
+        }
+
+        if ($echo) {
+            echo($output);
+        }
+        
+        if ($exit) {
+            exit;
+        }
+
+        return $output;
+    }
 }
