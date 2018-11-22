@@ -138,7 +138,15 @@ class ZFE_Sphinx
     {
         $config = static::config();
         $config_path = realpath($config->config);
-        $plain_config = file_get_contents($config_path);
+        if (is_array($config_path)) {
+            $plain_config = '';
+            foreach ($config_path as $path) {
+                $plain_config .= file_get_contents($config_path);
+            }
+        } else {
+            $plain_config = file_get_contents($config_path);
+        }
+        
         $tokens = \LTDBeget\sphinx\Tokenizer::tokenize($plain_config);
 
         foreach ($tokens as $token) {
