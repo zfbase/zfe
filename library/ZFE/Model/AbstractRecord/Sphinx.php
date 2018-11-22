@@ -88,7 +88,11 @@ trait ZFE_Model_AbstractRecord_Sphinx
         if (empty(static::$_sphinxIndexSqlPath[$model])) {
             $indexName = static::getSphinxIndexName();
             $config = ZFE_Sphinx::config();
-            $path = $config->sqlPath . DIRECTORY_SEPARATOR . $indexName . '.sql';
+            if (empty($config->sqlQuery->$model)) {
+                $path = $config->sqlPath . DIRECTORY_SEPARATOR . $indexName . '.sql';
+            } else {
+                $path = $config->sqlQuery->$model;
+            }
             if ( ! file_exists($path)) {
                 throw new ZFE_Exception("SQL-запрос {$path} не найден.");
             }
