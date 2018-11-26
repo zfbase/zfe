@@ -91,7 +91,21 @@ class ZFEMultiAutocomplete {
     });
   }
 
+  hasElement(id) {
+    let result = false;
+    this.wrap.find('.linked-entity').each((i, entryDom) => {
+      if (id == $(entryDom).find('[name*="\[id\]"]').val()) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
   addElement(title, id, data = {}, replace = null) {
+    if (this.hasElement(id)) {
+      return;
+    }
+
     const priority = this.wrap.children().length + 1;
     const linkedEntity = $('<div class="linked-entity" />').data(data);
     const inputs = $('<div class="inputs" />').appendTo(linkedEntity);
