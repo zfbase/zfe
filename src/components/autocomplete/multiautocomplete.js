@@ -12,18 +12,18 @@ const defaults = {
 
 class ZFEMultiAutocomplete {
   constructor(element, options) {
-    this.input = $(element);
-    this.group = this.input.closest('.multiac-wrap');
-    this.wrap = this.group.find('.multiac-linked-wrap');
+    this.$input = $(element);
+    this.$group = this.$input.closest('.multiac-wrap');
+    this.$wrap = this.$group.find('.multiac-linked-wrap');
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
   }
 
   dataAttrOptions() {
-    const { input } = this;
-    const data = input.data();
-    const name = input.attr('name');
-    input.removeAttr('name');
+    const { $input } = this;
+    const data = $input.data();
+    const name = $input.attr('name');
+    $input.removeAttr('name');
     return {
       canCreate: data.create === 'allow',
       editUrl: data.editUrl,
@@ -53,24 +53,24 @@ class ZFEMultiAutocomplete {
   }
 
   replaceFeedback() { // @todo Хорошо бы делать на сервере, а не при клиенте
-    this.group.closest('.has-feedback').find('.form-control-feedback')
-      .appendTo(this.group.find('.tt-icon-right'));
+    this.$group.closest('.has-feedback').find('.form-control-feedback')
+      .appendTo(this.$group.find('.tt-icon-right'));
   }
 
   isDisabled() {
-    return this.wrap.hasClass('disabled');
+    return this.$wrap.hasClass('disabled');
   }
 
   startSortable() {
-    sortable(this.wrap);
-    this.wrap.on('dragstart.h5s', (e) => {
+    sortable(this.$wrap);
+    this.$wrap.on('dragstart.h5s', (e) => {
       this.placeholderWidth = $(e.target).width();
     }).on('dragenter.h5s', () => {
-      $('.sortable-placeholder', this.wrap)
+      $('.sortable-placeholder', this.$wrap)
         .css({ width: this.placeholderWidth });
     }).on('sortupdate', (e) => {
       $('.linked-entity input[name$="\\[priority\\]"]', $(e.target))
-        .each((priority, input) => $(input).val(priority + 1));
+        .each((priority, $input) => $($input).val(priority + 1));
     })
       .trigger('sortupdate');
   }
@@ -80,21 +80,21 @@ class ZFEMultiAutocomplete {
     if (!renderItem) {
       return;
     }
-    this.wrap.find('.linked-entity').each((i, el) => {
-      const item = $(el);
-      const title = item.find('.title');
+    this.$wrap.find('.linked-entity').each((i, entityDom) => {
+      const $item = $(entityDom);
+      const $title = $item.find('.title');
       const data = {
-        title: title.text(),
-        ...item.data(),
+        title: $title.text(),
+        ...$item.data(),
       };
-      title.replaceWith(renderItem(data));
+      $title.replaceWith(renderItem(data));
     });
   }
 
   hasElement(id) {
     let result = false;
-    this.wrap.find('.linked-entity').each((i, entryDom) => {
-      if (id == $(entryDom).find('[name*="\[id\]"]').val()) {
+    this.$wrap.find('.linked-entity').each((i, entityDom) => {
+      if (id == $(entityDom).find('[name*="\[id\]"]').val()) {
         result = true;
       }
     });
@@ -106,62 +106,62 @@ class ZFEMultiAutocomplete {
       return;
     }
 
-    const priority = this.wrap.children().length + 1;
-    const linkedEntity = $('<div class="linked-entity" />').data(data);
-    const inputs = $('<div class="inputs" />').appendTo(linkedEntity);
+    const priority = this.$wrap.children().length + 1;
+    const $linkedEntity = $('<div class="linked-entity" />').data(data);
+    const $inputs = $('<div class="inputs" />').appendTo($linkedEntity);
     const { name, templates } = this.settings;
 
     if (!id) {
-      linkedEntity.addClass('linked-entity-new');
+      $linkedEntity.addClass('linked-entity-new');
     }
 
     $(`<input type="hidden" name="${name}[${priority}][id]"/>`)
       .attr('value', id || '')
-      .appendTo(inputs);
+      .appendTo($inputs);
     $(`<input type="hidden" name="${name}[${priority}][title]"/>`)
       .attr('value', title)
-      .appendTo(inputs);
+      .appendTo($inputs);
     $(`<input type="hidden" name="${name}[${priority}][priority]"/>`)
       .attr('value', priority)
-      .appendTo(inputs);
+      .appendTo($inputs);
     if (templates.item) {
       $(templates.item({ ...data, title, id }))
-        .appendTo(linkedEntity);
+        .appendTo($linkedEntity);
     } else {
       $('<div class="title"/>')
         .text(title)
-        .appendTo(linkedEntity);
+        .appendTo($linkedEntity);
     }
 
     if (this.settings.editUrl) {
       $('<div class="btn btn-edit">...</div>')
-        .appendTo(linkedEntity);
-    } else if (this.wrap.data('itemform')) {
+        .appendTo($linkedEntity);
+    } else if (this.$wrap.data('itemform')) {
       $('<a class="btn btn-form" target="_blank"/>')
-        .attr('href', this.wrap.data('itemform').replace('%d', id))
+        .attr('href', this.$wrap.data('itemform').replace('%d', id))
         .append('<span class="glyphicon glyphicon-share-alt"/>')
-        .appendTo(linkedEntity);
+        .appendTo($linkedEntity);
     }
 
     $('<div class="btn btn-remove"/>')
       .append('<span class="glyphicon glyphicon-remove"/>')
-      .appendTo(linkedEntity);
+      .appendTo($linkedEntity);
 
     if (replace) {
-      replace.replaceWith(linkedEntity);
+      replace.replaceWith($linkedEntity);
     } else {
-      linkedEntity.appendTo(this.wrap);
+      $linkedEntity.appendTo(this.$wrap);
     }
 
     // Переподключаем сортировку
-    sortable(this.wrap, 'destroy');
+    sortable(this.$wrap, 'destroy');
     this.startSortable();
     this.onChange();
   }
 
   initBloodhound() {
     const { minLength, sourceUrl } = this.settings;
-    const { wrap } = this;
+    const { $wrap } = this;
     this.engine = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -177,7 +177,7 @@ class ZFEMultiAutocomplete {
           }
 
           const ids = [];
-          $("input[name$='[id]']", wrap).each((i, el) => {
+          $("input[name$='[id]']", $wrap).each((i, el) => {
             const val = $(el).val();
             if (val) {
               ids.push(val);
@@ -217,68 +217,68 @@ class ZFEMultiAutocomplete {
         },
       });
     }
-    this.input.typeahead({
+    this.$input.typeahead({
       minLength: 0, // проверка переезжает в Bloodhound
       highlight: true,
     }, datasetSettings);
-    this.input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
+    this.$input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
   }
 
   initHandlers() {
-    const { input, group, wrap } = this;
+    const { $input, $group, $wrap } = this;
     const { canCreate } = this.settings;
 
     // Обработка клика по иконке
-    $('i', group).on('click', () => {
-      input.trigger($.Event('keydown', { keyCode: keyCode.DOWN }));
-      input.focus();
+    $('i', $group).on('click', () => {
+      $input.trigger($.Event('keydown', { keyCode: keyCode.DOWN }));
+      $input.focus();
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
-    input.on('typeahead:closed', (e) => {
+    $input.on('typeahead:closed', (e) => {
       if (e.keyCode !== keyCode.ESCAPE) {
-        const newValue = $.trim(input.typeahead('val'));
+        const newValue = $.trim($input.typeahead('val'));
         if (newValue !== '' && canCreate) {
           this.addElement(newValue);
         }
       }
 
-      input.typeahead('val', '');
+      $input.typeahead('val', '');
       e.preventDefault();
     });
 
-    input.on('keypress', (e) => {
+    $input.on('keypress', (e) => {
       if (e.keyCode === keyCode.ENTER) {
-        input.trigger('typeahead:closed');
+        $input.trigger('typeahead:closed');
         e.preventDefault();
       }
     });
 
     // Выбор значения из списка
-    input.on('typeahead:selected', (e, selected) => {
+    $input.on('typeahead:selected', (e, selected) => {
       const { key, value, ...rest } = selected;
       this.addElement(value, key, rest);
-      input.typeahead('val', '');
+      $input.typeahead('val', '');
       e.preventDefault();
     });
 
     // Навешиваем на все существующие и будущие кнопки удаления соответствующий метод
-    wrap.on('click', '.btn-remove', (e) => {
+    $wrap.on('click', '.btn-remove', (e) => {
       $(e.currentTarget).closest('.linked-entity').remove();
       e.preventDefault();
       this.onChange();
     });
 
-    wrap.on('click', '.btn-edit', (e) => {
+    $wrap.on('click', '.btn-edit', (e) => {
       e.preventDefault();
-      const item = $(e.currentTarget).closest('.linked-entity');
-      const id = item.find('input[name*="[id]"]').val();
+      const $item = $(e.currentTarget).closest('.linked-entity');
+      const id = $item.find('input[name*="[id]"]').val();
       showEditModal({
         url: this.settings.editUrl + (id ? `/id/${id}` : ''),
-        data: { title: item.find('.title').text() },
+        data: { title: $item.find('.title').text() },
         callback: ({ id: newId, title, ...data }) => {
           if (id !== data.id) {
-            this.addElement(title, newId, data, item);
+            this.addElement(title, newId, data, $item);
           }
         },
       });
@@ -291,7 +291,7 @@ class ZFEMultiAutocomplete {
 
   currentValue() {
     const values = {};
-    this.wrap.find('input').each((i, el) => {
+    this.$wrap.find('input').each((i, el) => {
       const [, n, key] = el.name.split(/[\[\]]+/);
       if (!values[n]) {
         values[n] = {};
@@ -302,7 +302,7 @@ class ZFEMultiAutocomplete {
   }
 
   onChange() {
-    this.input.trigger('zfe.ac.change', [this.currentValue()]);
+    this.$input.trigger('zfe.ac.change', [this.currentValue()]);
   }
 }
 
