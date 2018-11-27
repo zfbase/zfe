@@ -221,7 +221,7 @@ class ZFEMultiAutocomplete {
       minLength: 0, // проверка переезжает в Bloodhound
       highlight: true,
     }, datasetSettings);
-    this.$input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
+    //this.$input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
   }
 
   initHandlers() {
