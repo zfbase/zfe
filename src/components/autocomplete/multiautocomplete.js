@@ -103,7 +103,7 @@ class ZFEMultiAutocomplete {
 
   addElement(title, id, data = {}, replace = null) {
     if (this.hasElement(id)) {
-      return;
+      return this.$wrap.find(`.linked-entity:has([name*="\[id\]"][value=${id}])`);
     }
 
     const priority = this.$wrap.children().length + 1;
@@ -157,6 +157,8 @@ class ZFEMultiAutocomplete {
     sortable(this.$wrap, 'destroy');
     this.startSortable();
     this.onChange();
+
+    return $linkedEntity;
   }
 
   initBloodhound() {
@@ -286,7 +288,7 @@ class ZFEMultiAutocomplete {
   }
 
   addValue(id, title, data = {}) {
-    this.addElement(title, id, data);
+    return this.addElement(title, id, data);
   }
 
   currentValue() {
@@ -307,13 +309,20 @@ class ZFEMultiAutocomplete {
 }
 
 $.fn[pluginName] = function zfeMultiAutocomplete(options, ...args) {
-  return this.each((i, el) => {
+  let results = [];
+  const $elements = this.each((i, el) => {
     if (!$.data(el, `plugin_${pluginName}`)) {
       $.data(el, `plugin_${pluginName}`, new ZFEMultiAutocomplete(el, options));
     }
     const item = $.data(el, `plugin_${pluginName}`);
     if (typeof options === 'string' && typeof item[options] === 'function') {
-      item[options](...args);
+      results.push(item[options](...args));
     }
   });
+
+  switch (results.length) {
+    case 0: return $elements;
+    case 1: return results.pop();
+    default: return results;
+  }
 };
