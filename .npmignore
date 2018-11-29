@@ -1,7 +1,0 @@
-.php_cs
-composer.json
-composer.lock
-library
-resources
-tests
-vendor
