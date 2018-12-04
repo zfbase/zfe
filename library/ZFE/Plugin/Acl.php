@@ -44,7 +44,7 @@ class ZFE_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $controller = $request->getControllerName();
         $action = $request->getActionName();
 
-        if ( ! $this->isAllowed($controller, $action)) {
+        if (! $this->isAllowed($controller, $action)) {
             $this->_attack($request);
         }
     }
@@ -59,6 +59,9 @@ class ZFE_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      */
     public function isAllowed($resource, $privilege = null)
     {
+        if (!$this->_acl->has($resource)) {
+            throw new Zend_Controller_Action_Exception("Ресурс {$resource} не найден", 404);
+        }
         return $this->_acl->isAllowedMe($resource, $privilege);
     }
 
@@ -75,7 +78,7 @@ class ZFE_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             $request->setControllerName('auth');
             $request->setActionName('login');
         } else {
-            throw new Exception('Доступ запрещен');
+            throw new Zend_Controller_Action_Exception('Доступ запрещён', 403);
         }
     }
 }

@@ -33,12 +33,19 @@ class ZFE_Controller_Default_Error extends Controller_Abstract
                 break;
             default:
                 $code = 500;
+                $this->view->message = 'Ошибка приложения';
                 if ($errors->exception instanceof Zend_Controller_Exception) {
                     $code = $errors->exception->getCode();
+                    switch ($code) {
+                        case 401:
+                        case 403:
+                            $this->view->message = 'Ошибка доступа';
+                            break;
+                        default:
+                    }
                 }
                 $this->getResponse()->setHttpResponseCode($code);
                 $priority = Zend_Log::CRIT;
-                $this->view->message = 'Ошибка приложения';
                 break;
         }
 
