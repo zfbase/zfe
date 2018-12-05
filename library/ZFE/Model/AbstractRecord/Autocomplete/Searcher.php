@@ -82,7 +82,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
             $q->where('attr_status', 0);
         }
 
-        if ( ! empty($params['term']) && $term = trim($params['term'])) {
+        if (! empty($params['term']) && $term = trim($params['term'])) {
             $q->match('*', $term);
         } else {
             $term = null;
@@ -128,7 +128,12 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
             $safeTerm = addcslashes($term, '%_\'\\');
 
             $q->addWhere(static::$titleField . " LIKE ? ESCAPE '\\\\'", '%' . $safeTerm . '%');
-            $q->orderBy("CASE WHEN title LIKE '{$safeTerm}%' ESCAPE '\\\\' THEN 0 ELSE 1 END");
+            // Кажется, парсер Доктрины неверно обрабатывает параметр со скобкой.
+            // Например, LIKE '(%' превращается в LIKE '(%)
+            // скобка вместо кавычки
+            if (strpos($safeTerm, '(') === null) {
+                $q->orderBy("CASE WHEN title LIKE '{$safeTerm}%' ESCAPE '\\\\' THEN 0 ELSE 1 END");
+            }
             $q->addOrderBy('title ASC');
         } else {
             $q = static::_modifyDoctrineQueryForEmptyAutocomplete($q, $params);
