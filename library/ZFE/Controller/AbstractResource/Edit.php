@@ -127,24 +127,7 @@ trait ZFE_Controller_AbstractResource_Edit
                         throw new ZFE_Controller_Exception('После сохранения в записи отсутствует ID.', 500);
                     }
                 } catch (Exception $ex) {
-                    $msg = 'Сохранить не удалось';
-                    if (Zend_Registry::get('user')->noticeDetails) {
-                        $msg .= ': ' . $ex->getMessage();
-                    }
-                    $this->_helper->Notices->err($msg);
-
-                    if ($log = Zend_Registry::get('log')) {
-                        $log->log(
-                            $ex->getMessage(),
-                            Zend_Log::ERR,
-                            [
-                                'errno' => $ex->getCode(),
-                                'file' => $ex->getFile(),
-                                'line' => $ex->getLine(),
-                                'context' => $ex->getTraceAsString(),
-                            ]
-                        );
-                    }
+                    $this->error('Сохранить не удалось', $ex);
                 }
             }
 

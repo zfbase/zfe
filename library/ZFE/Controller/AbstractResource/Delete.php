@@ -71,29 +71,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Exception $ex) {
-            $msg = 'Не удалось удалить ' . mb_strtolower($modelName::$nameSingular);
-            if (Zend_Registry::get('user')->noticeDetails) {
-                $msg .= ': ' . $ex->getMessage();
-            }
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_json(self::STATUS_FAIL, [], $msg);
-            }
-
-            $this->_helper->Notices->err($msg);
-
-            if ($log = Zend_Registry::get('log')) {
-                $log->log(
-                    $ex->getMessage(),
-                    Zend_Log::ERR,
-                    [
-                        'errno' => $ex->getCode(),
-                        'file' => $ex->getFile(),
-                        'line' => $ex->getLine(),
-                        'context' => $ex->getTraceAsString(),
-                    ]
-                );
-            }
+            $this->error('Не удалось удалить ' . mb_strtolower($modelName::$nameSingular), $ex);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {
@@ -154,29 +132,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Exception $ex) {
-            $msg = 'Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular);
-            if (Zend_Registry::get('user')->noticeDetails) {
-                $msg .= ': ' . $ex->getMessage();
-            }
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_json(self::STATUS_FAIL, [], $msg);
-            }
-
-            $this->_helper->Notices->err($msg);
-
-            if ($log = Zend_Registry::get('log')) {
-                $log->log(
-                    $ex->getMessage(),
-                    Zend_Log::ERR,
-                    [
-                        'errno' => $ex->getCode(),
-                        'file' => $ex->getFile(),
-                        'line' => $ex->getLine(),
-                        'context' => $ex->getTraceAsString(),
-                    ]
-                );
-            }
+            $this->error('Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular), $ex);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {

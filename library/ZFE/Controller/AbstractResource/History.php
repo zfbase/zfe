@@ -128,24 +128,7 @@ trait ZFE_Controller_AbstractResource_History
 
             $status = true;
         } catch (Exception $ex) {
-            $msg = 'Не удалось откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version;
-            if (Zend_Registry::get('user')->noticeDetails) {
-                $msg .= ': ' . $ex->getMessage();
-            }
-            $this->_helper->Notices->err($msg);
-
-            if ($log = Zend_Registry::get('log')) {
-                $log->log(
-                    $ex->getMessage(),
-                    Zend_Log::ERR,
-                    [
-                        'errno' => $ex->getCode(),
-                        'file' => $ex->getFile(),
-                        'line' => $ex->getLine(),
-                        'context' => $ex->getTraceAsString(),
-                    ]
-                );
-            }
+            $this->error('Не удалось откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version, $ex);
 
             $status = false;
         }

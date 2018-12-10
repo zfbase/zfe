@@ -94,4 +94,40 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
         $message = $customMessage ?: Zend_Http_Response::responseCodeAsText($code);
         throw new Zend_Controller_Action_Exception($message, $code);
     }
+
+    /**
+     * Отправить сообщение об ошибке и дополнить его данными из исключения,
+     * если расширенная информация об ошибках включена для пользователя.
+     * А также отправить информацию об ошибке в логи.
+     *
+     * @param string    $msg
+     * @param Exception $e
+     */
+    public function error($msg, Exception $ex = null)
+    {
+        if ($log = Zend_Registry::get('log')) {
+            $log->log(
+                $ex->getMessage(),
+                Zend_Log::ERR,
+                [
+                    'errno' => $ex->getCode(),
+                    'file' => $ex->getFile(),
+                    'line' => $ex->getLine(),
+                    'context' => $ex->getTraceAsString(),
+                ]
+            );
+        }
+
+        if ($ex && Zend_Registry::get('user')->noticeDetails) {
+            $msg = '<strong>' . $msg . '</strong><br>'
+                 . $ex->getMessage()
+                 . '<pre>' . $ex->getTraceAsString() . '</pre>';
+        }
+
+        if ($this->_request->isXmlHttpRequest()) {
+            $this->_json(self::STATUS_FAIL, [], $msg);
+        }
+
+        $this->_helper->Notices->err($msg);
+    }
 }
