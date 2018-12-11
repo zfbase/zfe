@@ -48,6 +48,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
         if ($ids) {
             $doctrineQuery = $this->_getBaseSearchQueryDoctrine();
             $doctrineQuery->andWhereIn('x.id', $ids);
+            $doctrineQuery->orderByField('x.id', $ids);
             $this->view->items = $doctrineQuery->execute();
         } else {
             $this->view->items = [];
