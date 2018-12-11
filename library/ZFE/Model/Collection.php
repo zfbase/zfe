@@ -15,8 +15,6 @@ class ZFE_Model_Collection extends Doctrine_Collection
      * @param Doctrine_Connection $conn
      * @param bool                $clearColl
      *
-     * @throws Exception
-     *
      * @return ZFE_Model_Collection
      */
     public function hardDelete(Doctrine_Connection $conn = null, $clearColl = true)
@@ -34,7 +32,7 @@ class ZFE_Model_Collection extends Doctrine_Collection
             }
 
             $conn->commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $conn->rollback();
             throw $e;
         }

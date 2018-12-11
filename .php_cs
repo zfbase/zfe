@@ -9,101 +9,103 @@ ZFE – платформа для построения редакторских 
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude('tests/Fixtures')
+    ->exclude('src')
+    ->exclude('node_modules')
+    ->exclude('vendor')
+    ->name('*.phtml')
     ->in(__DIR__)
 ;
 
-$config = PhpCsFixer\Config::create()
+return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PHP56Migration' => true,
-        //'@PHPUnit60Migration:risky' => true,
-        '@Symfony' => true,
-        '@Symfony:risky' => true,
-        'align_multiline_comment' => true,
-        'array_indentation' => true,
+        '@PSR2' => true,
+        '@PHP71Migration' => true,
         'array_syntax' => ['syntax' => 'short'],
-        'blank_line_before_statement' => true,
-        'combine_consecutive_issets' => true,
-        'combine_consecutive_unsets' => true,
-        'comment_to_phpdoc' => true,
-        'compact_nullable_typehint' => true,
-        'escape_implicit_backslashes' => true,
+        'blank_line_after_opening_tag' => true,
+        'class_attributes_separation' => ['elements' => ['method']],
+        'concat_space' => ['spacing' => 'one'],
+        'dir_constant' => true,
         'explicit_indirect_variable' => true,
         'explicit_string_variable' => true,
-        'final_internal_class' => true,
-        'fully_qualified_strict_types' => true,
+        'full_opening_tag' => false,  // В шаблонах длинные php-теги (*.phtml) излишни.
         'function_to_constant' => ['functions' => ['get_class', 'get_called_class', 'php_sapi_name', 'phpversion', 'pi']],
         'header_comment' => ['header' => $header],
-        'heredoc_to_nowdoc' => true,
-        'list_syntax' => ['syntax' => 'long'],
         'logical_operators' => true,
+        'lowercase_static_reference' => true,
+        'mb_str_functions' => true,
         'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
-        'method_chaining_indentation' => true,
-        'multiline_comment_opening_closing' => true,
-        'no_alternative_syntax' => true,
+        'multiline_whitespace_before_semicolons' => ['strategy' => 'new_line_for_chained_calls'],
         'no_binary_string' => true,
-        'no_extra_blank_lines' => ['tokens' => ['break', 'continue', 'extra', 'return', 'throw', 'use', 'parenthesis_brace_block', 'square_brace_block', 'curly_brace_block']],
+        'no_blank_lines_after_class_opening' => true,
+        'no_blank_lines_after_phpdoc' => true,
+        'no_empty_comment' => true,
+        'no_empty_phpdoc' => true,
+        'no_empty_statement' => true,
+        'no_homoglyph_names' => true,
+        'no_mixed_echo_print' => ['use' => 'echo'],
         'no_null_property_initialization' => true,
-        'no_short_echo_tag' => true,
+        'no_singleline_whitespace_before_semicolons' => true,
+        'no_spaces_around_offset' => true,
         'no_superfluous_elseif' => true,
+        'no_trailing_comma_in_singleline_array' => true,
+        'no_unneeded_control_parentheses' => true,
         'no_unneeded_curly_braces' => true,
-        'no_unneeded_final_method' => true,
-        'no_unreachable_default_argument_value' => true,
-        'no_unset_on_property' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,
-        'ordered_class_elements' => true,
+        'no_whitespace_before_comma_in_array' => true,
+        'no_whitespace_in_blank_line' => true,
+        'non_printable_character' => true,
+        'not_operator_with_space' => true,
+        'object_operator_without_whitespace' => true,
         'ordered_imports' => true,
-        /*
-        'php_unit_internal_class' => true,
-        'php_unit_method_casing' => true,
-        'php_unit_ordered_covers' => true,
-        'php_unit_set_up_tear_down_visibility' => true,
-        'php_unit_strict' => true,
-        'php_unit_test_annotation' => true,
-        'php_unit_test_case_static_method_calls' => ['call_type' => 'this'],
-        'php_unit_test_class_requires_covers' => true,
-        */
         'phpdoc_add_missing_param_annotation' => true,
+        'phpdoc_align' => ['tags' => ['param', 'property', 'return', 'throws', 'type', 'var', 'method']],
+        'phpdoc_annotation_without_dot' => true,
+        'phpdoc_indent' => true,
+        'phpdoc_inline_tag' => true,
+        'phpdoc_no_access' => true,
+        'phpdoc_no_alias_tag' => true,
+        'phpdoc_no_empty_return' => true,
+        'phpdoc_no_package' => true,
+        'phpdoc_no_useless_inheritdoc' => true,
         'phpdoc_order' => true,
+        'phpdoc_return_self_reference' => true,
+        'phpdoc_scalar' => true,
+        'phpdoc_separation' => true,
+        'phpdoc_single_line_var_spacing' => true,
+        'phpdoc_summary' => true,
+        'phpdoc_to_return_type' => false,  // хорошо бы включить, но заебешься обновлять существующие проекты
+        'phpdoc_trim' => true,
         'phpdoc_trim_consecutive_blank_line_separation' => true,
-        'phpdoc_types_order' => true,
+        'phpdoc_types' => true,
+        'phpdoc_var_without_name' => true,
+        'psr4' => true,
+        'random_api_migration' => true,
         'return_assignment' => true,
-        'semicolon_after_instruction' => true,
-        'single_line_comment_style' => true,
+        'return_type_declaration' => true,
+        'self_accessor' => true,
+        'semicolon_after_instruction' => false,  // В шаблонах теги <?= содержат одно выражение и нет смысла в точке с запятой
+        'set_type_to_cast' => true,
+        'short_scalar_cast' => true,
+        'single_blank_line_before_namespace' => true,
+        'single_line_comment_style' => ['comment_types' => ['hash']],
+        'single_quote' => true,
+        'space_after_semicolon' => ['remove_in_empty_for_expressions' => true],
+        'standardize_increment' => true,
+        'standardize_not_equals' => true,
         'strict_comparison' => true,
         'strict_param' => true,
         'string_line_ending' => true,
+        'ternary_operator_spaces' => true,
+        'ternary_to_null_coalescing' => true,
+        'trailing_comma_in_multiline_array' => true,
+        'trim_array_spaces' => true,
+        'unary_operator_spaces' => true,
+        'void_return' => false,  // хорошо бы включить, но заебешься обновлять существующие проекты
+        'whitespace_after_comma_in_array' => true,
         'yoda_style' => true,
-
-        // Customs rules
-        'binary_operator_spaces' => null,
-        'blank_line_before_statement' => false,
-        'concat_space' => ['spacing' => 'one'],
-        'function_to_constant' => ['functions' => ['php_sapi_name', 'phpversion', 'pi']],
-        'not_operator_with_space' => true,
-        'ordered_class_elements' => false,
-        'return_assignment' => false,
     ])
     ->setFinder($finder)
     ->setUsingCache(false)
 ;
-
-// special handling of fabbot.io service if it's using too old PHP CS Fixer version
-if (false !== getenv('FABBOT_IO')) {
-    try {
-        PhpCsFixer\FixerFactory::create()
-            ->registerBuiltInFixers()
-            ->registerCustomFixers($config->getCustomFixers())
-            ->useRuleSet(new PhpCsFixer\RuleSet($config->getRules()));
-    } catch (PhpCsFixer\ConfigurationException\InvalidConfigurationException $e) {
-        $config->setRules([]);
-    } catch (UnexpectedValueException $e) {
-        $config->setRules([]);
-    } catch (InvalidArgumentException $e) {
-        $config->setRules([]);
-    }
-}
-
-return $config;

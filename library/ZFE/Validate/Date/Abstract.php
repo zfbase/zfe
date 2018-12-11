@@ -15,16 +15,16 @@
 class ZFE_Validate_Date_Abstract extends Zend_Validate_Abstract
 {
     // Zend_Validate_Date Message Constants
-    const INVALID = 'dateInvalid';
-    const NOT_YYYY_MM_DD = 'dateNotYYYY-MM-DD';
-    const INVALID_DATE = 'dateInvalidDate';
-    const FALSEFORMAT = 'dateFalseFormat';
+    public const INVALID = 'dateInvalid';
+    public const NOT_YYYY_MM_DD = 'dateNotYYYY-MM-DD';
+    public const INVALID_DATE = 'dateInvalidDate';
+    public const FALSEFORMAT = 'dateFalseFormat';
 
     // Zend_Validate_Date Custom Message Constants
-    const FIELD_INVALID = 'dateInvalidField';
-    const FIELD_NOT_YYYY_MM_DD = 'dateNotYYYY-MM-DDField';
-    const FIELD_INVALID_DATE = 'dateInvalidDateField';
-    const FIELD_FALSEFORMAT = 'dateFalseFormatField';
+    public const FIELD_INVALID = 'dateInvalidField';
+    public const FIELD_NOT_YYYY_MM_DD = 'dateNotYYYY-MM-DDField';
+    public const FIELD_INVALID_DATE = 'dateInvalidDateField';
+    public const FIELD_FALSEFORMAT = 'dateFalseFormatField';
 
     /**
      * Validation failure message template definitions.

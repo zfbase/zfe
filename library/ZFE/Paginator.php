@@ -164,9 +164,9 @@ class ZFE_Paginator
                     continue;
                 }
 
-                if (false !== strpos($value, '/')
-                 || false !== strpos($value, '\\')
-                 || false !== strpos($value, '.')) {
+                if (false !== mb_strpos($value, '/')
+                 || false !== mb_strpos($value, '\\')
+                 || false !== mb_strpos($value, '.')) {
                     $get[] = $param . '=' . urlencode($value);
                 } else {
                     if ($value || '0' === $value) {

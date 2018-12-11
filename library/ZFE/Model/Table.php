@@ -306,7 +306,7 @@ class ZFE_Model_Table extends Doctrine_Table
                 if (isset($this->_columns[$columnName]['scale'])) {
                     $options['max'] = str_repeat('9', $maxLength - $this->_columns[$columnName]['scale']) .
                         '.' . str_repeat('9', $this->_columns[$columnName]['scale']);
-                    $options['step'] = 1 / pow(10, $this->_columns[$columnName]['scale']);
+                    $options['step'] = 1 / (10 ** $this->_columns[$columnName]['scale']);
                     $options['min'] = $this->isElementPositiveForColumn($columnName)
                         ? 0
                         : -$options['max'];

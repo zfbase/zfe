@@ -75,7 +75,7 @@ class ZFE_Controller_Action_Helper_PostToGet extends Zend_Controller_Action_Help
 
             if (is_array($value)) {
                 $this->_recursiveParser($value, $ret, $get, $key);
-            } elseif (is_string($value) && (false !== strpos($value, '/') || false !== strpos($value, '\\') || false !== strpos($value, '.'))) {
+            } elseif (is_string($value) && (false !== mb_strpos($value, '/') || false !== mb_strpos($value, '\\') || false !== mb_strpos($value, '.'))) {
                 // Apache, в целях безопасности, встречая в адресе (до "?") символ %2F (/) или %2С (\) возвращает 404 ошибку
                 $get[] = $key . '=' . urlencode($value);
             } elseif ( ! empty($value) || '0' === $value) {

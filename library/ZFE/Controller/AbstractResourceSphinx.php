@@ -67,7 +67,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
             return;
         }
 
-        $revertHash = $this->getparam('rh');
+        $revertHash = $this->getParam('rh');
         if (empty($revertHash)) {
             return;
         }
@@ -92,7 +92,8 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
         $q = ZFE_Sphinx::query()
             ->select(static::$_sphinxSelect)
             ->from($modelName::getSphinxIndexName())
-            ->limit($config->view->perpage);
+            ->limit($config->view->perpage)
+        ;
 
         $allFullTextColsText = $this->getParam('term');
         if ($allFullTextColsText) {
@@ -130,7 +131,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
                     }
                     break;
                 case 'rt_attr_multi':
-                    $items = $this->getParam(substr($field, 5), []);
+                    $items = $this->getParam(mb_substr($field, 5), []);
                     if (is_array($items) && ! empty($items)) {
                         $ids = array_map(function ($data) {
                             return (int) $data['id'];
@@ -139,7 +140,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
                     }
                     break;
                 default:
-                    $value = $this->getParam(substr($field, 5));
+                    $value = $this->getParam(mb_substr($field, 5));
                     if ($value) {
                         $q->where($field, (int) $value);
                     }
@@ -160,9 +161,9 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_Abst
     {
         $order = $this->_request->getParam('order');
         if ( ! empty($order)) {
-            $pos = strrpos($order, '_');
-            $field = substr($order, 0, $pos);
-            $direction = strtoupper(substr($order, $pos + 1));
+            $pos = mb_strrpos($order, '_');
+            $field = mb_substr($order, 0, $pos);
+            $direction = mb_strtoupper(mb_substr($order, $pos + 1));
             if ('ASC' === $direction || 'DESC' === $direction) {
                 $reset && $q->resetOrderBy();
                 $q = $this->_sphinxQueryOrder($q, $field, $direction);

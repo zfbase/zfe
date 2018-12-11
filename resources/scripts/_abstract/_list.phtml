@@ -4,6 +4,7 @@
     $hasEdited = $tableInstance->hasColumn('datetime_edited');
     $downHash = $this->hopsHistory()->getDownHash('К результатам поиска', '?', ['totalResults' => ZFE_Paginator::getInstance()->getNumResults()]);
 ?>
+
 <? if (count($this->items)): ?>
     <?= $this->paginator() ?>
     <div class="clearfix"></div>

@@ -25,9 +25,9 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     use ZFE_Model_Decline;                             // Склонения сообщений
 
     // Пол записи (допустимые варианты)
-    const SEX_MALE = 1;
-    const SEX_FEMALE = 2;
-    const SEX_NEUTER = 3;
+    public const SEX_MALE   = '1';
+    public const SEX_FEMALE = '2';
+    public const SEX_NEUTER = '3';
 
     /**
      * Названия новой записи в зависимости от половой принадлежности записи.
@@ -113,10 +113,10 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $mergeable = false;
 
     // Статусы записей модели
-    const STATUS_PUBLISHED = 0;
-    const STATUS_NOT_PUBLISHED = 1;
-    const STATUS_READY_TO_PUBLISH = 2;
-    const STATUS_UNPUBLISHED = 3;
+    public const STATUS_PUBLISHED        = '0';
+    public const STATUS_NOT_PUBLISHED    = '1';
+    public const STATUS_READY_TO_PUBLISH = '2';
+    public const STATUS_UNPUBLISHED      = '3';
 
     /**
      * Список полей, принимающихся только значения да/нет
@@ -132,22 +132,22 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public static $status = [
         self::SEX_MALE => [
-            self::STATUS_PUBLISHED => 'Опубликован',
-            self::STATUS_NOT_PUBLISHED => 'Не опубликован',
+            self::STATUS_PUBLISHED        => 'Опубликован',
+            self::STATUS_NOT_PUBLISHED    => 'Не опубликован',
             self::STATUS_READY_TO_PUBLISH => 'Готов к публикации',
-            self::STATUS_UNPUBLISHED => 'Снят с публикации',
+            self::STATUS_UNPUBLISHED      => 'Снят с публикации',
         ],
         self::SEX_FEMALE => [
-            self::STATUS_PUBLISHED => 'Опубликована',
-            self::STATUS_NOT_PUBLISHED => 'Не опубликована',
+            self::STATUS_PUBLISHED        => 'Опубликована',
+            self::STATUS_NOT_PUBLISHED    => 'Не опубликована',
             self::STATUS_READY_TO_PUBLISH => 'Готова к публикации',
-            self::STATUS_UNPUBLISHED => 'Снята с публикации',
+            self::STATUS_UNPUBLISHED      => 'Снята с публикации',
         ],
         self::SEX_NEUTER => [
-            self::STATUS_PUBLISHED => 'Опубликовано',
-            self::STATUS_NOT_PUBLISHED => 'Не опубликовано',
+            self::STATUS_PUBLISHED        => 'Опубликовано',
+            self::STATUS_NOT_PUBLISHED    => 'Не опубликовано',
             self::STATUS_READY_TO_PUBLISH => 'Готово к публикации',
-            self::STATUS_UNPUBLISHED => 'Снято с публикации',
+            self::STATUS_UNPUBLISHED      => 'Снято с публикации',
         ],
     ];
 
@@ -157,10 +157,10 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      * @var array
      */
     public static $statusColor = [
-        self::STATUS_PUBLISHED => 'green',
-        self::STATUS_NOT_PUBLISHED => 'red',
+        self::STATUS_PUBLISHED        => 'green',
+        self::STATUS_NOT_PUBLISHED    => 'red',
         self::STATUS_READY_TO_PUBLISH => 'orange',
-        self::STATUS_UNPUBLISHED => 'grey',
+        self::STATUS_UNPUBLISHED      => 'grey',
     ];
 
     /**
@@ -229,32 +229,32 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
 
         if (is_array($array)) {
             foreach ($array as $key => $value) {
-                if ('date' === $key || 'date_' === substr($key, 0, 5)) {
+                if ('date' === $key || 'date_' === mb_substr($key, 0, 5)) {
                     if (empty($value) || '0000-00-00' === $value) {
                         $array[$key] = '';
                     }
                     continue;
                 }
 
-                if ('datetime' === $key || 'datetime_' === substr($key, 0, 9)) {
+                if ('datetime' === $key || 'datetime_' === mb_substr($key, 0, 9)) {
                     if (empty($value) || '0000-00-00 00:00:00' === $value) {
                         $array[$key] = '';
                     }
                     continue;
                 }
 
-                if ('time' === $key || 'time_' === substr($key, 0, 5)) {
+                if ('time' === $key || 'time_' === mb_substr($key, 0, 5)) {
                     if (empty($value) || '00:00:00' === $value) {
                         $array[$key] = '';
                     }
                     continue;
                 }
 
-                if ('month' === $key || 'month_' === substr($key, 0, 6)) {
+                if ('month' === $key || 'month_' === mb_substr($key, 0, 6)) {
                     if (empty($value) || '0000-00-00' === $value) {
                         $array[$key] = '';
                     } else {
-                        $array[$key] = substr($value, 0, 7);
+                        $array[$key] = mb_substr($value, 0, 7);
                     }
                     continue;
                 }
@@ -268,8 +268,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
 
         $array = $this->_autocompleteToArray($array);
         $array = $this->_multiAutocompleteToArray($array);
-        $array = $this->_multiCheckOrSelectToArray($array);
-        return $array;
+        return $this->_multiCheckOrSelectToArray($array);
     }
 
     /**
@@ -283,7 +282,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public function fromArray(array $array, $deep = true)
     {
         foreach ($array as $key => $value) {
-            if ('month' === $key || 'month_' === substr($key, 0, 6)) {
+            if ('month' === $key || 'month_' === mb_substr($key, 0, 6)) {
                 if ( ! empty($array[$key]) && preg_match('/[0-9]{4}\-[0-1][0-9]/', $array[$key])) {
                     $array[$key] .= '-01';
                 } else {
@@ -311,7 +310,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public static function isRemovable()
     {
-        return Doctrine_Core::getTable(get_called_class())->hasField('deleted');
+        return Doctrine_Core::getTable(static::class)->hasField('deleted');
     }
 
     /**

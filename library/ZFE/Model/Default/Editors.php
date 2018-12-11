@@ -83,8 +83,8 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     ];
 
     // Статусы
-    const STATUS_ENABLE = 0;
-    const STATUS_DISABLED = 1;
+    public const STATUS_ENABLE   = '0';
+    public const STATUS_DISABLED = '1';
 
     /**
      * Статусы записей модели в зависимости от половой принадлежности записи.
@@ -93,7 +93,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      */
     public static $status = [
         self::SEX_MALE => [
-            self::STATUS_ENABLE => 'Включен',
+            self::STATUS_ENABLE   => 'Включен',
             self::STATUS_DISABLED => 'Отключен',
         ],
     ];
@@ -104,7 +104,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      * @var array
      */
     public static $statusColor = [
-        self::STATUS_ENABLE => 'green',
+        self::STATUS_ENABLE   => 'green',
         self::STATUS_DISABLED => 'red',
     ];
 
@@ -156,7 +156,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     public function fromArray(array $array, $deep = true)
     {
         if ( ! empty($array['password'])) {
-            $salt = isset($array['password_salt']) ? $array['password_salt'] : null;
+            $salt = $array['password_salt'] ?? null;
             $this->setPassword($array['password'], $salt);
         }
         unset($array['password'], $array['password_salt']);
@@ -180,9 +180,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
 
     public function setPassword($password, $salt = null)
     {
-        if (empty($salt)) {
-            $salt = empty($this->password_salt) ? uniqid() : $this->password_salt;
-        }
+        $salt = $salt ?: $this->password_salt ?: uniqid();
         $pwdEscape = Doctrine_Manager::connection()->quote($password);
         $pwdExpStr = str_replace('?', $pwdEscape, Editors::$credentialTreatment);
         $pwdExpStr = str_replace('password_salt', "'{$salt}'", $pwdExpStr);

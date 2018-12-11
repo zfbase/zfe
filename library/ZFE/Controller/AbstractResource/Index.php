@@ -27,12 +27,11 @@ trait ZFE_Controller_AbstractResource_Index
      */
     protected function _getBaseSearchQueryDoctrine()
     {
-        $modelName = static::$_modelName;
-        $tableInstance = Doctrine_Core::getTable($modelName);
+        $tableInstance = Doctrine_Core::getTable(static::$_modelName);
 
         $q = ZFE_Query::create()
             ->select('x.*')
-            ->from($modelName . ' x')
+            ->from(static::$_modelName . ' x')
         ;
 
         if ($tableInstance->hasRelation('Editor')) {
@@ -55,12 +54,11 @@ trait ZFE_Controller_AbstractResource_Index
      */
     protected function _getSearchQuery()
     {
-        $modelName = static::$_modelName;
         $q = $this->_getBaseSearchQueryDoctrine();
 
         $title = $this->getParam('title');
         if ( ! empty($title)) {
-            $q->addWhere('LOWER(' . $modelName::$titleField . ') LIKE LOWER(?)', '%' . $title . '%');
+            $q->addWhere('LOWER(' . (static::$_modelName)::$titleField . ') LIKE LOWER(?)', '%' . $title . '%');
         }
 
         $ids = $this->_getIdsParam();
@@ -105,26 +103,24 @@ trait ZFE_Controller_AbstractResource_Index
      */
     protected function _addOrderForSearchQuery(ZFE_Query $q)
     {
-        $modelName = static::$_modelName;
-
         $order = $this->_request->getParam('order');
         if ( ! empty($order)) {
-            $_ = strrpos($order, '_');
-            $_2 = strtoupper(substr($order, $_ + 1));
+            $_ = mb_strrpos($order, '_');
+            $_2 = mb_strtoupper(mb_substr($order, $_ + 1));
             if ('ASC' === $_2 || 'DESC' === $_2) {
-                $order = substr($order, 0, $_) . ' ' . substr($order, $_ + 1);
+                $order = mb_substr($order, 0, $_) . ' ' . mb_substr($order, $_ + 1);
             }
 
-            if ('title' === substr($order, 0, 5)) {
-                $query = $modelName::$titleField . substr($order, 5);
+            if ('title' === mb_substr($order, 0, 5)) {
+                $query = (static::$_modelName)::$titleField . mb_substr($order, 5);
             } else {
                 $query = $order;
             }
 
             $q->orderBy($query);
             $this->view->order = $order;
-        } elseif ( ! empty($modelName::$defaultOrder)) {
-            $q->orderBy($modelName::$defaultOrder);
+        } elseif ( ! empty((static::$_modelName)::$defaultOrder)) {
+            $q->orderBy((static::$_modelName)::$defaultOrder);
         }
 
         return $q;
@@ -189,6 +185,8 @@ trait ZFE_Controller_AbstractResource_Index
     /**
      * Возвращает параметр ids.
      * Параметр может содержать числа, разделенные запятыми, которые преобразуются в массив.
+     *
+     * @return array
      */
     protected function _getIdsParam()
     {

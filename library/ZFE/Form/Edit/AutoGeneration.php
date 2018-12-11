@@ -67,10 +67,7 @@ class ZFE_Form_Edit_AutoGeneration extends ZFE_Form_Horizontal
         $table = Doctrine_Core::getTable($modelName);
         foreach ($table->getColumnNames() as $columnName) {
             if ( ! in_array($columnName, $ignoreFields, true) && ! $this->getElement($columnName)) {
-                $method = isset($fieldMethods[$columnName])
-                    ? $fieldMethods[$columnName]
-                    : 'addElementForColumn';
-
+                $method = $fieldMethods[$columnName] ?? 'addElementForColumn';
                 $this->{$method}($columnName);
             }
         }

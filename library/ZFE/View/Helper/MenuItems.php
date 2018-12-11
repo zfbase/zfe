@@ -223,13 +223,9 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 }
             } elseif (isset($page->uri)) {
                 $_ = explode('/', trim($page->uri, '/'));
-                $controller = isset($_[0])
-                    ? $_[0]
-                    : 'index';
+                $controller = $_[0] ?? 'index';
                 if (isset($_[1])) {
-                    $action = isset($_[1])
-                        ? $_[1]
-                        : 'index';
+                    $action = $_[1] ?? 'index';
                 }
             }
 

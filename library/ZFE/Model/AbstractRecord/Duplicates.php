@@ -25,7 +25,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
     {
         $q = ZFE_Query::create()
             ->select(('x.title' === static::$titleField) ? 'x.title' : (static::$titleField . ' AS title'))
-            ->from(get_called_class() . ' x')
+            ->from(static::class . ' x')
             ->addSelect('COUNT(*) cnt')
             ->groupBy('title')
             ->having('cnt > 1')
@@ -37,13 +37,12 @@ trait ZFE_Model_AbstractRecord_Duplicates
 
     protected static function _getGroupsByDuplicate($duplicate)
     {
-        $modelName = get_called_class();
-        $tableInstance = Doctrine_Core::getTable($modelName);
+        $tableInstance = Doctrine_Core::getTable(static::class);
 
         /** @var $q ZFE_Query */
         $q = ZFE_Query::create()
             ->select('x.*')
-            ->from($modelName . ' x')
+            ->from(static::class . ' x')
             ->where(static::$titleField . ' = ?', $duplicate['title'])
             ->orderBy('weight DESC')
             ->groupBy('x.id')
@@ -82,7 +81,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
 
     public static function advancedMerge(Doctrine_Collection $slaves, array $map = [])
     {
-        $tableInstance = Doctrine_Core::getTable(get_called_class());
+        $tableInstance = Doctrine_Core::getTable(static::class);
         $serviceFields = self::getServiceFields();
         $columnNames = array_diff($tableInstance->getColumnNames(), $serviceFields);
 
@@ -158,7 +157,8 @@ SQL;
                 // К сожалению, на уровне запроса определить поддержку мягкого удаления не возможно
                 $q2 = ZFE_Query::create($conn)
                     ->from($relation->getClass())
-                    ->whereIn($foreign, $slaveIds);
+                    ->whereIn($foreign, $slaveIds)
+                ;
                 if ($table->hasColumn('deleted')) {
                     $q2->update()->set('deleted', '1');
                 } else {

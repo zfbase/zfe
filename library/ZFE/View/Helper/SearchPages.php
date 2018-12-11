@@ -157,7 +157,7 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
         }
 
         $url = $hops->{$hash}['url'];
-        $url .= (false === strpos($url, '?')) ? '?' : '&';
+        $url .= (false === mb_strpos($url, '?')) ? '?' : '&';
         $url .= 'rh=' . $hash;  // revert hash
         $url .= '&rn=' . $rowNumber;
 

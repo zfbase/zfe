@@ -55,7 +55,8 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                     ->setCredentialColumn('password')
                     ->setCredentialTreatment(Editors::$credentialTreatment . ' ' . self::$_credentialTreatmentAdditional)
                     ->setIdentity($formData['login'])
-                    ->setCredential($formData['password']);
+                    ->setCredential($formData['password'])
+                ;
 
                 $result = $auth->authenticate($authAdapter);
 
@@ -80,7 +81,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                         $this->_redirect($fpcUrl);
                     }
 
-                    if (empty($requestUri) || '/auth/' === substr($requestUri, 0, 6)) {
+                    if (empty($requestUri) || '/auth/' === mb_substr($requestUri, 0, 6)) {
                         $requestUri = '/';
                     }
                     if ($this->getParam('redirect')) {
@@ -164,7 +165,8 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                 $q = ZFE_Query::create()
                     ->select('*')
                     ->from('Editors')
-                    ->where('id = ?', $userId);
+                    ->where('id = ?', $userId)
+                ;
                 if ( ! $passwordCheck) {
                     $q->andWhere('password = ' . Editors::$credentialTreatment, $form->getValue('password'));
                 }

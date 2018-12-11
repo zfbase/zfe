@@ -24,30 +24,26 @@ trait ZFE_Controller_AbstractResource_Merge
      */
     public function mergeAction()
     {
-        $modelName = static::$_modelName;
-
         if ( ! in_array('merge', static::$_enableActions, true)) {
             throw new Zend_Controller_Action_Exception('Action "merge" does not exist', 404);
         }
 
-        if ( ! $modelName::isMergeable()) {
-            throw new Zend_Controller_Action_Exception($modelName::$namePlural . ' не поддерживают стандартный механизм объединения.', 404);
+        if ( ! (static::$_modelName)::isMergeable()) {
+            throw new Zend_Controller_Action_Exception((static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.', 404);
         }
     }
 
     public function searchDuplicatesAction()
     {
-        $modelName = static::$_modelName;
-
         if ( ! in_array('search-duplicates', static::$_enableActions, true)) {
             throw new Zend_Controller_Action_Exception('Action "search-duplicates" does not exist', 404);
         }
 
-        if ( ! $modelName::isMergeable()) {
-            throw new Zend_Controller_Action_Exception($modelName::$namePlural . ' не поддерживают стандартный механизм объединения.', 404);
+        if ( ! (static::$_modelName)::isMergeable()) {
+            throw new Zend_Controller_Action_Exception((static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.', 404);
         }
 
-        $this->view->groups = $modelName::getDuplicatesGroups();
+        $this->view->groups = (static::$_modelName)::getDuplicatesGroups();
     }
 
     public function mergeHelperAction()
@@ -142,7 +138,7 @@ trait ZFE_Controller_AbstractResource_Merge
                 }
 
                 $this->_helper->Notices->ok($msg);
-            } catch (Exception $ex) {
+            } catch (Throwable $ex) {
                 if ($this->_request->isXmlHttpRequest()) {
                     $this->_json(self::STATUS_FAIL, [], $ex->getMessage());
                 }
@@ -177,14 +173,13 @@ trait ZFE_Controller_AbstractResource_Merge
      */
     protected function _getMergeSearchQuery()
     {
-        $modelName = static::$_modelName;
-        $tableInstance = Doctrine_Core::getTable($modelName);
+        $tableInstance = Doctrine_Core::getTable(static::$_modelName);
 
         /** @var $q ZFE_Query */
         $q = ZFE_Query::create()
             ->select('x.*')
-            ->from($modelName . ' x')
-            ->orderBy($modelName::$titleField)
+            ->from(static::$_modelName . ' x')
+            ->orderBy((static::$_modelName)::$titleField)
             ->groupBy('x.id')
         ;
 
@@ -228,7 +223,7 @@ trait ZFE_Controller_AbstractResource_Merge
 
         $term = $this->getParam('term');
         if ( ! empty($term)) {
-            $q->addWhere('LOWER(' . $modelName::$titleField . ') LIKE LOWER(?)', '%' . $term . '%');
+            $q->addWhere('LOWER(' . (static::$_modelName)::$titleField . ') LIKE LOWER(?)', '%' . $term . '%');
         }
 
         $ignoreMerged = $this->getParam('ignore_merged');

@@ -42,7 +42,7 @@ trait ZFE_Model_AbstractRecord_Sphinx
      */
     public static function getSphinxIndexName()
     {
-        $model = get_called_class();
+        $model = static::class;
         if (empty(static::$_sphinxIndexName[$model])) {
             $config = ZFE_Sphinx::config();
             if ( ! isset($config->index->{$model})) {
@@ -84,14 +84,14 @@ trait ZFE_Model_AbstractRecord_Sphinx
      */
     public static function getSphinxIndexSqlPath()
     {
-        $model = get_called_class();
+        $model = static::class;
         if (empty(static::$_sphinxIndexSqlPath[$model])) {
             $indexName = static::getSphinxIndexName();
             $config = ZFE_Sphinx::config();
-            if (empty($config->sqlQuery->$model)) {
+            if (empty($config->sqlQuery->{$model})) {
                 $path = $config->sqlPath . DIRECTORY_SEPARATOR . $indexName . '.sql';
             } else {
-                $path = $config->sqlQuery->$model;
+                $path = $config->sqlQuery->{$model};
             }
             if ( ! file_exists($path)) {
                 throw new ZFE_Exception("SQL-запрос {$path} не найден.");

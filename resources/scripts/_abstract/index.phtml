@@ -11,7 +11,7 @@
     <?
         if ( ! $this->readonly) {
             $buttons = [];
-            
+
             if ($this->canCreate) {
                 $buttons[] = [
                     'ico' => 'glyphicon glyphicon-plus',
@@ -19,7 +19,7 @@
                     'url' => $modelName::getNewUrl() . $downHash,
                 ];
             }
-            
+
             if ($this->canMerge) {
                 $buttons[] = [
                     'label' => 'Объединить',
@@ -30,7 +30,7 @@
                     'url' => $modelName::getSearchDuplicatesUrl(),
                 ];
             }
-            
+
             if (count($buttons)) {
                 echo '&nbsp; ' . $this->crazyButtons($buttons);
             }
@@ -38,8 +38,8 @@
     ?>
     
     <? if ( ! $this->readonly && $this->canRestore): ?>
-        <a href="<?= $modelName::getIndexUrl() . ($this->deleted != 1 ? '/deleted/1' : '') ?>" 
-           class="btn btn-default pull-right<?= $this->deleted == 1 ? ' active' : '' ?>">
+        <a href="<?= $modelName::getIndexUrl() . ('1' !== $this->deleted ? '/deleted/1' : '') ?>" 
+           class="btn btn-default pull-right<?= '1' === $this->deleted ? ' active' : '' ?>">
             <span class="glyphicon glyphicon-trash"></span>
             Корзина
         </a>

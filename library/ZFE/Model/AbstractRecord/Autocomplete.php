@@ -146,13 +146,12 @@ trait ZFE_Model_AbstractRecord_Autocomplete
 
         $relModel = ! empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
 
-        $class = get_called_class();
         /** @var $table ZFE_Model_Table */
-        $table = Doctrine_Core::getTable($class);
+        $table = Doctrine_Core::getTable(static::class);
         /** @var $rel Doctrine_Relation_Association */
         $rel = $table->getRelation($relAlias);
         if (empty($rel)) {
-            throw new ZFE_Model_Exception('Связь "' . $relAlias . '" не обнаружена в модели "' . $class . '" при определении свойств автодополнения нескольких значений.');
+            throw new ZFE_Model_Exception('Связь "' . $relAlias . '" не обнаружена в модели "' . static::class . '" при определении свойств автодополнения нескольких значений.');
         }
 
         $default = [
@@ -277,7 +276,8 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                             ->from($modelClassName . ' x')
                             ->where($localFieldName . ' = ?', $this->id)
                             ->andWhere($foreignFieldName . ' = ?', $item->id)
-                            ->execute([], Doctrine_Core::HYDRATE_SINGLE_SCALAR);
+                            ->execute([], Doctrine_Core::HYDRATE_SINGLE_SCALAR)
+                        ;
                     } elseif ($rel instanceof Doctrine_Relation_ForeignKey) {
                         $row['priority'] = $item->{$options['sortable']};
                     }
@@ -338,7 +338,8 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                             ->set($options['sortable'], $item['priority'])
                             ->where($localFieldName . ' = ?', $this->id)
                             ->andWhere($foreignFieldName . ' = ?', $item['id'])
-                            ->execute();
+                            ->execute()
+                        ;
                     }
                 } elseif ($rel instanceof Doctrine_Relation_ForeignKey) {
                     $relTable = $rel->getTable();
@@ -348,7 +349,8 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                             ->update()
                             ->set($options['sortable'], '?', $item['priority'])
                             ->where($relTable->getIdentifier() . ' = ?', $item['id'])
-                            ->execute();
+                            ->execute()
+                        ;
                     }
                 }
             }

@@ -31,10 +31,10 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $raw_order = $request->getParam('order', $modelName::$defaultOrderKey);
 
-        $pos = strrpos($raw_order, '_');
+        $pos = mb_strrpos($raw_order, '_');
         if ($pos > 1) {
-            $cur_field = substr($raw_order, 0, $pos);
-            $cur_order = strtolower(substr($raw_order, $pos + 1));
+            $cur_field = mb_substr($raw_order, 0, $pos);
+            $cur_order = mb_strtolower(mb_substr($raw_order, $pos + 1));
 
             if ($cur_field === $field) {
                 $order = 'asc' === $cur_order
@@ -94,7 +94,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
                 continue;
             }
 
-            if (false !== strpos($value, '/')) {
+            if (false !== mb_strpos($value, '/')) {
                 $get[] = $param . '=' . urlencode($value);
             } else {
                 if ($value || '0' === $value) {

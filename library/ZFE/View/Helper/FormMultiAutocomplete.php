@@ -108,10 +108,6 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
                 }
                 ++$i;
 
-                $title = isset($item['title'])
-                    ? $item['title']
-                    : 'Без названия';
-
                 $editBtn = $editUrl ? '<div class="btn btn-edit">...</div>' : '';
                 $formBtn = $hasFormBtn && ! $editBtn ? '<a href="' . sprintf($attribs['data-itemform'], $item['id']) . '" target="_blank" class="btn btn-form"><span class="glyphicon glyphicon-share-alt"></span></a>' : '';
                 $removeBtn = $disable ? '' : '<div class="btn btn-remove"><span class="glyphicon glyphicon-remove"></span></div>';
@@ -124,7 +120,7 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
 
                 $xhtml .= '<div class="linked-entity" ' . $this->_htmlAttribs($item_attrs) . '>'
                     . '<div class="inputs">' . $item_xhtml . '</div>'
-                    . '<div class="title">' . $title . '</div>'
+                    . '<div class="title">' . ($item['title'] ?? 'Без названия') . '</div>'
                     . $formBtn
                     . $editBtn
                     . $removeBtn

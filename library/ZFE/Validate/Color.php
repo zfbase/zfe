@@ -12,8 +12,8 @@
  */
 class ZFE_Validate_Color extends Zend_Validate_Abstract
 {
-    const INVALID = 'colorInvalid';
-    const NOT_COLOR = 'notColor';
+    public const INVALID = 'colorInvalid';
+    public const NOT_COLOR = 'notColor';
 
     /**
      * Сообщения об ошибках.
@@ -77,9 +77,9 @@ class ZFE_Validate_Color extends Zend_Validate_Abstract
         }
 
         $this->_setValue($value);
-        if ( ! in_array(strtolower($value), $this->_colors, true)) {
-            $len = strlen($value);
-            if ('#' !== $value[0] || ! (4 === $len || 7 === $len) || ! ctype_xdigit(substr($value, 1))) {
+        if ( ! in_array(mb_strtolower($value), $this->_colors, true)) {
+            $len = mb_strlen($value);
+            if ('#' !== $value[0] || ! (4 === $len || 7 === $len) || ! ctype_xdigit(mb_substr($value, 1))) {
                 $this->_error(self::NOT_COLOR);
                 return false;
             }

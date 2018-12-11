@@ -105,7 +105,7 @@ trait ZFE_Form_Extensions
             if (null === $options) {
                 $options = ['class' => 'form-control'];
             } elseif (array_key_exists('class', $options)) {
-                if ( ! strstr($options['class'], 'form-control')) {
+                if ( ! mb_strstr($options['class'], 'form-control')) {
                     $options['class'] .= ' form-control';
                     $options['class'] = trim($options['class']);
                 }

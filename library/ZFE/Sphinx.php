@@ -124,7 +124,8 @@ class ZFE_Sphinx
             ->from("{$table} x")
             ->setHard(true)
             ->andWhere('x.id = ?', $id)
-            ->fetchOne();
+            ->fetchOne()
+        ;
     }
 
     /**
@@ -146,14 +147,14 @@ class ZFE_Sphinx
         } else {
             $plain_config = file_get_contents($config_path);
         }
-        
+
         $tokens = \LTDBeget\sphinx\Tokenizer::tokenize($plain_config);
 
         foreach ($tokens as $token) {
             if ('index' === $token['type'] && $token['name'] === $indexName) {
                 $schema = ['id' => 'rt_attr_uint'];
                 foreach ($token['options'] as $option) {
-                    if ('rt_field' === $option['name'] || 'rt_attr_' === substr($option['name'], 0, 8)) {
+                    if ('rt_field' === $option['name'] || 'rt_attr_' === mb_substr($option['name'], 0, 8)) {
                         $schema[$option['value']] = $option['name'];
                     }
                 }
@@ -211,6 +212,7 @@ class ZFE_Sphinx
             ->replace()
             ->into($indexName)
             ->set($data)
-            ->execute();
+            ->execute()
+        ;
     }
 }

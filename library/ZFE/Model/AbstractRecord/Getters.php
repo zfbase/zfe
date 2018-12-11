@@ -56,7 +56,7 @@ trait ZFE_Model_AbstractRecord_Getters
     public static function getControllerName()
     {
         return empty(static::$controller)
-            ? strtolower(implode('-', ZFE::splitCamelCase(get_called_class())))
+            ? mb_strtolower(implode('-', ZFE::splitCamelCase(static::class)))
             : static::$controller;
     }
 

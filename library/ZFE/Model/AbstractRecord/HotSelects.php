@@ -32,7 +32,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function find()
     {
-        return call_user_func_array([Doctrine_Core::getTable(get_called_class()), 'find'], func_get_args());
+        return call_user_func_array([Doctrine_Core::getTable(static::class), 'find'], func_get_args());
     }
 
     /**
@@ -46,7 +46,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function findAll($hydrationMode = null)
     {
-        return Doctrine_Core::getTable(get_called_class())->findAll($hydrationMode);
+        return Doctrine_Core::getTable(static::class)->findAll($hydrationMode);
     }
 
     /**
@@ -65,7 +65,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function findBySql($dql, $params = [], $hydrationMode = null)
     {
-        return Doctrine_Core::getTable(get_called_class())->findBySql($dql, $params, $hydrationMode);
+        return Doctrine_Core::getTable(static::class)->findBySql($dql, $params, $hydrationMode);
     }
 
     /**
@@ -81,7 +81,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function findByDql($dql, $params = [], $hydrationMode = null)
     {
-        return Doctrine_Core::getTable(get_called_class())->findByDql($dql, $params, $hydrationMode);
+        return Doctrine_Core::getTable(static::class)->findByDql($dql, $params, $hydrationMode);
     }
 
     /**
@@ -97,7 +97,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function findBy($fieldName, $value, $hydrationMode = null)
     {
-        return Doctrine_Core::getTable(get_called_class())->findBy($fieldName, $value, $hydrationMode);
+        return Doctrine_Core::getTable(static::class)->findBy($fieldName, $value, $hydrationMode);
     }
 
     /**
@@ -113,7 +113,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function findOneBy($fieldName, $value, $hydrationMode = null)
     {
-        return Doctrine_Core::getTable(get_called_class())->findOneBy($fieldName, $value, $hydrationMode);
+        return Doctrine_Core::getTable(static::class)->findOneBy($fieldName, $value, $hydrationMode);
     }
 
     /**
@@ -128,7 +128,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function hardFind()
     {
-        return call_user_func_array([Doctrine_Core::getTable(get_called_class()), 'hardFind'], func_get_args());
+        return call_user_func_array([Doctrine_Core::getTable(static::class), 'hardFind'], func_get_args());
     }
 
     /**
@@ -142,12 +142,9 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function findBySeveralParams(array $filters = [], $hydrationMode = null, $returnOne = false)
     {
-        $tableClass = get_called_class();
-        $model = Doctrine_Core::getTable($tableClass);
-
         $query = ZFE_Query::create()
             ->select('x.*')
-            ->from($tableClass . ' x')
+            ->from(static::class . ' x')
         ;
 
         foreach ($filters as $param => $value) {
@@ -188,7 +185,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      */
     public static function __callStatic($method, $arguments)
     {
-        return call_user_func_array([Doctrine_Core::getTable(get_called_class()), $method], $arguments);
+        return call_user_func_array([Doctrine_Core::getTable(static::class), $method], $arguments);
     }
 
     /**

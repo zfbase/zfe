@@ -19,7 +19,7 @@ trait ZFE_Model_AbstractRecord_ServiceFields
      */
     protected static function _clearServiceFields()
     {
-        Doctrine_Core::getTable(get_called_class())->clearServiceFields();
+        Doctrine_Core::getTable(static::class)->clearServiceFields();
     }
 
     /**
@@ -29,7 +29,7 @@ trait ZFE_Model_AbstractRecord_ServiceFields
      */
     protected static function _addServiceFields(array $fields)
     {
-        $table = Doctrine_Core::getTable(get_called_class());
+        $table = Doctrine_Core::getTable(static::class);
 
         foreach ($fields as $field) {
             $table->addServiceField($field);
@@ -54,7 +54,7 @@ trait ZFE_Model_AbstractRecord_ServiceFields
      */
     protected static function _removeServiceFields(array $fields)
     {
-        $table = Doctrine_Core::getTable(get_called_class());
+        $table = Doctrine_Core::getTable(static::class);
 
         foreach ($fields as $field) {
             $table->removeServiceField($field);
@@ -84,7 +84,7 @@ trait ZFE_Model_AbstractRecord_ServiceFields
      */
     public static function getServiceFields()
     {
-        $table = Doctrine_Core::getTable(get_called_class());
+        $table = Doctrine_Core::getTable(static::class);
         $serviceFields = $table->getServiceFields();
         if (null === $serviceFields) {
             static::_initServiceFields();

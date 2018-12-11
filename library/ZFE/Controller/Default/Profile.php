@@ -26,7 +26,8 @@ class ZFE_Controller_Default_Profile extends Controller_Abstract
                     ->from('Editors')
                     ->where('id = ?', $user->id)
                     ->andWhere('password = ' . Editors::$credentialTreatment, $data['password'])
-                    ->setHydrationMode(Doctrine_Core::HYDRATE_SINGLE_SCALAR);
+                    ->setHydrationMode(Doctrine_Core::HYDRATE_SINGLE_SCALAR)
+                ;
                 if ($q->execute() !== $user->id) {
                     $form->getElement('password')->addError('Не верный пароль');
                 } else {

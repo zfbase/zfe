@@ -17,12 +17,10 @@ trait ZFE_Controller_AbstractResource_View
             throw new Zend_Controller_Action_Exception('Action "view" does not exist', 404);
         }
 
-        $modelName = static::$_modelName;
-
         /** @var $item AbstractRecord */
-        $item = $modelName::find($this->getParam('id'));
+        $item = (static::$_modelName)::find($this->getParam('id'));
         if (empty($item)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            throw new Zend_Controller_Action_Exception((static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
         }
         $this->view->item = $item;
     }

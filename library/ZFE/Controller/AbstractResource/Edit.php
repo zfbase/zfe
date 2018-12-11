@@ -66,8 +66,10 @@ trait ZFE_Controller_AbstractResource_Edit
             throw new Zend_Controller_Action_Exception('Action "edit" does not exist', 404);
         }
 
+        $modelName = static::$_modelName;
+
         if ( ! array_key_exists('modelName', $formOptions)) {
-            $formOptions['modelName'] = static::$_modelName;
+            $formOptions['modelName'] = $modelName;
         }
 
         $formName = static::$_editFormName;
@@ -82,7 +84,6 @@ trait ZFE_Controller_AbstractResource_Edit
             $this->view->form->setDisabled(true);
         }
         $form = $this->view->form; /** @var $form ZFE_Form_Horizontal */
-        $modelName = static::$_modelName;
         if ( ! ($this->view->item instanceof Doctrine_Record)) {
             if ( ! static::$_canCreate && ! $this->hasParam('id')) {
                 throw new ZFE_Controller_Exception('Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен', 403);
@@ -126,7 +127,7 @@ trait ZFE_Controller_AbstractResource_Edit
                     } else {
                         throw new ZFE_Controller_Exception('После сохранения в записи отсутствует ID.', 500);
                     }
-                } catch (Exception $ex) {
+                } catch (Throwable $ex) {
                     $this->error('Сохранить не удалось', $ex);
                 }
             }
@@ -192,9 +193,8 @@ trait ZFE_Controller_AbstractResource_Edit
         $saved = $this->editAction(false);
         $this->_helper->layout()->disableLayout();
         if (true === $saved) {
-            $model = static::$_modelName;
             $item = $this->view->item;
-            $data = $model::autocompleteItemToArray($item) + [
+            $data = (static::$_modelName)::autocompleteItemToArray($item) + [
                 'id' => $item->id,
                 'title' => $item->getTitle(),
             ];

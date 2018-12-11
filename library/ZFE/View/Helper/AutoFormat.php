@@ -84,7 +84,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                     return null;
                 }
 
-                if (false !== strpos($columnName, 'year')) {
+                if (false !== mb_strpos($columnName, 'year')) {
                     return $value;
                 }
 
@@ -95,7 +95,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                     return null;
                 }
 
-                return number_format($value, isset($columnParams['scale']) ? $columnParams['scale'] : null, ',', '&nbsp;');
+                return number_format($value, $columnParams['scale'] ?? null, ',', '&nbsp;');
             case 'timestamp':
                 if (empty($value) || '0000-00-00 00:00:00' === $value) {
                     return '';
@@ -132,7 +132,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
     {
         $config = Zend_Registry::get('config');
 
-        if ('date' === $columnName || 'date_' === substr($columnName, 0, 5)) {
+        if ('date' === $columnName || 'date_' === mb_substr($columnName, 0, 5)) {
             if (empty($value) || '0000-00-00' === $value) {
                 return '';
             }
@@ -140,7 +140,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
             return date($config->format->date, strtotime($value));
         }
 
-        if ('datetime' === $columnName || 'datetime_' === substr($columnName, 0, 9)) {
+        if ('datetime' === $columnName || 'datetime_' === mb_substr($columnName, 0, 9)) {
             if (empty($value) || '0000-00-00 00:00:00' === $value) {
                 return '';
             }
@@ -148,13 +148,13 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
             return date($config->format->datetime, strtotime($value));
         }
 
-        if ('time' === $columnName || 'time_' === substr($columnName, 0, 5)) {
+        if ('time' === $columnName || 'time_' === mb_substr($columnName, 0, 5)) {
             if (empty($value) || '00:00:00' === $value) {
                 return '';
             }
         }
 
-        if ('month' === $columnName || 'month_' === substr($columnName, 0, 6)) {
+        if ('month' === $columnName || 'month_' === mb_substr($columnName, 0, 6)) {
             if (empty($value) || '0000-00-00' === $value) {
                 return '';
             }

@@ -77,7 +77,7 @@ trait ZFE_Model_AbstractRecord_HistoryHiddenFields
     /**
      * Получить список полей модели, для которых в истории скрываются значения.
      *
-     * @return type
+     * @return array
      */
     public static function getHistoryHiddenFields()
     {

@@ -82,14 +82,14 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
             'style' => isset($pConfig->style) ? $pConfig->style : 'sliding',
         ];
 
-        $chunk = isset($options['chunk']) ? $options['chunk'] : $default['chunk'];
-        $style = isset($options['style']) ? $options['style'] : $default['style'];
+        $chunk = $options['chunk'] ?? $default['chunk'];
+        $style = $options['style'] ?? $default['style'];
 
-        $this->_template = isset($options['template']) ? $options['template'] : $this->_template;
-        $this->_selectedTemplate = isset($options['selectedTemplate']) ? $options['selectedTemplate'] : $this->_selectedTemplate;
-        $this->_separatorTemplate = isset($options['separatorTemplate']) ? $options['separatorTemplate'] : $this->_separatorTemplate;
-        $this->_containerPrefix = isset($options['containerPrefix']) ? $options['containerPrefix'] : $this->_containerPrefix;
-        $this->_containerPostfix = isset($options['containerPostfix']) ? $options['containerPostfix'] : $this->_containerPostfix;
+        $this->_template =          $options['template']          ?? $this->_template;
+        $this->_selectedTemplate =  $options['selectedTemplate']  ?? $this->_selectedTemplate;
+        $this->_separatorTemplate = $options['separatorTemplate'] ?? $this->_separatorTemplate;
+        $this->_containerPrefix =   $options['containerPrefix']   ?? $this->_containerPrefix;
+        $this->_containerPostfix =  $options['containerPostfix']  ?? $this->_containerPostfix;
 
         $rangeClass = 'Doctrine_Pager_Range_' . ucfirst($style);
         $range = new $rangeClass(['chunk' => $chunk]);

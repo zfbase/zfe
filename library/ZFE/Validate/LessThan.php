@@ -14,8 +14,8 @@
  */
 class ZFE_Validate_LessThan extends Zend_Validate_Abstract
 {
-    const NOT_LESS        = 'notLessThan';
-    const NOT_LESS_STRICT = 'notLessThanStrict';
+    public const NOT_LESS        = 'notLessThan';
+    public const NOT_LESS_STRICT = 'notLessThanStrict';
 
     /**
      * Сообщения об ошибках.
@@ -84,7 +84,8 @@ class ZFE_Validate_LessThan extends Zend_Validate_Abstract
         }
 
         $this->setMax($options['max'])
-            ->setInclusive($options['inclusive']);
+            ->setInclusive($options['inclusive'])
+        ;
     }
 
     /**

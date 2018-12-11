@@ -14,8 +14,8 @@
 abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
 {
     // Статусы стандартизированных Ajax ответов
-    const STATUS_SUCCESS = 0;  // Статус успеха
-    const STATUS_FAIL = 1;  // Статус ошибки
+    public const STATUS_SUCCESS = '0';  // Статус успеха
+    public const STATUS_FAIL    = '1';  // Статус ошибки
 
     /**
      * Класс контейнера всей страницы.

@@ -2,6 +2,7 @@
     $config = Zend_Registry::get('config');
     $user = Zend_Registry::get('user');
 ?>
+
 <nav class="navbar navbar-fixed-top navbar-default" role="navigation">
     <div class="<?= $this->containerClass ?>">
         <div class="navbar-header">
@@ -36,27 +37,27 @@
                             if ($config->menuUser) {
                                 echo $this->menuItems($config->menuUser);
                             }
-                            
+
                             if ($user->canSwitchRoles) {
-                                $items = array ();
-                                
+                                $items = [];
+
                                 if ($config->menuUser) {
                                     $items['rolesHeader']['divider'] = 1;
                                 }
-                                
+
                                 $items['rolesHeader']['itemsHeader'] = 'Сменить роль';
-                                
+
                                 foreach (Editors::$roles as $name => $label) {
                                     $items[$name]['label'] = $label;
                                     $items[$name]['uri'] = '/auth/setrole/role/' . $name;
-                                    
-                                    if ($user->role == $name) {
+
+                                    if ($user->role === $name) {
                                         $items[$name]['active'] = true;
                                     }
                                 }
-                                
+
                                 $items['rolesAfterDevider']['divider'] = '';
-                                
+
                                 echo $this->menuItems($items, false, true);
                             }
                         ?><li><a href="/auth/logout">Выход</a></li>

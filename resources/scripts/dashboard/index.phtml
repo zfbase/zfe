@@ -1,6 +1,6 @@
 <?
     $config = Zend_Registry::get('config');
-    
+
     // @todo нужно переделать склонение по нормальному
     $actionLabel = [
         History::ACTION_TYPE_INSERT => [
@@ -66,7 +66,7 @@
 
                     if (empty($item)) {
                         echo '<dd class="empty">Запись не найдена.</dd>';
-                    } else if ($item->contains('deleted') && $item->deleted) {
+                    } elseif ($item->contains('deleted') && $item->deleted) {
                         echo '<dd>' . $item->getTitle() . '</dd>';
                     } else {
                         ?><dd>
@@ -106,7 +106,7 @@
 
                     if (empty($item)) {
                         echo '<dd class="empty">Запись не найдена.</dd>';
-                    } else if ($item->contains('deleted') && $item->deleted) {
+                    } elseif ($item->contains('deleted') && $item->deleted) {
                         echo '<dd>' . $item->getTitle() . '</dd>';
                     } else {
                         ?><dd>

@@ -60,8 +60,9 @@ class ZFE_Debug extends Zend_Debug
     /**
      * Помощник для распечатки текущей строчки.
      *
-     * @param boolean $echo Вывести на экран вместо возвращения?
-     * @param boolean $exit Завершить выполнение?
+     * @param bool $echo Вывести на экран вместо возвращения?
+     * @param bool $exit Завершить выполнение?
+     *
      * @return string
      */
     public static function trace($echo = true, $exit = false)
@@ -75,9 +76,9 @@ class ZFE_Debug extends Zend_Debug
         }
 
         if ($echo) {
-            echo($output);
+            echo $output;
         }
-        
+
         if ($exit) {
             exit;
         }

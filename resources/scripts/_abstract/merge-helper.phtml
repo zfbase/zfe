@@ -57,9 +57,9 @@
             <tr>
                 <th><?= $modelName::getFieldName($columnName) ?></th>
                 <? foreach ($this->items as $item): ?>
-                <td class="<?= null === $item->$columnName ? 'null-value' : '' ?>">
+                <td class="<?= null === $item->{$columnName} ? 'null-value' : '' ?>">
                     <input type="radio" name="field[<?= $columnName ?>]" value="<?= $item->id ?>" />
-                    <?= $this->autoFormat($item->$columnName, $columnName, $modelName) ?>
+                    <?= $this->autoFormat($item->{$columnName}, $columnName, $modelName) ?>
                 </td>
                 <? endforeach; ?>
             </tr>

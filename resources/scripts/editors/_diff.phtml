@@ -1,5 +1,5 @@
 <?= $this->render('_abstract/diff.phtml') ?>
 
-<? if ($this->firstItem->password != $this->secondItem->password): ?>
+<? if ($this->firstItem->password !== $this->secondItem->password): ?>
 <p>Так же был изменен пароль.</p>
 <? endif; ?>

@@ -304,7 +304,7 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
      *
      * @throws Zend_Auth_Adapter_Exception - in the event that setup was not done properly
      *
-     * @return true
+     * @return bool
      */
     protected function _authenticateSetup()
     {
@@ -350,20 +350,19 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     protected function _authenticateCreateSelect()
     {
         // build credential expression
-        if (empty($this->_credentialTreatment) || (false === strpos($this->_credentialTreatment, '?'))) {
+        if (empty($this->_credentialTreatment) || (false === mb_strpos($this->_credentialTreatment, '?'))) {
             $this->_credentialTreatment = '?';
         }
 
-        $dbSelect = Doctrine_Query::create($this->getConnection())
+        return Doctrine_Query::create($this->getConnection())
             ->from($this->_tableName)
             ->select('*, (' . $this->_credentialColumn . ' = ' . str_replace(
                 '?',
                 $this->getConnection()->quote($this->_credential),
                 $this->_credentialTreatment
             ) . ') AS zend_auth_credential_match')
-            ->addWhere($this->_identityColumn . ' = ?', $this->_identity);
-
-        return $dbSelect;
+            ->addWhere($this->_identityColumn . ' = ?', $this->_identity)
+        ;
     }
 
     /**
@@ -380,7 +379,7 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     {
         try {
             $resultIdentities = $dbSelect->execute()->toArray();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             /**
              * @see Zend_Auth_Adapter_Exception
              */

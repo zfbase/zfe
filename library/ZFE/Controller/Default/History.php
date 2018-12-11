@@ -110,7 +110,7 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
             if ( ! (new $modelName() instanceof AbstractRecord)) {
                 throw new Exception();
             }
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Application_Exception('Не корректный класс записи', 400);
         }
 

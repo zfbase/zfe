@@ -31,7 +31,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
     {
         $q = static::_getDoctrineQueryForAutocomplete($params);
         return array_map(
-            [get_called_class(), 'mapAutocompleteResultRow'],
+            [static::class, 'mapAutocompleteResultRow'],
             $q->execute()
         );
     }
@@ -58,7 +58,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         }
 
         return array_map(
-            [get_called_class(), 'mapAutocompleteResultRow'],
+            [static::class, 'mapAutocompleteResultRow'],
             $doctrineQuery->execute()
         );
     }
@@ -75,14 +75,15 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         /** @var $q \Foolz\SphinxQL\SphinxQL */
         $q = ZFE_Sphinx::query()->select('id')
             ->from(static::getSphinxIndexName())
-            ->limit(static::$acLimit);
+            ->limit(static::$acLimit)
+        ;
 
-        $table = Doctrine_Core::getTable(get_called_class());
+        $table = Doctrine_Core::getTable(static::class);
         if (static::$_excludeByStatus && $table->hasField('status')) {
             $q->where('attr_status', 0);
         }
 
-        if (! empty($params['term']) && $term = trim($params['term'])) {
+        if ( ! empty($params['term']) && $term = trim($params['term'])) {
             $q->match('*', $term);
         } else {
             $term = null;
@@ -112,12 +113,13 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         $q = ZFE_Query::create()
             ->select('x.id')
             ->addSelect('x.title' === static::$titleField ? static::$titleField : '(' . static::$titleField . ') title')
-            ->from(get_called_class() . ' x')
+            ->from(static::class . ' x')
             ->where(static::$titleField . ' IS NOT NULL')
-            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
+            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY)
+        ;
 
         // Add check Status
-        $table = Doctrine_Core::getTable(get_called_class());
+        $table = Doctrine_Core::getTable(static::class);
         if (static::$_excludeByStatus && $table->hasField('status')) {
             $q->addWhere('x.status = 0');
         }
@@ -131,7 +133,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
             // Кажется, парсер Доктрины неверно обрабатывает параметр со скобкой.
             // Например, LIKE '(%' превращается в LIKE '(%)
             // скобка вместо кавычки
-            if (strpos($safeTerm, '(') === null) {
+            if (null === mb_strpos($safeTerm, '(')) {
                 $q->orderBy("CASE WHEN title LIKE '{$safeTerm}%' ESCAPE '\\\\' THEN 0 ELSE 1 END");
             }
             $q->addOrderBy('title ASC');

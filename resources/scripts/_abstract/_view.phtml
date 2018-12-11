@@ -1,4 +1,4 @@
-<? 
+<?
     $modelName = $this->modelName;
     $item = $this->item; /* @var $item Doctrine_Record */
     $table = Doctrine_Core::getTable($modelName);
@@ -8,20 +8,20 @@
 <table class="table table-condensed">
     <tbody>
         <? foreach ($columns as $columnName): ?>
-        <? if ( ! empty($item->$columnName)): ?>
+        <? if ( ! empty($item->{$columnName})): ?>
         <tr>
             <th><?= $modelName::getFieldName($columnName) ?></th>
-            <td><?= ZFE::shortenText($this->autoFormat($item->$columnName, $columnName, $modelName), 400) ?></td>
+            <td><?= ZFE::shortenText($this->autoFormat($item->{$columnName}, $columnName, $modelName), 400) ?></td>
         </tr>
         <? endif; ?>
         <? endforeach; ?>
         
         <? foreach ($modelName::$multiAutocompleteCols as $column => $options): ?>
         <? $relation = $options['relAlias']; ?>
-        <? if ($item->$relation->count()): ?>
+        <? if ($item->{$relation}->count()): ?>
         <tr>
-            <th><?= $modelName::getFieldName(strtolower($relation)) ?></th>
-            <td><?= $this->showTitles($item->$relation) ?></td>
+            <th><?= $modelName::getFieldName(mb_strtolower($relation)) ?></th>
+            <td><?= $this->showTitles($item->{$relation}) ?></td>
         </tr>
         <? endif; ?>
         <? endforeach; ?>

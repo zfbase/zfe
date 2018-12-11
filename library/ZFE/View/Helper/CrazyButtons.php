@@ -64,7 +64,7 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
         foreach ($buttons as $button) {
             $childrenBtns[] = $this->view->tag(
                 'li',
-                ['class' => isset($button['class']) ? $button['class'] : null],
+                ['class' => $button['class'] ?? null],
                 $this->one($button, '')
             );
         }

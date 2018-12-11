@@ -27,6 +27,6 @@ class ZFE_View_Helper_Webpack
     public function webpack($filename)
     {
         $manifest = self::getManifest();
-        return '/build/' . (isset($manifest[$filename]) ? $manifest[$filename] : $filename);
+        return '/build/' . ($manifest[$filename] ?? $filename);
     }
 }

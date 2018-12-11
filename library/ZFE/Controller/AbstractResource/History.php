@@ -63,13 +63,12 @@ trait ZFE_Controller_AbstractResource_History
 
         if (empty($this->view->curItem) && $this->hasParam('id')) {
             $itemId = (int) $this->getParam('id');
-            $modelName = static::$_modelName;
-            $this->view->curItem = $modelName::hardFind($itemId);
+            $this->view->curItem = (static::$_modelName)::hardFind($itemId);
         }
         $curItem = $this->view->curItem;
 
         if (empty($curItem)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            throw new Zend_Controller_Action_Exception((static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
         }
 
         $this->view->milestones = History::getVersionsListFor($curItem);
@@ -108,12 +107,11 @@ trait ZFE_Controller_AbstractResource_History
     public function restoreAction($redirectUrl = null)
     {
         $version = $this->getParam('version');
+        $modelName = static::$_modelName;
 
         if ( ! static::$_canRestore) {
             throw new Zend_Config_Exception('Невозможно откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version . ': доступ запрещен', 403);
         }
-
-        $modelName = static::$_modelName;
 
         $curItem = $modelName::find($this->getParam('id'));
         if (empty($curItem)) {
@@ -127,7 +125,7 @@ trait ZFE_Controller_AbstractResource_History
             $this->_helper->Notices->ok($modelName::decline('%s успешно откатан', '%s успешно откатана', '%s успешно откатано') . ' к версии ' . $version);
 
             $status = true;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             $this->error('Не удалось откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version, $ex);
 
             $status = false;
@@ -145,11 +143,9 @@ trait ZFE_Controller_AbstractResource_History
 
     public function historyMergeAction()
     {
-        $modelName = static::$_modelName;
-
-        $curItem = $modelName::find($this->getParam('id'));
+        $curItem = (static::$_modelName)::find($this->getParam('id'));
         if (empty($curItem)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            throw new Zend_Controller_Action_Exception((static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
         }
         $this->view->item = $item = $curItem->getStateForVersion(1);
 
@@ -164,9 +160,10 @@ trait ZFE_Controller_AbstractResource_History
 
         $q = ZFE_Query::create()
             ->select('x.*')
-            ->from($modelName . ' x')
+            ->from(static::$_modelName . ' x')
             ->whereIn('id', $slaveIds)
-            ->setHard(true);
+            ->setHard(true)
+        ;
         $this->view->slaves = $q->execute();
     }
 }

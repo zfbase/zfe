@@ -790,7 +790,7 @@ class ZFE_File
             ($subPath ? $subPath . '/' : '') .
             $fileName .
             (empty($ext) ? '' : '.' . $ext) .
-            ($isUrl && $andRand ? '?r=' . rand() : '');
+            ($isUrl && $andRand ? '?r=' . mt_rand() : '');
     }
 
     /**
@@ -845,16 +845,14 @@ class ZFE_File
             'pdf' =>  'fa fa-file-pdf-o',
         ];
 
-        $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-        return isset($matrix[$ext])
-            ? $matrix[$ext]
-            : 'fa fa-file-o';
+        $ext = mb_strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        return $matrix[$ext] ?? 'fa fa-file-o';
     }
 
     public static function humanFileSize($bytes, $precision = 2)
     {
         $base = log($bytes, 1024);
         $suffixes = ['байт', 'КБ', 'МБ', 'ГБ', 'ТБ'];
-        return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
+        return round(1024 ** ($base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
     }
 }

@@ -26,17 +26,17 @@
                     </td>
                     <td class="text-center"><?= History::$actionTypes[$item->action_type] ?></td>
                     <td class="text-center"><?= $item->content_version ?></td>
-                    <td class="text-center"><?= $item->action_type == History::ACTION_TYPE_UPDATE ? $item->cnt : '' ?></td>
+                    <td class="text-center"><?= History::ACTION_TYPE_UPDATE === $item->action_type ? $item->cnt : '' ?></td>
                     <? if (empty($obj)): ?>
                     <td class="empty">Не доступно</td>
                     <? else: ?>
                     <td>
-                        <? if ($item->action_type == History::ACTION_TYPE_MERGE): ?>
+                        <? if (History::ACTION_TYPE_MERGE === $item->action_type): ?>
                             <a href="<?= $obj->getHistoryMergeUrl($item->id) . $downHash ?>" class="btn btn-xs btn-primary">
                                 <span class="fa fa-cubes"></span>
                                 Показать объединенные
                             </a>
-                        <? elseif($item->action_type == History::ACTION_TYPE_INSERT): ?>
+                        <? elseif (History::ACTION_TYPE_INSERT === $item->action_type): ?>
                         <? else: ?>
                             <a href="<?= $obj->getHistoryDiffUrl($item->content_version) . $downHash ?>" class="btn btn-xs btn-primary">
                                 <span class="glyphicon glyphicon-transfer"></span>

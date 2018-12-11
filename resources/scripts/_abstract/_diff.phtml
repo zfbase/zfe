@@ -3,8 +3,8 @@
     $serviceFields = $modelName::getServiceFields();
     $hiddenColumns = $modelName::getHistoryHiddenFields();
     $sideHash = $this->hopsHistory()->getSideHash('?');
-    
-    $versions = array ();
+
+    $versions = [];
     foreach ($this->milestones as $version) {
         $versions[$version['version']] =
             'Версия № ' . $version['version'] . ': ' .
@@ -12,6 +12,7 @@
             ' в ' . $this->DateTime($version['datetime']);
     }
 ?>
+
 <div class="info">
     <div class="title">Сведения об актуальной версии</div>
     <?= $this->historyMeta($this->curItem) ?>
@@ -50,16 +51,16 @@
         <? foreach ($this->curItem->getData() as $column => $value): ?>
             <?
                 // Служебные поля пропускаем
-                if (in_array($column, $serviceFields)) {
+                if (in_array($column, $serviceFields, true)) {
                     continue;
                 }
-                
-                $leftValue = $this->leftItem->$column;
-                $rightValue = $this->rightItem->$column;
+
+                $leftValue = $this->leftItem->{$column};
+                $rightValue = $this->rightItem->{$column};
             ?>
-            <tr<?= $leftValue != $rightValue ? ' class="danger"' : '' ?>>
+            <tr<?= $leftValue !== $rightValue ? ' class="danger"' : '' ?>>
                 <th class="diff-left"><?= $modelName::getFieldName($column) ?></th>
-                <? if (in_array($column, $hiddenColumns)): ?>
+                <? if (in_array($column, $hiddenColumns, true)): ?>
                 <td colspan="2" class="text-center"><em class="empty">значение скрыто</em></td>
                 <? else: ?>
                 <td class="diff-left"><?= $this->autoFormat($leftValue, $column, $modelName) ?></td>
@@ -73,14 +74,14 @@
             <tfoot>
                 <tr>
                     <td colspan="2" class="text-center">
-                        <? if ($this->leftVersion != $this->curItem->version): ?>
+                        <? if ($this->leftVersion !== $this->curItem->version): ?>
                             <a href="<?= $this->curItem->getRestoreToVersion($this->leftVersion) . $sideHash ?>" class="btn btn-danger" data-confirm="Вы уверены, что хотите откатиться к версии <?= $this->leftVersion ?>?">
                                 Откатить к версии <?= $this->leftVersion ?>
                             </a>
                         <? endif; ?>
                     </td>
                     <td colspan="2" class="text-center">
-                        <? if ($this->rightVersion != $this->curItem->version): ?>
+                        <? if ($this->rightVersion !== $this->curItem->version): ?>
                             <a href="<?= $this->curItem->getRestoreToVersion($this->rightVersion) . $sideHash ?>" class="btn btn-danger" data-confirm="Вы уверены, что хотите откатиться к версии <?= $this->rightVersion ?>?">
                                 Откатить к версии <?= $this->rightVersion ?>
                             </a>

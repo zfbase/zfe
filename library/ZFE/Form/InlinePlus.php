@@ -6,7 +6,7 @@
 
 abstract class ZFE_Form_InlinePlus extends ZFE_Form
 {
-    const DISPOSITION_INLINE_PLUS = 'inline-plus';
+    public const DISPOSITION_INLINE_PLUS = 'inline-plus';
 
     public static $_dispositionClasses = [
         self::DISPOSITION_HORIZONTAL => 'form-horizontal',
