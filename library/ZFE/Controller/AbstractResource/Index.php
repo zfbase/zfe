@@ -108,7 +108,7 @@ trait ZFE_Controller_AbstractResource_Index
             $pos = mb_strrpos($order, '_');
             $field = mb_substr($order, 0, $pos);
             $direction = mb_strtoupper(mb_substr($order, $pos + 1));
-            if (in_array($direction , ['ASC', 'DESC'], true)) {
+            if (in_array($direction, ['ASC', 'DESC'], true)) {
                 $order = $field . ' ' . $direction;
             }
 
