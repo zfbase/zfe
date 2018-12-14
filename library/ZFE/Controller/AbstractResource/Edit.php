@@ -55,15 +55,12 @@ trait ZFE_Controller_AbstractResource_Edit
      * @param bool|string $redirectUrl адрес для перенаправления в случае успеха; если адрес равен FALSE, то перенаправление не произойдет
      * @param array       $formOptions конфигурация формы редактирования (по умолчанию содержит класс редактируемой записи
      *
-     * @throws Zend_Controller_Action_Exception
-     * @throws ZFE_Controller_Exception
-     *
      * @return bool|void В случае отсутствия перенаправления и успешного сохранения, возвращает TRUE, в остальных случаях NULL
      */
     public function editAction($redirectUrl = null, array $formOptions = [])
     {
         if ( ! in_array('edit', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "edit" does not exist', 404);
+            $this->abort(404);
         }
 
         $modelName = static::$_modelName;
@@ -77,7 +74,7 @@ trait ZFE_Controller_AbstractResource_Edit
             if ( ! empty($formName) && is_string($formName)) {
                 $this->view->form = new $formName($formOptions);
             } else {
-                throw new ZFE_Controller_Exception('Некорректная форма', 501);
+                $this->abort(500, 'Некорректная форма');
             }
         }
         if (static::$_readonly) {
@@ -86,7 +83,7 @@ trait ZFE_Controller_AbstractResource_Edit
         $form = $this->view->form; /** @var $form ZFE_Form_Horizontal */
         if ( ! ($this->view->item instanceof Doctrine_Record)) {
             if ( ! static::$_canCreate && ! $this->hasParam('id')) {
-                throw new ZFE_Controller_Exception('Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен', 403);
+                $this->abort(403, 'Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
             }
             $itemId = (int) $this->getParam('id');
             $this->view->item = $itemId > 0
@@ -95,7 +92,7 @@ trait ZFE_Controller_AbstractResource_Edit
         }
         $item = $this->view->item; /** @var $item AbstractRecord */
         if (empty($item)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
         if ($this->_request->isPost() && ! $item->isDeleted() && ! static::$_readonly) {
@@ -125,7 +122,7 @@ trait ZFE_Controller_AbstractResource_Edit
                             return true;
                         }
                     } else {
-                        throw new ZFE_Controller_Exception('После сохранения в записи отсутствует ID.', 500);
+                        $this->abort(500, 'После сохранения в записи отсутствует ID.');
                     }
                 } catch (Throwable $ex) {
                     $this->error('Сохранить не удалось', $ex);

@@ -16,8 +16,6 @@ class ZFE_Controller_Action_Helper_DownloadApache extends Zend_Controller_Action
      *
      * @param string $path путь до файла в файловой системе
      * @param string $name новое имя файла
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function direct($path, $name)
     {
@@ -45,7 +43,7 @@ class ZFE_Controller_Action_Helper_DownloadApache extends Zend_Controller_Action
                 die;
             }
         } else {
-            throw new Zend_Controller_Action_Exception('Файл не найден', 404);
+            $this->abort(404, 'Файл не найден');
         }
     }
 }

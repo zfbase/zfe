@@ -18,13 +18,11 @@ trait ZFE_Controller_AbstractResource_History
 
     /**
      * Просмотр изменений конкретной записи.
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function historyAction()
     {
         if ( ! in_array('history', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "history" does not exist', 404);
+            $this->abort(404);
         }
 
         $modelName = static::$_modelName;
@@ -35,7 +33,7 @@ trait ZFE_Controller_AbstractResource_History
         $item = $this->view->item;
 
         if (empty($item)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
         if (empty($this->view->history)) {
@@ -54,8 +52,6 @@ trait ZFE_Controller_AbstractResource_History
 
     /**
      * Сравнить две версии конкретной записи.
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function diffAction()
     {
@@ -68,7 +64,7 @@ trait ZFE_Controller_AbstractResource_History
         $curItem = $this->view->curItem;
 
         if (empty($curItem)) {
-            throw new Zend_Controller_Action_Exception((static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            $this->abort(404, (static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
         $this->view->milestones = History::getVersionsListFor($curItem);
@@ -99,9 +95,6 @@ trait ZFE_Controller_AbstractResource_History
      *
      * @param bool|string $redirectUrl Адрес для перенаправления; если адрес равен FALSE, то перенаправление не происходит
      *
-     * @throws Zend_Config_Exception
-     * @throws Zend_Controller_Action_Exception
-     *
      * @return bool|void В случае отсутствия перенаправления, возвращает TRUE или FALSE в зависимости от успеха удаления
      */
     public function restoreAction($redirectUrl = null)
@@ -110,12 +103,12 @@ trait ZFE_Controller_AbstractResource_History
         $modelName = static::$_modelName;
 
         if ( ! static::$_canRestore) {
-            throw new Zend_Config_Exception('Невозможно откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version . ': доступ запрещен', 403);
+            $this->abort(403, 'Невозможно откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version . ': доступ запрещен');
         }
 
         $curItem = $modelName::find($this->getParam('id'));
         if (empty($curItem)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
         try {
@@ -145,14 +138,14 @@ trait ZFE_Controller_AbstractResource_History
     {
         $curItem = (static::$_modelName)::find($this->getParam('id'));
         if (empty($curItem)) {
-            throw new Zend_Controller_Action_Exception((static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            $this->abort(404, (static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
         $this->view->item = $item = $curItem->getStateForVersion(1);
 
         /** @var $history History */
         $history = History::find($this->getParam('hid'));
         if (empty($history)) {
-            throw new Zend_Controller_Action_Exception('Историческая запись не найдена', 404);
+            $this->abort(404, 'Историческая запись не найдена');
         }
 
         $slavesStr = $history->content_old;

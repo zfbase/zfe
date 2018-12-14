@@ -11,8 +11,6 @@ class ZFE_Controller_Default_Error extends Controller_Abstract
 {
     /**
      * Страница ошибки.
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function errorAction()
     {
@@ -20,7 +18,7 @@ class ZFE_Controller_Default_Error extends Controller_Abstract
 
         if ( ! $errors) {
             // Зачем говорить что попали на страницу ошибки? Просто такой страницы нету
-            throw new Zend_Controller_Action_Exception('Action "error" does not exist', 404);
+            $this->abort(404);
         }
 
         switch ($errors->type) {

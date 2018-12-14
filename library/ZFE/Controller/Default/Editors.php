@@ -53,8 +53,6 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
 
     /**
      * Страница настройки прав.
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function accessAction()
     {
@@ -63,14 +61,12 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
         $item = $this->view->item = $modelName::find($itemId);
 
         if (empty($item)) {
-            throw new Zend_Controller_Action_Exception('Редактор не найден', 404);
+            $this->abort(404, 'Редактор не найден');
         }
     }
 
     /**
      * Страница с информацией о последней активности пользователя.
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function recentAction()
     {
@@ -79,7 +75,7 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
         $item = $this->view->item = $modelName::find($itemId);
 
         if (empty($item)) {
-            throw new Zend_Controller_Action_Exception('Редактор не найден', 404);
+            $this->abort(404, 'Редактор не найден');
         }
     }
 }

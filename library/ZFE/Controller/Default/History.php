@@ -95,9 +95,6 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
 
     /**
      * Страница сравнения версий записи.
-     *
-     * @throws Application_Exception
-     * @throws Zend_Controller_Action_Exception
      */
     public function diffAction()
     {
@@ -108,17 +105,17 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
         try {  // Если класс не удалось создать, либо он не потомок абстрактной модели, то что-то тут не то
             $this->view->modelName = $modelName = AbstractRecord::getModelNameByTableName($resource);
             if ( ! (new $modelName() instanceof AbstractRecord)) {
-                throw new Exception();
+                throw new ZFE_Controller_Exception();
             }
         } catch (Throwable $ex) {
-            throw new Application_Exception('Не корректный класс записи', 400);
+            $this->abort(500, 'Не корректный класс записи');
         }
 
         $this->view->resource = $modelName::getControllerName();
 
         $this->view->curItem = $modelName::hardFind($this->getParam('id', 0));
         if (empty($this->view->curItem)) {
-            throw new Zend_Controller_Action_Exception('Запись не найдена', 404);
+            $this->abort(404, 'Запись не найдена');
         }
 
         parent::diffAction();

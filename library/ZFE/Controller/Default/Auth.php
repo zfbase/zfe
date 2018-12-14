@@ -118,15 +118,13 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
     /**
      * Смена роли в рамках текущего сеанса.
-     *
-     * @throws Application_Exception
      */
     public function setRoleAction()
     {
         $auth = Zend_Auth::getInstance();
 
         if ( ! Zend_Registry::get('user')->canSwitchRoles) {
-            throw new Application_Exception('Изменение роли запрещено', 403);
+            $this->abort(403, 'Изменение роли запрещено');
         }
 
         $role = $this->getParam('role');
@@ -206,13 +204,11 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
     /**
      * Создание первого пользователя.
-     *
-     * @throws Application_Exception
      */
     public function startAction()
     {
         if (Editors::findAll()->count() > 0) {
-            throw new Application_Exception('В системе уже есть пользователи.');
+            $this->abort(500, 'В системе уже есть пользователи');
         }
 
         $this->view->form = $form = new ZFE_Form_Default_Start();

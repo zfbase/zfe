@@ -18,29 +18,26 @@ trait ZFE_Controller_AbstractResource_Merge
 
     /**
      * Страница объединения записей.
-     *
-     * @throws Zend_Controller_Action_Exception
-     * @throws Exception
      */
     public function mergeAction()
     {
         if ( ! in_array('merge', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "merge" does not exist', 404);
+            $this->abort(404);
         }
 
         if ( ! (static::$_modelName)::isMergeable()) {
-            throw new Zend_Controller_Action_Exception((static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.', 404);
+            $this->abort(404, (static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.');
         }
     }
 
     public function searchDuplicatesAction()
     {
         if ( ! in_array('search-duplicates', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "search-duplicates" does not exist', 404);
+            $this->abort(404);
         }
 
         if ( ! (static::$_modelName)::isMergeable()) {
-            throw new Zend_Controller_Action_Exception((static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.', 404);
+            $this->abort(404, (static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.');
         }
 
         $this->view->groups = (static::$_modelName)::getDuplicatesGroups();
@@ -54,11 +51,11 @@ trait ZFE_Controller_AbstractResource_Merge
 
         $ids = $this->getParam('ids');
         if (empty($ids)) {
-            throw new Zend_Controller_Action_Exception($modelName::$namePlural . ' для объединения не выбраны.', 400);
+            $this->abort(400, $modelName::$namePlural . ' для объединения не выбраны.');
         }
         if ( ! is_array($ids)) {
             if ( ! is_string($ids)) {
-                throw new Zend_Controller_Action_Exception('Не корректные параметры запроса.', 400);
+                $this->abort(400, 'Не корректные параметры запроса.');
             }
             $ids = explode(',', $ids);
         }

@@ -24,7 +24,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
         } elseif ($excel instanceof PHPExcel) {
             $this->sendPhpExcel($excel, $fileName);
         } else {
-            throw new ZFE_Controller_Exception('Не поддерживаемый тип документа Excel');
+            $this->abort(500, 'Не поддерживаемый тип документа Excel');
         }
     }
 

@@ -21,19 +21,16 @@ trait ZFE_Controller_AbstractResource_Delete
      *
      * @param bool|string $redirectUrl Адрес для перенаправления; если адрес равен FALSE, то перенаправление не происходит
      *
-     * @throws Zend_Controller_Action_Exception
-     * @throws ZFE_Controller_Exception
-     *
      * @return bool|void В случае отсутствия перенаправления, возвращает TRUE или FALSE в зависимости от успеха удаления
      */
     public function deleteAction($redirectUrl = null)
     {
         if ( ! in_array('delete', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "delete" does not exist', 404);
+            $this->abort(404);
         }
 
         if ( ! static::$_canDelete) {
-            throw new ZFE_Controller_Exception('Невозможно удалить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен', 403);
+            $this->abort(403, 'Невозможно удалить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
 
         $modelName = static::$_modelName;
@@ -41,7 +38,7 @@ trait ZFE_Controller_AbstractResource_Delete
         /** @var $item AbstractRecord */
         $item = $modelName::find($this->getParam('id'));
         if (empty($item)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
         try {
@@ -89,19 +86,16 @@ trait ZFE_Controller_AbstractResource_Delete
      *
      * @param bool|string $redirectUrl Адрес для перенаправления; если адрес равен FALSE, то перенаправление не происходит
      *
-     * @throws Zend_Controller_Action_Exception
-     * @throws ZFE_Controller_Exception
-     *
      * @return bool Возвращает TRUE или FALSE в зависимости от успеха восстановления
      */
     public function undeleteAction($redirectUrl = null)
     {
         if ( ! in_array('undelete', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "undelete" does not exist', 404);
+            $this->abort(404);
         }
 
         if ( ! static::$_canRestore) {
-            throw new ZFE_Controller_Exception('Невозможно восстановить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен', 403);
+            $this->abort(403, 'Невозможно восстановить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
 
         $modelName = static::$_modelName;
@@ -109,7 +103,7 @@ trait ZFE_Controller_AbstractResource_Delete
         /** @var $item AbstractRecord */
         $item = $modelName::hardFind($this->getParam('id'));
         if (empty($item)) {
-            throw new Zend_Controller_Action_Exception($modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'), 404);
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
         try {

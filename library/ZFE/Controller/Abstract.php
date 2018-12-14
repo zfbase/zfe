@@ -60,7 +60,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     protected function _json($status, array $data = [], $message = null, $log = true)
     {
         if (self::STATUS_SUCCESS !== $status && self::STATUS_FAIL !== $status) {
-            throw new ZFE_Controller_Exception('Использован недопустимый статус ответа');
+            $this->abort(500, 'Использован недопустимый статус ответа');
         }
 
         $json = [];
@@ -88,6 +88,8 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      *
      * @param int    $code
      * @param string $customMessage
+     *
+     * @throws Zend_Controller_Action_Exception
      */
     public function abort($code = 500, $customMessage = null)
     {

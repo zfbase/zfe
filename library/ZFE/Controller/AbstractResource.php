@@ -63,8 +63,6 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 
     /**
      * Выполняется до того, как диспетчером будет вызвано действие.
-     *
-     * @throws ZFE_Controller_Exception
      */
     public function preDispatch()
     {
@@ -72,7 +70,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 
         $modelName = static::$_modelName;
         if (empty($modelName)) {
-            throw new ZFE_Controller_Exception('В контроллере не указана модель. Необходимо определить свойство ' . static::class . '::$_modelName');
+            $this->abort(500, 'В контроллере не указана модель. Необходимо определить свойство ' . static::class . '::$_modelName');
         }
 
         $acl = Zend_Registry::get('acl');
@@ -133,13 +131,11 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 
     /**
      * Ajax-autocomplete модели.
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function autocompleteAction()
     {
         if ( ! in_array('autocomplete', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "autocomplete" does not exist', 404);
+            $this->abort(404, 'Action "autocomplete" does not exist');
         }
 
         $modelName = static::$_modelName;

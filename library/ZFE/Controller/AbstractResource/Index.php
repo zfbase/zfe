@@ -154,13 +154,11 @@ trait ZFE_Controller_AbstractResource_Index
 
     /**
      * Сводная страница с перечнем объектов.
-     *
-     * @throws Zend_Controller_Action_Exception
      */
     public function indexAction()
     {
         if ( ! in_array('index', static::$_enableActions, true)) {
-            throw new Zend_Controller_Action_Exception('Action "index" does not exist', 404);
+            $this->abort(404);
         }
 
         $this->_helper->postToGet();
