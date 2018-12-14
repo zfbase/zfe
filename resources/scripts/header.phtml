@@ -49,7 +49,7 @@
 
                                 foreach (Editors::$roles as $name => $label) {
                                     $items[$name]['label'] = $label;
-                                    $items[$name]['uri'] = '/auth/setrole/role/' . $name;
+                                    $items[$name]['uri'] = '/auth/set-role/role/' . $name;
 
                                     if ($user->role === $name) {
                                         $items[$name]['active'] = true;

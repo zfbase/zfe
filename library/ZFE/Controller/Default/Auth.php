@@ -121,7 +121,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
      *
      * @throws Application_Exception
      */
-    public function setroleAction()
+    public function setRoleAction()
     {
         $auth = Zend_Auth::getInstance();
 
