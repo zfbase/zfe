@@ -9,7 +9,7 @@ use Foolz\SphinxQL\SphinxQL;
 /**
  * Основной базовый контроллер приложения, для поддержки работы со Sphinx.
  */
-abstract class ZFE_Controller_AbstractResourceSphinx extends ZFE_Controller_AbstractResource
+abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_AbstractResource
 {
     /**
      * Атрибут, возвращаемый запросом к Sphinx.
