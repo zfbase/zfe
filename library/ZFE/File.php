@@ -728,7 +728,7 @@ class ZFE_File
      *
      * @return string
      */
-    public static function safeFilename($filename)
+    public static function safeFilename($filename, $ext = null)
     {
         $tr = [
             'А' => 'A',   'Б' => 'B',    'В' => 'V',   'Г' => 'G',   'Д' => 'D',
@@ -747,17 +747,22 @@ class ZFE_File
             'э' => 'e',   'ю' => 'yu',   'я' => 'ya',
         ];
 
-        $name = pathinfo($filename, PATHINFO_FILENAME);
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-
-        if (in_array($ext, self::$_blackExtensions, true)) {
-            $ext = '_' . $ext;
+        if ($ext) {
+            $name = $filename;
+        } else {
+            $name = pathinfo($filename, PATHINFO_FILENAME);
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
         }
 
-        $result = $name . '.' . $ext;
-        $result = strtr($result, $tr);
+        if ($ext) {
+            if (in_array($ext, self::$_blackExtensions, true)) {
+                $ext = '_' . $ext;
+            }
+    
+            $filename = $name . '.' . $ext;
+        }
 
-        return preg_replace('/[^a-zA-Z0-9_\-\.]+/', '_', $result);
+        return preg_replace('/[^a-zA-Z0-9_\-\.]+/', '_', strtr($filename, $tr));
     }
 
     /**
