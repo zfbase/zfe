@@ -14,7 +14,7 @@
  */
 class ZFE_Validate_Date_LessThan extends My_Validate_Date_Abstract
 {
-    public const NOT_LESS = 'notLessThan';
+    const NOT_LESS = 'notLessThan';
 
     /**
      * Sets validator options.

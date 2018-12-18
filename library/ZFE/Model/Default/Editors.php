@@ -83,8 +83,8 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     ];
 
     // Статусы
-    public const STATUS_ENABLE   = '0';
-    public const STATUS_DISABLED = '1';
+    const STATUS_ENABLE   = '0';
+    const STATUS_DISABLED = '1';
 
     /**
      * Статусы записей модели в зависимости от половой принадлежности записи.

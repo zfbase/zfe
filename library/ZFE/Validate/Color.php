@@ -12,8 +12,8 @@
  */
 class ZFE_Validate_Color extends Zend_Validate_Abstract
 {
-    public const INVALID = 'colorInvalid';
-    public const NOT_COLOR = 'notColor';
+    const INVALID = 'colorInvalid';
+    const NOT_COLOR = 'notColor';
 
     /**
      * Сообщения об ошибках.

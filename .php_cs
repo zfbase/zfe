@@ -102,6 +102,7 @@ return PhpCsFixer\Config::create()
         'trailing_comma_in_multiline_array' => true,
         'trim_array_spaces' => true,
         'unary_operator_spaces' => true,
+        'visibility_required' => ['property', 'method'],
         'void_return' => false,  // хорошо бы включить, но заебешься обновлять существующие проекты
         'whitespace_after_comma_in_array' => true,
         'yoda_style' => true,

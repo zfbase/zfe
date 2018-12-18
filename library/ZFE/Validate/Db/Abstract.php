@@ -10,8 +10,8 @@
 abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
 {
     // Константы ошибок
-    public const ERROR_NO_RECORD_FOUND = 'noRecordFound';
-    public const ERROR_RECORD_FOUND    = 'recordFound';
+    const ERROR_NO_RECORD_FOUND = 'noRecordFound';
+    const ERROR_RECORD_FOUND    = 'recordFound';
 
     /**
      * Массив сообщений.

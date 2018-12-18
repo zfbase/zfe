@@ -14,8 +14,8 @@
  */
 class ZFE_Validate_LessThan extends Zend_Validate_Abstract
 {
-    public const NOT_LESS        = 'notLessThan';
-    public const NOT_LESS_STRICT = 'notLessThanStrict';
+    const NOT_LESS        = 'notLessThan';
+    const NOT_LESS_STRICT = 'notLessThanStrict';
 
     /**
      * Сообщения об ошибках.

@@ -25,9 +25,9 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     use ZFE_Model_Decline;                             // Склонения сообщений
 
     // Пол записи (допустимые варианты)
-    public const SEX_MALE   = '1';
-    public const SEX_FEMALE = '2';
-    public const SEX_NEUTER = '3';
+    const SEX_MALE   = '1';
+    const SEX_FEMALE = '2';
+    const SEX_NEUTER = '3';
 
     /**
      * Названия новой записи в зависимости от половой принадлежности записи.
@@ -113,10 +113,10 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $mergeable = false;
 
     // Статусы записей модели
-    public const STATUS_PUBLISHED        = '0';
-    public const STATUS_NOT_PUBLISHED    = '1';
-    public const STATUS_READY_TO_PUBLISH = '2';
-    public const STATUS_UNPUBLISHED      = '3';
+    const STATUS_PUBLISHED        = '0';
+    const STATUS_NOT_PUBLISHED    = '1';
+    const STATUS_READY_TO_PUBLISH = '2';
+    const STATUS_UNPUBLISHED      = '3';
 
     /**
      * Список полей, принимающихся только значения да/нет

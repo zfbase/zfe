@@ -12,7 +12,7 @@
  */
 class ZFE_Validate_Url extends Zend_Validate_Abstract
 {
-    public const INVALID = 'urlInvalid';
+    const INVALID = 'urlInvalid';
 
     /**
      * Сообщения об ошибках.

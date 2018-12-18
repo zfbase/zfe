@@ -14,8 +14,8 @@
  */
 class ZFE_Validate_GreaterThan extends Zend_Validate_Abstract
 {
-    public const NOT_GREATER        = 'notGreaterThan';
-    public const NOT_GREATER_STRICT = 'notGreaterThanStrict';
+    const NOT_GREATER        = 'notGreaterThan';
+    const NOT_GREATER_STRICT = 'notGreaterThanStrict';
 
     /**
      * Сообщения об ошибках.
