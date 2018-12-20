@@ -84,7 +84,7 @@ trait ZFE_Controller_AbstractResource_Index
             if ($ids) {
                 $q->setHard(true);
             } else {
-                $deleted = (int) $this->getParam('deleted');
+                $deleted = $this->getParam('deleted');
                 if ('1' === $deleted) {
                     $q->addWhere('x.deleted = 1')->setHard(true);
                 }
