@@ -334,7 +334,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
             return false;
         }
 
-        return 1 === $this->deleted;
+        return '1' === $this->deleted;
     }
 
     /**

@@ -27,7 +27,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
 
         if ( ! empty(static::$_searchFormName)) {
             $searchForm = new static::$_searchFormName();
-            if (1 === $this->getParam('deleted')) {
+            if ('1' === $this->getParam('deleted')) {
                 $searchForm->addElement('hidden', 'deleted', ['value' => 1]);
             }
             $searchForm->populate($this->getAllParams());

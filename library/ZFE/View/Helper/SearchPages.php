@@ -71,7 +71,7 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
             return '';
         }
 
-        if (1 !== $currentRowNumber) {
+        if ('1' !== $currentRowNumber) {
             $prevUrl = $this->getPrevUrl();
             $prevBtn = '<a role="button" class="btn btn-' . $btnSize . ' btn-default" href="' . $prevUrl . '">'
                      . '<span class="glyphicon glyphicon-arrow-left"></span>'
