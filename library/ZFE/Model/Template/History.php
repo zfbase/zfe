@@ -130,7 +130,10 @@ class ZFE_Model_Template_History extends Doctrine_Template
             if ($invoker->contains('version')) {
                 ++$invoker->version;
             }
+
+            $invoker->preUndelete();
             $invoker->hardSave($conn);
+            $invoker->postUndelete();
 
             $history = new History();
             $history->table_name = $invoker->getTableName();
@@ -145,6 +148,14 @@ class ZFE_Model_Template_History extends Doctrine_Template
         } else {
             throw new ZFE_Model_Exception('Запись не поддерживает восстановление из удаленных.');
         }
+    }
+
+    public function preUndelete()
+    {
+    }
+
+    public function postUndelete()
+    {
     }
 
     /**
