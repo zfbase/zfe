@@ -36,7 +36,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     protected function _getCurrentUserId()
     {
-        if  ( ! Zend_Registry::isRegistered('user')) {
+        if ( ! Zend_Registry::isRegistered('user')) {
             return null;
         }
 

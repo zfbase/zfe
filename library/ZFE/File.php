@@ -724,7 +724,8 @@ class ZFE_File
     /**
      * Преобразовать имя файла к безопасному.
      *
-     * @param string $filename
+     * @param string     $filename
+     * @param null|mixed $ext
      *
      * @return string
      */
@@ -758,7 +759,7 @@ class ZFE_File
             if (in_array($ext, self::$_blackExtensions, true)) {
                 $ext = '_' . $ext;
             }
-    
+
             $filename = $name . '.' . $ext;
         }
 
