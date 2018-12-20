@@ -20,7 +20,11 @@ trait ZFE_Controller_AbstractResource_View
         /** @var $item AbstractRecord */
         $item = (static::$_modelName)::find($this->getParam('id'));
         if (empty($item)) {
-            $this->abort(404, (static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
+            if (Zend_Registry::get('acl')->isAllowedMe((static::$_modelName)::getControllerName(), 'edit')) {
+                $this->redirect($item->getEditUrl());
+            } else {
+                $this->abort(404, (static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
+            }
         }
         $this->view->item = $item;
     }
