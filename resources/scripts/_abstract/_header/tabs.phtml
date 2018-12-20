@@ -17,7 +17,7 @@
 
         $onlyValid = array_key_exists('onlyValid', $tab)
             ? $tab['onlyValid']
-            : false;
+            : true;
 
         $isActive = $this->actionName === $tab['action'];
         if ($isActive && ! empty($tab['params'])) {

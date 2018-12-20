@@ -32,7 +32,7 @@ trait ZFE_Controller_AbstractResource_Edit
      * * title           – заголовок вкладки
      * * class           – класс элемента li вкладки
      * * onlyRegistered  – только для зарегистрированных (если есть id), по умолчанию false
-     * * onlyValid       - только не удаленные (deleted != 0), по умолчанию false
+     * * onlyValid       - только не удаленные (deleted != 0), по умолчанию true
      *
      * @var array
      */
@@ -40,6 +40,7 @@ trait ZFE_Controller_AbstractResource_Edit
         [
             'action' => 'edit',
             'title' => 'Карточка',
+            'onlyValid' => true,
         ],
         [
             'action' => 'history',
