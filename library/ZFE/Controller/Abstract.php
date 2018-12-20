@@ -103,9 +103,9 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      * А также отправить информацию об ошибке в логи.
      *
      * @param string    $msg
-     * @param Exception $e
+     * @param Throwable $e
      */
-    public function error($msg, Exception $ex = null)
+    public function error($msg, Throwable $ex = null)
     {
         if ($log = Zend_Registry::get('log')) {
             $log->log(
