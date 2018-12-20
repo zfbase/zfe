@@ -47,6 +47,7 @@ trait ZFE_Controller_AbstractResource_Edit
             'title' => 'История',
             'class' => 'pull-right',
             'onlyRegistered' => true,
+            'onlyValid' => true,
         ],
     ];
 

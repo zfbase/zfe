@@ -32,6 +32,7 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
         [
             'action' => 'edit',
             'title' => 'Карточка',
+            'onlyValid' => true,
         ],
         [
             'action' => 'access',
@@ -48,6 +49,7 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
             'title' => 'История',
             'class' => 'pull-right',
             'onlyRegistered' => true,
+            'onlyValid' => true,
         ],
     ];
 
