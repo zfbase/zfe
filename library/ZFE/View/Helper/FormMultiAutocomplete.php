@@ -55,9 +55,8 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
         }
 
         // Определяем состояние флага отключения элемента
-        $disabled = '';
         if ($disable) {
-            $disabled = ' disabled="disabled"';
+            $attribs['disabled'] = 'disabled';
         }
 
         // Определяем перечень классов
@@ -94,6 +93,11 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
             unset($attribs['relAlias']);
         }
 
+        $class = 'multiac-linked-wrap';
+        if ($disable) {
+            $class .= ' disabled';
+        }
+
         $xhtml = '';
 
         if (is_array($value)) {
@@ -108,7 +112,7 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
                 }
                 ++$i;
 
-                $editBtn = $editUrl ? '<div class="btn btn-edit">...</div>' : '';
+                $editBtn = $editUrl && ! $disable ? '<div class="btn btn-edit">...</div>' : '';
                 $formBtn = $hasFormBtn && ! $editBtn ? '<a href="' . sprintf($attribs['data-itemform'], $item['id']) . '" target="_blank" class="btn btn-form"><span class="glyphicon glyphicon-share-alt"></span></a>' : '';
                 $removeBtn = $disable ? '' : '<div class="btn btn-remove"><span class="glyphicon glyphicon-remove"></span></div>';
 
@@ -127,23 +131,18 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
                     . '</div>';
             }
         }
+        $xhtml = '<div class="' . $class . '" data-name="' . $name . '"' . $itemFormUrl . '>' . $xhtml . '</div>';
 
-        $class = 'multiac-linked-wrap';
-        if ($disable) {
-            $class .= ' disabled';
-        }
+        $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-search']);
+        $separator = $this->view->tag('i', ['class' => 'tt-separator']);
+        $searchInput = $this->view->tag('input', $attribs + [
+            'type' => 'text',
+            'id' => $id,
+            'name' => $name,
+        ]);
+        $searchPackClass = 'tt-icon-right' . ($disable ? ' tt-disabled' : '');
+        $searchPack = $this->view->tag('div', ['class' => $searchPackClass], $separator . $searchIcon . $searchInput);
 
-        $xhtml = '<div class="' . $class . '" data-name="' . $name . '"' . $itemFormUrl . '>' . $xhtml . '</div>'
-               . '<div class="tt-icon-right">'
-               . '<i class="glyphicon glyphicon-search"></i>'
-               . '<input type="text"'
-               . ' id="' . $this->view->escape($id) . '"'
-               . ' name="' . $this->view->escape($name) . '"'
-               . $disabled
-               . $this->_htmlAttribs($attribs)
-               . $this->getClosingBracket()
-               . '</div>';
-
-        return '<div class="multiac-wrap">' . $xhtml . '</div>';
+        return '<div class="multiac-wrap">' . $xhtml . $searchPack . '</div>';
     }
 }

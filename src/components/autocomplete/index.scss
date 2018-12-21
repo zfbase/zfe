@@ -139,16 +139,58 @@
   z-index: 1;
 }
 
+.tt-icon-right.tt-disabled > i {
+  cursor: not-allowed;
+}
+
 .tt-icon-left input {
   padding-left: 30px;
 }
 
 .tt-icon-right input {
-  padding-right: 30px;
+  padding-right: 38px;
 }
 
 .tt-icon-right > i {
   right: 0;
+  color: #cccccc;
+}
+
+.tt-icon-right > i:hover {
+  color: #999999;
+}
+
+.tt-icon-right.tt-disabled > i:hover {
+  color: #cccccc;
+}
+
+.tt-icon-right > i.clear {
+  right: 37px;
+  font-size: 80%;
+  line-height: 1.2;
+  cursor: pointer;
+  display: none;
+}
+
+.tt-fill {
+  i.clear {
+    display: inline-block;
+  }
+
+  input {
+    padding-right: 70px;
+  }
+}
+
+.tt-icon-right > i.tt-separator {
+  background-color: rgb(204, 204, 204);
+  width: 1px;
+  position: absolute;
+  padding: 0;
+  height: 50%;
+  top: 25%;
+  right: 37px;
+  z-index: 1;
 }
 
 .form-inline .autocomplete-wrap,

@@ -68,6 +68,8 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         $titleInput = $this->_hidden($name . '[title]', $value['title']);
 
         $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-search']);
+        $separator = $this->view->tag('i', ['class' => 'tt-separator']);
+        $clearIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-remove clear']);
         $searchInput = $this->view->tag('input', $attribs + [
             'type' => 'text',
             'id' => $id,
@@ -75,7 +77,8 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             'value' => $value['title'],
             'data-create' => $create,
         ]);
-        $searchPack = $this->view->tag('div', ['class' => 'tt-icon-right'], $searchIcon . $searchInput);
+        $searchPackClass = 'tt-icon-right' . ($disable ? ' tt-disabled' : '');
+        $searchPack = $this->view->tag('div', ['class' => $searchPackClass], $clearIcon . $separator . $searchIcon . $searchInput);
 
         $helpIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-warning-sign']);
         $helpBlock = $this->view->tag(

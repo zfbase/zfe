@@ -10,21 +10,22 @@ const defaults = {
 
 class ZFEAutocomplete {
   constructor(element, options) {
-    this.input = $(element);
-    this.group = this.input.closest('.autocomplete-wrap');
+    this.$input = $(element);
+    this.$group = this.$input.closest('.autocomplete-wrap');
+    this.$iconRight = this.$group.find('.tt-icon-right');
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
   }
 
   dataAttrOptions() {
-    const { input, group } = this;
-    const data = input.data();
-    const name = input.attr('name');
-    input.removeAttr('name');
+    const { $input, $group } = this;
+    const data = $input.data();
+    const name = $input.attr('name');
+    $input.removeAttr('name');
     return {
       name,
-      idInput: group.find(`[name="${name}[id]"]`),
-      titleInput: group.find(`[name="${name}[title]"]`),
+      $idInput: $group.find(`[name="${name}[id]"]`),
+      $titleInput: $group.find(`[name="${name}[title]"]`),
       sourceUrl: data.source,
       canCreate: data.create === 'allow',
       itemForm: data.itemform,
@@ -85,62 +86,83 @@ class ZFEAutocomplete {
         },
       });
     }
-    this.input.typeahead({
+    this.$input.typeahead({
       minLength: 0, // проверка переезжает в Bloodhound
       highlight: true,
     }, datasetSettings);
     //this.input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
+  
+    if (this.$input.typeahead('val')) {
+      this.$iconRight.addClass('tt-fill');
+    }
   }
 
   initHandlers() {
-    const { input, group } = this;
-    const { idInput, titleInput, canCreate } = this.settings;
+    const { $input, $group, $iconRight } = this;
+    const { $idInput, $titleInput, canCreate } = this.settings;
 
     // Обработка клика по иконке
-    $('i', group).on('click', () => {
-      input.trigger($.Event('keydown', { keyCode: 40 }));
-      input.focus();
+    $('i', $group).on('click', () => {
+      $input.trigger($.Event('keydown', { keyCode: 40 }));
+      $input.focus();
     });
 
     // Событие заверения работы автокомплита (значение выбрано/указано)
-    this.input.on('typeahead:close', (e) => {
+    $input.on('typeahead:close', (e) => {
       if (e.keyCode === keyCode.ESCAPE) {
-        input
+        $input
           .typeahead('val', titleInput.val())
           .typeahead('close');
         e.preventDefault();
         return;
       }
 
-      const newValue = $.trim(input.typeahead('val'));
+      const newValue = $.trim($input.typeahead('val'));
 
       if (newValue === '') {
-        idInput.val('');
-        titleInput.val('');
-        group.removeClass('has-warning');
-      } else if (newValue !== titleInput.val()) {
+        $idInput.val('');
+        $titleInput.val('');
+        $group.removeClass('has-warning');
+      } else if (newValue !== $titleInput.val()) {
         if (canCreate) {
-          idInput.val('');
-          titleInput.val(newValue);
-          group.addClass('has-warning');
+          $idInput.val('');
+          $titleInput.val(newValue);
+          $group.addClass('has-warning');
         } else {
-          input.typeahead('val', '');
+          $input.typeahead('val', '');
         }
       }
     });
 
-    this.input.on('keypress', (e) => {
+    $input.on('keypress', (e) => {
       if (e.keyCode === keyCode.ENTER) {
-        input.trigger('typeahead:close');
+        $input.trigger('typeahead:close');
         e.preventDefault();
       }
     });
 
     // Выбор значения из списка
-    this.input.on('typeahead:select', (e, selected) => {
-      idInput.val(selected.key);
-      titleInput.val(selected.value);
-      group.removeClass('has-warning');
+    $input.on('typeahead:select', (e, selected) => {
+      $idInput.val(selected.key);
+      $titleInput.val(selected.value);
+      $group.removeClass('has-warning');
+      $iconRight.addClass('tt-fill');
+    });
+
+    $input.on('typeahead:change', () => {
+      if ($input.typeahead('val')) {
+        $iconRight.addClass('tt-fill');
+      } else {
+        $iconRight.removeClass('tt-fill');
+      }
+    });
+
+    // Очистка элемента
+    $iconRight.find('.clear').on('click', () => {
+      $input.typeahead('val', '');
+      $idInput.val('');
+      $titleInput.val('');
+      $iconRight.removeClass('tt-fill');
     });
   }
 }
