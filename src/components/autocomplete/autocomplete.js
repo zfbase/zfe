@@ -15,6 +15,7 @@ class ZFEAutocomplete {
     this.$iconRight = this.$group.find('.tt-icon-right');
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
+    this.$hint = this.$group.find('.tt-hint');
   }
 
   dataAttrOptions() {
@@ -165,12 +166,38 @@ class ZFEAutocomplete {
       $iconRight.removeClass('tt-fill');
     });
   }
+
+  disable(disable) {
+    if (disable) {
+      this.$input.addClass('disabled');
+      this.$iconRight.addClass('tt-disabled');
+      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)');
+    } else {
+      this.$input.removeClass('disabled');
+      this.$iconRight.removeClass('tt-disabled');
+      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)');
+    }
+
+    this.$input.attr('disabled', disable);
+    this.$hint.attr('disabled', disable);
+  }
 }
 
-$.fn[pluginName] = function zfeAutocomplete(options) {
-  return this.each((i, el) => {
+$.fn[pluginName] = function zfeAutocomplete(options, ...args) {
+  let results = [];
+  const $elements = this.each((i, el) => {
     if (!$.data(el, `plugin_${pluginName}`)) {
       $.data(el, `plugin_${pluginName}`, new ZFEAutocomplete(el, options));
     }
+    const item = $.data(el, `plugin_${pluginName}`);
+    if (typeof options === 'string' && typeof item[options] === 'function') {
+      results.push(item[options](...args));
+    }
   });
+
+  switch (results.length) {
+    case 0: return $elements;
+    case 1: return results.pop();
+    default: return results;
+  }
 };
