@@ -1,13 +1,12 @@
 <?
     $item = $this->item; /* @var $item ZFE_Model_AbstractRecord */
-    $acl = Zend_Registry::get('acl'); /* @var $acl ZFE_Acl */
     $request = Zend_Controller_Front::getInstance()->getRequest();
 ?>
 
 <ul class="nav nav-tabs" style="margin-bottom: 20px;"><?
 
     foreach ($this->controlTabs as $tab) {
-        if ( ! $acl->isAllowedMe($this->controllerName, $tab['action'])) {
+        if ( ! $this->acl()->isAllowedMe($this->controllerName, $tab['action'])) {
             continue;
         }
 
