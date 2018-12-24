@@ -11,7 +11,7 @@
             <?= $this->historyMeta($item) ?>
         </div>
     </div>
-    <?= $this->form ?>
+    <?= $this->abstractRender('_edit_form.phtml') ?>
     <? if ( ! $this->readonly): ?>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
