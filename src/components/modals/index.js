@@ -32,6 +32,7 @@ const setModalHtml = (html) => {
   const form = editModal.find('form');
   form.html(html);
   window.ZFE.initContainer(form);
+  return form;
 };
 
 editModal.on('submit', 'form', (e) => {
@@ -61,6 +62,7 @@ export const showEditModal = ({
   title,
   data,
   formClass,
+  onload,
 }) => {
   modalUrl = url;
   modalCallback = callback;
@@ -76,7 +78,7 @@ export const showEditModal = ({
     }));
 
   $.get(url, data)
-    .done(res => setModalHtml(res));
+    .done(res => onload(setModalHtml(res)));
   editModal.modal('show');
 };
 
