@@ -77,6 +77,7 @@ export const showEditModal = ({
       style: 'margin: auto;',
     }));
 
+  onload = onload || (form => form);
   $.get(url, data)
     .done(res => onload(setModalHtml(res)));
   editModal.modal('show');
