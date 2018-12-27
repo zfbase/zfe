@@ -1,3 +1,4 @@
+@import 'bootstrap';
 @import 'forms';
 @import '../components/audio/index';
 @import '../components/auth/login';
@@ -92,24 +93,6 @@ th.sortable a:hover span {
 
 tr[role="button"] {
     cursor: pointer;
-}
-
-.panel > .table > thead > tr > th:first-child,
-.panel > .table > thead > tr > td:first-child,
-.panel > .table > tbody > tr > td:first-child,
-.panel > .table > tbody > tr > th:first-child,
-.panel > .table > tfoot > tr > td:first-child,
-.panel > .table > tfoot > tr > th:first-child {
-    padding-left: 15px;
-}
-
-.panel > .table > thead > tr > th:last-child,
-.panel > .table > thead > tr > td:last-child,
-.panel > .table > tbody > tr > td:last-child,
-.panel > .table > tbody > tr > th:last-child,
-.panel > .table > tfoot > tr > td:last-child,
-.panel > .table > tfoot > tr > th:last-child {
-    padding-right: 15px;
 }
 
 .popover-content > table:last-child {

@@ -1,0 +1,89 @@
+.input-group-addon {
+  border-left-width: 0;
+  border-right-width: 0;
+}
+
+.input-group-addon:first-child {
+  border-left-width: 1px;
+}
+
+.input-group-addon:last-child {
+  border-right-width: 1px;
+}
+
+
+.form-horizontal {
+  .help-block:first-child {
+    margin-top: 7px;
+  }
+
+  .form-control-static .help-block:first-child {
+    margin-top: 0;
+  }
+}
+
+
+.panel > .table > thead > tr > th:first-child,
+.panel > .table > thead > tr > td:first-child,
+.panel > .table > tbody > tr > td:first-child,
+.panel > .table > tbody > tr > th:first-child,
+.panel > .table > tfoot > tr > td:first-child,
+.panel > .table > tfoot > tr > th:first-child {
+    padding-left: 15px;
+}
+
+.panel > .table > thead > tr > th:last-child,
+.panel > .table > thead > tr > td:last-child,
+.panel > .table > tbody > tr > td:last-child,
+.panel > .table > tbody > tr > th:last-child,
+.panel > .table > tfoot > tr > td:last-child,
+.panel > .table > tfoot > tr > th:last-child {
+    padding-right: 15px;
+}
+
+
+/*
+ * Bootstrap 3 patch
+ * @source https://github.com/zfbase/zend1-bootstrap3/blob/master/library/Twitter/Bootstrap3/patch.css
+ */
+.form-vertical {
+  label + .checkbox,
+  label + .radio {
+    margin-top: 0;
+  }
+
+  label + .form-control-static {
+    padding-top: 0;
+  }
+
+  .form-control-static:last-child {
+    padding-bottom: 0;
+  }
+}
+
+input[type=range]:after {
+  padding-left: 0.5em;
+  content: attr(data-value);
+}
+
+
+/* @see https://stackoverflow.com/a/34895728 */
+.checkbox-inline,
+.checkbox-inline + .checkbox-inline,
+.checkbox-inline + .radio-inline,
+.radio-inline,
+.radio-inline + .checkbox-inline,
+.radio-inline + .radio-inline {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.checkbox-inline:last-child,
+.radio-inline:last-child {
+  margin-right: 0;
+}
+
+label.required:after {
+    content: ' *';
+    color: #a94442;
+}
