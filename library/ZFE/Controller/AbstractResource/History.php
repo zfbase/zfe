@@ -36,6 +36,8 @@ trait ZFE_Controller_AbstractResource_History
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
+        $this->view->title($item->getTitle());
+
         if (empty($this->view->history)) {
             $q = ZFE_Query::create()
                 ->select('x.*, e.*, count(*) cnt')
@@ -66,6 +68,8 @@ trait ZFE_Controller_AbstractResource_History
         if (empty($curItem)) {
             $this->abort(404, (static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
+
+        $this->view->title($curItem->getTitle());
 
         $this->view->milestones = History::getVersionsListFor($curItem);
 

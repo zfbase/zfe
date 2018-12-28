@@ -65,6 +65,8 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
         if (empty($item)) {
             $this->abort(404, 'Редактор не найден');
         }
+
+        $this->view->title($item->getTitle());
     }
 
     /**
@@ -79,5 +81,7 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
         if (empty($item)) {
             $this->abort(404, 'Редактор не найден');
         }
+
+        $this->view->title($item->getTitle());
     }
 }

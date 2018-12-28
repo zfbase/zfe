@@ -27,5 +27,6 @@ trait ZFE_Controller_AbstractResource_View
             }
         }
         $this->view->item = $item;
+        $this->view->title($item->getTitle());
     }
 }

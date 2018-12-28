@@ -227,7 +227,12 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->addHelperPath(APPLICATION_PATH . '/views/helpers', 'Helper_')
         ;
 
-        $view->headTitle(is_string($config->brand) ? $config->brand : $config->brand->short)->setSeparator($config->view->titleSeparator);
+        $brand = is_string($config->brand) ? $config->brand : $config->brand->short;
+        $titleSeparator = $config->view->titleSeparator ?? '/';
+        $view->headTitle($brand)
+            ->setSeparator($titleSeparator)
+            ->setDefaultAttachOrder(Zend_View_Helper_Placeholder_Container_Abstract::PREPEND)
+        ;
 
         Zend_Controller_Action_HelperBroker::getPluginLoader()->clearPaths();
         Zend_Controller_Action_HelperBroker::addPath('Zend/Controller/Action/Helper', 'Zend_Controller_Action_Helper');

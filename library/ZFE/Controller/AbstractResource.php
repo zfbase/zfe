@@ -76,6 +76,8 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $acl = Zend_Registry::get('acl');
         $resource = $modelName::getControllerName();
 
+        $this->view->title($modelName::$namePlural);
+
         $this->view->modelName = $modelName;
         $this->view->listName = $modelName::$namePlural;
         $this->view->itemName = $modelName::$nameSingular;
