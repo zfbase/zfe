@@ -5,7 +5,7 @@
  */
 
 /**
- * Отключил отображение иконки статуса валидации
+ * Отключил отображение иконки статуса валидации.
  */
 class ZFE_Form_Decorator_Feedback_State extends ZFE_Form_Decorator_Feedback
 {

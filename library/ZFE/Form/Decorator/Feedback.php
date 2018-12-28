@@ -5,7 +5,7 @@
  */
 
 /**
- * Отключил отображение иконки статуса валидации
+ * Отключил отображение иконки статуса валидации.
  */
 class ZFE_Form_Decorator_Feedback extends Twitter_Bootstrap3_Form_Decorator_Feedback
 {
@@ -22,7 +22,7 @@ class ZFE_Form_Decorator_Feedback extends Twitter_Bootstrap3_Form_Decorator_Feed
             $classes = explode(' ', $container->getOption('class'));
             $container->setOption('class', implode(' ', array_diff($classes, ['has-feedback'])));
         }
-        
+
         return $content;
     }
 }
