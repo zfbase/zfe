@@ -56,6 +56,21 @@ class ZFE_Searcher_Default extends ZFE_Searcher_Abstract
         $params = $this->filterIdsParam($params);
 
         $query = $this->getQueryBuilder()->getQuery($params);
+
+        $revertHash = $params['rh'] ?? null;
+        $resultNumber = $params['rn'] ?? null;
+        if ( ! empty($resultNumber) && ! empty($revertHash)) {
+            $query->offset($resultNumber - 1);
+            $query->limit(1);
+            $item = $query->fetchOne();
+
+            $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
+            $redirector->setGotoUrl($item->getUrl() . '?h=' . $revertHash . '&rn=' . $resultNumber);
+        }
+
+        $paginator = $this->getPaginator();
+        $result = $paginator ? $paginator::execute($query) : $query->execute();
+
         return ZFE_Paginator::execute($query);
     }
 }

@@ -45,12 +45,19 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
         if (empty($params['ids'])) {
             $sphinxQuery = $this->getSphinxQueryBuilder()->getQuery($params);
 
-            if ($paginator) {
-                $sphinxResult = $paginator::execute($sphinxQuery);
-            } else {
-                $sphinxResult = $sphinxQuery->execute();
+            $revertHash = $params['rh'] ?? null;
+            $resultNumber = $params['rn'] ?? null;
+            if ( ! empty($resultNumber) && ! empty($revertHash)) {
+                $sphinxQuery->option('max_matches', $resultNumber + 1);
+                $sphinxQuery->offset($resultNumber - 1);
+                $sphinxQuery->limit(1);
+                $item = ZFE_Sphinx::fetchOne($sphinxQuery, static::$_modelName);
+
+                $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
+                $redirector->setGotoUrl($item->getUrl() . '?h=' . $revertHash . '&rn=' . $resultNumber);
             }
 
+            $sphinxResult = $paginator ? $paginator::execute($sphinxQuery) : $sphinxResult = $sphinxQuery->execute();
             $ids = ZFE_Sphinx::fetchIds($sphinxResult);
         } else {
             $ids = $params['ids'];
