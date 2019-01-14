@@ -29,7 +29,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
      *
      * @var string
      */
-    protected static $_searcherName = 'ZFE_Searcher_Sphinx';
+    protected static $_searcherName = 'ZFE_Searcher_Default';
 
     /**
      * Включенные стандартные экшены.
