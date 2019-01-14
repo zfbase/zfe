@@ -25,6 +25,13 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
     protected static $_searchFormName = 'ZFE_Form_Search_Default';
 
     /**
+     * Класс поискового движка.
+     *
+     * @var string
+     */
+    protected static $_searcherName = 'ZFE_Searcher_Sphinx';
+
+    /**
      * Включенные стандартные экшены.
      *
      * @var array
@@ -62,7 +69,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
     public static function getSearcher()
     {
         if ( ! static::$_searcher) {
-            static::$_searcher = new ZFE_Searcher_Default(static::$_modelName);
+            static::$_searcher = new static::$_searcherName(static::$_modelName);
         }
         return static::$_searcher;
     }
