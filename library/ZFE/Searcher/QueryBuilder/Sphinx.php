@@ -208,6 +208,18 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
     /**
      * {@inheritdoc}
      */
+    protected function _order()
+    {
+        if ($this->_query->compileWhere() <> 'WHERE attr_deleted = 0 ' || $this->_query->compileMatch()) {
+            parent::_order();
+        } else {
+            $this->_setEmptyFiltersOrder();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function _orderHelper($field, $direction = 'ASC')
     {
         $this->_query->orderBy('attr_' . $field, $direction);
@@ -217,6 +229,10 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
      * {@inheritdoc}
      */
     protected function _setDefaultOrder()
+    {
+    }
+
+    protected function _setEmptyFiltersOrder()
     {
     }
 }
