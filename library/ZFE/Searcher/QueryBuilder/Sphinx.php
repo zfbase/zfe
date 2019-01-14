@@ -210,11 +210,21 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
      */
     protected function _order()
     {
-        if ($this->_query->compileWhere() <> 'WHERE attr_deleted = 0 ' || $this->_query->compileMatch()) {
+        if ($this->hasFilters()) {
             parent::_order();
         } else {
             $this->_setEmptyFiltersOrder();
         }
+    }
+
+    /**
+     * Применены ли фильтры?
+     *
+     * @return bool
+     */
+    public function hasFilters()
+    {
+        return 'WHERE attr_deleted = 0 ' !== $this->_query->compileWhere() || $this->_query->compileMatch();
     }
 
     /**
