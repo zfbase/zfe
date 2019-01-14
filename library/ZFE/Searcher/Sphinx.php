@@ -51,7 +51,7 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
                 $sphinxQuery->option('max_matches', $resultNumber + 1);
                 $sphinxQuery->offset($resultNumber - 1);
                 $sphinxQuery->limit(1);
-                $item = ZFE_Sphinx::fetchOne($sphinxQuery, static::$_modelName);
+                $item = ZFE_Sphinx::fetchOne($sphinxQuery, $this->_modelName);
 
                 $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
                 $redirector->setGotoUrl($item->getUrl() . '?h=' . $revertHash . '&rn=' . $resultNumber);
