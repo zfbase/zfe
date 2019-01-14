@@ -210,7 +210,7 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
      */
     protected function _order()
     {
-        if ($this->hasFilters()) {
+        if ($this->hasFilters() || $this->getParam('order')) {
             parent::_order();
         } else {
             $this->_setEmptyFiltersOrder();
