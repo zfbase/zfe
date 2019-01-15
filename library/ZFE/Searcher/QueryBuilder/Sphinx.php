@@ -133,8 +133,8 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
             $this->_advancedFilters();
         }
 
-        $deleted = $this->getParam('deleted');
-        $this->_query->where('attr_deleted', (int) (bool) $deleted);
+        $deleted = (int) (bool) $this->getParam('deleted');
+        $this->_query->where('attr_deleted', $deleted);
     }
 
     /**
@@ -224,7 +224,9 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
      */
     public function hasFilters()
     {
-        return 'WHERE attr_deleted = 0 ' !== $this->_query->compileWhere() || $this->_query->compileMatch();
+        $deleted = (int) (bool) $this->getParam('deleted');
+        return "WHERE attr_deleted = {$deleted} " !== $this->_query->compileWhere()
+            || $this->_query->compileMatch();
     }
 
     /**
