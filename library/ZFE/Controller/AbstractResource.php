@@ -165,10 +165,11 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $this->_helper->postToGet();
 
         $rowParams = $this->getAllParams();
+        $deleted = $this->getParam('deleted');
 
         if ( ! empty(static::$_searchFormName)) {
             $searchForm = new static::$_searchFormName();
-            if ('1' === $this->getParam('deleted')) {
+            if ('1' === $deleted) {
                 $searchForm->addElement('hidden', 'deleted', ['value' => 1]);
             }
             $searchForm->setAction((static::$_modelName)::getIndexUrl());
@@ -181,6 +182,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         }
 
         $this->view->items = static::getSearcher()->search($params);
+        $this->view->deleted = $deleted;
     }
 
     /**
