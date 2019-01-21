@@ -19,6 +19,11 @@ class ZFE_Searcher_Default extends ZFE_Searcher_Abstract
     protected $_queryBuilder;
 
     /**
+     * {@inheritdoc}
+     */
+    protected $_paginator = 'ZFE_Paginator';
+
+    /**
      * Установить конструктор запросов.
      *
      * @param ZFE_Searcher_QueryBuilder_Interface $builder
