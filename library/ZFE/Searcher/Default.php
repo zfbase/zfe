@@ -74,8 +74,6 @@ class ZFE_Searcher_Default extends ZFE_Searcher_Abstract
         }
 
         $paginator = $this->getPaginator();
-        $result = $paginator ? $paginator::execute($query) : $query->execute();
-
-        return ZFE_Paginator::execute($query);
+        return $paginator ? $paginator::execute($query) : $query->execute();
     }
 }
