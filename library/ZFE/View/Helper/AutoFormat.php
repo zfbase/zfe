@@ -10,6 +10,13 @@
 class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
 {
     /**
+     * Режим поддержки HTML
+     *
+     * @var boolean
+     */
+    protected $_htmlMode = true;
+
+    /**
      * Автоматически отформатировать значение по ключевым префиксам названия.
      *
      * @param mixed  $value
@@ -44,6 +51,18 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
     }
 
     /**
+     * Установить режим поддержки HTML
+     *
+     * @param boolean $mode
+     * @return ZFE_View_Helper_AutoFormat
+     */
+    public function setHtmlMode($mode = true)
+    {
+        $this->_htmlMode = $mode;
+        return $this;
+    }
+
+    /**
      * Отформатировать значение на основе структуры таблицы.
      *
      * @param ZFE_Model_Table $table
@@ -68,7 +87,6 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
             foreach ($table->getRelations() as $name => $opt) { /** @var Doctrine_Relation $opt */
                 if ($columnName === $opt->getLocal()) {
                     $alias = $opt->getClass();
-
                     break;
                 }
             }
@@ -88,14 +106,14 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                     return $value;
                 }
 
-                return number_format($value, 0, ',', '&nbsp;');
+                return number_format($value, 0, ',', $this->_htmlMode ? '&nbsp;' : '');
             case 'float':
             case 'decimal':
                 if (null === $value) {
                     return null;
                 }
 
-                return number_format($value, $columnParams['scale'] ?? null, ',', '&nbsp;');
+                return number_format($value, $columnParams['scale'] ?? null, ',', $this->_htmlMode ? '&nbsp;' : '');
             case 'timestamp':
                 if (empty($value) || '0000-00-00 00:00:00' === $value) {
                     return '';
@@ -183,7 +201,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
         }
 
         if (is_int($value)) {
-            return number_format($value, 0, null, '&nbsp;');
+            return number_format($value, 0, null, $this->_htmlMode ? '&nbsp;' : '');
         }
 
         if (is_object($value)) {

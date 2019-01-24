@@ -97,8 +97,6 @@ trait ZFE_Controller_AbstractResource_Edit
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
-        $this->view->title($item->getTitle());
-
         if ($this->_request->isPost() && ! $item->isDeleted() && ! static::$_readonly) {
             $post = $this->_request->getPost();
 
