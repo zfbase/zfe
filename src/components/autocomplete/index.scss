@@ -136,7 +136,7 @@
   position: absolute;
   padding: 10px 12px;
   cursor: default;
-  z-index: 1;
+  z-index: 10;
 }
 
 .tt-icon-right.tt-disabled > i {
@@ -190,7 +190,6 @@
   height: 50%;
   top: 25%;
   right: 37px;
-  z-index: 1;
 }
 
 .form-inline .autocomplete-wrap,
@@ -198,4 +197,31 @@
   display: inline-block;
   width: auto;
   vertical-align: middle;
+}
+
+.input-group .autocomplete-wrap {
+  display: table-cell;
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 100%;
+  height: 34px;
+
+  .tt-icon-right .form-control {
+      border-radius: 4px;
+  }
+
+  &:not(:first-child) {
+      .tt-icon-right .form-control {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+      }
+  }
+
+  &:not(:last-child) {
+      .tt-icon-right .form-control {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+      }
+  }
 }

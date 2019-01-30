@@ -19,15 +19,19 @@ class ZFE_View_Helper_DateTime extends Zend_View_Helper_Abstract
     /**
      * Форматировать дату (и время).
      *
-     * @param string $stringDateTime
+     * @param string $dateTime
      * @param bool   $time
      *
      * @return string
      */
-    public function dateTime($stringDateTime, $time = true)
+    public function dateTime($dateTime, $time = true)
     {
-        $datetime = strtotime($stringDateTime);
-        if ( ! $datetime) {
+        if (in_array($dateTime, ['0000-00-00', '0000-00-00 00:00:00'], true)) {
+            return '';
+        }
+
+        $timestamp = strtotime($dateTime);
+        if ( ! $timestamp) {
             return '';
         }
 
@@ -36,6 +40,6 @@ class ZFE_View_Helper_DateTime extends Zend_View_Helper_Abstract
             self::$_format['date'] = Zend_Registry::get('config')->format->date;
         }
 
-        return date(self::$_format[$time ? 'datetime' : 'date'], $datetime);
+        return date(self::$_format[$time ? 'datetime' : 'date'], $timestamp);
     }
 }
