@@ -78,7 +78,7 @@ abstract class ZFE_Searcher_Abstract implements ZFE_Searcher_Interface
      *
      * @param array $params
      */
-    public function filterIdsParam( & $params)
+    public function filterIdsParam(& $params)
     {
         if (empty($params['ids'])) {
             return $params;

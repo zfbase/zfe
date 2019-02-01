@@ -24,6 +24,8 @@ return PhpCsFixer\Config::create()
         'array_syntax' => ['syntax' => 'short'],
         'blank_line_after_opening_tag' => true,
         'class_attributes_separation' => ['elements' => ['method']],
+        'combine_consecutive_issets' => true,
+        'combine_consecutive_unsets' => true,
         'concat_space' => ['spacing' => 'one'],
         'dir_constant' => true,
         'explicit_indirect_variable' => true,
@@ -31,6 +33,7 @@ return PhpCsFixer\Config::create()
         'full_opening_tag' => false,  // В шаблонах длинные php-теги (*.phtml) излишни.
         'function_to_constant' => ['functions' => ['get_class', 'get_called_class', 'php_sapi_name', 'phpversion', 'pi']],
         'header_comment' => ['header' => $header],
+        'heredoc_to_nowdoc' => true,
         'logical_operators' => true,
         'lowercase_static_reference' => true,
         'mb_str_functions' => true,
@@ -101,7 +104,7 @@ return PhpCsFixer\Config::create()
         'ternary_to_null_coalescing' => true,
         'trailing_comma_in_multiline_array' => true,
         'trim_array_spaces' => true,
-        'unary_operator_spaces' => true,
+        'unary_operator_spaces' => false,
         'visibility_required' => ['property', 'method'],
         'void_return' => false,  // хорошо бы включить, но заебешься обновлять существующие проекты
         'whitespace_after_comma_in_array' => true,

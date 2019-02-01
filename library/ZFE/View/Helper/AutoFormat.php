@@ -10,9 +10,9 @@
 class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
 {
     /**
-     * Режим поддержки HTML
+     * Режим поддержки HTML.
      *
-     * @var boolean
+     * @var bool
      */
     protected $_htmlMode = true;
 
@@ -51,9 +51,10 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
     }
 
     /**
-     * Установить режим поддержки HTML
+     * Установить режим поддержки HTML.
      *
-     * @param boolean $mode
+     * @param bool $mode
+     *
      * @return ZFE_View_Helper_AutoFormat
      */
     public function setHtmlMode($mode = true)
