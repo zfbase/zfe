@@ -19,7 +19,7 @@ class ZFE_View_Helper_LastEditedCell extends Zend_View_Helper_Abstract
      */
     public function lastEditedCell(AbstractRecord $item, $class = '')
     {
-        $editor = $item->contains('editor_id') && ! empty($item->editor_id)
+        $editor = $item->contains('editor_id') && ! empty($item->get('editor_id', false))
             ? '<div class="editor">' . $item->Editor->getShortName() . '</div>'
             : '';
 

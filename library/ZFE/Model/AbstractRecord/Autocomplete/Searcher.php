@@ -81,6 +81,9 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         if (static::$_excludeByStatus && $table->hasField('status')) {
             $q->where('attr_status', 0);
         }
+        if ($table->hasField('deleted')) {
+            $q->where('attr_deleted', 0);
+        }
 
         if (! empty($params['term']) && $term = trim($params['term'])) {
             $q->match('*', $term);
