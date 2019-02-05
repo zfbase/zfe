@@ -67,7 +67,7 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         $idInput = $this->_hidden($name . '[id]', $value['id']);
         $titleInput = $this->_hidden($name . '[title]', $value['title']);
 
-        $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-search']);
+        $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-menu-down']);
         $separator = $this->view->tag('i', ['class' => 'tt-separator']);
         $clearIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-remove clear']);
         $searchInput = $this->view->tag('input', $attribs + [

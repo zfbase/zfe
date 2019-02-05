@@ -133,7 +133,7 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
         }
         $xhtml = '<div class="' . $class . '" data-name="' . $name . '"' . $itemFormUrl . '>' . $xhtml . '</div>';
 
-        $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-search']);
+        $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-menu-down']);
         $separator = $this->view->tag('i', ['class' => 'tt-separator']);
         $searchInput = $this->view->tag('input', $attribs + [
             'type' => 'text',

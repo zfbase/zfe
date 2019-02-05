@@ -71,6 +71,7 @@ class ZFEAutocomplete {
       source: this.engine.ttAdapter(),
       templates: this.settings.templates,
       display: 'value',
+      limit: 7,
     };
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
