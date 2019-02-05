@@ -135,7 +135,7 @@ class Loader {
         return xhr;
       },
       success: (response) => {
-        if (response.status === 0) {
+        if (response.status === '0') {
           if (this.settings.previewCallback) {
             this.settings.previewCallback.apply(response.data);
           } else {
