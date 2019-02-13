@@ -106,13 +106,25 @@ class ZFE_View_Helper_HopsHistory extends Zend_View_Helper_Abstract
     /**
      * Получить ссылку для перехода (с сохранением направления «Наверх»).
      *
-     * @param string $prefix класс префикса: при указании '?' будет добавлено '?h=', аналогично для '&'
+     * @param string        $prefix     класс префикса: при указании '?' будет добавлено '?h=', аналогично для '&'
+     * @param array<string> $saveParams сохраняемые параметры
      *
      * @return null|string
      */
-    public function getSideHash($prefix = null)
+    public function getSideHash($prefix = null, array $saveParams = ['rn'])
     {
         $hash = $this->_request->getParam('h');
+        if (empty($hash)) {
+            return null;
+        }
+
+        foreach ($saveParams as $paramName) {
+            $paramValue = $this->_request->getParam($paramName);
+            if ($paramValue) {
+                $hash .= "&{$paramName}={$paramValue}";
+            }
+        }
+
         switch ($prefix) {
             case '?':
                 return '?h=' . $hash;
