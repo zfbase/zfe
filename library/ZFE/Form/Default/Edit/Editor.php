@@ -34,4 +34,11 @@ class ZFE_Form_Default_Edit_Editor extends ZFE_Form_Edit_AutoGeneration
         'status' => 'addSelectElement',
         'comment' => 'addTextareaElement',
     ];
+
+    public function init()
+    {
+        parent::init();
+
+        $this->getElement('role')->setRequired(true);
+    }
 }
