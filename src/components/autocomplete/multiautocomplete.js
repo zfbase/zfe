@@ -44,7 +44,7 @@ class ZFEMultiAutocomplete {
     if (this.isDisabled()) {
       return;
     }
-    
+
     this.startSortable();
     this.initBloodhound();
     this.initTypeahead();
@@ -101,7 +101,7 @@ class ZFEMultiAutocomplete {
     return result;
   }
 
-  addElement(title, id, data = {}, replace = null) {
+  addElement(title, id, data = {}, replace = null, silent = false) {
     if (this.hasElement(id)) {
       return this.$wrap.find(`.linked-entity:has([name*="\[id\]"][value=${id}])`);
     }
@@ -156,7 +156,9 @@ class ZFEMultiAutocomplete {
     // Переподключаем сортировку
     sortable(this.$wrap, 'destroy');
     this.startSortable();
-    this.onChange();
+    if (!silent) {
+      this.onChange();
+    }
 
     return $linkedEntity;
   }
@@ -224,7 +226,7 @@ class ZFEMultiAutocomplete {
       minLength: 0, // проверка переезжает в Bloodhound
       highlight: true,
     }, datasetSettings);
-    //this.$input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
+    // this.$input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
   }
 
   initHandlers() {
@@ -292,6 +294,15 @@ class ZFEMultiAutocomplete {
     return this.addElement(title, id, data);
   }
 
+  clear() {
+    this.$wrap.empty();
+  }
+
+  setValues(values) {
+    this.clear();
+    values.forEach(({ id, title, ...data }) => this.addElement(title, id, data, null, true));
+  }
+
   currentValue() {
     const values = {};
     this.$wrap.find('input').each((i, el) => {
@@ -299,7 +310,7 @@ class ZFEMultiAutocomplete {
       if (!values[n]) {
         values[n] = {};
       }
-      values[n][key] = el.value
+      values[n][key] = el.value;
     });
     return Object.values(values);
   }
@@ -310,7 +321,7 @@ class ZFEMultiAutocomplete {
 }
 
 $.fn[pluginName] = function zfeMultiAutocomplete(options, ...args) {
-  let results = [];
+  const results = [];
   const $elements = this.each((i, el) => {
     if (!$.data(el, `plugin_${pluginName}`)) {
       $.data(el, `plugin_${pluginName}`, new ZFEMultiAutocomplete(el, options));
