@@ -64,6 +64,10 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             unset($attribs['relAlias']);
         }
 
+        if (isset($attribs['relModel'])) {
+            $attribs['data-limit'] = ($attribs['relModel'])::$acLimit;
+        }
+
         $idInput = $this->_hidden($name . '[id]', $value['id']);
         $titleInput = $this->_hidden($name . '[title]', $value['title']);
 

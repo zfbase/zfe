@@ -8,6 +8,7 @@ import { showEditModal } from '../modals';
 const pluginName = 'zfeMultiAutocomplete';
 const defaults = {
   templates: {},
+  limit: 7,
 };
 
 class ZFEMultiAutocomplete {
@@ -31,6 +32,7 @@ class ZFEMultiAutocomplete {
       minLength: data.termMinLength || 3,
       name,
       sourceUrl: data.source,
+      limit: data.limit,
     };
   }
 
@@ -205,7 +207,7 @@ class ZFEMultiAutocomplete {
       source: this.engine.ttAdapter(),
       templates: this.settings.templates,
       display: 'value',
-      limit: 7,
+      limit: this.settings.limit,
     };
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;

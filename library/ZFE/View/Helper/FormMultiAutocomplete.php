@@ -93,6 +93,10 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
             unset($attribs['relAlias']);
         }
 
+        if (isset($attribs['relModel'])) {
+            $attribs['data-limit'] = ($attribs['relModel'])::$acLimit;
+        }
+
         $class = 'multiac-linked-wrap';
         if ($disable) {
             $class .= ' disabled';
