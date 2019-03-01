@@ -163,10 +163,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             if ($obj = $userModel::findForAuth($identity['id'])) {
                 $user = $obj;
                 $role = $obj->role;
-
-                if ('admin' === $role) {
-                    $canSwitchRoles = true;
-                }
+                $canSwitchRoles = $this->_canSwitchRoles($user);
             }
 
             if (isset($identity['role']) && $canSwitchRoles) {
@@ -182,6 +179,11 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'canSwitchRoles' => $canSwitchRoles,
             'noticeDetails' => $config->noticeDetails,
         ]);
+    }
+
+    protected function _canSwitchRoles(Editors $user)
+    {
+        return 'admin' === $user->role;
     }
 
     /**
