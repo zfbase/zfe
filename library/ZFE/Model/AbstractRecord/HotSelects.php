@@ -201,12 +201,12 @@ trait ZFE_Model_AbstractRecord_HotSelects
      * @return array
      */
     public static function getKeyValueList(
-            $keyField = 'x.id',
-            $valueField = null,
-            $where = null,
-            $order = 'VAL_FIELD ASC',
-            $groupby = null,
-            $filterByStatus = null
+        $keyField = 'x.id',
+        $valueField = null,
+        $where = null,
+        $order = 'VAL_FIELD ASC',
+        $groupby = null,
+        $filterByStatus = null
     ) {
         $groupby = $groupby ? ", ${groupby} AS GROUP_FIELD" : '';
         if (null === $filterByStatus) {

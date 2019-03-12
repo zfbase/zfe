@@ -18,10 +18,12 @@ class ZFE_Form_Default_Start extends ZFE_Form_Default_Edit_Editor
 
         $this->getElement('role')
             ->setValue('admin')
-            ->setAttrib('disabled', true);
+            ->setAttrib('disabled', true)
+        ;
 
         $this->getElement('status')
-            ->setAttrib('disabled', true);
+            ->setAttrib('disabled', true)
+        ;
 
         $this->addSubmitElement();
     }
