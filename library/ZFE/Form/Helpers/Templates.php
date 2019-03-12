@@ -133,7 +133,7 @@ trait ZFE_Form_Helpers_Templates
         $columnOptions = $table->getElementOptionsForColumn($id);
         $localOptions = [
             'validators' => [
-                ['EmailAddress'],
+                ['EmailAddressSimple'],
             ],
         ];
         $options = array_replace_recursive($columnOptions, $localOptions, $customOptions);
