@@ -168,7 +168,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                 if ( ! $passwordCheck) {
                     $q->andWhere('password = ' . Editors::$credentialTreatment, $form->getValue('password'));
                 }
-                $user = $q->fetchOne(); /** @var $user Editors */
+                $user = $q->fetchOne(); /** @var Editors $user */
                 if ($user) {
                     $user->setPassword($form->getValue('password_second'));
                     if ($user->contains('request_password_change')) {

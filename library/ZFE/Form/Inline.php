@@ -34,7 +34,7 @@ class ZFE_Form_Inline extends Twitter_Bootstrap3_Form_Inline
      */
     public function prepare()
     {
-        foreach ($this->getElements() as $element) { /** @var $element Zend_Form_Element */
+        foreach ($this->getElements() as $element) { /** @var Zend_Form_Element $element */
             $placeholder = $element->getAttrib('placeholder');
             if (empty($placeholder) && false !== $placeholder) {
                 $element->setAttrib('placeholder', $element->getLabel());

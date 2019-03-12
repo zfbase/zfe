@@ -25,7 +25,7 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
      */
     public function render($content)
     {
-        /** @var $element Zend_Form_Element */
+        /** @var Zend_Form_Element $element */
         $element = $this->getElement();
         $id = $element->getName();
 
@@ -43,7 +43,7 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
 
         $html = '';
 
-        /** @var $file ZFE_File */
+        /** @var ZFE_File $file */
         foreach ($files as $file) {
             $html .= $this->_renderFile($file, $element->getAttrib('disabled'));
         }

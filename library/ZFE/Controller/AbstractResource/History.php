@@ -146,7 +146,7 @@ trait ZFE_Controller_AbstractResource_History
         }
         $this->view->item = $item = $curItem->getStateForVersion(1);
 
-        /** @var $history History */
+        /** @var History $history */
         $history = History::find($this->getParam('hid'));
         if (empty($history)) {
             $this->abort(404, 'Историческая запись не найдена');

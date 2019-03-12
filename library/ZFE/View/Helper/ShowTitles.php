@@ -24,7 +24,7 @@ class ZFE_View_Helper_ShowTitles
     {
         $i = 0;
         $arr = [];
-        foreach ($items as $item) { /** @var $item Doctrine_Record */
+        foreach ($items as $item) { /** @var Doctrine_Record $item */
             if ( ! $item) {
                 continue;
             }

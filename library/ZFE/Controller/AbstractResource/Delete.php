@@ -35,7 +35,7 @@ trait ZFE_Controller_AbstractResource_Delete
 
         $modelName = static::$_modelName;
 
-        /** @var $item AbstractRecord */
+        /** @var AbstractRecord $item */
         $item = $modelName::find($this->getParam('id'));
         if (empty($item)) {
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
@@ -100,7 +100,7 @@ trait ZFE_Controller_AbstractResource_Delete
 
         $modelName = static::$_modelName;
 
-        /** @var $item AbstractRecord */
+        /** @var AbstractRecord $item */
         $item = $modelName::hardFind($this->getParam('id'));
         if (empty($item)) {
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));

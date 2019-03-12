@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <? $rowIndex = 0; foreach ($this->items as $item): ++$rowIndex; /* @var $item ZFE_Model_AbstractRecord */ ?>
+                <? $rowIndex = 0; foreach ($this->items as $item): ++$rowIndex; /** @var ZFE_Model_AbstractRecord $item */ ?>
                     <tr>
                         <td><?= $item->id ?></td>
                         <td>

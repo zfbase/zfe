@@ -58,7 +58,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     public function preInsert(Doctrine_Event $event)
     {
         if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var $invoker ZFE_Model_AbstractRecord */
+            /** @var ZFE_Model_AbstractRecord $invoker */
             $invoker = $event->getInvoker();
 
             $userId = $this->_getCurrentUserId();
@@ -94,7 +94,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     public function postInsert(Doctrine_Event $event)
     {
         if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var $invoker ZFE_Model_AbstractRecord */
+            /** @var ZFE_Model_AbstractRecord $invoker */
             $invoker = $event->getInvoker();
 
             $userId = $this->_getCurrentUserId();
@@ -146,7 +146,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     public function preUpdate(Doctrine_Event $event)
     {
         if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var $invoker ZFE_Model_AbstractRecord */
+            /** @var ZFE_Model_AbstractRecord $invoker */
             $invoker = $event->getInvoker();
 
             if ($invoker->contains('editor_id')) {
@@ -171,7 +171,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     public function postUpdate(Doctrine_Event $event)
     {
         if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var $invoker ZFE_Model_AbstractRecord */
+            /** @var ZFE_Model_AbstractRecord $invoker */
             $invoker = $event->getInvoker();
             $invokerModelName = get_class($invoker);
             $tableName = $invoker->getTableName();
@@ -273,7 +273,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     public function preDelete(Doctrine_Event $event)
     {
         if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var $invoker ZFE_Model_AbstractRecord */
+            /** @var ZFE_Model_AbstractRecord $invoker */
             $invoker = $event->getInvoker();
 
             if ($invoker->contains('deleted')) {
@@ -296,7 +296,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     public function postDelete(Doctrine_Event $event)
     {
         if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var $invoker ZFE_Model_AbstractRecord */
+            /** @var ZFE_Model_AbstractRecord $invoker */
             $invoker = $event->getInvoker();
 
             // Используем только первичный ключ по полю id

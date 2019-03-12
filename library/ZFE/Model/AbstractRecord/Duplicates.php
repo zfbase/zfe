@@ -39,7 +39,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
     {
         $tableInstance = Doctrine_Core::getTable(static::class);
 
-        /** @var $q ZFE_Query */
+        /** @var ZFE_Query $q */
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from(static::class . ' x')

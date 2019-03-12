@@ -72,7 +72,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
      */
     protected static function _getSphinxQueryForAutocomplete(array $params = [])
     {
-        /** @var $q \Foolz\SphinxQL\SphinxQL */
+        /** @var \Foolz\SphinxQL\SphinxQL $q */
         $q = ZFE_Sphinx::query()->select('id')
             ->from(static::getSphinxIndexName())
             ->limit(static::$acLimit)

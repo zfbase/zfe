@@ -48,7 +48,7 @@ trait ZFE_Form_Helpers_Generator
      */
     public function addElementForColumn($columnName, array $customOptions = [], $elementName = null)
     {
-        /** @var $table ZFE_Model_Table */
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $elementType = $table->getElementTypeForColumn($columnName);
 

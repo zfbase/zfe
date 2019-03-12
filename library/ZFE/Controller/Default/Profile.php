@@ -13,7 +13,7 @@ class ZFE_Controller_Default_Profile extends Controller_Abstract
 
     public function indexAction()
     {
-        /** @var $user Editors */
+        /** @var Editors $user */
         $user = Zend_Registry::get('user')->data;
         $form = new self::$_profileFormName();
 

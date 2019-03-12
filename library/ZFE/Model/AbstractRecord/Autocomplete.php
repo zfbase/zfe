@@ -106,7 +106,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         }
 
         // Автоматически определяем значения по умолчанию
-        /** @var $table ZFE_Model_Table */
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable(static::class);
         $relAlias = $table->getModelNameForColumn($field);
         $relModel = ! empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
@@ -146,9 +146,9 @@ trait ZFE_Model_AbstractRecord_Autocomplete
 
         $relModel = ! empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
 
-        /** @var $table ZFE_Model_Table */
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable(static::class);
-        /** @var $rel Doctrine_Relation_Association */
+        /** @var Doctrine_Relation_Association $rel */
         $rel = $table->getRelation($relAlias);
         if (empty($rel)) {
             throw new ZFE_Model_Exception('Связь "' . $relAlias . '" не обнаружена в модели "' . static::class . '" при определении свойств автодополнения нескольких значений.');

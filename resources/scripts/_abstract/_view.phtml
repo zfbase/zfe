@@ -1,6 +1,6 @@
 <?
     $modelName = $this->modelName;
-    $item = $this->item; /* @var $item Doctrine_Record */
+    $item = $this->item; /** @var Doctrine_Record $item */
     $table = Doctrine_Core::getTable($modelName);
     $columns = array_diff($item->getTable()->getColumnNames(), $modelName::getServiceFields());
 ?>

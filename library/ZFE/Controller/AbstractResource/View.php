@@ -17,7 +17,7 @@ trait ZFE_Controller_AbstractResource_View
             $this->abort(404);
         }
 
-        /** @var $item AbstractRecord */
+        /** @var AbstractRecord $item */
         $item = (static::$_modelName)::find($this->getParam('id'));
         if (empty($item)) {
             if (Zend_Registry::get('acl')->isAllowedMe((static::$_modelName)::getControllerName(), 'edit')) {

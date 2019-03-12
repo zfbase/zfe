@@ -5,7 +5,7 @@
 ?>
 
 <form>
-<? foreach ($this->groups as $group): /* @var $group Doctrine_Collection */ ?>
+<? foreach ($this->groups as $group): /** @var Doctrine_Collection $group */ ?>
     <? $gid = uniqid(); ?>
     <fieldset class="panel panel-default">
         <div class="panel-heading">

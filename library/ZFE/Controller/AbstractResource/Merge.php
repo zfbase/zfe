@@ -63,7 +63,7 @@ trait ZFE_Controller_AbstractResource_Merge
 
         $tableInstance = Doctrine_Core::getTable($modelName);
 
-        /** @var $q ZFE_Query */
+        /** @var ZFE_Query $q */
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from($modelName . ' x INDEXBY x.id')
@@ -172,7 +172,7 @@ trait ZFE_Controller_AbstractResource_Merge
     {
         $tableInstance = Doctrine_Core::getTable(static::$_modelName);
 
-        /** @var $q ZFE_Query */
+        /** @var ZFE_Query $q */
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from(static::$_modelName . ' x')

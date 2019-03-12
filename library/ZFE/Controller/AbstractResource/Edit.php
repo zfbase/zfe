@@ -82,7 +82,7 @@ trait ZFE_Controller_AbstractResource_Edit
         if (static::$_readonly) {
             $this->view->form->setDisabled(true);
         }
-        $form = $this->view->form; /** @var $form ZFE_Form_Horizontal */
+        $form = $this->view->form; /** @var ZFE_Form_Horizontal $form */
         if ( ! ($this->view->item instanceof Doctrine_Record)) {
             if ( ! static::$_canCreate && ! $this->hasParam('id')) {
                 $this->abort(403, 'Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
@@ -92,7 +92,7 @@ trait ZFE_Controller_AbstractResource_Edit
                 ? $modelName::hardFind($itemId)
                 : new $modelName();
         }
-        $item = $this->view->item; /** @var $item AbstractRecord */
+        $item = $this->view->item; /** @var AbstractRecord $item */
         if (empty($item)) {
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }

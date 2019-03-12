@@ -17,7 +17,7 @@ class ZFE_Controller_Action_Helper_AbstractView extends Zend_Controller_Action_H
      */
     public function direct($action = null, $controller = null)
     {
-        /** @var $viewRenderer Zend_Controller_Action_Helper_ViewRenderer */
+        /** @var Zend_Controller_Action_Helper_ViewRenderer $viewRenderer */
         $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
 
         if ($viewRenderer->getNoRender()) {

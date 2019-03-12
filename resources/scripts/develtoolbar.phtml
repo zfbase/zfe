@@ -26,7 +26,7 @@
                         <tbody>
                             <? $sumTime = 0; ?>
                             <? $numEvents = 0; ?>
-                            <? foreach (Doctrine_Manager::connection()->getListener() as $key => $event) : /* @var $event Doctrine_Event */ ?>
+                            <? foreach (Doctrine_Manager::connection()->getListener() as $key => $event) : /** @var Doctrine_Event $event */ ?>
                                 <? if ( ! in_array($event->getName(), ['fetch', 'prepare'], true)): ?>
                                     <? $sumTime += $time = $event->getElapsedSecs(); ?>
                                     <? if (++$numEvents <= $config->debug->limitShowQueries): ?>
