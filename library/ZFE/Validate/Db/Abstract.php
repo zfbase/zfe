@@ -66,19 +66,19 @@ abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
             throw new Zend_Validate_Exception('Не допустимый параметр!');
         }
 
-        if (array_key_exists('model', $options)) {
+        if (key_exists('model', $options)) {
             $this->setModel($options['model']);
         } else {
             throw new Zend_Validate_Exception('Модель не определена!');
         }
 
-        if (array_key_exists('field', $options)) {
+        if (key_exists('field', $options)) {
             $this->setField($options['field']);
         } else {
             throw new Zend_Validate_Exception('Поле для проверки не определено!');
         }
 
-        if (array_key_exists('where', $options)) {
+        if (key_exists('where', $options)) {
             $this->setWhere($options['where']);
         }
     }

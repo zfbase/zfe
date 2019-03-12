@@ -509,11 +509,11 @@ trait ZFE_Form_Helpers_Templates
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
 
-        if (array_key_exists('multiOptions', $customOptions)) {
+        if (key_exists('multiOptions', $customOptions)) {
             $options['multiOptions'] = $customOptions['multiOptions'];
         }
 
-        if (array_key_exists('emptyValueLabel', $options)) {
+        if (key_exists('emptyValueLabel', $options)) {
             $options['multiOptions'] = [null => $options['emptyValueLabel']] + $columnOptions['multiOptions'];
             unset($options['emptyValueLabel']);
         }

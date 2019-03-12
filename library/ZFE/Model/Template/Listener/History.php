@@ -101,7 +101,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
 
             // Используем только первичный ключ по полю id
             $ids = $invoker->identifier('id');
-            if (1 === count($ids) && array_key_exists('id', $ids)) {
+            if (1 === count($ids) && key_exists('id', $ids)) {
                 $history = new History();
                 $history->table_name = $invoker->getTableName();
                 $history->content_id = $invoker->id;
@@ -117,7 +117,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
                         $relAlias = $rel->getAlias();
                         $relObj = $invoker->get($relAlias);
                         $relIds = $relObj->identifier('id');
-                        $relId = 1 === count($relIds) && array_key_exists('id', $relIds)
+                        $relId = 1 === count($relIds) && key_exists('id', $relIds)
                             ? $relObj->id
                             : null;
 
@@ -180,7 +180,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
 
             // Используем только первичный ключ по полю id
             $ids = $invoker->identifier('id');
-            $id = 1 === count($ids) && array_key_exists('id', $ids)
+            $id = 1 === count($ids) && key_exists('id', $ids)
                 ? $invoker->id
                 : null;
 
@@ -301,7 +301,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
 
             // Используем только первичный ключ по полю id
             $ids = $invoker->identifier('id');
-            $id = 1 === count($ids) && array_key_exists('id', $ids)
+            $id = 1 === count($ids) && key_exists('id', $ids)
                 ? $invoker->id
                 : null;
 

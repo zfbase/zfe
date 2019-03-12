@@ -75,12 +75,12 @@ class ZFE_Validate_GreaterThan extends Zend_Validate_Abstract
             $options = $temp;
         }
 
-        if ( ! array_key_exists('min', $options)) {
+        if ( ! key_exists('min', $options)) {
             require_once 'Zend/Validate/Exception.php';
             throw new Zend_Validate_Exception("Missing option 'min'");
         }
 
-        if ( ! array_key_exists('inclusive', $options)) {
+        if ( ! key_exists('inclusive', $options)) {
             $options['inclusive'] = false;
         }
 

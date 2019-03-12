@@ -39,7 +39,7 @@ class ZFE_Model_Table extends Doctrine_Table
                 $form = 'checkbox';
             }
 
-            if (array_key_exists($columnName, $modelName::$autocompleteCols)) {
+            if (key_exists($columnName, $modelName::$autocompleteCols)) {
                 $form = 'autocomplete';
             } elseif ($modelName::isDictionaryField($columnName)) {
                 // Предполагается, что если поле словарное и словарь определен в модели,

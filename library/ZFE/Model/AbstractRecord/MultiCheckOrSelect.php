@@ -38,7 +38,7 @@ trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
     public static function getMultiCheckOrSelectOptions($field)
     {
         // Проверяем, является ли поле автокомплитом
-        if ( ! array_key_exists($field, static::$multiCheckOrSelectCols)) {
+        if ( ! key_exists($field, static::$multiCheckOrSelectCols)) {
             return false;
         }
 

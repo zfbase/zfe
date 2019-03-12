@@ -64,7 +64,7 @@ abstract class ZFE_Searcher_QueryBuilder_Abstract implements ZFE_Searcher_QueryB
      */
     public function getParam($name, $default = null)
     {
-        if (array_key_exists($name, $this->_params)) {
+        if (key_exists($name, $this->_params)) {
             return $this->_params[$name];
         }
 
@@ -80,7 +80,7 @@ abstract class ZFE_Searcher_QueryBuilder_Abstract implements ZFE_Searcher_QueryB
      */
     public function hasParam($name)
     {
-        return array_key_exists($name, $this->_params);
+        return key_exists($name, $this->_params);
     }
 
     /**

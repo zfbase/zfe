@@ -101,7 +101,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         $custom = static::$autocompleteCols[$field];
 
         // Проверяем, является ли поле автокомплитом
-        if ( ! array_key_exists($field, static::$autocompleteCols)) {
+        if ( ! key_exists($field, static::$autocompleteCols)) {
             return false;
         }
 
@@ -133,7 +133,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
     public static function getMultiAutocompleteOptions($field)
     {
         // Проверяем, является ли поле автокомплитом
-        if ( ! array_key_exists($field, static::$multiAutocompleteCols)) {
+        if ( ! key_exists($field, static::$multiAutocompleteCols)) {
             return false;
         }
 

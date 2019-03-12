@@ -67,7 +67,7 @@ trait ZFE_Controller_AbstractResource_Edit
 
         $modelName = static::$_modelName;
 
-        if ( ! array_key_exists('modelName', $formOptions)) {
+        if ( ! key_exists('modelName', $formOptions)) {
             $formOptions['modelName'] = $modelName;
         }
 

@@ -13,14 +13,14 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
     {
         $attribs = parent::getAttribs();
 
-        if ( ! array_key_exists('data-type', $attribs)) {
+        if ( ! key_exists('data-type', $attribs)) {
             $dateType = $this->getDataType();
             if ($dateType) {
                 $attribs['data-type'] = $dateType;
             }
         }
 
-        if ( ! array_key_exists('accept', $attribs)) {
+        if ( ! key_exists('accept', $attribs)) {
             $allowExtensions = $this->getAllowExtensions();
             $allowMimeTypes = $this->getAllowMimeTypes();
             if ($allowExtensions || $allowMimeTypes) {
