@@ -62,7 +62,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $namePlural = 'Записи';
 
     /**
-     * Сохранять историю.
+     * Писать историю.
      *
      * @var bool
      */
@@ -351,16 +351,13 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     }
 
     /**
-     * setUp.
+     * {@inheritdoc}
      */
     public function setUp()
     {
         parent::setUp();
 
-        $config = Zend_Registry::get('config');
-
-        if ($config->saveHistory && static::$saveHistory) {
-            $this->actAs(new ZFE_Model_Template_History());
-        }
+        $this->actAs(new ZFE_Model_Template_History());
+        $this->actAs(new ZFE_Model_Template_SoftDelete());
     }
 }

@@ -23,9 +23,15 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      * Установить флаг: Фиксировать событие в истории?
      *
      * @param bool $mode
+     * 
+     * @return bool
      */
-    public function saveHistory($mode)
+    public function saveHistory($mode = null)
     {
+        if (null === $mode) {
+            return $this->_saveHistory;
+        }
+
         $this->_saveHistory = $mode;
     }
 
@@ -57,32 +63,30 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     public function preInsert(Doctrine_Event $event)
     {
-        if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var ZFE_Model_AbstractRecord $invoker */
-            $invoker = $event->getInvoker();
+        /** @var ZFE_Model_AbstractRecord $invoker */
+        $invoker = $event->getInvoker();
 
-            $userId = $this->_getCurrentUserId();
-            $datetime = new Doctrine_Expression('NOW()');
+        $userId = $this->_getCurrentUserId();
+        $datetime = new Doctrine_Expression('NOW()');
 
-            if ($invoker->contains('creator_id')) {
-                $invoker->creator_id = $userId;
-            }
+        if ($invoker->contains('creator_id')) {
+            $invoker->creator_id = $userId;
+        }
 
-            if ($invoker->contains('datetime_created')) {
-                $invoker->datetime_created = $datetime;
-            }
+        if ($invoker->contains('datetime_created')) {
+            $invoker->datetime_created = $datetime;
+        }
 
-            if ($invoker->contains('editor_id')) {
-                $invoker->editor_id = $userId;
-            }
+        if ($invoker->contains('editor_id')) {
+            $invoker->editor_id = $userId;
+        }
 
-            if ($invoker->contains('datetime_edited')) {
-                $invoker->datetime_edited = $datetime;
-            }
+        if ($invoker->contains('datetime_edited')) {
+            $invoker->datetime_edited = $datetime;
+        }
 
-            if ($invoker->contains('version')) {
-                $invoker->version = 1;
-            }
+        if ($invoker->contains('version')) {
+            $invoker->version = 1;
         }
     }
 
@@ -145,21 +149,19 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     public function preUpdate(Doctrine_Event $event)
     {
-        if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var ZFE_Model_AbstractRecord $invoker */
-            $invoker = $event->getInvoker();
+        /** @var ZFE_Model_AbstractRecord $invoker */
+        $invoker = $event->getInvoker();
 
-            if ($invoker->contains('editor_id')) {
-                $invoker->editor_id = Zend_Auth::getInstance()->getIdentity()['id'];
-            }
+        if ($invoker->contains('editor_id')) {
+            $invoker->editor_id = $this->_getCurrentUserId();
+        }
 
-            if ($invoker->contains('datetime_edited')) {
-                $invoker->datetime_edited = new Doctrine_Expression('NOW()');
-            }
+        if ($invoker->contains('datetime_edited')) {
+            $invoker->datetime_edited = new Doctrine_Expression('NOW()');
+        }
 
-            if ($invoker->contains('version')) {
-                $invoker->version = $invoker->version + 1;
-            }
+        if ($invoker->contains('version')) {
+            $invoker->version = $invoker->version + 1;
         }
     }
 
@@ -221,6 +223,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
                     $history->save();
                 }
 
+                // Unlinks
                 foreach ($invoker->getPendingUnlinks() as $relAlias => $relIdsData) {
                     $relIds = array_keys($relIdsData);
                     foreach ($relIds as $relId) {
@@ -237,6 +240,8 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
                         $history->save();
                     }
                 }
+
+                // Links
                 foreach ($invoker->getPendingLinks() as $relAlias => $relIdsData) {
                     $relIds = array_keys($relIdsData);
                     foreach ($relIds as $relId) {
@@ -261,29 +266,6 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
                 $history->datetime_action = new Doctrine_Expression('NOW()');
                 $history->content_version = $version;
                 $history->save();
-            }
-        }
-    }
-
-    /**
-     * Хук preDelete.
-     *
-     * @param Doctrine_Event $event
-     */
-    public function preDelete(Doctrine_Event $event)
-    {
-        if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var ZFE_Model_AbstractRecord $invoker */
-            $invoker = $event->getInvoker();
-
-            if ($invoker->contains('deleted')) {
-                if ($invoker->contains('version')) {
-                    ++$invoker->version;
-                }
-                $invoker->deleted = true;
-                $invoker->hardSave();
-
-                $event->skipOperation();
             }
         }
     }
