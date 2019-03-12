@@ -201,8 +201,16 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
             return $value ? 'Да' : 'Нет';
         }
 
-        if (is_int($value)) {
-            return number_format($value, 0, null, $this->_htmlMode ? '&nbsp;' : '');
+        if (is_numeric($value)) {
+            if ((float) $value == (int) $value) {
+                return number_format($value, 0, null, $this->_htmlMode ? '&nbsp;' : '');
+            }
+
+            if (0. === (float) $value) {
+                return 0;
+            }
+
+            return $value;
         }
 
         if (is_object($value)) {
