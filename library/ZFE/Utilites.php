@@ -199,4 +199,18 @@ class ZFE_Utilites
 
         return $seconds;
     }
+
+    /**
+     * Сформировать аббревиатуру из текста
+     * @param string $text
+     * @return string
+     */
+    public static function makeAbbr(string $text) : string
+    {
+        if (preg_match_all('/\b(\w)/u', mb_strtoupper($text),$m)) {
+            return implode('',$m[1]);
+        } else {
+            return $text;
+        }
+    }
 }

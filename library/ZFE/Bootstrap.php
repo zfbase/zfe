@@ -96,8 +96,13 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $manager = Doctrine_Manager::getInstance();
         $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
+
         $manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, $dbConfig->schema . '.%s');
         $manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, $dbConfig->schema . '.%s');
+        // рабочий вариант для с PSQL
+        // $manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, '%s');
+        // $manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, '%s');
+
         $manager->setAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES, true);
         $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
 
