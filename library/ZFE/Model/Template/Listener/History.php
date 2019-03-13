@@ -121,21 +121,19 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
                         $relAlias = $rel->getAlias();
                         $relObj = $invoker->get($relAlias);
                         $relIds = $relObj->identifier('id');
-                        $relId = 1 === count($relIds) && key_exists('id', $relIds)
-                            ? $relObj->id
-                            : null;
-
-                        $history = new History();
-                        $history->table_name = $relObj->getTableName();
-                        $history->content_id = $relId;
-                        $history->column_name = $relAlias;
-                        $history->content_old = null;
-                        $history->content_new = $invoker->id;
-                        $history->action_type = History::ACTION_TYPE_LINK;
-                        $history->user_id = $userId;
-                        $history->datetime_action = new Doctrine_Expression('NOW()');
-                        $history->content_version = null;
-                        $history->save();
+                        if (1 === count($relIds) && key_exists('id', $relIds)) {
+                            $history = new History();
+                            $history->table_name = $relObj->getTableName();
+                            $history->content_id = $relObj->id;
+                            $history->column_name = $relAlias;
+                            $history->content_old = null;
+                            $history->content_new = $invoker->id;
+                            $history->action_type = History::ACTION_TYPE_LINK;
+                            $history->user_id = $userId;
+                            $history->datetime_action = new Doctrine_Expression('NOW()');
+                            $history->content_version = null;
+                            $history->save();
+                        }
                     }
                 }
             }
