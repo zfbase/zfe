@@ -360,4 +360,24 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         $this->actAs(new ZFE_Model_Template_History());
         $this->actAs(new ZFE_Model_Template_SoftDelete());
     }
+
+    /**
+     * Получить список полей для отображения в viewAction (_view).
+     * 
+     * @return array
+     * 
+     * Пример возвращаемого массива:
+     * [
+     *     'title',                                                - использовать автоформатирование
+     *     ['field' => 'Creator', 'title' => 'Автор'],             - переопределение заголовка
+     *     ['field' => 'timestamp', 'viewHelper' => 'dateTime'],   - использовать помощник представления
+     *     ['field' => 'body', 'viewMethod' => function ($item) {  - использовать для отображения лямбду
+     *         return strip_tags($item->preview);
+     *     ],
+     * ]
+     */
+    public static function getViewFields()
+    {
+        return [];
+    }
 }

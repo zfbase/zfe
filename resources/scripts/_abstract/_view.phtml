@@ -1,29 +1,38 @@
 <?
+    $item = $this->item; /** @var AbstractRecord $item */
     $modelName = $this->modelName;
-    $item = $this->item; /** @var Doctrine_Record $item */
     $table = Doctrine_Core::getTable($modelName);
-    $columns = array_diff($item->getTable()->getColumnNames(), $modelName::getServiceFields());
+    $fields = $modelName::getViewFields();
+    if (empty($fields)) {
+        $columns = array_diff($item->getTable()->getColumnNames(), $modelName::getServiceFields());
+        $relations = array_map(function ($options) {
+            return $options['relAlias'];
+        }, $modelName::$multiAutocompleteCols);
+        $fields = array_merge($columns, $relations);
+    }
 ?>
 
-<table class="table table-condensed">
+<table class="table table-condensed viewTable">
     <tbody>
-        <? foreach ($columns as $columnName): ?>
-        <? if ( ! empty($item->{$columnName})): ?>
-        <tr>
-            <th><?= $modelName::getFieldName($columnName) ?></th>
-            <td><?= ZFE::shortenText($this->autoFormat($item->{$columnName}, $columnName, $modelName), 400) ?></td>
-        </tr>
+    <? foreach ($fields as $field): ?>
+        <? $options = is_string($field) ? ['field' => $field] : $field; ?>
+        <? if (($table->hasRelation($options['field']) && $item->{$options['field']}->count())
+            || ($table->hasColumn($options['field']) && ! empty($item->{$options['field']}))): ?>
+            <tr>
+                <th><?= $options['title'] ?? $modelName::getFieldName($options['field']) ?></th>
+                <td>
+                    <? if ( ! empty($options['viewHelper'])): ?>
+                        <?= $this->{$options['viewHelper']}($item->{$options['field']}) ?>
+                    <? elseif ( ! empty($options['viewMethod'])): ?>
+                        <?= ($options['viewMethod'])($item) ?>
+                    <? elseif ($table->hasRelation($options['field'])): ?>
+                        <?= $this->showTitles($item->{$options['field']}) ?>
+                    <? elseif ($table->hasColumn($options['field'])): ?>
+                        <?= ZFE::shortenText($this->autoFormat($item->{$options['field']}, $options['field'], $modelName), 400) ?>
+                    <? endif; ?>
+                </td>
+            </tr>
         <? endif; ?>
-        <? endforeach; ?>
-        
-        <? foreach ($modelName::$multiAutocompleteCols as $column => $options): ?>
-        <? $relation = $options['relAlias']; ?>
-        <? if ($item->{$relation}->count()): ?>
-        <tr>
-            <th><?= $modelName::getFieldName(mb_strtolower($relation)) ?></th>
-            <td><?= $this->showTitles($item->{$relation}) ?></td>
-        </tr>
-        <? endif; ?>
-        <? endforeach; ?>
+    <? endforeach; ?>
     </tbody>
 </table>
