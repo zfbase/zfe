@@ -201,14 +201,16 @@ class ZFE_Utilites
     }
 
     /**
-     * Сформировать аббревиатуру из текста
+     * Сформировать аббревиатуру из текста.
+     *
      * @param string $text
+     *
      * @return string
      */
-    public static function makeAbbr(string $text) : string
+    public static function makeAbbr(string $text)
     {
-        if (preg_match_all('/\b(\w)/u', mb_strtoupper($text),$m)) {
-            return implode('',$m[1]);
+        if (preg_match_all('/\b(\w)/u', mb_strtoupper($text), $m)) {
+            return implode('', $m[1]);
         } else {
             return $text;
         }
