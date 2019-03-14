@@ -1,19 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 16.10.18
- * Time: 16:51
+
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
  */
 
+/**
+ * Помощник отправки файла средствами php-сервера через авторизацию приложения.
+ *
+ * @see https://habr.com/post/151795/
+ */
 class ZFE_Controller_Action_Helper_DownloadPhp extends Zend_Controller_Action_Helper_Abstract
 {
     /**
-     * Отправить файл средствами php-сервера через авторизацию приложения
-     * https://habr.com/post/151795/
+     * Отправить файл средствами php-сервера через авторизацию приложения.
      *
-     * @param string $path  путь до файла в файловой системе
-     * @param string $name  новое имя файла
+     * @param string $path путь до файла в файловой системе
+     * @param string $name новое имя файла
      */
     public function direct($path, $name)
     {
@@ -38,6 +40,7 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends Zend_Controller_Action_He
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
             header('Content-Length: ' . filesize($path));
+
             // читаем файл и отправляем его пользователю
             readfile($path);
             exit;
