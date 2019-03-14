@@ -23,7 +23,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      * Установить флаг: Фиксировать событие в истории?
      *
      * @param bool $mode
-     * 
+     *
      * @return bool
      */
     public function saveHistory($mode = null)

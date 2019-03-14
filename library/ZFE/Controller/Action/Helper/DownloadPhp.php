@@ -29,7 +29,7 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends Zend_Controller_Action_He
             header('Content-Description: File Transfer');
 
             $mime = mime_content_type($path);
-            if ($mime === false) {
+            if (false === $mime) {
                 $mime = 'application/octet-stream';
             }
             header('Content-Type: ' . $mime);
@@ -44,9 +44,8 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends Zend_Controller_Action_He
             // читаем файл и отправляем его пользователю
             readfile($path);
             exit;
-        } else {
-            $this->abort(404, 'Файл не найден');
         }
-    }
 
+        $this->abort(404, 'Файл не найден');
+    }
 }

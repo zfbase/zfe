@@ -12,7 +12,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     /**
      * Разрешить мягкое удаление?
      *
-     * @var boolean
+     * @var bool
      */
     protected $_allowSoftDelete = true;
 

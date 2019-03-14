@@ -100,7 +100,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $username = $dbConfig->username;
         $password = $dbConfig->password;
         $persistent = $dbConfig->persistent ? 'true' : 'false';
-        $driver = $dbConfig->driver ?? : 'mysql';
+        $driver = $dbConfig->driver ?? 'mysql';
 
         $manager = Doctrine_Manager::getInstance();
         $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);

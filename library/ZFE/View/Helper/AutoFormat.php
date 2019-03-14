@@ -202,7 +202,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
         }
 
         if (is_numeric($value)) {
-            if ((float) $value == (int) $value) {
+            if ((float) $value === (float) (int) $value) {
                 return number_format($value, 0, null, $this->_htmlMode ? '&nbsp;' : '');
             }
 

@@ -211,8 +211,8 @@ class ZFE_Utilites
     {
         if (preg_match_all('/\b(\w)/u', mb_strtoupper($text), $m)) {
             return implode('', $m[1]);
-        } else {
-            return $text;
         }
+
+        return $text;
     }
 }

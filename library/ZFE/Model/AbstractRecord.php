@@ -363,9 +363,9 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
 
     /**
      * Получить список полей для отображения в viewAction (_view).
-     * 
+     *
      * @return array
-     * 
+     *
      * Пример возвращаемого массива:
      * [
      *     'title',                                                - использовать автоформатирование

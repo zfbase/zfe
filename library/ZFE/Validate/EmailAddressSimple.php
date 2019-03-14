@@ -31,7 +31,7 @@ class ZFE_Validate_EmailAddressSimple extends Zend_Validate_Abstract
      */
     public function isValid($value)
     {
-        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+        if (false === filter_var($value, FILTER_VALIDATE_EMAIL)) {
             $this->_error(self::INVALID);
             return false;
         }
