@@ -94,30 +94,25 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $dbConfig = Zend_Registry::get('config')->doctrine;
 
-        $manager = Doctrine_Manager::getInstance();
-        $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
-        $manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, $dbConfig->schema . '.%s');
-        $manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, $dbConfig->schema . '.%s');
-        $manager->setAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES, true);
-        $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
-
-        spl_autoload_register(['Doctrine_Core', 'modelsAutoload']);
-
-        Doctrine_Core::loadModels($dbConfig->models_path);
-
         $host = $dbConfig->host;
         $port = $dbConfig->port;
         $schema = $dbConfig->schema;
         $username = $dbConfig->username;
         $password = $dbConfig->password;
         $persistent = $dbConfig->persistent ? 'true' : 'false';
-        $driver = isset($dbConfig->driver) ? $dbConfig->driver : 'mysql';
+        $driver = $dbConfig->driver ?? : 'mysql';
 
-        // У нас не настолько все универсально, что бы можно было конфигом изменять СУБД.
-        // Конечно, хорошо бы сделать универсальное подключение на случай перехода
-        // на PostgreSQL или Oracle Database, но оставим это переосмысление на будущее.
+        $manager = Doctrine_Manager::getInstance();
+        $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
+        $manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
+        $manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
+        $manager->setAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES, true);
+        $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
+
+        spl_autoload_register(['Doctrine_Core', 'modelsAutoload']);
+        Doctrine_Core::loadModels($dbConfig->models_path);
+
         $dsn = "{$driver}:host={$host};port={$port};dbname={$schema}";
-
         if ('mysql' === $driver) {
             $dsn .= ";persistent={$persistent}";
         }

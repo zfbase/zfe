@@ -26,9 +26,18 @@ class ZFE_Controller_Action_Helper_DownloadNginx extends Zend_Controller_Action_
             $response = $this->getResponse();
             $response->clearAllHeaders();
             $response->clearBody();
+
+            $mime = mime_content_type($path);
+            if ($mime === false) {
+                $mime = 'application/octet-stream';
+            }
+
             $response->setHeader('Content-Description', 'File Transfer');
-            $response->setHeader('Content-Type', 'application/octet-stream');
-            $response->setHeader('Content-Transfer-Encoding', 'binary');
+            $response->setHeader('Content-Type', $mime);
+
+            // @see https://stackoverflow.com/q/7285372
+            // $response->setHeader('Content-Transfer-Encoding', 'binary');
+
             $response->setHeader('Content-Disposition', 'attachment; filename="' . $name . '"');
             $response->setHeader('Expires', '0');
             $response->setHeader('Cache-Control', 'must-revalidate');

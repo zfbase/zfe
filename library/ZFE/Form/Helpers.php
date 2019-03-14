@@ -60,13 +60,13 @@ trait ZFE_Form_Helpers
 
         $this->addPrefixPath(
             $config->appnamespace . '_Form_Element',
-            APPLICATION_PATH . '/forms/elements',
+            APPLICATION_PATH . '/forms/Element',
             'element'
         );
 
         $this->addElementPrefixPath(
             $config->appnamespace . '_Form_Decorator',
-            $config->appnamespace . '/Form/Decorator',
+            APPLICATION_PATH . '/forms/Decorator',
             'decorator'
         );
 

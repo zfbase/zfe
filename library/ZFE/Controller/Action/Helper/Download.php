@@ -32,6 +32,9 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
             case 'apache':
                 Zend_Controller_Action_HelperBroker::getStaticHelper('DownloadApache')->direct($path, $name);
                 break;
+            case 'php':
+                Zend_Controller_Action_HelperBroker::getStaticHelper('DownloadPhp')->direct($path, $name);
+                break;
             default:
                 $this->abort(500, 'В конфигурации не указан не поддерживаемый веб-сервер');
         }

@@ -32,10 +32,11 @@ trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
      * Получить настройки поля выбора нескольких записей другой таблицы из списка.
      *
      * @param string $field
+     * @param array  $multiOptions опционально заданный список значений списка, по умолчанию - $alias::getKeyValueList()
      *
      * @return array|bool
      */
-    public static function getMultiCheckOrSelectOptions($field)
+    public static function getMultiCheckOrSelectOptions($field, $multiOptions = [])
     {
         // Проверяем, является ли поле автокомплитом
         if ( ! key_exists($field, static::$multiCheckOrSelectCols)) {
@@ -49,7 +50,13 @@ trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
         }
 
         $alias = $options['relAlias'];
-        $options['multiOptions'] = $alias::getKeyValueList();
+
+        // не будем пересобирать варианты, если они уже собраны
+        if ( ! empty($multiOptions)) {
+            $options['multiOptions'] = $multiOptions;
+        } else {
+            $options['multiOptions'] = $alias::getKeyValueList();
+        }
 
         return $options;
     }
