@@ -52,7 +52,7 @@ trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
         $alias = $options['relAlias'];
 
         // не будем пересобирать варианты, если они уже собраны
-        if (!empty($multiOptions)) {
+        if ( ! empty($multiOptions)) {
             $options['multiOptions'] = $multiOptions;
         } else {
             $options['multiOptions'] = $alias::getKeyValueList();
