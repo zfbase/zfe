@@ -110,14 +110,9 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
 
         spl_autoload_register(['Doctrine_Core', 'modelsAutoload']);
-
         Doctrine_Core::loadModels($dbConfig->models_path);
 
-        // У нас не настолько все универсально, что бы можно было конфигом изменять СУБД.
-        // Конечно, хорошо бы сделать универсальное подключение на случай перехода
-        // на PostgreSQL или Oracle Database, но оставим это переосмысление на будущее.
         $dsn = "{$driver}:host={$host};port={$port};dbname={$schema}";
-
         if ('mysql' === $driver) {
             $dsn .= ";persistent={$persistent}";
         }
