@@ -95,7 +95,7 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
         $range = new $rangeClass(['chunk' => $chunk]);
 
         $pager = $this->_pager = ZFE_Paginator::getInstance()->getPager();
-        $url = ZFE_Paginator::getInstance()->getUrl();
+        $url = str_replace('%7B%25page_number%7D', '{%page_number}', ZFE_Paginator::getInstance()->getUrl());
 
         $layout = $this->_layout = new Doctrine_Pager_Layout($pager, $range, $url);
         $layout->setSelectedTemplate($this->_selectedTemplate);

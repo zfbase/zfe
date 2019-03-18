@@ -33,9 +33,9 @@ class ZFE_Paginator
     /**
      * Базовый URL.
      *
-     * @var string
+     * @var ZFE_Uri_Route
      */
-    protected $_url = '';
+    protected $_uri;
 
     /**
      * Экземпляр запроса.
@@ -131,11 +131,41 @@ class ZFE_Paginator
      * @param string $url
      *
      * @return ZFE_Paginator
+     *
+     * @deprecated 1.31.6
      */
     public function setUrl($url)
     {
-        $this->_url = preg_replace('|\/$|', '', preg_replace('|page\/\d+/?|is', '', $url)) . '/page/{%page_number}';
+        $this->_uri = ZFE_Uri_Route::fromString($url);
+        $this->_uri->setParam('page', '{%page_number}');
         return self::$_instance;
+    }
+
+    /**
+     * Установить текущий URI.
+     *
+     * @param ZFE_Uri $uri
+     *
+     * @return ZFE_Paginator
+     */
+    public function setUri(ZFE_Uri $uri)
+    {
+        $this->_uri = $uri;
+        $this->_uri->setParam('page', '{%page_number}');
+        return self::$_instance;
+    }
+
+    /**
+     * Получить текущий URI.
+     *
+     * @return ZFE_Uri
+     */
+    public function getUri()
+    {
+        if ( ! $this->_uri) {
+            $this->setUri(ZFE_Uri_Route::fromRequest($this->_request));
+        }
+        return $this->_uri;
     }
 
     /**
@@ -145,52 +175,10 @@ class ZFE_Paginator
      */
     public function getUrl()
     {
-        if ( ! $this->_url) {
-            $ret = [];
-            $get = [];
-
-            $ignore = [
-                'module',                // модули мы не используем
-                'controller', 'action',  // контроллер и экшен подставим позже
-                'page',                  // номер страницы будет назначен новый
-            ];
-
-            foreach ($this->_request->getParams() as $param => $value) {
-                if (in_array($param, $ignore, true)) {
-                    continue;
-                }
-
-                if (is_array($value)) {  // массивы игнорируем
-                    continue;
-                }
-
-                if (false !== mb_strpos($value, '/')
-                 || false !== mb_strpos($value, '\\')
-                 || false !== mb_strpos($value, '.')) {
-                    $get[] = $param . '=' . urlencode($value);
-                } else {
-                    if ($value || '0' === $value) {
-                        $ret[] = urlencode($param);
-                        $ret[] = urlencode($value);
-                    }
-                }
-            }
-
-            $module = $this->_request->getModuleName();
-            if ($module) {
-                $parts[] = $module;
-            }
-            $parts[] = $this->_request->getControllerName();
-            $parts[] = $this->_request->getActionName();
-
-            $url = '/' . implode('/', $parts) . '/' . implode('/', $ret);
-            if ( ! empty($get)) {
-                $url .= '?' . implode('&', $get);
-            }
-
-            $this->setUrl($url);
+        if ( ! $this->_uri) {
+            $this->setUri(ZFE_Uri_Route::fromRequest($this->_request));
         }
-        return $this->_url;
+        return $this->_uri->getUri();
     }
 
     /**

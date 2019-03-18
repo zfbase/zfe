@@ -16,72 +16,13 @@ class ZFE_Controller_Action_Helper_PostToGet extends Zend_Controller_Action_Help
      */
     public function direct(array $ignore = ['submit'])
     {
-        $this->_ignore = $ignore;
-
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $ret = [];
-            $get = [];
-
-            foreach ($request->getQuery() as $var => $val) {
-                $get[] = $var . '=' . urlencode($val);
+            $uri = ZFE_Uri_Route::fromRequest($request, true);
+            foreach ($ignore as $key) {
+                $uri->removeParam($key);
             }
-
-            $this->_recursiveParser($request->getPost(), $ret, $get);
-
-            $module = $request->getModuleName();
-            if ($module) {
-                $parts[] = $module;
-            }
-            $parts[] = $request->getControllerName();
-            $parts[] = $request->getActionName();
-
-            $redirectTo = '/' . implode('/', $parts) . '/' . implode('/', $ret);
-            if ( ! empty($get)) {
-                $redirectTo .= '?' . implode('&', $get);
-            }
-
-            Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->gotoUrl($redirectTo);
-        }
-    }
-
-    /**
-     * Игнорируемые параметры.
-     *
-     * @var array
-     */
-    protected $_ignore;
-
-    /**
-     * Рекурсивно перебрать параметры и составить массивы компонентов GET-запроса.
-     *
-     * @param array  $data
-     * @param array  $ret
-     * @param array  $get
-     * @param string $prefix
-     */
-    protected function _recursiveParser(array $data, array &$ret, array &$get, $prefix = '')
-    {
-        if ( ! empty($prefix)) {
-            $prefix .= '_';
-        }
-
-        foreach ($data as $key => $value) {
-            $key = $prefix . $key;
-
-            if (in_array($key, $this->_ignore, true)) {
-                continue;
-            }
-
-            if (is_array($value)) {
-                $this->_recursiveParser($value, $ret, $get, $key);
-            } elseif (is_string($value) && (false !== mb_strpos($value, '/') || false !== mb_strpos($value, '\\') || false !== mb_strpos($value, '.'))) {
-                // Apache, в целях безопасности, встречая в адресе (до "?") символ %2F (/) или %2С (\) возвращает 404 ошибку
-                $get[] = $key . '=' . urlencode($value);
-            } elseif ( ! empty($value) || '0' === $value) {
-                $ret[] = urlencode($key);
-                $ret[] = urlencode($value);
-            }
+            Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->gotoUrl($uri->getUri());
         }
     }
 }
