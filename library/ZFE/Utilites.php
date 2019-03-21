@@ -99,6 +99,20 @@ class ZFE_Utilites
     }
 
     /**
+     * Дополняет строку другой строкой до заданной длины с поддержкой UTF-8.
+     *
+     * @param string $input
+     * @param int    $pad_length
+     * @param string $pad_string
+     * @param int    $pad_type
+     * @param string $encoding
+     */
+    public static function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = 'UTF-8')
+    {
+        return str_pad($input, strlen($input) - mb_strlen($input, $encoding) + $pad_length, $pad_string, $pad_type);
+    }
+
+    /**
      * Загрузить короткий псевдоним класса.
      */
     public static function loadShortAlias()
