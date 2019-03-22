@@ -1,11 +1,12 @@
 {
   "name": "zfe",
-  "version": "1.31.7",
+  "version": "1.32.0",
   "description": "ZFE – платформа для построения редакторских интерфейсов",
   "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
     "Dmitriy Demin <dma01x@gmail.com>",
     "Dmitriy Stepanov <stepdi@gmail.com>",
+    "Nikita Orlov <n.dezz.orlov@gmail.com>",
     "Alexey Sumin"
   ],
   "license": "MIT",
