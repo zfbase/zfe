@@ -5,7 +5,7 @@
  */
 
 /**
- * @todo Добавить возможность переопределения команд, помощников и логгеров из библиотеки стандартным зендовским методом.
+ * Единая точка входа для консольных скриптов.
  */
 class ZFE_Console_Tools
 {
@@ -24,25 +24,11 @@ class ZFE_Console_Tools
     protected $_params = [];
 
     /**
-     * Зарегистрированные команды.
+     * Брокер команд.
      *
-     * @var array
+     * @var ZFE_Console_CommandBroker|null
      */
-    protected $_commands = [];
-
-    /**
-     * Инициализированные команды.
-     *
-     * @var array<string>|string[]
-     */
-    protected $_initializedCommands = [];
-
-    /**
-     * Логгер.
-     *
-     * @var ZFE_Console_Logger|null
-     */
-    protected $_logger;
+    protected $_commandBroker;
 
     /**
      * Брокер помощников.
@@ -50,6 +36,13 @@ class ZFE_Console_Tools
      * @var ZFE_Console_HelperBroker|null
      */
     protected $_helperBroker;
+
+    /**
+     * Логгер.
+     *
+     * @var ZFE_Console_Logger|null
+     */
+    protected $_logger;
 
     /**
      * Конструктор.
@@ -60,66 +53,46 @@ class ZFE_Console_Tools
             $this->_call = $_SERVER['argv'][1] ?? null;
             $this->_params = array_slice($_SERVER['argv'], 2);
         }
-
-        $this->registryCommand(new ZFE_Console_Command_Help($this));
-        $this->registryCommand(ZFE_Console_Command_ModelsGenerate::class);
-        $this->registryCommand(ZFE_Console_Command_SphinxIndexer::class);
     }
 
     /**
-     * Зарегистрировать команду.
+     * Указать параметры вызываемой команды.
      *
-     * @param string|ZFE_Console_Command_Abstract $command
-     * @param string                              $name
-     * @param bool                                $replace Заменять зарегистрированную ранее команду с указанным ключом
+     * @param array $params
      *
      * @return ZFE_Console_Tools
      */
-    public function registryCommand($command, string $name = null, bool $replace = false)
+    public function setParams(array $params)
     {
-        $name = $name ?? $command::getName();
-        if (empty($name)) {
-            throw new ZFE_Console_Exception('Нельзя зарегистрировать команду без ключа.');
-        }
-
-        if (key_exists($name, $this->_commands) && ! $replace) {
-            $prevCommand = $this->_commands[$name];
-            if (is_object($prevCommand)) {
-                $prevCommand = get_class($prevCommand);
-            }
-
-            throw new ZFE_Console_Exception("Ключ '${$name}' уже использован для команды '${prevCommand}'.");
-        }
-
-        $this->_commands[$name] = $command;
+        $this->_params = $params;
         return $this;
     }
 
     /**
-     * Установить логгер.
+     * Указать брокер команд.
      *
-     * @param ZFE_Console_Logger $logger
-     *
+     * @param ZFE_Console_CommandBroker $broker
+     * 
      * @return ZFE_Console_Tools
      */
-    public function setLogger(ZFE_Console_Logger $logger)
+    public function setCommandBroker(ZFE_Console_CommandBroker $broker)
     {
-        $this->_logger = $logger;
+        $this->_commandBroker = $broker;
         return $this;
     }
 
     /**
-     * Получить логгер.
+     * Получить брокер команд.
      *
-     * @return ZFE_Console_Logger
+     * @return ZFE_Console_CommandBroker
      */
-    public function getLogger()
+    public function getCommandBroker()
     {
-        if ( ! $this->_logger) {
-            $this->_logger = new ZFE_Console_Logger();
+        if ( ! $this->_commandBroker) {
+            $this->_commandBroker = ZFE_Console_CommandBroker::getInstance();
         }
 
-        return $this->_logger;
+        return $this->_commandBroker;
     }
 
     /**
@@ -150,24 +123,39 @@ class ZFE_Console_Tools
     }
 
     /**
-     * Указать параметры вызываемой команды.
+     * Установить логгер.
      *
-     * @param array $params
+     * @param ZFE_Console_Logger $logger
      *
      * @return ZFE_Console_Tools
      */
-    public function setParams(array $params)
+    public function setLogger(ZFE_Console_Logger $logger)
     {
-        $this->_params = $params;
+        $this->_logger = $logger;
         return $this;
+    }
+
+    /**
+     * Получить логгер.
+     *
+     * @return ZFE_Console_Logger
+     */
+    public function getLogger()
+    {
+        if ( ! $this->_logger) {
+            $this->_logger = new ZFE_Console_Logger();
+        }
+
+        return $this->_logger;
     }
 
     /**
      * Выполнить команду.
      *
      * @param string $command
+     * @param array $params
      */
-    public function run(string $command = null)
+    public function run(string $command = null, array $params = null)
     {
         if ($command) {
             $this->_call = $command;
@@ -177,57 +165,14 @@ class ZFE_Console_Tools
             $this->_call = 'help';
         }
 
-        return $this->getCommand($this->_call)->execute($this->_params);
-    }
-
-    /**
-     * Получить все команды.
-     *
-     * @param bool $initialize Инициализировать перед возвращением
-     *
-     * @return array|ZFE_Console_Command_Abstract[]
-     */
-    public function getCommands(bool $initialize = true)
-    {
-        if ( ! $initialize) {
-            return $this->_commands;
+        if (null !== $params) {
+            $this->_params = $params;
         }
 
-        return array_map(function ($command) {
-            $command = $this->getCommand($command);
-        }, $this->_commands);
-    }
-
-    /**
-     * Вернуть инициализированную команду.
-     *
-     * @param string $name
-     *
-     * @return ZFE_Console_Command_Abstract
-     */
-    public function getCommand(string $name)
-    {
-        if (in_array($name, $this->_initializedCommands, true)) {
-            return $this->_commands[$name];
-        }
-
-        if ( ! key_exists($name, $this->_commands)) {
-            throw new ZFE_Console_Exception('Команда не зарегистрирована.');
-        }
-
-        $command = $this->_commands[$name];
-        if (is_string($command)) {
-            $command = new $command;
-        }
-
-        if ( ! $command instanceof ZFE_Console_Command_Abstract) {
-            throw new ZFE_Console_Exception('Команда не валидна.');
-        }
-
-        $this->_initializedCommands[] = $name;
-
-        $command->setLogger($this->getLogger());
-        $command->setHelperBroker($this->getHelperBroker());
-        return $command;
+        return $this->getCommandBroker()
+            ->getCommand($this->_call)
+            ->setLogger($this->getLogger())
+            ->setHelperBroker($this->getHelperBroker())
+            ->execute($this->_params);
     }
 }

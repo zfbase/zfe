@@ -16,19 +16,6 @@ class ZFE_Console_Command_Help extends ZFE_Console_Command_Abstract
         "Для получения подробной информации о команде укажите её аргументом. Укажите несколько команд через пробел и получите справку сразу по всем ним.";
 
     /**
-     * @var ZFE_Console_Tools
-     */
-    protected $_tools;
-
-    /**
-     * @param ZFE_Console_Tools $tools
-     */
-    public function __construct(ZFE_Console_Tools $tools)
-    {
-        $this->_tools = $tools;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function execute(array $params = [])
@@ -45,7 +32,7 @@ class ZFE_Console_Command_Help extends ZFE_Console_Command_Abstract
         } else {
             $table = $this->getHelperBroker()->get('Table');
             $table->setHeaders(['Команда', 'Описание']);
-            $commands = $this->_tools->getCommands(false);
+            $commands = ZFE_Console_CommandBroker::getInstance()->getCommands();
             foreach ($commands as $command) {
                 $table->addRow([
                     $command::getName(),
