@@ -6,6 +6,11 @@
 
 /**
  * Брокер консольных команд.
+ * 
+ * Резервирует в конфигурации следующие параметры:
+ * console.prefixPath.Application_Console_Command = APPLICATION_PATH . '/Console/Command'  ; конфиг по умолчанию, добавляющий префикс Application_Console_Command_* для команд по адресу APPLICATION_PATH . /Console/Command/*
+ * console.command.sendmail = 'Application_Plugin_MailSender'  ; Регистрирует команду Application_Plugin_MailSender с ключом sendmail
+ * console.command[] = 'Application_Plugin_MailSender'  ; Регистрирует команду Application_Plugin_MailSender с ключом команды по умолчанию
  */
 class ZFE_Console_CommandBroker
 {
