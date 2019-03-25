@@ -72,7 +72,7 @@ class ZFE_Console_Tools
      * Указать брокер команд.
      *
      * @param ZFE_Console_CommandBroker $broker
-     * 
+     *
      * @return ZFE_Console_Tools
      */
     public function setCommandBroker(ZFE_Console_CommandBroker $broker)
@@ -153,7 +153,7 @@ class ZFE_Console_Tools
      * Выполнить команду.
      *
      * @param string $command
-     * @param array $params
+     * @param array  $params
      */
     public function run(string $command = null, array $params = null)
     {
@@ -173,6 +173,7 @@ class ZFE_Console_Tools
             ->getCommand($this->_call)
             ->setLogger($this->getLogger())
             ->setHelperBroker($this->getHelperBroker())
-            ->execute($this->_params);
+            ->execute($this->_params)
+        ;
     }
 }

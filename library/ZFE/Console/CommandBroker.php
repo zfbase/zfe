@@ -6,7 +6,7 @@
 
 /**
  * Брокер консольных команд.
- * 
+ *
  * Резервирует в конфигурации следующие параметры:
  * console.prefixPath.Application_Console_Command = APPLICATION_PATH . '/Console/Command'  ; конфиг по умолчанию, добавляющий префикс Application_Console_Command_* для команд по адресу APPLICATION_PATH . /Console/Command/*
  * console.command.sendmail = 'Application_Plugin_MailSender'  ; Регистрирует команду Application_Plugin_MailSender с ключом sendmail
@@ -54,7 +54,7 @@ class ZFE_Console_CommandBroker
     protected function __construct()
     {
         $config = Zend_Registry::get('config');
-        
+
         // Настройка путей автозагрузчика
         $this->addPrefixPath('ZFE_Console_Command', ZFE_PATH . '/console/Command');
 
@@ -65,16 +65,11 @@ class ZFE_Console_CommandBroker
         } else {
             $this->addPrefixPath('Application_Console_Command', APPLICATION_PATH . '/Console/Command');
         }
-        
 
-        // Стандартные команды
-        $this->registerCommand('Help');
-        $this->registerCommand('DoctrineCli');
-        $this->registerCommand('ModelsGenerate');
-        $this->registerCommand('SphinxIndexer');
-        $this->registerCommand('ApplySchema');
-        $this->registerCommand('Migrate');
-
+        // Загрузка всех команд из директорий
+        foreach ($this->_prefixPaths as $prefix => $path) {
+            $this->loadCommand($path, $prefix);
+        }
 
         // Собираем команды из конфига
         if ($config->console->command ?? false) {
@@ -85,10 +80,44 @@ class ZFE_Console_CommandBroker
     }
 
     /**
+     * Подгрузить команды из конкретной директории с конкретным префиксом.
+     *
+     * @param string $path
+     * @param string $prefix
+     *
+     * @return ZFE_Console_CommandBroker
+     */
+    public function loadCommand(string $path, string $prefix)
+    {
+        $files = scandir($path, SCANDIR_SORT_ASCENDING);
+        foreach ($files as $file) {
+            if ('.php' !== mb_substr($file, -4)) {
+                continue;
+            }
+
+            $fileName = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+            $className = $prefix . '_' . mb_substr($file, 0, -4);
+            if (Zend_Loader::isReadable($fileName)) {
+                include_once $fileName;
+                if (class_exists($className, false)) {
+                    if ( ! $this->hasCommandByClass($className)) {
+                        $reflection = new ReflectionClass($className);
+                        if ($reflection->isSubclassOf(ZFE_Console_Command_Abstract::class) && ! $reflection->isAbstract()) {
+                            $this->registerCommand($className);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Зарегистрировать команду.
      *
      * @param string|ZFE_Console_Command_Abstract $command
-     * @param string                              $name
+     * @param string|null                         $name
      * @param bool                                $replace Заменять зарегистрированную ранее команду с указанным ключом
      *
      * @return ZFE_Console_CommandBroker
@@ -119,7 +148,7 @@ class ZFE_Console_CommandBroker
      * Удалить команду из зарегистрированных.
      *
      * @param string $name
-     * 
+     *
      * @return ZFE_Console_CommandBroker
      */
     public function unregisterCommand(string $name)
@@ -133,7 +162,7 @@ class ZFE_Console_CommandBroker
      *
      * @param string $prefix
      * @param string $path
-     * 
+     *
      * @return ZFE_Console_CommandBroker
      */
     public function addPrefixPath(string $prefix, string $path)
@@ -157,12 +186,38 @@ class ZFE_Console_CommandBroker
      * Проверить зарегистрированность команды.
      *
      * @param string $name
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasCommand(string $name)
     {
         return isset($this->_commands[$name]);
+    }
+
+    /**
+     * Проверить зарегистрированность команды по имени класса.
+     *
+     * @param string $class
+     *
+     * @return bool
+     */
+    public function hasCommandByClass(string $class)
+    {
+        foreach ($this->_commands as $command) {
+            if (is_object($command)) {
+                if (get_class($command) === $class) {
+                    return true;
+                }
+            }
+
+            if (is_string($command)) {
+                if ($this->_getCommandClass($command) === $class) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -199,7 +254,7 @@ class ZFE_Console_CommandBroker
     public function getCommands()
     {
         return array_map(function ($command) {
-            return is_object($command) ? get_type($command) : $command;
+            return is_object($command) ? gettype($command) : $command;
         }, $this->_commands);
     }
 
@@ -213,7 +268,7 @@ class ZFE_Console_CommandBroker
         // Тогда считаем последней частью имени класса (именем файла)
         $name = ucfirst($name);
 
-        if (false !== strpos($name, '\\')) {
+        if (false !== mb_strpos($name, '\\')) {
             $classFile = str_replace('\\', DIRECTORY_SEPARATOR, $name) . '.php';
         } else {
             $classFile = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';

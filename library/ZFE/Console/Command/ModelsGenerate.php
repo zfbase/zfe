@@ -16,6 +16,7 @@ class ZFE_Console_Command_ModelsGenerate extends ZFE_Console_Command_Abstract
     {
         ZFE_Console_CommandBroker::getInstance()
             ->getCommand('doctrine')
-            ->execute(array_merge(['generate-models-db'], $params));
+            ->execute(array_merge(['generate-models-db'], $params))
+        ;
     }
 }

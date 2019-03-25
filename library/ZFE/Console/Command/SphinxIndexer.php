@@ -9,8 +9,8 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
     protected static $_name = 'indexer';
     protected static $_description = 'Индексация Sphinx';
     protected static $_help =
-        "При вызове без аргументов проиндексируются все модели.\n" .
-        "Для индексации определенных моделей перечислите их через пробел.";
+        'При вызове без аргументов проиндексируются все модели.' . "\n" .
+        'Для индексации определенных моделей перечислите их через пробел.';
 
     /**
      * Помощник для рендеринга таблиц.

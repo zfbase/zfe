@@ -22,7 +22,7 @@ class ZFE_Console_Command_Migrate extends ZFE_Console_Command_Abstract
             $migration->migrate($params[0] ?? null);
         } catch (Doctrine_Exception $e) {
             $message = $e->getMessage();
-            if (strpos($e->getMessage(), 'Already at') !== false) {
+            if (false !== mb_strpos($e->getMessage(), 'Already at')) {
                 echo $message;
                 return;
             }
