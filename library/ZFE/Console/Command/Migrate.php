@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
+/**
+ * Миграция БД.
+ */
+class ZFE_Console_Command_Migrate extends ZFE_Console_Command_Abstract
+{
+    protected static $_name = 'migrate';
+    protected static $_description = 'Миграция БД';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function execute(array $params = [])
+    {
+        $migration = new Doctrine_Migration(Zend_Registry::get('config')->doctrine->migrations_path);
+        try {
+            $migration->migrate($params[0] ?? null);
+        } catch (Doctrine_Exception $e) {
+            $message = $e->getMessage();
+            if (strpos($e->getMessage(), 'Already at') !== false) {
+                echo $message;
+                return;
+            }
+            throw new ZFE_Console_Exception($message);
+        }
+    }
+}
