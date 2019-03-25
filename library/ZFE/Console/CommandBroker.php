@@ -69,6 +69,7 @@ class ZFE_Console_CommandBroker
 
         // Стандартные команды
         $this->registerCommand('Help');
+        $this->registerCommand('DoctrineCli');
         $this->registerCommand('ModelsGenerate');
         $this->registerCommand('SphinxIndexer');
         $this->registerCommand('ApplySchema');
