@@ -5,7 +5,7 @@
  */
 
 /**
- * Скрипт для актуализации описания моделей.
+ * Скрипт для актуализации описания моделей в соотв. со YAML-схемой
  */
 class ZFE_Console_Command_ApplySchema extends ZFE_Console_Command_Abstract
 {
@@ -26,24 +26,16 @@ class ZFE_Console_Command_ApplySchema extends ZFE_Console_Command_Abstract
             throw new ZFE_Console_Exception('Параметр rethrow_exceptions не указан в doctrine.ini, запуск без него чреват нарушением порядка действий!');
         }
 
-        /**
-         * Эти файлы хранятся в library/doctrine1/lib/Doctrine/Parser/sfYaml
-         * Они не поддерживают общий для Doctrine PSR-0 и не имеют пространства имен.
-         * В Doctrine_Core::autoload есть специальный блок для обработки этих файлов, что намекает,
-         * что эти файлы из какой-то сторонней библиотеки.
-         * В любом случае, я не знаю, почему они не подгружаются автоматически, но они нужны для задачи generate-migrations-diff
-         */
-        Doctrine_Core::autoload('sfYaml');
-        Doctrine_Core::autoload('sfYamlDumper');
-        Doctrine_Core::autoload('sfYamlParser');
+        $cmd = ZFE_Console_CommandBroker::getInstance()
+            ->getCommand('doctrine');
 
         try {
-            $cli = new Doctrine_Cli($config->toArray());
-            $cli->run(array_merge(['doctrine-cli', 'generate-migrations-diff'], $params));
+            $cmd->execute(array_merge(['generate-migrations-diff'], $params));
         } catch (Doctrine_Task_Exception $e) {
-            throw new ZFE_Console_Exception(implode('', [$e->getMessage(), 'Описания моделей соответствует описанию схемы']));
+            echo "Описания моделей соответствует описанию схемы\n";
+            return ;
         }
-        
-        $cli->run([__FILE__, 'generate-models-yaml']);
+
+        $cmd->execute(array_merge(['generate-models-yaml'], $params));
     }
 }
