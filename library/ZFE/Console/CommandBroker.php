@@ -72,7 +72,7 @@ class ZFE_Console_CommandBroker
         $this->registerCommand('ModelsGenerate');
         $this->registerCommand('SphinxIndexer');
         $this->registerCommand('ApplySchema');
-        $this->registerCommand('Migration');
+        $this->registerCommand('Migrate');
 
 
         // Собираем команды из конфига
