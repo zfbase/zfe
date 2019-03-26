@@ -24,34 +24,25 @@ class ZFE_Controller_Default_Editors extends Controller_AbstractResource
     protected static $_editFormName = 'ZFE_Form_Default_Edit_Editor';
 
     /**
-     * Вкладки управления записью.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected static $_controlTabs = [
-        [
-            'action' => 'edit',
-            'title' => 'Карточка',
-            'onlyValid' => true,
-        ],
-        [
-            'action' => 'access',
-            'title' => 'Права',
-            'onlyRegistered' => true,
-        ],
-        [
-            'action' => 'recent',
-            'title' => 'Последние действия',
-            'onlyRegistered' => true,
-        ],
-        [
-            'action' => 'history',
-            'title' => 'История',
-            'class' => 'pull-right',
-            'onlyRegistered' => true,
-            'onlyValid' => true,
-        ],
-    ];
+    public function preDispatch()
+    {
+        parent::preDispatch();
+
+        $this->view->controlTabs()
+            //->addTab('access', [
+            //    'action' => 'access',
+            //    'title' => 'Права',
+            //    'onlyRegistered' => true,
+            //])
+            //->addTab('recent', [
+            //    'action' => 'recent',
+            //    'title' => 'Последние действия',
+            //    'onlyRegistered' => true,
+            //])
+        ;
+    }
 
     /**
      * Страница настройки прав.

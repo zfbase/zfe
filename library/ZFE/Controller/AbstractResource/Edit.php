@@ -24,34 +24,6 @@ trait ZFE_Controller_AbstractResource_Edit
     protected static $_canCreate = true;
 
     /**
-     * Вкладки управления записью.
-     *
-     * Параметры вкладки:
-     * * action          – экшен вкладки
-     * * params          – параметры запроса
-     * * title           – заголовок вкладки
-     * * class           – класс элемента li вкладки
-     * * onlyRegistered  – только для зарегистрированных (если есть id), по умолчанию false
-     * * onlyValid       - только не удаленные (deleted != 0), по умолчанию true
-     *
-     * @var array
-     */
-    protected static $_controlTabs = [
-        [
-            'action' => 'edit',
-            'title' => 'Карточка',
-            'onlyValid' => true,
-        ],
-        [
-            'action' => 'history',
-            'title' => 'История',
-            'class' => 'pull-right',
-            'onlyRegistered' => true,
-            'onlyValid' => true,
-        ],
-    ];
-
-    /**
      * Редактор записи.
      *
      * @param bool|string $redirectUrl адрес для перенаправления в случае успеха; если адрес равен FALSE, то перенаправление не произойдет

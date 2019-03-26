@@ -82,19 +82,15 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         parent::init();
 
         if (static::$_enableViewAction) {
-            array_unshift(self::$_controlTabs, [
-                'action' => 'view',
-                'title' => 'Просмотр',
-                'onlyValid' => true,
-            ]);
-
-            /* Вариант на случай, если решим view называть Карточка в таких ресурсах
-            foreach (self::$_controlTabs as $tabIndex => $tabOptions) {
-                if ('edit' == $tabOptions['action']) {
-                    $tabOptions['title'] = 'Редактирование';
-                }
-            }
-            */
+            $this->view->controlTabs()
+                ->addTab('view', [
+                    'action' => 'view',
+                    'title' => 'Просмотр',
+                    'onlyRegistered' => true,
+                    'order' => 0,
+                ])
+                ->modifyTab('edit', ['title' => 'Редактирование'])
+            ;
         }
     }
 
@@ -119,7 +115,6 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $this->view->listName = $modelName::$namePlural;
         $this->view->itemName = $modelName::$nameSingular;
         $this->view->readonly = static::$_readonly;
-        $this->view->controlTabs = static::$_controlTabs;
 
         $this->view->canMerge = static::$_canMerge
                              && $modelName::isMergeable()
