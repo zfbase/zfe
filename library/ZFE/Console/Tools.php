@@ -123,7 +123,7 @@ class ZFE_Console_Tools
     {
         if ( ! $this->_helperBroker) {
             $brokerClass = Zend_Registry::get('config')->console->helperBroker ?? 'ZFE_Console_HelperBroker';
-            $this->_helperBroker = new $brokerClass();
+            $this->_helperBroker = $brokerClass::getInstance();
         }
 
         return $this->_helperBroker;

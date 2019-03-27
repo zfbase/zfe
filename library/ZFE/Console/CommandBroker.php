@@ -8,9 +8,9 @@
  * Брокер консольных команд.
  *
  * Резервирует в конфигурации следующие параметры:
- * console.prefixPath.Application_Console_Command = APPLICATION_PATH . '/Console/Command'  ; конфиг по умолчанию, добавляющий префикс Application_Console_Command_* для команд по адресу APPLICATION_PATH . /Console/Command/*
- * console.command.sendmail = 'Application_Plugin_MailSender'  ; Регистрирует команду Application_Plugin_MailSender с ключом sendmail
- * console.command[] = 'Application_Plugin_MailSender'  ; Регистрирует команду Application_Plugin_MailSender с ключом команды по умолчанию
+ * console.prefixPath.Application_Console = APPLICATION_PATH . '/Console'  ; конфиг по умолчанию, добавляющий префикс Application_Console_Command_* для команд по адресу APPLICATION_PATH . /Console/Command/*
+ * console.commands.sendmail = 'Application_Plugin_MailSender'  ; Регистрирует команду Application_Plugin_MailSender с ключом sendmail
+ * console.commands[] = 'Application_Plugin_MailSender'  ; Регистрирует команду Application_Plugin_MailSender с ключом команды по умолчанию
  */
 class ZFE_Console_CommandBroker
 {
@@ -56,26 +56,21 @@ class ZFE_Console_CommandBroker
         $config = Zend_Registry::get('config');
 
         // Настройка путей автозагрузчика
-        $this->addPrefixPath('ZFE_Console_Command', ZFE_PATH . '/console/Command');
+        $this->addPrefixPath('ZFE_Console', ZFE_PATH . '/console');
 
-        if ($config->console->prefixPath ?? false) {
-            foreach ($config->console->prefixPath as $name => $options) {
-                $this->addPrefixPath($options['namespace'], $options['path']);
-            }
-        } else {
-            $this->addPrefixPath('Application_Console_Command', APPLICATION_PATH . '/Console/Command');
+        $appPrefixPath = $config->console->prefixPath ?? ['Application_Console' => APPLICATION_PATH . '/Console'];
+        foreach ($appPrefixPath as $namespace => $path) {
+            $this->addPrefixPath($namespace, $path);
         }
 
         // Загрузка всех команд из директорий
         foreach ($this->_prefixPaths as $prefix => $path) {
-            $this->loadCommand($path, $prefix);
+            $this->loadCommand($path . DIRECTORY_SEPARATOR . 'Command', $prefix . '_' . 'Command');
         }
 
         // Собираем команды из конфига
-        if ($config->console->command ?? false) {
-            foreach ($config->console->command as $name => $command) {
-                $this->registerCommand($command, is_string($name) ? $name : null);
-            }
+        foreach ($config->console->commands ?? [] as $name => $command) {
+            $this->registerCommand($command, is_string($name) ? $name : null);
         }
     }
 
@@ -167,7 +162,7 @@ class ZFE_Console_CommandBroker
      */
     public function addPrefixPath(string $prefix, string $path)
     {
-        $this->_prefixPaths[$prefix] = $path;
+        $this->_prefixPaths[$prefix] = rtrim($path, DIRECTORY_SEPARATOR);
         return $this;
     }
 
@@ -230,7 +225,7 @@ class ZFE_Console_CommandBroker
     public function getCommand(string $name)
     {
         if ( ! key_exists($name, $this->_commands)) {
-            throw new ZFE_Console_Exception('Команда не зарегистрирована.');
+            throw new ZFE_Console_Exception("Команда '${name}' не зарегистрирована.");
         }
 
         $command = $this->_commands[$name];
@@ -276,13 +271,13 @@ class ZFE_Console_CommandBroker
 
         $prefixPaths = array_reverse($this->_prefixPaths, true);
         foreach ($prefixPaths as $prefix => $path) {
-            $className = $prefix . '_' . $name;
+            $className = $prefix . '_Command_' . $name;
 
             if (class_exists($className)) {
                 return $className;
             }
 
-            $fileName = $path . $classFile;
+            $fileName = $path . DIRECTORY_SEPARATOR . 'Command' . DIRECTORY_SEPARATOR . $classFile;
             if (Zend_Loader::isReadable($fileName)) {
                 include_once $fileName;
                 if (class_exists($className, false)) {
@@ -290,5 +285,7 @@ class ZFE_Console_CommandBroker
                 }
             }
         }
+
+        throw new ZFE_Console_Exception("Команда '${name}' не найдена.");
     }
 }
