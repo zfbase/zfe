@@ -1,5 +1,5 @@
 <?
-    $item = $this->item;
+    $item = $this->item;  /** @var ZFE_Model_AbstractRecord $item */
     $modelName = $this->modelName;
 ?>
 
@@ -20,6 +20,6 @@
     <small>(<?= mb_strtolower($this->itemName) ?>)</small>
 </h2>
 
-<?= $this->abstractRender('_header/tabs.phtml') ?>
+<?= $this->controlTabs($item) ?>
 
 <div class="clearfix"></div>
