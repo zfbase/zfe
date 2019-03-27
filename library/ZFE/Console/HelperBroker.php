@@ -86,7 +86,7 @@ class ZFE_Console_HelperBroker
      * Получить помощника по имени.
      *
      * @param string $name
-     * 
+     *
      * @return ZFE_Console_Helper_Abstract
      */
     public function get(string $name)
