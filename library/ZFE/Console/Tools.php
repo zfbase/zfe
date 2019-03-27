@@ -6,6 +6,11 @@
 
 /**
  * Единая точка входа для консольных скриптов.
+ *
+ * Резервирует в конфигурации следующие параметры (использованы значения по умолчанию):
+ * console.commandBroker = "ZFE_Console_CommandBroker"
+ * console.helperBroker = "ZFE_Console_HelperBroker"
+ * console.logger = "ZFE_Console_Logger"
  */
 class ZFE_Console_Tools
 {
@@ -89,7 +94,8 @@ class ZFE_Console_Tools
     public function getCommandBroker()
     {
         if ( ! $this->_commandBroker) {
-            $this->_commandBroker = ZFE_Console_CommandBroker::getInstance();
+            $brokerClass = Zend_Registry::get('config')->console->commandBroker ?? 'ZFE_Console_CommandBroker';
+            $this->_commandBroker = $brokerClass::getInstance();
         }
 
         return $this->_commandBroker;
@@ -116,7 +122,8 @@ class ZFE_Console_Tools
     public function getHelperBroker()
     {
         if ( ! $this->_helperBroker) {
-            $this->_helperBroker = new ZFE_Console_HelperBroker();
+            $brokerClass = Zend_Registry::get('config')->console->helperBroker ?? 'ZFE_Console_HelperBroker';
+            $this->_helperBroker = new $brokerClass();
         }
 
         return $this->_helperBroker;
@@ -143,7 +150,8 @@ class ZFE_Console_Tools
     public function getLogger()
     {
         if ( ! $this->_logger) {
-            $this->_logger = new ZFE_Console_Logger();
+            $loggerClass = Zend_Registry::get('config')->console->logger ?? 'ZFE_Console_Logger';
+            $this->_logger = new $loggerClass();
         }
 
         return $this->_logger;
