@@ -6,6 +6,7 @@ import '../lib/jquery.tmpl';
 import '../components/audio';
 import '../components/autocomplete/autocomplete';
 import '../components/autocomplete/multiautocomplete';
+import '../components/consoleManager';
 import debug from '../components/debug';
 import '../components/duplicates';
 import historyDiff from '../components/historyDiff';

@@ -11,6 +11,7 @@ class ZFE_Console_Command_Migrate extends ZFE_Console_Command_Abstract
 {
     protected static $_name = 'migrate';
     protected static $_description = 'Миграция БД';
+    protected static $_allowInApp = false;
 
     /**
      * {@inheritdoc}

@@ -31,6 +31,13 @@ abstract class ZFE_Console_Command_Abstract
     protected static $_help;
 
     /**
+     * Резрешено выполнять из интерфейса пользователей?
+     *
+     * @var bool
+     */
+    protected static $_allowInApp = true;
+
+    /**
      * Логгер.
      *
      * @var ZFE_Console_Logger|null
@@ -72,6 +79,16 @@ abstract class ZFE_Console_Command_Abstract
     public static function getHelp()
     {
         return static::$_help;
+    }
+
+    /**
+     * Получить право на исполнение из пользовательского интерфейса.
+     *
+     * @return bool
+     */
+    public static function isAllowInApp()
+    {
+        return static::$_allowInApp;
     }
 
     /**

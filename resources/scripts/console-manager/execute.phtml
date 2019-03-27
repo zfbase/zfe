@@ -1,0 +1,27 @@
+<?
+    /** @var ZFE_Console_Command_Abstract $command */
+    $command = $this->command;
+    $name = $command::getName();
+?>
+
+<?= $this->hopsHistory()->getUpBtn() ?>
+
+<h2>
+    <code><?= $name ?></code>
+    <?= $command::getDescription() ?>
+</h2>
+
+<p><?= nl2br($command::getHelp()) ?></p>
+
+<? if ($command::isAllowInApp()): ?>
+<form class="form-inline" id="console-manager" style="margin-bottom: 10px;">
+    <input type="hidden" id="exec-command" value="<?= $name ?>">
+    <div class="input-group">
+        <div class="input-group-addon">$ <?= $name ?></div>
+        <input type="text" id="exec-params" class="form-control" placeholder="параметры">
+    </div>
+    <input type="button" id="exec-start" class="btn btn-primary" value="Выполнить">
+</form>
+<? else: ?>
+<div class="alert alert-info">Выполнения команды возможно только из терминала.</div>
+<?endif; ?>

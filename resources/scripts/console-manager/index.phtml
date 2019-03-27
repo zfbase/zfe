@@ -1,0 +1,18 @@
+<h2>Консольные команды</h2>
+
+<table class="table table-hover" style="width: fit-content;">
+    <thead>
+        <tr>
+            <th>Команда</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+    <? foreach ($this->commands as $command): ?>
+        <tr role="button" data-href="/console-manager/execute/command/<?= $command::getName() ?>">
+            <td><?= $command::getName() ?></td>
+            <td><?= $command::getDescription() ?></td>
+        </tr>
+    <? endforeach; ?>
+    </tbody>
+</table>

@@ -24,10 +24,10 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
      */
     public function execute(array $params = [])
     {
-        if (count($params) && 'all' !== $params[0]) {
-            $models = $params;
-        } else {
+        if (empty($params) || 'all' === $params[0]) {
             $models = $this->_getAllModels();
+        } else {
+            $models = $params;
         }
 
         $timeStart = time();
