@@ -38,6 +38,13 @@ abstract class ZFE_Searcher_QueryBuilder_Abstract implements ZFE_Searcher_QueryB
     protected $_query;
 
     /**
+     * Число примененных расширенных фильтров.
+     *
+     * @var int
+     */
+    protected $_countUsedFilters = 0;
+
+    /**
      * @param string $modelName
      */
     public function __construct($modelName)
@@ -142,4 +149,14 @@ abstract class ZFE_Searcher_QueryBuilder_Abstract implements ZFE_Searcher_QueryB
      * Установить сортировку по умолчанию.
      */
     abstract protected function _setDefaultOrder();
+
+    /**
+     * Вернуть число примененных фильтров.
+     *
+     * @return int
+     */
+    public function countUsedFilters()
+    {
+        return $this->_countUsedFilters;
+    }
 }

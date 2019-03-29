@@ -102,4 +102,11 @@ abstract class ZFE_Searcher_Abstract implements ZFE_Searcher_Interface
             unset($params['ids']);
         }
     }
+
+    /**
+     * Вернуть число примененных фильтров.
+     *
+     * @return int
+     */
+    abstract public function countUsedFilters();
 }

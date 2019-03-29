@@ -35,13 +35,6 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
     protected $_useAdvancedFilters = true;
 
     /**
-     * Число примененных расширенных фильтров.
-     *
-     * @var int
-     */
-    protected $_countUsedFilters = 0;
-
-    /**
      * Установить имя Sphinx-индекса.
      *
      * @param string $name
@@ -90,16 +83,6 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
     public function isUseAdvancedFilters()
     {
         return $this->_useAdvancedFilters;
-    }
-
-    /**
-     * Число примененных расширенных фильтров.
-     *
-     * @return int
-     */
-    public function countUsedFilters()
-    {
-        return $this->_countUsedFilters;
     }
 
     /**

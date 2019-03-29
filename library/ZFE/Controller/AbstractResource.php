@@ -25,6 +25,15 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
     protected static $_searchFormName = 'ZFE_Form_Search_Default';
 
     /**
+     * Класс расширенной поисковой формы (indexAction).
+     *
+     * Указание значения автоматически включит в indexAction поддержку дополнительной расширенной формы.
+     *
+     * @var string
+     */
+    protected static $_searchAdvancedFormName;
+
+    /**
      * Класс поискового движка.
      *
      * @var string
@@ -159,25 +168,69 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 
         $this->_helper->postToGet();
 
-        $rowParams = $this->getAllParams();
-        $deleted = $this->getParam('deleted');
+        $params = $rowParams = $this->getAllParams();
+        $this->view->deleted = $deleted = $this->getParam('deleted', 0);
 
-        if ( ! empty(static::$_searchFormName)) {
+
+        // Настройка основной формы
+        $searchFormName = static::$_searchFormName;
+        if ($this->view->searchForm instanceof Zend_Form) {
+            $searchForm = $this->view->searchForm;
+        } elseif ( ! empty($searchFormName) && is_string($searchFormName)) {
             $searchForm = new static::$_searchFormName();
-            if ('1' === $deleted) {
+            if ($deleted) {
                 $searchForm->addElement('hidden', 'deleted', ['value' => 1]);
             }
             $searchForm->setAction((static::$_modelName)::getIndexUrl());
             $searchForm->populate($rowParams);
             $this->view->searchForm = $searchForm;
-
-            $params = array_merge($rowParams, $searchForm->getValues());
         } else {
-            $params = $rowParams;
+            $searchForm = null;
         }
 
+        if ($searchForm instanceof Zend_Form) {
+            $params = array_merge($params, $searchForm->getValues());
+        }
+
+
+        // Настройка расширенной формы
+        $searchAdvancedFormName = static::$_searchAdvancedFormName;
+        if ($this->view->formAdvanced instanceof Zend_Form) {
+            $searchAdvancedForm = $this->view->formAdvanced;
+        } elseif ( ! empty($searchAdvancedFormName) && is_string($searchAdvancedFormName)) {
+            $searchAdvancedForm = new static::$_searchAdvancedFormName();
+            if ($deleted) {
+                $searchAdvancedForm->addElement('hidden', 'deleted', ['value' => 1]);
+            }
+            $searchAdvancedForm->setAction((static::$_modelName)::getIndexUrl());
+            $searchAdvancedForm->populate($rowParams);
+            $this->view->formAdvanced = $searchAdvancedForm;
+        } else {
+            $searchAdvancedForm = null;
+        }
+
+        if ($searchAdvancedForm instanceof Zend_Form) {
+            $params = array_merge($params, $searchAdvancedForm->getValues());
+        }
+
+
+        // Поиск результатов
         $this->view->items = static::getSearcher()->search($params);
-        $this->view->deleted = $deleted;
+
+        if ($searchAdvancedForm) {
+            $countUsedFilters = static::getSearcher()->countUsedFilters();
+            if ($countUsedFilters) {
+                $btn = $this->view->searchForm->getElement('advanced');
+                $btn->setAttrib('escape', false);
+                $counter = $this->view->tag(
+                    'span',
+                    ['class' =>'badge'],
+                    $countUsedFilters . ' ' . ZFE::plural($countUsedFilters, ['фильтр', 'фильтра', 'фильтров'])
+                );
+                $btn->setLabel($btn->getLabel() . ' ' . $counter);
+            }
+            $this->view->cntAdvancedFilters = $countUsedFilters;
+        }
     }
 
     /**

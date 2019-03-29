@@ -6,8 +6,6 @@
 
 /**
  * Средства организации основного поиска по модели по средствам Sphinx.
- *
- * @todo Добавить функционал переходов по страницам результата
  */
 class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
 {
@@ -126,5 +124,13 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
         }
 
         return $this->_doctrineQueryBuilder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countUsedFilters()
+    {
+        return $this->getSphinxQueryBuilder()->countUsedFilters();
     }
 }
