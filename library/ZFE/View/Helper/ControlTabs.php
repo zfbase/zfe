@@ -20,6 +20,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * Вкладки управления записью.
      *
      * Параметры вкладки:
+     * * ?string $privilege       – привилегия для проверки права доступа (если не указана проверяется экшен)
      * * string  $action          – экшен вкладки
      * * ?array  $params          – параметры запроса
      * * string  $title           – заголовок вкладки
@@ -165,7 +166,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             return ($a < $b) ? -1 : 1;
         });
         foreach ($this->_tabs as $tab) {
-            if ( ! $this->view->isAllowedMe($controllerName, $tab['action'])) {
+            if ( ! $this->view->isAllowedMe($controllerName, $tab['privilege'] ?? $tab['action'])) {
                 continue;
             }
     
