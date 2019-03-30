@@ -20,6 +20,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * Вкладки управления записью.
      *
      * Параметры вкладки:
+     * * ?string $resource        – ресурс для проверки права доступа (если не указано, проверяется общий ресурс или контроллер)
      * * ?string $privilege       – привилегия для проверки права доступа (если не указана проверяется экшен)
      * * string  $action          – экшен вкладки
      * * ?array  $params          – параметры запроса
@@ -47,6 +48,13 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             'order' => 100,
         ],
     ];
+
+    /**
+     * Ресурс для проверки прав доступа.
+     *
+     * @var string
+     */
+    protected $_resource;
 
     /**
      * Точка входа в помощник.
@@ -135,6 +143,19 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         return $this;
     }
 
+    /**
+     * Указать ресурс для проверки прав.
+     *
+     * @param string $resource
+     * 
+     * @return ZFE_View_Helper_ControlTabs
+     */
+    public function setResource(string $resource)
+    {
+        $this->_resource = $resource;
+        return $this;
+    }
+
     public function __toString()
     {
         if ( ! ($this->_item instanceof ZFE_Model_AbstractRecord)) {
@@ -143,7 +164,6 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         }
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
-        $controllerName = $request->getControllerName();
 
         $markup = '<ul class="nav nav-tabs" style="margin-bottom: 20px;">';
 
@@ -166,7 +186,9 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             return ($a < $b) ? -1 : 1;
         });
         foreach ($this->_tabs as $tab) {
-            if ( ! $this->view->isAllowedMe($controllerName, $tab['privilege'] ?? $tab['action'])) {
+            $resource = $tab['resource'] ?? $this->_resource ?? $request->getControllerName();
+            $privilege = $tab['privilege'] ?? $tab['action'];
+            if ( ! $this->view->isAllowedMe($resource, $privilege)) {
                 continue;
             }
     
