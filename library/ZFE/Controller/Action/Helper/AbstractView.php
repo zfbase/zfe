@@ -24,14 +24,35 @@ class ZFE_Controller_Action_Helper_AbstractView extends Zend_Controller_Action_H
             return;
         }
 
-        $request = $this->getRequest();
-        $controller = $controller ?: str_replace('_', '/', $request->getControllerName());
-        $action = $action ?: $request->getActionName();
+        if ($viewRenderer->getNoController() || $viewRenderer->getNeverController()) {
+            $nameSpec = $viewRenderer->getViewScriptPathNoControllerSpec();
+        } else {
+            $nameSpec = $viewRenderer->getViewScriptPathSpec();
+        }
+
         $view = $this->_actionController->view;
+        $request = $this->getRequest();
+
+        if ($controller === null) {
+            $controller = str_replace('_', '/', $request->getControllerName());
+        }
+
+        if ($action === null) {
+            $action = $request->getActionName();
+        }
+
+        $parts = [
+            'controller' => $controller,
+            'action'     => $action,
+        ];
+
+        $inflector = $viewRenderer->getInflector();
+        $inflector->setTargetReference($nameSpec);
+        $script = $inflector->filter($parts);
 
         // Если есть своя вьюшка, то делать больше ничего не надо
-        foreach ($view->getScriptPaths() as $path) {
-            if (file_exists($path . '/' . $controller . '/' . $action . '.phtml')) {
+        foreach ($view->getScriptPaths() as $basePath) {
+            if (file_exists($basePath . DIRECTORY_SEPARATOR . $script)) {
                 return;
             }
         }
