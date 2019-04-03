@@ -207,7 +207,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
      */
     public function startAction()
     {
-        if (Editors::findAll()->count() > 0) {
+        if (Editors::findByDql('login != "tester"')->count() > 0) {
             $this->abort(500, 'В системе уже есть пользователи');
         }
 
