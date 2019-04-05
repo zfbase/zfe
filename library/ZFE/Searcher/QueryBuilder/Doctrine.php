@@ -62,10 +62,12 @@ class ZFE_Searcher_QueryBuilder_Doctrine extends ZFE_Searcher_QueryBuilder_Abstr
     {
         if (($this->_modelName)::isRemovable() && ($this->_modelName)::$saveHistory) {
             if ( ! $this->hasParam('ids')) {
-                if ('1' === $this->getParam('deleted')) {
+                if ($this->getParam('deleted')) {
                     $this->_query->addWhere('x.deleted = 1');
                     $this->_query->setHard(true);
                 }
+            } else {
+                $this->_query->setHard(true);
             }
         }
     }
