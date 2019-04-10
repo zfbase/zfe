@@ -174,13 +174,14 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
      * @param int|float $max
      * @param int|float $min
      * @param int|float $start
+     * @param int       $startTime
      * @param bool      $echo
      *
      * @return string
      */
-    public function start($max = null, $min = null, $start = null, $echo = true)
+    public function start($max = null, $min = null, $start = null, ?int $startTime = null, $echo = true)
     {
-        $this->_prepare($max, $min, $start);
+        $this->_prepare($max, $min, $start, $startTime);
 
         if (null === $this->_value) {
             $this->_value = $this->_minValue;
@@ -338,10 +339,11 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
      * @param int|float $max
      * @param int|float $min
      * @param int|float $start
+     * @param int       $startTime
      */
-    protected function _prepare($max = null, $min = null, $start = null)
+    protected function _prepare($max = null, $min = null, $start = null, ?int $startTime = null)
     {
-        $this->_startTime = microtime(true);
+        $this->_startTime = $startTime ?? microtime(true);
 
         if (null !== $max) {
             $this->_maxValue = $max;
