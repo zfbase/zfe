@@ -60,7 +60,9 @@ class ZFE_Console_CommandBroker
 
         $appPrefixPath = $config->console->prefixPath ?? ['Application_Console' => APPLICATION_PATH . '/console'];
         foreach ($appPrefixPath as $namespace => $path) {
-            $this->addPrefixPath($namespace, $path);
+            if (is_readable($path)) {
+                $this->addPrefixPath($namespace, $path);
+            }
         }
 
         // Загрузка всех команд из директорий
