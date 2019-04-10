@@ -56,11 +56,13 @@ class ZFE_Console_CommandBroker
         $config = Zend_Registry::get('config');
 
         // Настройка путей автозагрузчика
-        $this->addPrefixPath('ZFE_Console', ZFE_PATH . '/console');
+        $this->addPrefixPath('ZFE_Console', ZFE_PATH . '/Console');
 
-        $appPrefixPath = $config->console->prefixPath ?? ['Application_Console' => APPLICATION_PATH . '/Console'];
+        $appPrefixPath = $config->console->prefixPath ?? ['Application_Console' => APPLICATION_PATH . '/console'];
         foreach ($appPrefixPath as $namespace => $path) {
-            $this->addPrefixPath($namespace, $path);
+            if (is_readable($path)) {
+                $this->addPrefixPath($namespace, $path);
+            }
         }
 
         // Загрузка всех команд из директорий
@@ -70,7 +72,7 @@ class ZFE_Console_CommandBroker
 
         // Собираем команды из конфига
         foreach ($config->console->commands ?? [] as $name => $command) {
-            $this->registerCommand($command, is_string($name) ? $name : null);
+            $this->registerCommand($command, !empty($name) && is_string($name) ? $name : null);
         }
     }
 
@@ -117,7 +119,7 @@ class ZFE_Console_CommandBroker
      *
      * @return ZFE_Console_CommandBroker
      */
-    public function registerCommand($command, ?string $name = null, bool $replace = false)
+    public function registerCommand($command, ?string $name = null, bool $replace = true)
     {
         $class = is_string($command) ? $this->_getCommandClass($command) : get_class($command);
 
