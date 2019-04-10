@@ -70,7 +70,7 @@ class ZFE_Console_CommandBroker
 
         // Собираем команды из конфига
         foreach ($config->console->commands ?? [] as $name => $command) {
-            $this->registerCommand($command, is_string($name) ? $name : null);
+            $this->registerCommand($command, !empty($name) && is_string($name) ? $name : null);
         }
     }
 
@@ -117,7 +117,7 @@ class ZFE_Console_CommandBroker
      *
      * @return ZFE_Console_CommandBroker
      */
-    public function registerCommand($command, ?string $name = null, bool $replace = false)
+    public function registerCommand($command, ?string $name = null, bool $replace = true)
     {
         $class = is_string($command) ? $this->_getCommandClass($command) : get_class($command);
 
