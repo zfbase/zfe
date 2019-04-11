@@ -34,16 +34,20 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
         if (empty($params)) {
             /** @var ZFE_Console_Helper_Table $table */
             $table = $this->_table = $this->getHelperBroker()->get('Table');
-            $table->setHeaders(['Все модели']);
+            $table->setHeaders(['Код', 'Модель']);
             $models = $this->_getAllModels();
-            foreach ($models as $model) {
-                $table->addRow([$model]);
+            foreach ($models as $i => $model) {
+                $table->addRow([$i, $model]);
             }
             $table->render();
 
             $example = (array_shift($models) ?? 'Tags') . ' ' . (array_shift($models) ?? 'Items');
-            echo "Для индексации всех моделей передайте параметром all [composer tool indexer all]\n";
-            echo "Для индексации конкретных моделей перечислите их через пробел [composer tool indexer {$example}]\n";
+            echo "Для индексации всех моделей передайте параметром all:\n";
+            echo "  > <info>composer tool indexer all</info>\n";
+
+            echo "Для индексации конкретных моделей перечислите их названия или коды через пробел:\n";
+            echo "  > <info>composer tool indexer {$example}</info>\n";
+            echo "  > <info>composer tool indexer 1 4</info>\n";
             return;
         } elseif ('all' === $params[0]) {
             $models = $this->_getAllModels();
@@ -53,9 +57,16 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
 
         $timeStart = time();
 
+        $allModels = $this->_getAllModels();
+        $allModelsMap = array_flip(array_map('mb_strtolower', $allModels));
         $maxLenModelName = 0;
-        foreach ($models as $model) {
-            $len = mb_strlen($model);
+        foreach ($models as $i => $model) {
+            if (!is_numeric($model)) {
+                $model = $allModelsMap[mb_strtolower($model)];
+            }
+
+            $models[$i] = $allModels[$model];
+            $len = mb_strlen($models[$i]);
             if ($maxLenModelName < $len) {
                 $maxLenModelName = $len;
             }
@@ -147,6 +158,7 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
 
         $progressBar->finish(false);
         $this->_updateRow($model, $progressBar);
+        echo "\n";
 
         unset($progressBar);
     }
