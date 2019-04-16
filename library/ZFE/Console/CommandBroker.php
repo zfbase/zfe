@@ -58,7 +58,7 @@ class ZFE_Console_CommandBroker
         // Настройка путей автозагрузчика
         $this->addPrefixPath('ZFE_Console', ZFE_PATH . '/Console');
 
-        $appPrefixPath = $config->console->prefixPath ?? ['Application_Console' => APPLICATION_PATH . '/console'];
+        $appPrefixPath = $config->console->prefixPath ?? ['Console' => APPLICATION_PATH . '/console'];
         foreach ($appPrefixPath as $namespace => $path) {
             if (is_readable($path)) {
                 $this->addPrefixPath($namespace, $path);

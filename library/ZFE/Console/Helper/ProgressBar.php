@@ -206,7 +206,7 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
             $this->overwrite();
         }
 
-        return $this->render($echo);
+        return $this->render(false);
     }
 
     /**
@@ -225,7 +225,7 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
             echo "\n";
         }
 
-        return $this->render($echo);
+        return $this->render(false);
     }
 
     /**
@@ -237,7 +237,7 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
      */
     public function getPercent(bool $integer = true)
     {
-        if ($this->_maxValue === $this->_minValue) {
+        if ($this->_maxValue == $this->_minValue) {
             return 0;
         }
 
