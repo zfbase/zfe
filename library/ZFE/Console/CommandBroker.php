@@ -67,7 +67,7 @@ class ZFE_Console_CommandBroker
 
         // Загрузка всех команд из директорий
         foreach ($this->_prefixPaths as $prefix => $path) {
-            $this->loadCommand($path . DIRECTORY_SEPARATOR . 'Command', $prefix . '_' . 'Command');
+            $this->loadCommands($path . DIRECTORY_SEPARATOR . 'Command', $prefix . '_' . 'Command');
         }
 
         // Собираем команды из конфига
@@ -84,23 +84,34 @@ class ZFE_Console_CommandBroker
      *
      * @return ZFE_Console_CommandBroker
      */
-    public function loadCommand(string $path, string $prefix)
+    public function loadCommands(string $path, string $prefix)
     {
-        $files = scandir($path, SCANDIR_SORT_ASCENDING);
-        foreach ($files as $file) {
-            if ('.php' !== mb_substr($file, -4)) {
+        $directory = new DirectoryIterator($path);
+        foreach ($directory as $file) {  /** @var SplFileInfo $file */
+            if ($file->isDot()) {
                 continue;
-            }
+            } elseif ($file->isDir()) {
+                $name = $file->getBasename();
+                $this->loadCommands(
+                    $path . DIRECTORY_SEPARATOR . $name,
+                    $prefix . '_' . ZFE::mb_ucfirst($name)
+                );
+            } else {
+                if ($file->getExtension() != 'php') {
+                    continue;
+                }
 
-            $fileName = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
-            $className = $prefix . '_' . mb_substr($file, 0, -4);
-            if (Zend_Loader::isReadable($fileName)) {
-                include_once $fileName;
-                if (class_exists($className, false)) {
-                    if ( ! $this->hasCommandByClass($className)) {
-                        $reflection = new ReflectionClass($className);
-                        if ($reflection->isSubclassOf(ZFE_Console_Command_Abstract::class) && ! $reflection->isAbstract()) {
-                            $this->registerCommand($className);
+                $fileName = $file->getRealPath();
+                $className = $prefix . '_' . $file->getBasename('.php');
+
+                if (Zend_Loader::isReadable($fileName)) {
+                    include_once $fileName;
+                    if (class_exists($className, false)) {
+                        if ( ! $this->hasCommandByClass($className)) {
+                            $reflection = new ReflectionClass($className);
+                            if ($reflection->isSubclassOf(ZFE_Console_Command_Abstract::class) && ! $reflection->isAbstract()) {
+                                $this->registerCommand($className);
+                            }
                         }
                     }
                 }
