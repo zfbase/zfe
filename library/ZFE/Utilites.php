@@ -140,6 +140,35 @@ class ZFE_Utilites
         return $bytes . ' Б';
     }
 
+    public static function formatDuration($seconds, $precision = 0)
+    {
+        $duration = '';
+
+        $days = floor($seconds / 86400);
+        if ($days > 0) {
+            $duration .= $days . ' д.';
+            $seconds -= $days * 86400;
+        }
+
+        $hours = floor($seconds / 3600);
+        if ($hours > 0) {
+            $duration .= ' ' . $hours . ' ч.';
+            $seconds -= $hours * 3600;
+        }
+
+        $minutes = floor($seconds / 60);
+        if ($minutes > 0) {
+            $duration .= ' ' . $minutes . ' мин.';
+            $seconds -= $minutes * 60;
+        }
+
+        if ($seconds > 0) {
+            $duration .= ' ' . number_format($seconds, $precision) . ' сек.';
+        }
+
+        return $duration ?: number_format(0, $precision) . ' сек.';
+    }
+
     /**
      * Помощник для склонения существительных.
      *
