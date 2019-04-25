@@ -25,6 +25,8 @@ trait ZFE_Controller_AbstractResource_Delete
      */
     public function deleteAction($redirectUrl = null)
     {
+        $modelName = static::$_modelName;
+
         if ( ! in_array('delete', static::$_enableActions, true)) {
             $this->abort(404);
         }
@@ -32,8 +34,6 @@ trait ZFE_Controller_AbstractResource_Delete
         if ( ! static::$_canDelete) {
             $this->abort(403, 'Невозможно удалить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
-
-        $modelName = static::$_modelName;
 
         /** @var $item AbstractRecord */
         $item = $modelName::find($this->getParam('id'));
@@ -90,6 +90,8 @@ trait ZFE_Controller_AbstractResource_Delete
      */
     public function undeleteAction($redirectUrl = null)
     {
+        $modelName = static::$_modelName;
+
         if ( ! in_array('undelete', static::$_enableActions, true)) {
             $this->abort(404);
         }
@@ -97,8 +99,6 @@ trait ZFE_Controller_AbstractResource_Delete
         if ( ! static::$_canRestore) {
             $this->abort(403, 'Невозможно восстановить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
-
-        $modelName = static::$_modelName;
 
         /** @var $item AbstractRecord */
         $item = $modelName::hardFind($this->getParam('id'));
