@@ -48,12 +48,7 @@ trait ZFE_Controller_AbstractResource_Delete
             if ($item->canUndeleted()) {
                 $msg .= ' <a href="' . $item->getUndeleteUrl() . '">Отменить удаление?</a>';
             }
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_json(self::STATUS_SUCCESS, [], $msg);
-            }
-
-            $this->_helper->Notices->ok($msg);
+            $this->success($msg, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {
@@ -68,7 +63,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
-            $this->error('Не удалось удалить ' . mb_strtolower($modelName::$nameSingular), $ex);
+            $this->error('Не удалось удалить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {
@@ -109,13 +104,9 @@ trait ZFE_Controller_AbstractResource_Delete
         try {
             $item->undelete();
 
-            $msg = $modelName::decline('%s успешно восстановлен.', '%s успешно восстановлена.', '%s успешно восстановлено.');
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_json(self::STATUS_SUCCESS, [], $msg);
-            }
-
-            $this->_helper->Notices->ok($msg);
+            $this->success(
+                $modelName::decline('%s успешно восстановлен.', '%s успешно восстановлена.', '%s успешно восстановлено.'),
+                false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {
@@ -126,7 +117,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
-            $this->error('Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular), $ex);
+            $this->error('Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {

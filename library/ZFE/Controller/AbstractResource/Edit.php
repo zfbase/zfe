@@ -64,7 +64,7 @@ trait ZFE_Controller_AbstractResource_Edit
                 ? $modelName::hardFind($itemId)
                 : new $modelName();
         }
-        $item = $this->view->item; /** @var AbstractRecord $item */
+        $item = $this->view->item; /** @var Doctrine_Record $item */
         if (empty($item)) {
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
@@ -84,8 +84,9 @@ trait ZFE_Controller_AbstractResource_Edit
                     $this->_afterSave($item, $form, $post);
 
                     if ($item->exists()) {
-                        $msg = $modelName::decline('%s успешно сохранен.', '%s успешно сохранена.', '%s успешно сохранено.');
-                        $this->_helper->Notices->ok($msg);
+                        $this->success(
+                            $modelName::decline('%s успешно сохранен.', '%s успешно сохранена.', '%s успешно сохранено.'),
+                            false !== $redirectUrl);
 
                         if (false !== $redirectUrl) {
                             if (null === $redirectUrl) {

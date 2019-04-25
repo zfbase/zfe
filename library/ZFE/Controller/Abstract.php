@@ -103,9 +103,10 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      * А также отправить информацию об ошибке в логи.
      *
      * @param string    $msg
+     * @param bool      $allowAjax
      * @param Throwable $e
      */
-    public function error($msg, Throwable $ex = null)
+    public function error($msg, Throwable $ex = null, $allowAjax = true)
     {
         if ($log = Zend_Registry::get('log')) {
             $log->log(
@@ -126,10 +127,25 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
                  . '<pre>' . $ex->getTraceAsString() . '</pre>';
         }
 
-        if ($this->_request->isXmlHttpRequest()) {
+        if ($this->_request->isXmlHttpRequest() && $allowAjax) {
             $this->_json(self::STATUS_FAIL, [], $msg);
         }
 
         $this->_helper->Notices->err($msg);
+    }
+
+    /**
+     * Отправить сообщение об успешном исполнении.
+     *
+     * @param string $message
+     * @param bool   $allowAjax
+     */
+    public function success($message, $allowAjax = true)
+    {
+        if ($this->_request->isXmlHttpRequest() && $allowAjax) {
+            $this->_json(self::STATUS_SUCCESS, [], $message);
+        }
+
+        $this->_helper->Notices->ok($message);
     }
 }
