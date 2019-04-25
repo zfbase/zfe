@@ -88,4 +88,18 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
             throw new ZFE_Model_Exception('Запись не поддерживает восстановление из удаленных.');
         }
     }
+
+    /**
+     * Хук, выполняющийся перед восстановлением.
+     */
+    public function preUndelete()
+    {
+    }
+
+    /**
+     * Хук, выполняющийся после восстановления.
+     */
+    public function postUndelete()
+    {
+    }
 }
