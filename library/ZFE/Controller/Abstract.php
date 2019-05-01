@@ -50,7 +50,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      *
      * @param int    $status  статус
      * @param array  $data    данные
-     * @param string $message сообщение
+     * @param string $message сообщение (так же допускается массив сообщений)
      * @param mixed  $log     стек вызовов функций, приведших к ошибке:
      *                        из Exception возьмется $e->getTrace();
      *                        если будет передан true, будут использовано debug_backtrace();
@@ -63,15 +63,15 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
             $this->abort(500, 'Использован недопустимый статус ответа');
         }
 
-        $json = [];
-
-        $json['status'] = $status;
-        $json['data'] = $data;
+        $json = [
+            'status' => $status,
+            'data' => $data,
+        ];
 
         if (ini_get('display_errors')) {
             $json['message'] = $message;
 
-            if ($log instanceof Exception) {
+            if ($log instanceof Throwable) {
                 $json['log'] = $log->getTrace();
             } elseif (true === $log) {
                 $json['log'] = debug_backtrace();
