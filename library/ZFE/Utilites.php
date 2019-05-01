@@ -131,7 +131,7 @@ class ZFE_Utilites
     public static function formatSize($bytes, $precision = 2)
     {
         $labels = ['К', 'М', 'Г', 'Т', 'П', 'Э', 'З', 'И'];
-        for ($i = count($label); $i >= 1; --$i) {
+        for ($i = count($labels); $i >= 1; --$i) {
             if (bccomp($bytes, bcpow(1024, $i)) >= 0) {
                 return bcdiv($bytes, bcpow(1024, $i), $precision) . ' ' . $labels[$i - 1] . 'Б';
             }
