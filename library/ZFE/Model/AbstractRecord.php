@@ -351,14 +351,23 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     }
 
     /**
+     * Режим миграции
+     *
+     * @var boolean
+     */
+    public static $migrationMode = false;
+
+    /**
      * {@inheritdoc}
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->actAs(new ZFE_Model_Template_History());
-        $this->actAs(new ZFE_Model_Template_SoftDelete());
+        if ( ! self::$migrationMode) {
+            $this->actAs(new ZFE_Model_Template_History());
+            $this->actAs(new ZFE_Model_Template_SoftDelete());
+        }
     }
 
     /**
