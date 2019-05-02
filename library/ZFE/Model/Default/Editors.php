@@ -132,20 +132,6 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     public static $credentialTreatment = 'MD5(CONCAT(?, password_salt))';
 
     /**
-     * Получить название записи.
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        if ($this->exists()) {
-            return $this->getFullName();
-        }
-
-        return static::getNewTitle();
-    }
-
-    /**
      * Импортировать данные из массива.
      *
      * @see http://www.doctrine-project.org/documentation/manual/1_1/en/working-with-models
@@ -189,6 +175,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     }
 
     // Дополняем AbstractRecords
+    use ZFE_Model_Default_PersonTrait;
 
     /**
      * Роли пользователей.
@@ -220,46 +207,6 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     }
 
     /**
-     * Получить сокращенное имя пользователя.
-     *
-     * @return string
-     */
-    public function getShortName()
-    {
-        $name = $this->second_name . ' ';
-
-        if ( ! empty($this->first_name)) {
-            $name .= mb_substr($this->first_name, 0, 1) . '.';
-        }
-
-        if ( ! empty($this->middle_name)) {
-            $name .= mb_substr($this->middle_name, 0, 1) . '.';
-        }
-
-        return trim($name);
-    }
-
-    /**
-     * Получить полное имя пользователя.
-     *
-     * @return string
-     */
-    public function getFullName()
-    {
-        $name = $this->second_name;
-
-        if ( ! empty($this->first_name)) {
-            $name .= ' ' . $this->first_name;
-        }
-
-        if ( ! empty($this->middle_name)) {
-            $name .= ' ' . $this->middle_name;
-        }
-
-        return $name;
-    }
-
-    /**
      * Получить полное имя пользователя с контактными данными.
      *
      * @return string
@@ -275,23 +222,6 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         }
 
         return $name;
-    }
-
-    /**
-     * Получить массив с заданными ключами и значениями из текущей таблицы.
-     *
-     * @param string       $keyField       поле для ключа
-     * @param string       $valueField     поле для значения
-     * @param array|string $where          фильтр: ['status = ? or status = ?', 1, 2];
-     * @param string       $order          сортировка
-     * @param string       $groupby        группирует списки по третьему полю (для формирования списка зависимого от другого, напр. список городов с группировкой по регионам)
-     * @param null|bool    $filterByStatus
-     *
-     * @return array
-     */
-    public static function getKeyValueList($keyField = 'id', $valueField = "CONCAT_WS(' ', second_name, first_name, middle_name)", $where = null, $order = 'KEY_FIELD ASC', $groupby = null, $filterByStatus = null)
-    {
-        return parent::getKeyValueList($keyField, $valueField, $where, $order, $groupby);
     }
 
     /**
