@@ -26,7 +26,11 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
     public function menuItems($pages = null, $autoActive = true, $disabledAcl = false, $dropdownEnable = true)
     {
         $html = '';
-        foreach ($pages as $page) {
+        foreach ($pages as $id => $page) {
+            if ($page == '') {
+                $page = ['controller' => $id];
+            }
+
             $page = is_array($page)
                 ? (object) $page
                 : $page;
