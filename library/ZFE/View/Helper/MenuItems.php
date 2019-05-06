@@ -192,7 +192,11 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 $privilege = $page->action;
             }
         } elseif (isset($page->pages) && ! empty($page->pages)) {
-            foreach ($page->pages as $child) {
+            foreach ($page->pages as $id => $child) {
+                if ($child == '') {
+                    $child = (object) ['controller' => $id];
+                }
+
                 if ($this->_isAllowed($child)) {
                     return true;
                 }
