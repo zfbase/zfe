@@ -80,6 +80,12 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
             unset($attribs['editUrl']);
         }
 
+        $type = 'default';
+        if (isset($attribs['type'])) {
+            $type = $attribs['type'];
+            unset($attribs['type']);
+        }
+
         // Определяем, нужны ли ссылки с выбранных вариантов на их страницы
         $hasFormBtn = isset($attribs['data-itemform']);
         if ($hasFormBtn) {
@@ -147,6 +153,13 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
         $searchPackClass = 'tt-icon-right' . ($disable ? ' tt-disabled' : '');
         $searchPack = $this->view->tag('div', ['class' => $searchPackClass], $separator . $searchIcon . $searchInput);
 
-        return '<div class="multiac-wrap">' . $xhtml . $searchPack . '</div>';
+        switch ($type) {
+            case 'linked-left':
+                return '<div class="multiac-wrap multiac-left">' . $searchPack . $xhtml . '</div>';
+            case 'linked-right':
+                return '<div class="multiac-wrap multiac-right">' . $searchPack . $xhtml . '</div>';
+            default:
+                return '<div class="multiac-wrap">' . $xhtml . $searchPack . '</div>';
+        }
     }
 }
