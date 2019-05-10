@@ -143,6 +143,16 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('Loader');
         $this->bootstrap('Doctrine');
 
+        Zend_Registry::set('user', (object) $this->_makeAuthData());
+    }
+
+    /**
+     * Определить авторизационные данные.
+     *
+     * @return array
+     */
+    protected function _makeAuthData()
+    {
         $config = Zend_Registry::get('config');
         $auth = Zend_Auth::getInstance();
 
@@ -166,16 +176,23 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             }
         }
 
-        Zend_Registry::set('user', (object) [
+        return [
             'data' => $user,
             'role' => $role,
             'isAuthorized' => (bool) $user,
             'displayName' => $user ? $user->getShortName() : 'Гость',
             'canSwitchRoles' => $canSwitchRoles,
             'noticeDetails' => $config->noticeDetails,
-        ]);
+        ];
     }
 
+    /**
+     * Пользователь может менять свою роль?
+     *
+     * @param Editors $user
+     * 
+     * @return bool
+     */
     protected function _canSwitchRoles(Editors $user)
     {
         return 'admin' === $user->role;
