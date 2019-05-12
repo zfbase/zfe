@@ -11,18 +11,6 @@
 class ZFE_Model_Template_BaseZfeFields extends Doctrine_Template
 {
     protected $_options = [
-        'id' => [
-            'name' => 'id',
-            'type' => 'integer',
-            'length' => 4,
-            'options' => [
-                'unsigned' => true,
-                'primary' => true,
-                'autoincrement' => true,
-                'comment' => 'Идентификатор',
-            ],
-            'disabled' => false,
-        ],
         'version' => [
             'name' => 'version',
             'type' => 'integer',
@@ -100,7 +88,6 @@ class ZFE_Model_Template_BaseZfeFields extends Doctrine_Template
     public function setTableDefinition()
     {
         $columns = [
-            'id',
             'version',
             'creator_id',
             'editor_id',
