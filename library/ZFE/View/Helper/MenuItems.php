@@ -54,7 +54,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 continue;
             }
 
-            if ($page->label instanceof Zend_Config) {
+            if (isset($page->label) && $page->label instanceof Zend_Config) {
                 $label = '<span class="' . $page->label->ico . ' hidden-xs"></span>'
                        . '<span class="visible-xs-inline">' . $page->label->text . '</span>';
                 $title = isset($page->title) ? $page->title : $page->label->text;
