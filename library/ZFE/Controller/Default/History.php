@@ -54,43 +54,15 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
     protected static $_searchFormName = 'Application_Form_Search_History';
 
     /**
-     * Определяем запрос поиска по истории.
-     *
-     * @return ZFE_Query
+     * {@inheritdoc}
      */
-    protected function _getSearchQuery()
+    public static function getSearcher()
     {
-        $modelName = static::$_modelName;
-
-        $q = ZFE_Query::create()
-            ->select('x.*, e.*')
-            ->from($modelName . ' x, x.Editors e')
-            ->groupBy('x.user_id, x.table_name, x.content_id, x.content_version, x.action_type')
-            ->where('x.content_id > 0')
-        ;
-
-        $this->view->editor = $editor = $this->getParam('editor');
-        if ( ! empty($editor)) {
-            $q = $q->addWhere('x.user_id = ?', $editor);
+        if (!static::$_searcher) {
+            static::$_searcher = new ZFE_Searcher_Doctrine(static::$_modelName);
+            static::$_searcher->setQueryBuilder(new ZFE_Searcher_QueryBuilder_HistoryDoctrine(static::$_modelName));
         }
-
-        $today = date('Y-m-d');
-
-        $this->view->date_from = $dateFrom = $this->getParam('date_from');
-        if (empty($dateFrom)) {
-            $this->view->date_from = $dateFrom = $today . 'T00:00';
-            $this->view->searchForm->getElement('date_from')->setValue($dateFrom);
-        }
-        $q = $q->addWhere('datetime_action >= ?', $dateFrom . ':00');
-
-        $this->view->date_till = $dateTill = $this->getParam('date_till');
-        if (empty($dateTill)) {
-            $this->view->date_till = $dateTill = $today . 'T23:59';
-            $this->view->searchForm->getElement('date_till')->setValue($dateTill);
-        }
-        $q = $q->addWhere('datetime_action <= ?', $dateTill . ':59');
-
-        return $q;
+        return static::$_searcher;
     }
 
     /**
