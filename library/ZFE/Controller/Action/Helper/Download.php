@@ -15,6 +15,8 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
      * @param string $path путь до файла в файловой системе
      * @param string $url  защищенный виртуальный URL
      * @param string $name новое имя файла
+     *
+     * @throws Zend_Controller_Action_Exception
      */
     public function direct($path, $url, $name)
     {
@@ -22,7 +24,7 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
         $config = Zend_Registry::get('config');
 
         if ( ! $config->webserver) {
-            $this->abort(500, 'В конфигурации не указан используемый веб-сервер (параметр webserver)');
+            throw new Zend_Controller_Action_Exception('В конфигурации не указан используемый веб-сервер (параметр webserver)');
         }
 
         switch ($config->webserver) {
@@ -33,7 +35,7 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
                 Zend_Controller_Action_HelperBroker::getStaticHelper('DownloadApache')->direct($path, $name);
                 break;
             default:
-                $this->abort(500, 'В конфигурации не указан не поддерживаемый веб-сервер');
+                throw new Zend_Controller_Action_Exception('В конфигурации не указан не поддерживаемый веб-сервер', 500);
         }
     }
 }
