@@ -174,6 +174,8 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             if (isset($identity['role']) && $canSwitchRoles) {
                 $role = $identity['role'];
             }
+        } elseif (PHP_SAPI == 'cli' && isset($config->cli->userId)) {
+            $user = Editors::find($config->cli->userId);
         }
 
         return [
