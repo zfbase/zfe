@@ -139,7 +139,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      */
     public function removeTab(string $name)
     {
-        unset($this->_tab[$name]);
+        unset($this->_tabs[$name]);
         return $this;
     }
 
