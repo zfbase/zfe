@@ -35,6 +35,9 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         $create = $canCreate ? 'allow' : 'deny';
 
         // Определяем источник данных
+        if (empty($attribs['source']) && ! empty($attribs['relModel'])) {
+            $attribs['source'] = $attribs['relModel']::getAutocompleteUrl();
+        }
         if (empty($attribs['data-source']) && ! empty($attribs['source'])) {
             $attribs['data-source'] = $attribs['source'];
             unset($attribs['source']);
