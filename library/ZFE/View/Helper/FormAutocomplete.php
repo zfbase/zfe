@@ -94,6 +94,8 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             $helpIcon . ' Будет создана запись'
         );
 
-        return '<div class="autocomplete-wrap">' . $idInput . $titleInput . $searchPack . $helpBlock . '</div>';
+        return $this->view->tag('div',
+            ['id' => $id . '-wrap', 'class' => 'autocomplete-wrap'],
+            $idInput . $titleInput . $searchPack . $helpBlock);
     }
 }
