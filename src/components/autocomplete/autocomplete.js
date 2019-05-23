@@ -17,6 +17,7 @@ class ZFEAutocomplete {
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
     this.$hint = this.$group.find('.tt-hint');
+    this.valueData = null;
   }
 
   dataAttrOptions() {
@@ -149,6 +150,7 @@ class ZFEAutocomplete {
     // Выбор значения из списка
     $input.on('typeahead:select', (e, selected) => {
       this.setValue({ id: selected.key, title: selected.value });
+      this.setValueData(selected);
     });
 
     // Очистка элемента
@@ -214,6 +216,14 @@ class ZFEAutocomplete {
     $group.toggleClass('has-warning', isNew);
 
     this.$input.trigger('zfe.ac.change');
+  }
+
+  getValueData() {
+    return this.valueData;
+  }
+
+  setValueData(data) {
+    this.valueData = data;
   }
 }
 
