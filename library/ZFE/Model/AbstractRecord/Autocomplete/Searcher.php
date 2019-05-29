@@ -136,7 +136,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
             // Кажется, парсер Доктрины неверно обрабатывает параметр со скобкой.
             // Например, LIKE '(%' превращается в LIKE '(%)
             // скобка вместо кавычки
-            if (null === mb_strpos($safeTerm, '(')) {
+            if (false === mb_strpos($safeTerm, '(')) {
                 $q->orderBy("CASE WHEN title LIKE '{$safeTerm}%' ESCAPE '\\\\' THEN 0 ELSE 1 END");
             }
             $q->addOrderBy('title ASC');
