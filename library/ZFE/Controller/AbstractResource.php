@@ -263,4 +263,34 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 
         $this->_helper->json($array);
     }
+
+    /**
+     * Загрузить и получить текущую запись или упасть с исключением.
+     * Если $this->view->item уже загружен, просто вернуть его значение.
+     *
+     * @param string $param
+     * 
+     * @return ZFE_Model_AbstractRecord
+     */
+    protected function _loadItemOrFall($param = 'id')
+    {
+        $modelName = static::$_modelName;
+
+        if ($this->view->item instanceof $modelName) {
+            return $this->view->item;
+        }
+
+        $key = $this->getParam($param);
+        if (!$key) {
+            $this->abort(400, sprintf('Не указан обязательный параметр <code>%s</code>', $param));
+        }
+
+        $item = $modelName::find($key);
+        if (empty($item)) {
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
+        }
+
+        $this->view->item = $item;
+        return $item;
+    }
 }
