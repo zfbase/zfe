@@ -1,20 +1,12 @@
 <?
-    $item = $this->item; /** @var AbstractRecord $item */
     $modelName = $this->modelName;
+    $item = $this->item; /** @var AbstractRecord $item */
     $table = Doctrine_Core::getTable($modelName);
-    $fields = $modelName::getViewFields();
-    if (empty($fields)) {
-        $columns = array_diff($item->getTable()->getColumnNames(), $modelName::getServiceFields());
-        $relations = array_map(function ($options) {
-            return $options['relAlias'];
-        }, $modelName::$multiAutocompleteCols);
-        $fields = array_merge($columns, $relations);
-    }
 ?>
 
 <table class="table table-condensed viewTable">
     <tbody>
-    <? foreach ($fields as $field): ?>
+    <? foreach ($modelName::getViewFields() as $field): ?>
         <? $options = is_string($field) ? ['field' => $field] : $field; ?>
         <? if (($table->hasRelation($options['field']) && $item->{$options['field']}->count())
             || ($table->hasColumn($options['field']) && ! empty($item->{$options['field']}))): ?>

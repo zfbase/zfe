@@ -104,8 +104,8 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $manager = Doctrine_Manager::getInstance();
         $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
-        $manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
-        $manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
+        //$manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');  // В миграциях нужно что бы не было указано схемы
+        //$manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
         $manager->setAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES, true);
         $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
 

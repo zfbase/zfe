@@ -36,10 +36,7 @@ trait ZFE_Controller_AbstractResource_Delete
         }
 
         /** @var AbstractRecord $item */
-        $item = $modelName::find($this->getParam('id'));
-        if (empty($item)) {
-            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
-        }
+        $item = $this->_loadItemOrFall();
 
         try {
             $item->delete();

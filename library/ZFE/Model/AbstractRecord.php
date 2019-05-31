@@ -387,6 +387,11 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public static function getViewFields()
     {
-        return [];
+        $table = Doctrine_Core::getTable(static::class);
+        $columns = array_diff($table->getColumnNames(), static::getServiceFields());
+        $relations = array_map(function ($options) {
+            return $options['relAlias'];
+        }, static::$multiAutocompleteCols);
+        return array_merge($columns, $relations);
     }
 }
