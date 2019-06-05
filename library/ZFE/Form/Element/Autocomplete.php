@@ -12,7 +12,7 @@
 class ZFE_Form_Element_Autocomplete extends Zend_Form_Element_Xhtml
 {
     /**
-     * Помошник представления для элемента.
+     * Помощник представления для элемента.
      *
      * @var string
      */
@@ -27,6 +27,11 @@ class ZFE_Form_Element_Autocomplete extends Zend_Form_Element_Xhtml
      */
     public function setValue($value)
     {
+        if (null === $value) {
+            $this->_value = null;
+            return $this;
+        }
+
         if ( ! is_array($value)) {
             return $this;
         }
