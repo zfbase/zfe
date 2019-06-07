@@ -55,7 +55,19 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
                 $redirector->setGotoUrl($item->getUrl() . '?h=' . $revertHash . '&rn=' . $resultNumber);
             }
 
-            $sphinxResult = $paginator ? $paginator::execute($sphinxQuery) : $sphinxResult = $sphinxQuery->execute();
+            if ($paginator) {
+                $sphinxResult = $paginator::execute($sphinxQuery);
+            } else {
+                $count = (int) (clone $sphinxQuery)
+                    ->setSelect('COUNT(*)')
+                    ->execute()
+                    ->fetchNum()[0];
+                $sphinxResult = $sphinxQuery
+                    ->limit($count)
+                    ->option('max_matches', $count)
+                    ->execute();
+            }
+
             $ids = ZFE_Sphinx::fetchIds($sphinxResult);
         } else {
             $ids = $params['ids'];
