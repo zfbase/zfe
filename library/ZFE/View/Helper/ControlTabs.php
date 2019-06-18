@@ -11,7 +11,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
 {
     /**
      * Базовая запись.
-     * 
+     *
      * @var ZFE_Model_AbstractRecord
      */
     protected $_item;
@@ -32,7 +32,12 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      *
      * @var array
      */
-    protected $_tabs = [
+    protected $_tabs;
+
+    /**
+     * Первоначальное значение свойства $_tabs.
+     */
+    protected $_initialTabs = [
         'edit' => [
             'action' => 'edit',
             'title' => 'Карточка',
@@ -60,11 +65,14 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * Точка входа в помощник.
      *
      * @param ZFE_Model_AbstractRecord|null $item
-     * 
+     *
      * @return ZFE_View_Helper_ControlTabs
      */
     public function controlTabs(?ZFE_Model_AbstractRecord $item = null)
     {
+        if (null === $this->_tabs) {
+            $this->resetTabs();
+        }
         if ($item instanceof ZFE_Model_AbstractRecord) {
             $this->setItem($item);
         }
@@ -76,7 +84,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * Указать базовую запись.
      *
      * @param ZFE_Model_AbstractRecord $item
-     * 
+     *
      * @return ZFE_View_Helper_ControlTabs
      */
     public function setItem(ZFE_Model_AbstractRecord $item)
@@ -91,7 +99,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * @param string $name
      * @param array  $tab
      * @param bool   $replace
-     * 
+     *
      * @return ZFE_View_Helper_ControlTabs
      */
     public function addTab(string $name, array $tab, bool $replace = false)
@@ -106,14 +114,14 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
 
     /**
      * Изменить часть настроек вкладки.
-     * 
+     *
      * Пример:
      * $view->controlTabs()->modifyTab('edit', ['title' => 'Редактирование']);
      *
      * @param string $name        код вкладки
      * @param array  $settings    новые настройки
      * @param bool   $skipMissing пропускать незарегистрированные
-     * 
+     *
      * @return ZFE_View_Helper_ControlTabs
      */
     public function modifyTab(string $name, array $settings, bool $skipMissing = false)
@@ -121,9 +129,8 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         if ( ! key_exists($name, $this->_tabs)) {
             if ($skipMissing) {
                 return $this;
-            } else {
-                throw new ZFE_View_Helper_Exception("Вкладка с названием '${name}' не зарегистрирована.");
             }
+            throw new ZFE_View_Helper_Exception("Вкладка с названием '${name}' не зарегистрирована.");
         }
 
         $this->_tabs[$name] = array_merge($this->_tabs[$name], $settings);
@@ -134,7 +141,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * Удалить вкладку по коду вкладки
      *
      * @param string $name
-     * 
+     *
      * @return ZFE_View_Helper_ControlTabs
      */
     public function removeTab(string $name)
@@ -147,7 +154,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * Указать ресурс для проверки прав.
      *
      * @param string $resource
-     * 
+     *
      * @return ZFE_View_Helper_ControlTabs
      */
     public function setResource(string $resource)
@@ -191,21 +198,21 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             if ( ! $this->view->isAllowedMe($resource, $privilege)) {
                 continue;
             }
-    
+
             $onlyRegistered = array_key_exists('onlyRegistered', $tab)
                 ? $tab['onlyRegistered']
                 : false;
             if (is_callable($onlyRegistered)) {
                 $onlyRegistered = $onlyRegistered($this->_item);
             }
-    
+
             $onlyValid = array_key_exists('onlyValid', $tab)
                 ? $tab['onlyValid']
                 : true;
             if (is_callable($onlyValid)) {
                 $onlyValid = $onlyValid($this->_item);
             }
-    
+
             $isActive = $request->getActionName() === $tab['action'];
             if ($isActive && ! empty($tab['params'])) {
                 foreach ($tab['params'] as $param => $value) {
@@ -215,10 +222,10 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
                     }
                 }
             }
-    
+
             $isDisabled = ($onlyRegistered && ! $this->_item->exists())
                        || ($onlyValid && $this->_item->isDeleted());
-    
+
             $class = [];
             $class[] = array_key_exists('class', $tab) ? $tab['class'] : '';
             $class[] = $isActive ? 'active' : '';
@@ -229,7 +236,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             } else {
                 $markup .= '<li>';
             }
-    
+
             if ($isActive || $isDisabled) {
                 $markup .= '<a>';
             } else {
@@ -238,18 +245,26 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
                 $uri->setParams($tab['params'] ?? []);
 
                 $url = $uri . $this->view->hopsHistory()->getSideHash('?');
-    
+
                 $rn = $request->getParam('rn');
                 if ($rn) {
                     $url .= '&rn=' . $rn;
                 }
-    
+
                 $markup .= '<a href="' . $url . '">';
             }
-    
+
             $markup .= $tab['title'] . '</a></li>';
         }
 
         return $markup . '</ul>';
+    }
+
+    /**
+     * Копирует $_initialTabs в $_tabs.
+     */
+    public function resetTabs()
+    {
+        $this->_tabs = $this->_initialTabs;
     }
 }
