@@ -149,8 +149,8 @@ class ZFEAutocomplete {
 
     // Выбор значения из списка
     $input.on('typeahead:select', (e, selected) => {
-      this.setValue({ id: selected.key, title: selected.value });
       this.setValueData(selected);
+      this.setValue({ id: selected.key, title: selected.value });
     });
 
     // Очистка элемента
