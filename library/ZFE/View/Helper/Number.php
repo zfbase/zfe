@@ -19,7 +19,7 @@ class ZFE_View_Helper_Number extends Zend_View_Helper_Abstract
      *
      * @return string
      */
-    public function number($number, $decimals = 0, $dec_point = '.', $thousands_sep = '&nbsp;')
+    public function number($number, $decimals = 0, $dec_point = ',', $thousands_sep = '&nbsp;')
     {
         return number_format($number, $decimals, $dec_point, $thousands_sep);
     }

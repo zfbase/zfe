@@ -26,10 +26,10 @@ trait ZFE_Model_AbstractRecord_Sphinx
     /**
      * Обновить запись в RT-индексе Sphinx.
      */
-    public function updateSphinxRtIndex()
+    public function updateSphinxRtIndex(Doctrine_Connection $conn = null)
     {
         $indexName = static::getSphinxIndexName();
-        $data = $this->getDataForSphinxIndex();
+        $data = $this->getDataForSphinxIndex($conn);
         ZFE_Sphinx::replaceIndexData($indexName, $data);
     }
 
@@ -59,7 +59,7 @@ trait ZFE_Model_AbstractRecord_Sphinx
      *
      * @return array
      */
-    public function getDataForSphinxIndex()
+    public function getDataForSphinxIndex(Doctrine_Connection $conn = null)
     {
         $sqlPath = static::getSphinxIndexSqlPath();
         $sql = file_get_contents($sqlPath);
@@ -67,7 +67,7 @@ trait ZFE_Model_AbstractRecord_Sphinx
         $query = ZFE_SqlManipulator::parseSql($sql);
         $query->andWhere('x.id = ?');
 
-        $conn = Doctrine_Manager::connection()->getDbh();
+        $conn = ($conn ?: Doctrine_Manager::connection())->getDbh();
         $q = $conn->prepare($query->getSql());
         $q->execute([$this->id]);
         $row = $q->fetch(PDO::FETCH_ASSOC);
