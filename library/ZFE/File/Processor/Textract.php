@@ -6,14 +6,14 @@
  * Time: 14:42
  */
 
-class Helper_File_Processor_Textract extends Helper_File_Processor
+class ZFE_File_Processor_Textract extends ZFE_File_Processor
 {
     function getDesc() : string
     {
         return 'Извлечение текста';
     }
 
-    function plan(Helper_File_Loadable $file) : Helper_File_Processor
+    function plan(ZFE_File_Loadable $file) : ZFE_File_Processor
     {
         $item = $this->getProcessing();
 
@@ -27,15 +27,15 @@ class Helper_File_Processor_Textract extends Helper_File_Processor
         return $this;
     }
 
-    function process(Helper_File_Loader $loader) : Helper_File_Processor
+    function process(ZFE_File_Loader $loader) : ZFE_File_Processor
     {
         $item = $this->getProcessing();
         if (!$item->exists() && $item->isPlanned()) {
-            throw new Application_Exception('Запись не сохранена в БД. Обработать файл невозможно');
+            throw new ZFE_File_Exception('Запись не сохранена в БД. Обработать файл невозможно');
         }
 
         if ($item->isCompleted()) {
-            throw new Application_Exception('Обработка уже была произведена ранее');
+            throw new ZFE_File_Exception('Обработка уже была произведена ранее');
         }
 
         $file = $item->getLinkedFile();
@@ -51,7 +51,7 @@ class Helper_File_Processor_Textract extends Helper_File_Processor
             $item->elapsed = $textractor->getElapsed();
             $item->text = $textractor->getText();
             $item->code = $textractor->getCode();
-        } catch (Application_Exception $e) {
+        } catch (ZFE_File_Exception $e) {
             // ...
         }
 
@@ -64,7 +64,7 @@ class Helper_File_Processor_Textract extends Helper_File_Processor
      * Разобраться с ошибками
      * @param Helper_Textractor $textractor
      * @param Exception|null $e
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      */
     protected function clarifyErrors(Helper_Textractor $textractor, Exception $e = null)
     {

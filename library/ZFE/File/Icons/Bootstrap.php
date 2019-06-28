@@ -6,7 +6,7 @@
  * Time: 16:22
  */
 
-class Helper_File_Icons_Bootstrap extends Helper_File_Icons
+class ZFE_File_Icons_Bootstrap extends ZFE_File_Icons
 {
     public function getFor(string $ext)
     {

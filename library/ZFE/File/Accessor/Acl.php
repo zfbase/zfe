@@ -1,20 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 16.10.18
- * Time: 14:33
- */
 
-class Helper_File_Accessor_Acl extends Helper_File_Accessor
+class ZFE_File_Accessor_Acl extends ZFE_File_Accessor
 {
     /**
      * Проверить прав на просмотр всех файлов записи списком
      * @return bool
      */
-    function isAllowToList() : bool
+    function isAllowToView() : bool
     {
-        return $this->acl->isAllowed($this->role, $this->controller, 'list');
+        return $this->acl->isAllowed($this->role, $this->controller, 'view');
+    }
+
+    /**
+     * Проверить права на управление файлами
+     * @return bool
+     */
+    function isAllowToControl(): bool
+    {
+        return $this->acl->isAllowed($this->role, $this->controller, 'control');
     }
 
     /**

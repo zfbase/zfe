@@ -6,7 +6,7 @@
  * Time: 14:15
  */
 
-class Helper_File_Schema
+class ZFE_File_Schema
 {
     const ACCEPTS_TEXTS = '.doc, .docx, .txt, .pdf, .rtf, .odt, .html';
     const ACCEPTS_TABLES = '.xls, .xlsx, .csv, .tsv';
@@ -31,9 +31,9 @@ class Helper_File_Schema
 
     /**
      * @param string $title
-     * @return Helper_File_Schema
+     * @return ZFE_File_Schema
      */
-    public function setTitle(string $title): Helper_File_Schema
+    public function setTitle(string $title): ZFE_File_Schema
     {
         $this->title = $title;
         return $this;
@@ -49,9 +49,9 @@ class Helper_File_Schema
 
     /**
      * @param bool $multiple
-     * @return Helper_File_Schema
+     * @return ZFE_File_Schema
      */
-    public function setMultiple(bool $multiple): Helper_File_Schema
+    public function setMultiple(bool $multiple): ZFE_File_Schema
     {
         $this->multiple = $multiple;
         return $this;
@@ -67,9 +67,9 @@ class Helper_File_Schema
 
     /**
      * @param string $accept
-     * @return Helper_File_Schema
+     * @return ZFE_File_Schema
      */
-    public function setAccept(string $accept): Helper_File_Schema
+    public function setAccept(string $accept): ZFE_File_Schema
     {
         $this->accept = $accept;
         return $this;
@@ -77,9 +77,9 @@ class Helper_File_Schema
 
     /**
      * @param string $fieldName
-     * @return Helper_File_Schema
+     * @return ZFE_File_Schema
      */
-    public function setFieldName(string $fieldName): Helper_File_Schema
+    public function setFieldName(string $fieldName): ZFE_File_Schema
     {
         $this->fieldName = $fieldName;
         return $this;
@@ -87,21 +87,21 @@ class Helper_File_Schema
 
     /**
      * @param int $fileTypeCode
-     * @return Helper_File_Schema
+     * @return ZFE_File_Schema
      */
-    public function setFileTypeCode(int $fileTypeCode): Helper_File_Schema
+    public function setFileTypeCode(int $fileTypeCode): ZFE_File_Schema
     {
         $this->fileTypeCode = $fileTypeCode;
         return $this;
     }
 
     /**
-     * @deprecated
+     * @param ZFE_File_Processor $processor
+     * @return ZFE_File_Schema
+     *@deprecated
      * use setProcessing
-     * @param Helper_File_Processor $processor
-     * @return Helper_File_Schema
      */
-    public function setProcessor(Helper_File_Processor $processor)
+    public function setProcessor(ZFE_File_Processor $processor)
     {
         $this->processor = $processor;
         return $this;
@@ -136,7 +136,7 @@ class Helper_File_Schema
     /**
      * @return null
      */
-    public function getProcessor() : ?Helper_File_Processor
+    public function getProcessor() : ?ZFE_File_Processor
     {
         return $this->processor;
     }
@@ -151,9 +151,9 @@ class Helper_File_Schema
 
     /**
      * @param bool $required
-     * @return Helper_File_Schema
+     * @return ZFE_File_Schema
      */
-    public function setRequired(bool $required): Helper_File_Schema
+    public function setRequired(bool $required): ZFE_File_Schema
     {
         $this->required = $required;
         return $this;
@@ -169,7 +169,7 @@ class Helper_File_Schema
 
     /**
      * @param null $tooltip
-     * @return Helper_File_Schema
+     * @return ZFE_File_Schema
      */
     public function setTooltip($tooltip)
     {

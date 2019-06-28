@@ -32,25 +32,25 @@
  * @method canProcess
  * @method getProcessUrl
  */
-class Helper_File_Agent
+class ZFE_File_Agent
 {
     /**
-     * @var Helper_File_Loadable
+     * @var Files
      */
     protected $file;
 
     /**
-     * @var Helper_File_Accessor
+     * @var ZFE_File_Accessor
      */
     protected $accessor;
 
     /**
-     * @var Helper_File_Icons
+     * @var ZFE_File_Icons
      */
     protected $iconsSet;
 
     /**
-     * @var null|Helper_File_Processor_Mapping
+     * @var null|ZFE_File_Processor_Mapping
      */
     protected $processings = null;
 
@@ -62,33 +62,33 @@ class Helper_File_Agent
 
     /**
      * Helper_File_Agent constructor.
-     * @param Helper_File_Loadable $file
+     * @param Files $file
      *
      * @throws Doctrine_Connection_Exception
      * @throws Doctrine_Record_Exception
      */
-    public function __construct(Helper_File_Loadable $file)
+    public function __construct(Files $file)
     {
         $this->file = $file;
-        $this->useAccessor(new Helper_File_Accessor_Acl(Zend_Registry::get('acl'), new Editors));
-        $this->useIconsSet(new Helper_File_Icons);
+        $this->useAccessor(new ZFE_File_Accessor_Acl(Zend_Registry::get('acl'), new Editors));
+        $this->useIconsSet(new ZFE_File_Icons);
 
-        if ($file instanceof Helper_File_Processable) {
+        if ($file instanceof ZFE_File_Processable) {
             $this->processings = $file->getProcessings();
         }
     }
 
     /**
      * Определить управление доступом
-     * @param Helper_File_Accessor $accessor
+     * @param ZFE_File_Accessor $accessor
      * @return $this
      */
-    public function useAccessor(Helper_File_Accessor $accessor)
+    public function useAccessor(ZFE_File_Accessor $accessor)
     {
         $this->accessor = $accessor;
         try {
             $accessor->getRecord();
-        } catch (Application_Exception $e) {
+        } catch (ZFE_File_Exception $e) {
             $accessor->setRecord($this->file->getManageableItem());
         }
         //$this->accessor->setRecord($this->file);
@@ -102,10 +102,10 @@ class Helper_File_Agent
 
     /**
      * Определить перечень иконок для файла
-     * @param Helper_File_Icons $set
+     * @param ZFE_File_Icons $set
      * @return $this
      */
-    public function useIconsSet(Helper_File_Icons $set)
+    public function useIconsSet(ZFE_File_Icons $set)
     {
         $this->iconsSet = $set;
         return $this;
@@ -186,9 +186,9 @@ class Helper_File_Agent
 
     /**
      * Получить обработки для файла
-     * @return Helper_File_Processor_Mapping
+     * @return ZFE_File_Processor_Mapping
      */
-    public function getProcessings() : Helper_File_Processor_Mapping
+    public function getProcessings() : ZFE_File_Processor_Mapping
     {
         return $this->processings;
     }
@@ -196,7 +196,7 @@ class Helper_File_Agent
     /**
      * Определить возможность ручного планирования обработки для файла
      * @param bool $val
-     * @return Helper_File_Agent
+     * @return ZFE_File_Agent
      */
     public function switchHandlyProcessing(bool $val) : self
     {

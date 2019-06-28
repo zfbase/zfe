@@ -1,37 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 09.10.18
- * Time: 15:42
- */
 
-class Helper_File_PathMapper
+class ZFE_File_PathMapper
 {
     const KEY_MAPPED_PATH = 'tmp_path';
 
     /**
-     * @var Doctrine_Record
+     * @var Files
      */
-    protected $record;
+    protected $file;
 
     /**
      * Helper_File_PathMapper constructor.
-     * @param Helper_File_Loadable $record
+     * @param Files $file
      */
-    public function __construct(Helper_File_Loadable $record)
+    public function __construct(Files $file)
     {
-        $this->record = $record;
+        $this->file = $file;
     }
 
     /**
      * @param string $path
-     * @return Helper_File_PathMapper
+     * @return ZFE_File_PathMapper
      */
     public function map(string $path) : self
     {
         $key = static::KEY_MAPPED_PATH;
-        $this->record->mapValue($key, $path);
+        $this->file->mapValue($key, $path);
         return $this;
     }
 
@@ -41,7 +35,7 @@ class Helper_File_PathMapper
     public function isMapped() : bool
     {
         $key = static::KEY_MAPPED_PATH;
-        return $this->record->hasMappedValue($key);
+        return $this->file->hasMappedValue($key);
     }
 
     /**
@@ -51,6 +45,6 @@ class Helper_File_PathMapper
     public function getMapped() : string
     {
         $key = static::KEY_MAPPED_PATH;
-        return $this->record->get($key);
+        return $this->file->get($key);
     }
 }

@@ -6,11 +6,11 @@
  * Time: 15:21
  */
 
-interface Helper_File_Processable extends Helper_File_Loadable
+interface ZFE_File_Processable extends ZFE_File_Loadable
 {
     /**
      * Возвращает описание допустимых обработок для файлов
-     * @return Helper_File_Processor_Mapping
+     * @return ZFE_File_Processor_Mapping
      */
-    public function getProcessings($refresh = false) : Helper_File_Processor_Mapping;
+    public function getProcessings($refresh = false) : ZFE_File_Processor_Mapping;
 }

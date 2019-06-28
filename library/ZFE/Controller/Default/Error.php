@@ -33,7 +33,7 @@ class ZFE_Controller_Default_Error extends Controller_Abstract
                 $code = 500;
                 $this->view->message = 'Ошибка приложения';
                 if ($errors->exception instanceof Zend_Controller_Exception) {
-                    $code = $errors->exception->getCode();
+                    $code = $errors->exception->getCode() ?: $code;
                     switch ($code) {
                         case 401:
                         case 403:

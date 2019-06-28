@@ -6,7 +6,7 @@
  * Time: 3:48
  */
 
-class Helper_File_Exception extends Exception
+class ZFE_File_Exception extends Exception
 {
 
 }

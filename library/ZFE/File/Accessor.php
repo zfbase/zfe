@@ -9,7 +9,7 @@
 /**
  * Class Helper_File_Accessor
  */
-abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
+abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
 {
     /**
      * @var Zend_Acl
@@ -38,11 +38,11 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
      * @param string $role
      * @throws Zend_Auth_Exception
      */
-    public function __construct(Zend_Acl $acl, Editors $user, string $role = null)
+    public function __construct(Zend_Acl $acl, ZFE_Model_Default_Editors $user, string $role = null)
     {
         $this->acl = $acl;
         $this->user = $user;
-        $this->role = $role ?? Editors::getRole();
+        $this->role = $role ?? $user->role;
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
         $this->user = $user;
     }
 
-    protected function generateUrl(string $action, Helper_File_Loadable $file = null)
+    protected function generateURL(string $action, Files $file = null)
     {
         $r = $this->getRecord();
         $rClass = get_class($r);
@@ -79,7 +79,7 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
      * Проверить прав на просмотр всех файлов записи списком
      * @return bool
      */
-    function isAllowToList() : bool
+    function isAllowToView() : bool
     {
         return true;
     }
@@ -88,18 +88,31 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
      * Получить ссылку на просмотр файлов записи списком
      * @return null|string
      */
-    function getListUrl() : ?string
+    function getViewURL() : ?string
     {
-        if ($this->isAllowToList()) {
-            return $this->generateUrl('list');
+        if ($this->isAllowToView()) {
+            return $this->generateURL('view');
         }
         return null;
     }
 
-    function getAgentsUrl() : ?string
+    /**
+     * Проверить прав на просмотр всех файлов записи списком
+     * @return bool
+     */
+    function isAllowToControl() : bool
     {
-        if ($this->isAllowToList()) {
-            return $this->generateUrl('agents');
+        return true;
+    }
+
+    /**
+     * Получить ссылку на просмотр файлов записи списком
+     * @return null|string
+     */
+    function getControlURL() : ?string
+    {
+        if ($this->isAllowToControl()) {
+            return $this->generateURL('control');
         }
         return null;
     }
@@ -115,13 +128,13 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
 
     /**
      * Получить ссылку на удаление файла записи
-     * @param Helper_File_Loadable $file
+     * @param Files $file
      * @return null|string
      */
-    function getDeleteUrl(Helper_File_Loadable $file) : ?string
+    function getDeleteURL(Files $file) : ?string
     {
         if ($this->isAllowToDelete()) {
-            return $this->generateUrl('delete', $file);
+            return $this->generateURL('delete', $file);
         }
         return null;
     }
@@ -137,13 +150,13 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
 
     /**
      * Получить ссылку на скачивание файла записи
-     * @param Helper_File_Loadable $file
+     * @param Files $file
      * @return null|string
      */
-    function getDownloadUrl(Helper_File_Loadable $file) : ?string
+    function getDownloadURL(Files $file) : ?string
     {
         if ($this->isAllowToDownload()) {
-            return $this->generateUrl('download', $file);
+            return $this->generateURL('download', $file);
         }
         return null;
     }
@@ -161,10 +174,10 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
      * Получить ссылку на скачивание скачивание файлов записи одним архивом
      * @return null|string
      */
-    function getDownloadAllUrl() : ?string
+    function getDownloadAllURL() : ?string
     {
         if ($this->isAllowToDownloadAll()) {
-            return $this->generateUrl('download-all');
+            return $this->generateURL('download-all');
         }
         return null;
     }
@@ -180,13 +193,13 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
 
     /**
      * Получить ссылку на скачивание скачивание файлов записи одним архивом
-     * @param Helper_File_Loadable $file
+     * @param Files $file
      * @return null|string
      */
-    function getProcessUrl(Helper_File_Loadable $file) : ?string
+    function getProcessURL(Files $file) : ?string
     {
         if ($this->isAllowToDownload()) {
-            return $this->generateUrl('process', $file);
+            return $this->generateURL('process', $file);
         }
         return null;
     }
@@ -195,7 +208,7 @@ abstract class Helper_File_Accessor extends Helper_File_ManageableAccess
      * @param string $url
      * @return array
      */
-    final function decomposeUrl(string $url) : array
+    final function decomposeURL(string $url) : array
     {
         $parts = explode('/', $url);
         $action = $parts[2];

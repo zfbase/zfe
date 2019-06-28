@@ -1,117 +1,95 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 09.10.18
- * Time: 11:43
- */
 
 /**
- * Class Helper_File_Loader
+ * Class ZFE_File_Manager
  * TODO случаи и примеры использования
  */
-abstract class Helper_File_Manager extends Helper_File_ManageableAccess
+abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
 {
-    /*
-    CREATE TABLE `*_files` (
-        `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-        `creator_id` int(10) unsigned DEFAULT NULL,
-        `created_at` timestamp NULL DEFAULT NULL,
-        `item_id` int(10) unsigned NOT NULL,
-        `title` varchar(100) NOT NULL,
-        `size` int(10) unsigned DEFAULT NULL,
-        `hash` varchar(45) DEFAULT NULL,
-        `type` tinyint(4) unsigned NOT NULL DEFAULT '0',
-        `ext` varchar(4) NOT NULL,
-        `path` varchar(256) NOT NULL COMMENT 'путь к файлу относительно корня',
-        PRIMARY KEY (`id`),
-        KEY `fk_requests_id_idx` (`item_id`),
-        CONSTRAINT `fk_files_1` FOREIGN KEY (`item_id`) REFERENCES `*` (`id`) ON UPDATE NO ACTION
-     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+    /**
+     * Шорткат для примера
+     * @param ZFE_File_Manageable $record
+     * @param bool $accessControl
+     * @param Editors|null $user
      *
+     * @return ZFE_File_Manager_Default
+     *
+     * @throws ZFE_File_Exception
+     * @throws Zend_Auth_Exception
+     * @throws Zend_Exception
      */
-
-    protected function checkRecordModel(Doctrine_Record $record)
+    static public function getDefault(ZFE_File_Manageable $record, $accessControl = true, Editors $user = null)
     {
-        foreach (['item_id', 'type', 'title', 'size', 'hash', 'ext', 'path'] as $column) {
-            if (!$record->contains($column)) throw new Exception(
-                sprintf("No %s in %s class", $column, get_class($record))
-            );
-        }
+        $fm = new ZFE_File_Manager_Default($record, Zend_Registry::get('config')->files);
+        if ($accessControl) $fm->initAccessControl(Zend_Registry::get('acl'), $user);
+        return $fm;
     }
 
     /**
-     * @var Helper_File_Loader
+     * Запрещенные расширения
+     */
+    protected $blackExtensions = [
+        'php', 'phtml', 'sh',
+    ];
+
+    /**
+     * @var ZFE_File_Loader
      */
     protected $loader;
 
     /**
-     * @var Editors|null
+     * @var Editors
      */
-    protected $user = null;
+    protected $user;
 
     /**
-     * @var Helper_File_Accessor|null
+     * @var ZFE_File_Accessor
      */
-    protected $accessor = null;
+    protected $accessor;
 
     /**
-     * Helper_File_Manager constructor.
-     *
-     * @param Helper_File_Manageable $record
-     * @param bool $accessControl проверять доступ для действий?
-     * @param Editors|null $user
-     * @param Zend_Acl|null $acl
-     *
-     * @throws Application_Exception
-     * @throws Zend_Auth_Exception
-     * @throws Zend_Exception
+     * @var Zend_Config секция files
      */
-    public function __construct(Helper_File_Manageable $record)
+    protected $config;
+
+    /**
+     * ZFE_File_Manager constructor.
+     * @param ZFE_File_Manageable $record
+     * @throw ZFE_File_Exception
+     */
+    public function __construct(ZFE_File_Manageable $record, Zend_Config $config)
     {
-        $modelName = $record->getFilesRelationName();
-        $this->checkRecordModel(new $modelName);
-
-        // не используем setRecord, храним лоадер и аксесор в менеджере
         $this->record = $record;
-        $this->loader = new Helper_File_Loader($this->getLoaderConfig(), FILES_PATH);
-    }
-
-    /**
-     * @param Editors|null $user
-     * @return $this
-     */
-    public function setUser(Editors $user = null)
-    {
-        $this->user = $user;
-        return $this;
+        $this->config = $config;
+        $this->loader = new ZFE_File_Loader($config);
     }
 
     /**
      * @param Zend_Acl $acl
-     * @throws Application_Exception
+     * @param ZFE_Model_Default_Editors $user
+     *
+     * @throws ZFE_File_Exception
      * @throws Zend_Auth_Exception
      * @throws Zend_Exception
      */
-    public function initAccessControl(Zend_Acl $acl)
+    public function initAccessControl(Zend_Acl $acl, ZFE_Model_Default_Editors $user)
     {
-        $user = $this->user ?? Editors::find(Editors::getMyId());
         $this->accessor = $this->initAccessor($acl, $user);
         $this->accessor->setRecord($this->getRecord());
     }
 
     /**
-     * @return Helper_File_Loader
+     * @return ZFE_File_Loader
      */
-    public function getLoader() : Helper_File_Loader
+    public function getLoader() : ZFE_File_Loader
     {
         return $this->loader;
     }
 
     /**
-     * @return Helper_File_Accessor
+     * @return ZFE_File_Accessor
      */
-    public function getAccessor() : ?Helper_File_Accessor
+    public function getAccessor() : ?ZFE_File_Accessor
     {
         return $this->accessor;
     }
@@ -130,70 +108,19 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
     }
 
     /**
-     * @param Zend_File_Transfer_Adapter_Http|null $adapter
-     * @throws Application_Exception
+     * @param array $tmpPaths пути откуда забрать файлы
+     * @param int $typeCode Код схемы файла
+     *
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Exception
      * @throws Zend_Exception
-     * @throws Zend_File_Transfer_Exception
      */
-    function manageAdapter(Zend_File_Transfer_Adapter_Http $adapter = null)
+    function manage(array $tmpPaths, $typeCode)
     {
-        $files = [];
-        foreach ($_FILES as $fieldKey => $data) {
-            if (array_key_exists('name', $data) && !empty($data['name'][0])) {
-                foreach ($data['name'] as $i => $name) {
-                    if (!array_key_exists($fieldKey, $files)) {
-                        $files[$fieldKey] = [];
-                    }
-                    $files[$fieldKey][] = $fieldKey . '_' . $i . '_';
-                }
-            }
-        }
-
-        if (empty($files)) {
-            return ;
-        }
-
-        if ($adapter == null) {
-            $adapter = new Zend_File_Transfer_Adapter_Http();
-            $adapter->setDestination('/tmp/');
-        }
-
         $schemas = $this->getFieldsSchemas();
-        foreach ($schemas as $schema) {
+        $schema = $schemas->get($typeCode);
 
-            /* @var $schema Helper_File_Schema */
-            if (!array_key_exists($schema->getFieldName(), $files)) {
-                // не загружаем файлы, не соотв. схемам
-                continue;
-            }
-
-            $filesKeys = $files[$schema->getFieldName()];
-
-            if (!@$adapter->receive($filesKeys)) {
-                throw new Application_Exception(join('<br />', $adapter->getMessages()));
-            }
-
-            $pathes = [];
-            foreach ($adapter->getFileInfo($filesKeys) as $item) {
-                $pathes[] = $item['tmp_name'];
-            }
-
-            $this->manage($pathes, $schema);
-        }
-    }
-
-    /**
-     * @param array $tmpPaths
-     * @param Helper_File_Schema $schema
-     * @throws Application_Exception
-     * @throws Doctrine_Exception
-     * @throws Zend_Exception
-     */
-    function manage(array $tmpPaths, Helper_File_Schema $schema)
-    {
         $loader = $this->getLoader();
-        $typeCode = $schema->getFileTypeCode();
         $processor = $schema->getProcessor();
 
         // find records of existed files with same types
@@ -203,8 +130,7 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
             $toDeleteColl = $this->findExistedFiles($typeCode);
         }
 
-        $modelName = $this->getRecord()->getFilesRelationName();
-        $toSaveColl = new Doctrine_Collection($modelName);
+        $toSaveColl = new Doctrine_Collection(Files::class);
         $processings = [];
 
         $conn = Doctrine_Manager::connection();
@@ -212,19 +138,17 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
 
         foreach ($tmpPaths as $tmpPath) {
 
-            /* @var $file Helper_File_Loadable */
+            /* @var $file Files */
             $file = $this->createFile($tmpPath, $typeCode);
-            if (empty($file->path)) {
-                $file->path = '';
-            }
-            $file->save(); // сохраним сразу
+            $file->save(); // сохраним сразу, чтобы получить id
 
             $loader->setRecord($file);
-            $file = $loader->upload();
-            $toSaveColl->add($file); // сохранять будем вместе со всем остальным
+            $file = $loader->upload(); // получили значение в поле path
+            $toSaveColl->add($file); // нужно пересохранить
 
             if ($processor) {
-                /* @var $processor Helper_File_Processor */
+                // если определен процессор для файла
+                /* @var $processor ZFE_File_Processor */
                 $processor->plan($file);
                 $processings[] = $processor->getProcessing();
             }
@@ -233,7 +157,6 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
         // unit of work
 
         if ($toDeleteColl && $toDeleteColl->count()) {
-            //var_dump($toDeleteColl->toArray(0));die;
             foreach ($toDeleteColl as $item) {
                 $loader->setRecord($item)->erase();
             }
@@ -252,66 +175,47 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
     }
 
     /**
-     * @param Zend_Form $form
+     * Преобразовать имя файла к безопасному.
      *
-     * @throws Application_Exception
-     * @throws Doctrine_Exception
-     * @throws Zend_Exception
+     * @param string     $filename
+     * @param null|mixed $ext
+     *
+     * @return string
      */
-    function manageForm(Zend_Form $form) : void
+    protected function safeFileName($filename, $ext = null)
     {
-        $schemas = $this->getFieldsSchemas();
-        foreach ($schemas as $schema) {
+        $tr = [
+            'А' => 'A',   'Б' => 'B',    'В' => 'V',   'Г' => 'G',   'Д' => 'D',
+            'Е' => 'E',   'Ё' => 'E',    'Ж' => 'J',   'З' => 'Z',   'И' => 'I',
+            'Й' => 'Y',   'К' => 'K',    'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+            'О' => 'O',   'П' => 'P',    'Р' => 'R',   'С' => 'S',   'Т' => 'T',
+            'У' => 'U',   'Ф' => 'F',    'Х' => 'H',   'Ц' => 'TS',  'Ч' => 'CH',
+            'Ш' => 'SH',  'Щ' => 'SCH',  'Ъ' => '',    'Ы' => 'YI',  'Ь' => '',
+            'Э' => 'E',   'Ю' => 'YU',   'Я' => 'YA',
+            'а' => 'a',   'б' => 'b',    'в' => 'v',   'г' => 'g',   'д' => 'd',
+            'е' => 'e',   'ё' => 'e',    'ж' => 'j',   'з' => 'z',   'и' => 'i',
+            'й' => 'y',   'к' => 'k',    'л' => 'l',   'м' => 'm',   'н' => 'n',
+            'о' => 'o',   'п' => 'p',    'р' => 'r',   'с' => 's',   'т' => 't',
+            'у' => 'u',   'ф' => 'f',    'х' => 'h',   'ц' => 'ts',  'ч' => 'ch',
+            'ш' => 'sh',  'щ' => 'sch',  'ъ' => 'y',   'ы' => 'yi',  'ь' => '',
+            'э' => 'e',   'ю' => 'yu',   'я' => 'ya',
+        ];
 
-            /* @var $schema Helper_File_Schema */
-            $fieldName = $schema->getFieldName();
+        if ($ext) {
+            $name = $filename;
+        } else {
+            $name = pathinfo($filename, PATHINFO_FILENAME);
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        }
 
-            /* @var $fieldElement Zend_Form_Element_File */
-            $fieldElement = $form->getElement($fieldName);
-
-            if ($fieldElement) {
-                if ($fieldElement->hasErrors()) {
-                    $this->errors = $fieldElement->getMessages();
-                    throw new Application_Exception('Возникли ошибки при загрузке файлов');
-                } else {
-                    $this->errors = [];
-                }
-
-                if ($fieldElement->isReceived()) {
-                    $tmpPaths = $fieldElement->getFileName();
-                    if (is_string($tmpPaths)) {
-                        $tmpPaths = [$tmpPaths];
-                    }
-                    $this->manage($tmpPaths, $schema);
-                }
+        if ($ext) {
+            if (in_array($ext, $this->blackExtensions, true)) {
+                $ext = '_' . $ext;
             }
+            $filename = $name . '.' . $ext;
         }
-    }
 
-    /**
-     * @param int $typeCode
-     * @return Doctrine_Collection
-     * @throws Application_Exception
-     * @throws Doctrine_Collection_Exception
-     * @throws Doctrine_Query_Exception
-     */
-    protected function findExistedFiles(int $typeCode = 0) : Doctrine_Collection
-    {
-        $itemId = $this->getRecord()->id;
-        $keyColumn = Helper_File_Loadable::KEY_TO_ITEM;
-        $modelName = $this->getRecord()->getFilesRelationName();
-        $collToDelete = new Doctrine_Collection($modelName);
-
-        $q = ZFE_Query::create()
-            ->select('x.*')
-            ->from($modelName . ' x INDEXBY id')
-            ->where('x.' . $keyColumn . ' = ?', $itemId)
-            ->addWhere('x.type = ?', $typeCode);
-        $result = $q->execute();
-        if ($result->count()) {
-            $collToDelete->merge($result);
-        }
-        return $collToDelete;
+        return preg_replace('/[^a-zA-Z0-9_\-\.]+/', '_', strtr($filename, $tr));
     }
 
     /**
@@ -319,31 +223,31 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
      *
      * @param string $path
      * @param int $typeCode
-     * @return Helper_File_Loadable
+     * @return Files
      *
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Exception
      * @throws Zend_Exception
      */
-    protected function createFile(string $path, int $typeCode = 0) : Helper_File_Loadable
+    protected function createFile(string $path, int $typeCode = 0) : Files
     {
         if (!file_exists($path)) {
-            throw new Application_Exception('Файла ' . $path . ' не существует');
+            throw new ZFE_File_Exception('Файла ' . $path . ' не существует');
         }
         if (!is_readable($path)) {
-            throw new Application_Exception('Файл ' . $path . ' не доступен для чтения');
+            throw new ZFE_File_Exception('Файл ' . $path . ' не доступен для чтения');
         }
 
-        $itemId = $this->getRecord()->id;
-        $keyColumn = Helper_File_Loadable::KEY_TO_ITEM;
-        $modelName = $this->getRecord()->getFilesRelationName();
-
-        $file = new $modelName;
-        $file->set($keyColumn, $itemId);
+        $file = new Files;
+        $file->set('model_name', get_class($this->record));
+        $file->set('item_id', $this->record->id);
         $file->set('type', $typeCode);
 
-        $name = $typeCode . '-' . substr(strrchr($path, '/'), 1);
-        $newFileName = ZFE_File::safeFilename($name);
+        $name = substr(strrchr($path, '/'), 1);
+        $file->set('title_original', $name);
+
+        //$newFileName = $typeCode . '-' . ZFE_File::safeFilename($name);
+        $newFileName = $this->safeFilename($name);
         $file->set('title', $newFileName);
 
         $size = filesize($path);
@@ -359,7 +263,9 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
             $file->set('creator_id', $this->user->id);
         }
 
-        $mapper = new Helper_File_PathMapper($file);
+        $file->set('path', '');
+
+        $mapper = new ZFE_File_PathMapper($file);
         $mapper->map($path);
 
         $file->clearRelated();
@@ -367,73 +273,29 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
     }
 
     /**
-     * Получить список из ZFE_File для поля с указанным названием
-     * Используется для обратной совместимости в \Application_Form_Extensions::populateFiles
-     * @deprecated используйте \Helper_File_Manager::getAgents
-     *
-     * @param string $fieldName
-     * @return array
-     *
-     * @throws Application_Exception
-     * @throws Doctrine_Record_Exception
-     */
-    public function getZFEFiles(string $fieldName) : array
-    {
-        $list = [];
-        $accessor = $this->getAccessor();
-        $loader = $this->getLoader();
-        $uploaded = $this->getFilesRecords();
-        $schemas = $this->getFieldsSchemas();
-        foreach ($schemas as $schema) {
-            /* @var $schema Helper_File_Schema */
-            if ($fieldName == $schema->getFieldName()) {
-                $typeCode = $schema->getFileTypeCode();
-                foreach ($uploaded as $file) {
-                    /* @var $file Helper_File_Loadable */
-                    $loader->setRecord($file);
-                    if ($file->type == $typeCode) {
-                        $zfile =  new ZFE_File([
-                            'name' => $file->title,
-                            'size' => intval($file->size),
-                            'hash' => $file->hash,
-                            'canDelete' => $accessor ? $accessor->isAllowToDelete() : false,
-                            'deleteUrl' => $accessor ? $accessor->getDeleteUrl($file) : null,
-                            'canDownload' => $accessor ? $accessor->isAllowToDownload() : false,
-                            'downloadUrl' => $accessor ? $accessor->getDownloadUrl($file) : null,
-                        ]);
-
-                        $list[] = $zfile;
-                    }
-                }
-            }
-        }
-        return $list;
-    }
-
-    /**
      * Получить список агентов по файлам, для указанных схемами полей файлов, если они были загружены
-     * @param Helper_File_Schema_Collection $schemas
+     * @param ZFE_File_Schema_Collection $schemas
+     * @param bool $byCode группировать агентов в группу по код поля, а не по названию?
      * @return array
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Connection_Exception
      * @throws Doctrine_Query_Exception
      * @throws Doctrine_Record_Exception
      */
-    public function getAgents(Helper_File_Schema_Collection $schemas) : array
+    public function getAgents(ZFE_File_Schema_Collection $schemas, $byCode = false) : array
     {
         $list = [];
-        //$loader = $this->getLoader();
-        $uploaded = $this->getFilesRecords();
+        $uploaded = $this->getFiles();
         foreach ($schemas as $schema) {
-            /* @var $schema Helper_File_Schema */
-            $list[$schema->getTitle()] = [];
+            /* @var $schema ZFE_File_Schema */
+            $key = $byCode ? $schema->getFileTypeCode() : $schema->getTitle();
+            $list[$key] = [];
             $typeCode = $schema->getFileTypeCode();
             foreach ($uploaded as $file) {
-                /* @var $file Helper_File_Loadable */
-                //$loader->setRecord($file);
+                /* @var $file Files */
                 if ($file->type == $typeCode) {
                     $agent = $this->createFileAgent($file);
-                    $list[$schema->getTitle()][] = $agent;
+                    $list[$key][] = $agent;
                 }
             }
         }
@@ -446,14 +308,14 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
      *
      * @param bool $strict проверить наличие файла в ФС
      * @return array
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Query_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
      */
     public function checkRequired($strict = false) : array
     {
-        $files = $this->getFilesRecords('type');
+        $files = $this->getFiles('type');
         $schemas = $this->getFieldsSchemas();
 
         $problems = [];
@@ -465,7 +327,7 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
                 $message = 'Необходимо загрузить файл(ы) в обязательное поле "%s"';
                 $loader = $this->getLoader();
                 foreach ($schemas->getRequired() as $schema) {
-                    /* @var $schema Helper_File_Schema */
+                    /* @var $schema ZFE_File_Schema */
                         $file = $files->get($schema->getFileTypeCode());
                         if ($file && $file->exists()) {
                             if ($strict) {
@@ -495,22 +357,12 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
      *
      * @param string $indexBy
      * @return Doctrine_Collection|null
-     * @throws Application_Exception
      * @throws Doctrine_Query_Exception
      */
-    public function getFilesRecords($indexBy = 'id'): ?Doctrine_Collection
+    public function getFiles($indexBy = 'id'): ?Doctrine_Collection
     {
-        $record = $this->getRecord();
-        $relName = $record->getFilesRelationName();
-
-//        $q = Doctrine_Query::create()->select('*')
-//            ->from( $relName . ' INDEXBY ' . $indexBy)
-//            ->groupBy($indexBy)
-//            ->where('item_id = ?', $record->id);
-//        return $q->execute();
-
-        // for postgres
-        $rows = clone $record->$relName;
+        $files = $this->findExistedFiles();
+        $rows = clone $files;
         $res = [];
         foreach ($rows as $row) {
             $res[$row->$indexBy] = $row;
@@ -522,10 +374,33 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
     }
 
     /**
+     * @param int|null $typeCode
+     * @return Doctrine_Collection
+     * @throws ZFE_File_Exception
+     * @throws Doctrine_Collection_Exception
+     * @throws Doctrine_Query_Exception
+     */
+    protected function findExistedFiles($typeCode = null) : Doctrine_Collection
+    {
+        $itemId = $this->record->id;
+        $modelName = get_class($this->record);
+
+        $q = ZFE_Query::create()
+            ->select('x.*')
+            ->from(Files::class . ' x INDEXBY id')
+            ->where('x.item_id = ?', $itemId)
+            ->addWhere('x.model_name = ?', $modelName);
+        if ($typeCode !== null) {
+            $q->addWhere('x.type = ?', $typeCode);
+        }
+        return $q->execute();
+    }
+
+    /**
      * Возвращает кол-во файлов по типам (если указаны) или всего
      * @param array $types
      * @return int
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Query_Exception
      */
     public function getFilesCount($types = []): int
@@ -543,52 +418,47 @@ abstract class Helper_File_Manager extends Helper_File_ManageableAccess
     }
 
     /**
-     * @return Zend_Config
+     * @return ZFE_File_Schema_Collection
      */
-    abstract protected function getLoaderConfig() : Zend_Config;
-
-    /**
-     * @return Helper_File_Schema_Collection
-     */
-    abstract public function getFieldsSchemas() : Helper_File_Schema_Collection;
+    abstract public function getFieldsSchemas() : ZFE_File_Schema_Collection;
 
     /**
      * @param Zend_Acl $acl
-     * @param Editors $user
-     * @return Helper_File_Accessor
+     * @param ZFE_Model_Default_Editors $user
+     * @return ZFE_File_Accessor
      */
-    abstract protected function initAccessor(Zend_Acl $acl, Editors $user) : Helper_File_Accessor;
+    abstract protected function initAccessor(Zend_Acl $acl, ZFE_Model_Default_Editors $user) : ZFE_File_Accessor;
 
     /**
      * Создание агента файла, можно переопределить в дочернем менеджере для модели
      * Используется для получения списка представителей для файлов модели (getAgents)
-     * @param Helper_File_Loadable $file
-     * @return Helper_File_Agent
+     * @param Files $file
+     * @return ZFE_File_Agent
      *
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Connection_Exception
      * @throws Doctrine_Record_Exception
      */
-    protected function createFileAgent(Helper_File_Loadable $file) : Helper_File_Agent
+    protected function createFileAgent(Files $file) : ZFE_File_Agent
     {
-        $agent = new Helper_File_Agent($file);
+        $agent = new ZFE_File_Agent($file);
         if ($this->accessor) $agent->useAccessor($this->accessor);
         return $agent;
     }
 
     /**
      * Удалить все файлы из ФС и записи о файлах в БД
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Query_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
      */
     function purge()
     {
-        $existedFiles = $this->getFilesRecords();
+        $existedFiles = $this->getFiles();
         if ($existedFiles->count()) {
             foreach ($existedFiles as $file) {
-                /* @var Helper_File_Loadable $file */
+                /* @var Files $file */
                 $this->getLoader()->setRecord($file)->erase();
                 $file->clearRelated();
                 $file->delete();

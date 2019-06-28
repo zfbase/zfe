@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 11.10.18
- * Time: 16:22
- */
 
-class Helper_File_Schema_Collection implements IteratorAggregate
+class ZFE_File_Schema_Collection implements IteratorAggregate
 {
     protected $map = [];
     protected $required = 0;
@@ -20,10 +14,10 @@ class Helper_File_Schema_Collection implements IteratorAggregate
     }
 
     /**
-     * @param Helper_File_Schema $schema
+     * @param ZFE_File_Schema $schema
      * @return bool
      */
-    protected function checkIsTypeUnic(Helper_File_Schema $schema) : bool
+    protected function checkIsTypeUnic(ZFE_File_Schema $schema) : bool
     {
         return !array_key_exists($schema->getFileTypeCode(), $this->map);
     }
@@ -37,11 +31,11 @@ class Helper_File_Schema_Collection implements IteratorAggregate
     }
 
     /**
-     * @param Helper_File_Schema $schema
-     * @return Helper_File_Schema_Collection
-     * @throws Application_Exception
+     * @param ZFE_File_Schema $schema
+     * @return ZFE_File_Schema_Collection
+     * @throws ZFE_File_Exception
      */
-    public function add(Helper_File_Schema $schema) : self
+    public function add(ZFE_File_Schema $schema) : self
     {
         $code = $schema->getFileTypeCode();
         if ($this->checkIsTypeUnic($schema)) {
@@ -50,7 +44,7 @@ class Helper_File_Schema_Collection implements IteratorAggregate
                 $this->required++;
             }
         } else {
-            throw new Application_Exception(
+            throw new ZFE_File_Exception(
                 'Схема поля файла с кодом ' . $code . ' уже присутствует в коллекции'
             );
         }
@@ -58,10 +52,10 @@ class Helper_File_Schema_Collection implements IteratorAggregate
     }
 
     /**
-     * @param Helper_File_Schema $schema
-     * @return Helper_File_Schema_Collection
+     * @param ZFE_File_Schema $schema
+     * @return ZFE_File_Schema_Collection
      */
-    public function remove(Helper_File_Schema $schema) : self
+    public function remove(ZFE_File_Schema $schema) : self
     {
         $code = $schema->getFileTypeCode();
         return $this->removeByCode($code);
@@ -69,7 +63,7 @@ class Helper_File_Schema_Collection implements IteratorAggregate
 
     /**
      * @param int $code
-     * @return Helper_File_Schema_Collection
+     * @return ZFE_File_Schema_Collection
      */
     public function removeByCode(int $code) : self
     {
@@ -84,24 +78,24 @@ class Helper_File_Schema_Collection implements IteratorAggregate
 
     /**
      * @param int $typeCode
-     * @return Helper_File_Schema
-     * @throws Application_Exception
+     * @return ZFE_File_Schema
+     * @throws ZFE_File_Exception
      */
-    public function get(int $typeCode) : Helper_File_Schema
+    public function get(int $typeCode) : ZFE_File_Schema
     {
         if (array_key_exists($typeCode, $this->map)) {
             return $this->map[$typeCode];
         }
-        throw new Application_Exception('Схемы поля файла с кодом ' . $typeCode . ' не найдено');
+        throw new ZFE_File_Exception('Схемы поля файла с кодом ' . $typeCode . ' не найдено');
     }
 
     /**
-     * @param Helper_File_Loadable $file
-     * @return Helper_File_Schema
-     * @throws Application_Exception
+     * @param ZFE_File_Loadable $file
+     * @return ZFE_File_Schema
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      */
-    public function getFor(Helper_File_Loadable $file) : Helper_File_Schema
+    public function getFor(ZFE_File_Loadable $file) : ZFE_File_Schema
     {
         /* @var $file Doctrine_Record */
         return $this->get($file->get('type'));
@@ -116,14 +110,14 @@ class Helper_File_Schema_Collection implements IteratorAggregate
     }
 
     /**
-     * @return Helper_File_Schema_Collection
-     * @throws Application_Exception
+     * @return ZFE_File_Schema_Collection
+     * @throws ZFE_File_Exception
      */
-    public function getRequired() : Helper_File_Schema_Collection
+    public function getRequired() : ZFE_File_Schema_Collection
     {
-        $subCollection = new Helper_File_Schema_Collection;
+        $subCollection = new ZFE_File_Schema_Collection;
         foreach ($this->map as $code => $schema) {
-            /* @var $schema Helper_File_Schema */
+            /* @var $schema ZFE_File_Schema */
             if ($schema->isRequired()) {
                 $subCollection->add($schema);
             }

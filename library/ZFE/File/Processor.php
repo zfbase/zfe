@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 09.10.18
- * Time: 15:46
- */
 
-abstract class Helper_File_Processor
+abstract class ZFE_File_Processor
 {
     /**
      * @var Helper_File_Processing
@@ -24,12 +18,12 @@ abstract class Helper_File_Processor
 
     /**
      * @return Helper_File_Processing
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      */
     public function getProcessing()
     {
         if ($this->processing === null) {
-            throw new Application_Exception('Запись обработки не задана');
+            throw new ZFE_File_Exception('Запись обработки не задана');
         }
         return $this->processing;
     }
@@ -38,18 +32,18 @@ abstract class Helper_File_Processor
      * Запланировать обработку. Создает запись обработки для файла
      * Запись на обработку создается при загрузке файла
      * Не сохраняет запись в БД!
-     * @return Helper_File_Processor
+     * @return ZFE_File_Processor
      */
-    abstract function plan(Helper_File_Loadable $file) : Helper_File_Processor;
+    abstract function plan(ZFE_File_Loadable $file) : ZFE_File_Processor;
 
     /**
      * Выполнить обработку. Обновляет запись обработи, созданную в методом plan(), для файла
      * Обработка осуществляется в фоновом режиме
      * Не сохраняет запись в БД!
-     * @param Helper_File_Loader $loader
-     * @return Helper_File_Processor
+     * @param ZFE_File_Loader $loader
+     * @return ZFE_File_Processor
      */
-    abstract function process(Helper_File_Loader $loader) : Helper_File_Processor;
+    abstract function process(ZFE_File_Loader $loader) : ZFE_File_Processor;
 
     /**
      * @return string

@@ -1,20 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 09.10.18
- * Time: 12:21
- */
 
 /**
- * Class Helper_File_Loader
+ * Class ZFE_File_Loader
  *
- * @todo заменить Application_Exception на Helper_File_Exception
+ * @todo заменить Helper_File_Exception на Helper_File_Exception
  */
-final class Helper_File_Loader extends Helper_File_LoadableAccess
+final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 {
     /**
-     * @var Zend_Config
+     * @var Zend_Config секция files
      */
     protected $config;
 
@@ -29,34 +23,24 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
     protected $method = 'rename';
 
     /**
-     * Helper_File_Loader constructor.
-     * @param Zend_Config $config
-     * @param string $dataDir абсолютный путь к папке, хранящей файлы моделей
-     * @throws Application_Exception
+     * @var int Число разрядов для разбиения идентификатора
      */
-    public function __construct(Zend_Config $config, string $dataDir)
-    {
-        if ($config->path && $config->url) {
-            $this->config = $config;
-        } else {
-            throw new Application_Exception('Не задано одно или несколько обязательных значений: path, url');
-        }
-        if (!is_dir($dataDir) || !is_writable($dataDir)) {
-            throw new Application_Exception($dataDir . ' не существует или не доступна для записи');
-        }
-
-        if (strpos($dataDir, '/') !== strlen($dataDir) - 1) {
-            $dataDir .= '/';
-        }
-        $this->dataDir = $dataDir;
-    }
+    protected $div = 3;
 
     /**
-     * @return Zend_Config
+     * ZFE_File_Loader constructor.
+     * @param Zend_Config $config секция files
+     * @throws ZFE_File_Exception
      */
-    public function getConfig() : Zend_Config
+    public function __construct(Zend_Config $config)
     {
-        return $this->config;
+        $this->config = $config;
+        $dataDir = $config->path;
+        if (!is_dir($dataDir) || !is_writable($dataDir)) {
+            throw new ZFE_File_Exception($dataDir . ' не существует или не доступна для записи');
+        }
+
+        $this->dataDir = preg_replace('/\/+$/', '', $dataDir);
     }
 
     /**
@@ -67,6 +51,8 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
     {
         if (strpos($resultPath, $this->dataDir) !== false) {
             $tmp = str_replace($this->dataDir, '', $resultPath);
+        } else {
+            throw new ZFE_File_Exception('Невозможно определить относительный путь файла для ' . $resultPath);
         }
 
         return $tmp;
@@ -74,40 +60,26 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
 
     /**
      * @return string
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
+     * @throws ZFE_File_Exception
      * @throws Zend_Exception
      */
     public function absFilePath() : string
     {
         $file = $this->getRecord();
-        if (empty($file->get('path'))) {
-            // костыль - выпилить при апгрейде
-            // для совместимости с ранее загруженными файлами
-            return $this->getResultPath();
-        }
         return $this->dataDir . $file->get('path');
     }
 
     /**
      * @return string
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Zend_Exception
      */
     public function getBaseDir() : string
     {
-        $path = $this->getConfig()->path;
-        // realpath заменяет папку-симлинк на реальный путь
-        //$realPath = realpath($path);
-        $realPath = $path;
-        if (!is_dir($realPath) || !is_readable($realPath)) {
-            throw new Application_Exception($realPath . ' не существует или не доступно для чтения');
-        }
-        return $realPath;
+        return $this->dataDir;
     }
-
-    /** Число разрядов для разбиения идентификатора */
-    protected $div = 3;
 
     /**
      * Генерировать путь для файла
@@ -119,32 +91,34 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
      * @param boolean $andRand
      * @return string
      */
-    protected function generationPath($basePath, $id = 0, $ext = '', $isUrl = false, $andRand = false)
+    protected function generatePath($basePath, $id = 0, $ext = '', $isUrl = false, $andRand = false)
     {
-//        if (! $isUrl) {
-//            $basePath = realpath($basePath);
-//        }
-
+        $basePath = preg_replace('/\/+$/', '', $basePath);
+        if (!is_writable($basePath)) {
+            throw new ZFE_File_Exception('Путь ' . $basePath . ' недоступен для записи');
+        }
 
         if (strlen($id) > $this->div) {
-            $strparts = str_split($id, $this->div);
+            $parts = str_split($id, $this->div);
         } else {
-            return $basePath . '/' . $id;
+            $parts = [$id];
         }
 
-        $fileName = array_pop($strparts);
-        $subPath = implode('/', $strparts);
+        $fileName = array_pop($parts);
+        $subPath = implode('/', $parts);
 
         if (! $isUrl && ! file_exists($basePath . '/' . $subPath)) {
-            self::makePath($basePath . '/' . $subPath);
-            self::fixPath($basePath, $subPath);
+            $this->makePath($basePath . '/' . $subPath);
+            $this->fixPath($basePath, $subPath);
         }
 
-        return $basePath . '/' .
+        $result = $basePath . '/' .
             (!empty($subPath) ? $subPath . '/' : '') .
             $fileName .
             (empty($ext) ? '' : '.' . $ext) .
             ($isUrl && $andRand ? '?r=' . rand() : '');
+
+        return $result;
     }
 
     /**
@@ -173,46 +147,37 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
      */
     public function fixPath($basePath, $subPath = null)
     {
-        $uploadConfig = Zend_Registry::get('config')->forms->upload;
-
         $workPath = $basePath;
         $pathArr = explode('/', $subPath);
         foreach ($pathArr as $part) {
             $workPath .= '/' . $part;
             @chmod($workPath, 0777);
-            @chown($workPath, $uploadConfig->default->owner);
-            @chgrp($workPath, $uploadConfig->default->group);
+            @chown($workPath, $this->config->owner);
+            @chgrp($workPath, $this->config->group);
         }
     }
 
     /**
      * @return string
      *
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
-     * @throws Helper_File_Exception
+     * @throws ZFE_File_Exception
      */
     public function getResultPath() : string
     {
         $baseDir = $this->getBaseDir();
-        $foreignKeyColumn = Helper_File_Loadable::KEY_TO_ITEM;
-        $folderName = $this->getRecord()->get($foreignKeyColumn);
-
-        // генерируем правильно
-        //$path = ZFE_File::generationPath($baseDir, $folderName);
-        // эти методы я перенес из ZFE_File, надо доработать
-
-        $path = $this->generationPath($baseDir, $folderName);
-        //var_dump($baseDir, $folderName, $path);die;
-        $this->makePath($path);
-        $this->fixPath($baseDir, $path);
-        //var_dump($path, $this->getRecord()->toArray(0));die;
-        if (is_writable($path)) {
-            $resultPath = $path . '/' . $this->getRecord()->title;
-            return $resultPath;
+        if (empty($this->record->path)) {
+            $path = $this->generatePath($baseDir, $this->record->id);
+        } else {
+            $path = $baseDir . $this->record->path;
         }
-        throw new Helper_File_Exception('Путь ' . $path . ' недоступен для записи');
+        // if (is_writable($path)) {
+            // $resultPath = $path . '/' . $this->getRecord()->title;
+            // return $resultPath;
+        //}
+        return $path;
     }
 
     /**
@@ -237,24 +202,25 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
 
     /**
      * @param string $fromPath
-     * @return Helper_File_Loadable
+     * @return ZFE_File_Loadable
      *
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
      */
-    public function upload(string $fromPath = null) : Helper_File_Loadable
+    public function upload(string $fromPath = null) : Files
     {
         $file = $this->getRecord();
         if (!$fromPath) {
-            $mapper = new Helper_File_PathMapper($file);
+            $mapper = new ZFE_File_PathMapper($file);
             if ($mapper->isMapped()) {
                 $fromPath = $mapper->getMapped();
             }
         }
         if (empty($fromPath)) {
-            throw new Application_Exception('Не указан путь, из которого надо переместить файл');
+            throw new ZFE_File_Exception('Не указан путь, из которого надо переместить файл');
         }
+
         $resultPath = $this->getResultPath();
 
         if ($this->method == 'copy') {
@@ -263,7 +229,7 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
             rename($fromPath, $resultPath);
         }
         if (!file_exists($resultPath)) {
-            throw new Application_Exception(
+            throw new ZFE_File_Exception(
                 sprintf('Не удалось переместить файл из %s в %s', $fromPath, $resultPath)
             );
         }
@@ -276,7 +242,7 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
 
     /**
      * @return bool
-     * @throws Application_Exception
+     * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
      */
@@ -285,17 +251,8 @@ final class Helper_File_Loader extends Helper_File_LoadableAccess
         try {
             $resultPath = $this->getResultPath();
             return @unlink($resultPath);
-        } catch (Application_Exception $e) {
+        } catch (ZFE_File_Exception $e) {
             return true;
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getBaseUrl() : string
-    {
-        $url = $this->getConfig()->url;
-        return $url;
     }
 }

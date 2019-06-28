@@ -6,9 +6,9 @@
  * Time: 15:21
  */
 
-interface Helper_File_Loadable
+interface ZFE_File_Loadable
 {
     const KEY_TO_ITEM = 'item_id';
 
-    public function getManageableItem() : Helper_File_Manageable;
+    public function getManageableItem() : ZFE_File_Manageable;
 }

@@ -6,7 +6,7 @@
  * Time: 16:10
  */
 
-class Helper_File_Icons
+class ZFE_File_Icons
 {
     public function getFor(string $ext)
     {

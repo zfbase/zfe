@@ -6,7 +6,7 @@
  * Time: 14:42
  */
 
-class Helper_File_Agent_Excerpts extends Helper_File_Agent
+class ZFE_File_Agent_Excerpts extends ZFE_File_Agent
 {
     protected $excerpts;
 

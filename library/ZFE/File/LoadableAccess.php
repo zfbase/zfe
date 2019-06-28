@@ -1,36 +1,30 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 09.10.18
- * Time: 15:59
- */
 
-abstract class Helper_File_LoadableAccess
+abstract class ZFE_File_LoadableAccess
 {
     /**
-     * @var Helper_File_Loadable
+     * @var Files
      */
     protected $record;
 
     /**
-     * @param Helper_File_Loadable $record
+     * @param Files $record
      * @return $this
      */
-    public function setRecord(Helper_File_Loadable $record) : self
+    public function setRecord(Files $record) : self
     {
         $this->record = $record;
         return $this;
     }
 
     /**
-     * @return Helper_File_Loadable|Doctrine_Record
-     * @throws Application_Exception
+     * @return Files|Doctrine_Record
+     * @throws ZFE_File_Exception
      */
-    public function getRecord() : Helper_File_Loadable
+    public function getRecord() : Files
     {
         if (empty($this->record)) {
-            throw new Application_Exception('Объект не задан');
+            throw new ZFE_File_Exception('Объект не задан');
         }
         return $this->record;
     }
