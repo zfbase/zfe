@@ -1,19 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 19.10.18
- * Time: 15:40
- */
 
 /**
- * Class Helper_File_Agent
+ * Class ZFE_File_Agent
+ *
+ * Агент представляет файл:
+ * презентация/отображение файла, getName, getSize и т.д.
+ * отвечает за доступ к нему с помощью методов isAllowedTo*
+ * предоставляет карту возможных и проведенных обработок файла
  *
  * @property int $id
  * @property int $creator_id
  * @property int $created_at
  * @property string $title
- * @property int $item_id
  * @property string $hash
  * @property int $size
  * @property int $type
@@ -72,10 +70,7 @@ class ZFE_File_Agent
         $this->file = $file;
         $this->useAccessor(new ZFE_File_Accessor_Acl(Zend_Registry::get('acl'), new Editors));
         $this->useIconsSet(new ZFE_File_Icons);
-
-        if ($file instanceof ZFE_File_Processable) {
-            $this->processings = $file->getProcessings();
-        }
+        $this->processings = $file->getProcessings();
     }
 
     /**
@@ -91,10 +86,12 @@ class ZFE_File_Agent
         } catch (ZFE_File_Exception $e) {
             $accessor->setRecord($this->file->getManageableItem());
         }
-        //$this->accessor->setRecord($this->file);
         return $this;
     }
 
+    /**
+     * @return ZFE_File_Accessor
+     */
     public function getAccesssor()
     {
         return $this->accessor;

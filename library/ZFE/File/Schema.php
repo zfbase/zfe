@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 09.10.18
- * Time: 14:15
- */
 
 class ZFE_File_Schema
 {
@@ -108,10 +102,10 @@ class ZFE_File_Schema
     }
 
     /**
-     * @param Helper_File_Processing $processing
+     * @param ZFE_File_Processing $processing
      * @return $this
      */
-    public function setProcessing(Helper_File_Processing $processing)
+    public function setProcessing(ZFE_File_Processing $processing)
     {
         $this->processor = $processing->getProcessor();
         return $this;

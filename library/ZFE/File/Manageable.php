@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Interface ZFE_File_Manageable
+ * Интерфейс, для моделей, для которых возможна работа с файлами
+ */
 interface ZFE_File_Manageable
 {
     /**

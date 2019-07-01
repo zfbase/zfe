@@ -2,7 +2,6 @@
 
 /**
  * Class ZFE_File_Manager
- * TODO случаи и примеры использования
  */
 abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
 {
@@ -201,6 +200,9 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
             'э' => 'e',   'ю' => 'yu',   'я' => 'ya',
         ];
 
+        $filename = strtr($filename, $tr);
+        $filename = preg_replace('/[^a-zA-Z0-9_\-\.]+/', '_', $filename);
+
         if ($ext) {
             $name = $filename;
         } else {
@@ -208,14 +210,15 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
         }
 
-        if ($ext) {
-            if (in_array($ext, $this->blackExtensions, true)) {
-                $ext = '_' . $ext;
-            }
-            $filename = $name . '.' . $ext;
+        if (in_array($ext, $this->blackExtensions, true)) {
+            $ext = '_' . $ext;
         }
 
-        return preg_replace('/[^a-zA-Z0-9_\-\.]+/', '_', strtr($filename, $tr));
+        $extLen = strlen($ext);
+        $name = substr($name, 0, 255 - $extLen);
+        $newFileName = $name . '.' . $ext;
+
+        return $newFileName;
     }
 
     /**
@@ -245,10 +248,7 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
 
         $name = substr(strrchr($path, '/'), 1);
         $file->set('title_original', $name);
-
-        //$newFileName = $typeCode . '-' . ZFE_File::safeFilename($name);
-        $newFileName = $this->safeFilename($name);
-        $file->set('title', $newFileName);
+        $file->set('title', $this->safeFilename($name));
 
         $size = filesize($path);
         $file->set('size', $size);

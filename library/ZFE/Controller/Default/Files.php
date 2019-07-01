@@ -204,7 +204,7 @@ class ZFE_Controller_Default_Files extends Controller_Abstract
             $mapping = $file->getProcessings();
             foreach ($mapping as $modelName => $collection) { /* @var $collection Doctrine_Collection */
                 if ($collection->count() == 0) {
-                    /* @var $processing Helper_File_Processing */
+                    /* @var $processing ZFE_File_Processing */
                     $processing = new $modelName;
                     $processor = $processing->getProcessor();
                     $processor->plan($file)->getProcessing()->save();

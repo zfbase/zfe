@@ -90,12 +90,12 @@ class ZFE_File_Schema_Collection implements IteratorAggregate
     }
 
     /**
-     * @param ZFE_File_Loadable $file
+     * @param Files $file
      * @return ZFE_File_Schema
      * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      */
-    public function getFor(ZFE_File_Loadable $file) : ZFE_File_Schema
+    public function getFor(Files $file) : ZFE_File_Schema
     {
         /* @var $file Doctrine_Record */
         return $this->get($file->get('type'));

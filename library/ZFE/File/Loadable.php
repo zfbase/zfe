@@ -6,7 +6,7 @@
  * Time: 15:21
  */
 
-interface ZFE_File_Loadable
+interface Files
 {
     const KEY_TO_ITEM = 'item_id';
 

@@ -1,15 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 09.10.18
- * Time: 16:25
- */
 
+/**
+ * Class ZFE_File_Manager_Default
+ * Стандартный менеджер с единственным полем для загрузки любых файлов
+ */
 class ZFE_File_Manager_Default extends ZFE_File_Manager
 {
     const TYPE_COMMON = 10;
-    const TYPE_MAIN = 20;
 
     /**
      * @inheritdoc
@@ -18,20 +15,13 @@ class ZFE_File_Manager_Default extends ZFE_File_Manager
     {
         $schemas = new ZFE_File_Schema_Collection;
 
-        $main = new ZFE_File_Schema;
-        $main->setFieldName('main')
-            ->setFileTypeCode(static::TYPE_MAIN)
-            ->setTitle('Файлы')
-            ->setMultiple(true)
-            ->setRequired(true);
-        $schemas->add($main);
-
         $common = new ZFE_File_Schema;
         $common->setFieldName('common')
             ->setFileTypeCode(static::TYPE_COMMON)
-            ->setTitle('Второстепенные')
+            ->setTitle('Файлы')
             ->setMultiple(true)
-            ->setRequired(false);
+            ->setRequired(false)
+            ->setTooltip('Приложите файлы для записи, если это необходимо');
         $schemas->add($common);
 
         return $schemas;

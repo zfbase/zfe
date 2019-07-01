@@ -94,8 +94,21 @@ class ZFE_Model_Default_Files extends BaseFiles
     {
         $modelName = $this->model_name;
         $itemId = $this->item_id;
-        $q = ZFE_Query::create()->setHard(true)->select()
-            ->from($modelName)->where('id = ?', $itemId);
+        $q = ZFE_Query::create()->setHard(true)
+            ->select()
+            ->from($modelName)
+            ->where('id = ?', $itemId);
         return $q->fetchOne() ?: null;
+    }
+
+    /**
+     * Возвращает описание допустимых обработок для файлов
+     * @param bool $refresh Загрузить коллекцию по-новой?
+     * @return ZFE_File_Processor_Mapping|null
+     */
+    public function getProcessings($refresh = false) : ZFE_File_Processor_Mapping
+    {
+        $mapping = new ZFE_File_Processor_Mapping($this);
+        return $mapping;
     }
 }

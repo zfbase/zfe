@@ -10,7 +10,12 @@ $schemas = $this->schemas; /** @var ZFE_File_Schema_Collection $schemas */
         ?>
             <div class="panel panel-default">
 
-                <div class="panel-heading"><?= $schema->getTitle() ?></div>
+                <div class="panel-heading">
+                    <b>
+                        <?= $schema->getTitle() ?> <? if ($schema->isRequired()) { ?><span class="text-danger">*</span><? } ?>
+                    </b>
+                    <div class="pull-right text-muted"><?= $schema->getTooltip() ?></div>
+                </div>
 
                 <ul class="list-group files-list">
                     <? foreach ($agents as $agent) { /** @var ZFE_File_Agent $agent */ ?>
@@ -38,7 +43,12 @@ $schemas = $this->schemas; /** @var ZFE_File_Schema_Collection $schemas */
                 </ul>
 
                 <div class="panel-body">
-                    <div class="plupload" data-model="<?= get_class($item) ?>" data-id="<?= $item->id ?>" data-code="<?= $fieldCode ?>">
+                    <div class="plupload"
+                         data-model="<?= get_class($item) ?>"
+                         data-id="<?= $item->id ?>"
+                         data-code="<?= $fieldCode ?>"
+                         data-multi="<?= intval($schema->isMultiple()) ?>"
+                    >
                         <a class="plupload-browse btn btn-link" href="javascript:;">Обзор и выбор файлов</a>
                         <a class="plupload-start btn btn-success" href="javascript:;">Загрузить</a>
                         <div class="plupload-console pull-right"></div>

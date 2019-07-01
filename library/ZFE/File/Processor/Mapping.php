@@ -15,27 +15,28 @@ class ZFE_File_Processor_Mapping extends ZFE_File_LoadableAccess implements Iter
 
     /**
      * Helper_File_Processor_Mapping constructor.
-     * @param ZFE_File_Processable $record
+     * @param Files $file
      */
-    public function __construct(ZFE_File_Processable $record)
+    public function __construct(Files $file)
     {
-        $this->setRecord($record);
+        $this->setRecord($file);
     }
 
     /**
      * @param string $processingModelName
      * @param bool $refresh
+     *
      * @return $this
      * @throws ZFE_File_Exception
      */
     function add(string $processingModelName, $refresh = false)
     {
         $model = new $processingModelName;
-        if (!($model instanceof Helper_File_Processing) || !($model instanceof Doctrine_Record)) {
+        if (!($model instanceof ZFE_File_Processing) || !($model instanceof Doctrine_Record)) {
             throw new ZFE_File_Exception(
                 sprintf(
                 'Модель обработки %s должна реализовывать интерфейс %s',
-                    $processingModelName, Helper_File_Processing::class
+                    $processingModelName, ZFE_File_Processing::class
                 ), 10
             );
         }

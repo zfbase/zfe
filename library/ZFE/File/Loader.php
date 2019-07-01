@@ -2,8 +2,6 @@
 
 /**
  * Class ZFE_File_Loader
- *
- * @todo заменить Helper_File_Exception на Helper_File_Exception
  */
 final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 {
@@ -202,7 +200,7 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 
     /**
      * @param string $fromPath
-     * @return ZFE_File_Loadable
+     * @return Files
      *
      * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception

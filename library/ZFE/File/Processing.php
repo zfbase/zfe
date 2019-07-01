@@ -1,12 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 11.10.18
- * Time: 14:45
- */
 
-interface Helper_File_Processing
+/**
+ * Interface ZFE_File_Processing
+ * Интерфейс для модели, которая хранит данные обработки файлов
+ */
+interface ZFE_File_Processing
 {
     /**
      * Получить процессор, соответств. модели
@@ -20,12 +18,12 @@ interface Helper_File_Processing
     function isCompleted() : bool;
 
 
-    function linkFile(ZFE_File_Loadable $file) : Helper_File_Processing;
+    function linkFile(Files $file) : ZFE_File_Processing;
 
-    function getLinkedFile() : ZFE_File_Loadable;
+    function getLinkedFile() : Files;
 
 
-    function setError(int $code, string $message = null) : Helper_File_Processing;
+    function setError(int $code, string $message = null) : ZFE_File_Processing;
 
     function hasError() : bool;
 

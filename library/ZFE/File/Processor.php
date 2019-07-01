@@ -1,23 +1,31 @@
 <?php
 
+/**
+ * Class ZFE_File_Processor
+ * Абстрактный класс, скрывающий реализации для любых процессоров обработки файлов
+ *
+ * Процессор предоставляет 2 самых важных метода: plan и process
+ * Plan - создает запись в таблице обработки (реализации класс ZFE_File_Processing)
+ * Process - обновляет запись в таблице обработки
+ */
 abstract class ZFE_File_Processor
 {
     /**
-     * @var Helper_File_Processing
+     * @var ZFE_File_Processing
      */
     protected $processing = null;
 
     /**
      * Helper_File_Processor constructor.
-     * @param Helper_File_Processing $item
+     * @param ZFE_File_Processing $item
      */
-    public function __construct(Helper_File_Processing $item)
+    public function __construct(ZFE_File_Processing $item)
     {
         $this->processing = $item;
     }
 
     /**
-     * @return Helper_File_Processing
+     * @return ZFE_File_Processing
      * @throws ZFE_File_Exception
      */
     public function getProcessing()
@@ -34,7 +42,7 @@ abstract class ZFE_File_Processor
      * Не сохраняет запись в БД!
      * @return ZFE_File_Processor
      */
-    abstract function plan(ZFE_File_Loadable $file) : ZFE_File_Processor;
+    abstract function plan(Files $file) : ZFE_File_Processor;
 
     /**
      * Выполнить обработку. Обновляет запись обработи, созданную в методом plan(), для файла
@@ -57,6 +65,4 @@ abstract class ZFE_File_Processor
     {
         return get_class($this);
     }
-
-
 }
