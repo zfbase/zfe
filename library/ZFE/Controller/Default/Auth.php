@@ -202,38 +202,6 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
         return new Zend_Session_Namespace("User_{$userId}_CheckPassword");
     }
 
-    /**
-     * Создание первого пользователя.
-     */
-    public function startAction()
-    {
-        if (Editors::findAll()->count() > 0) {
-            $this->abort(500, 'В системе уже есть пользователи');
-        }
-
-        $this->view->form = $form = new ZFE_Form_Default_Start();
-        if ($this->_request->isPost()) {
-            $post = $this->_request->getPost();
-            $post['role'] = 'admin';
-            $post['status'] = Editors::STATUS_ENABLE;
-
-            if ($form->isValid($post)) {
-                $item = new Editors();
-                $item->fromArray($form->getValues(), false);
-
-                $item->saveHistory(false);
-                $item->creator_id = $item->editor_id = 1;
-                $item->datetime_created = $item->datetime_edited = date('Y-m-d H:i:s');
-
-                $item->save();
-
-                $this->view->form = new Application_Form_Login();
-                $this->view->form->populate($post);
-                $this->render('start-complete');
-            }
-        }
-    }
-
     protected function onAuthSuccess($resultRow)
     {
     }
