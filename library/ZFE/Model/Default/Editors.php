@@ -177,14 +177,17 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     // Дополняем AbstractRecords
     use ZFE_Model_Default_PersonTrait;
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_EDITOR = 'editor';
+
     /**
      * Роли пользователей.
      *
      * @var array
      */
     public static $roles = [
-        'admin'  => 'Администратор',
-        'editor' => 'Редактор',
+        self::ROLE_ADMIN  => 'Администратор',
+        self::ROLE_EDITOR => 'Редактор',
     ];
 
     /**
