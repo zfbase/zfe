@@ -16,7 +16,7 @@ class ZFE_Controller_Default_Error extends Controller_Abstract
     {
         $errors = $this->_getParam('error_handler');
 
-        if ( ! $errors) {
+        if (!$errors) {
             // Зачем говорить что попали на страницу ошибки? Просто такой страницы нету
             $this->abort(404);
         }

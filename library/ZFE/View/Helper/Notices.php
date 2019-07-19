@@ -20,13 +20,13 @@ class ZFE_View_Helper_Notices extends Zend_View_Helper_Abstract
 
         $session = new Zend_Session_Namespace('Notices');
 
-        if ( ! isset($session->events) || empty($session->events)) {
+        if (!isset($session->events) || empty($session->events)) {
             return '';
         }
 
         foreach ($session->events as $event) {
             $args = '"' . $event['message'] . '"';
-            if (isset($event['options']) && ! empty($event['options'])) {
+            if (isset($event['options']) && !empty($event['options'])) {
                 $args .= ',' . json_encode($event['options'], JSON_UNESCAPED_UNICODE);
             }
             $notices[] = '$.bootstrapGrowl(' . $args . '); ';

@@ -45,7 +45,7 @@ trait ZFE_Model_AbstractRecord_Sphinx
         $model = static::class;
         if (empty(static::$_sphinxIndexName[$model])) {
             $config = ZFE_Sphinx::config();
-            if ( ! isset($config->index->{$model})) {
+            if (!isset($config->index->{$model})) {
                 throw new ZFE_Model_Exception("Индекс {$model} не найден в конфигурации.");
             }
             static::$_sphinxIndexName[$model] = $config->index->{$model};
@@ -93,7 +93,7 @@ trait ZFE_Model_AbstractRecord_Sphinx
             } else {
                 $path = $config->sqlQuery->{$model};
             }
-            if ( ! file_exists($path)) {
+            if (!file_exists($path)) {
                 throw new ZFE_Exception("SQL-запрос {$path} не найден.");
             }
             static::$_sphinxIndexSqlPath[$model] = $path;

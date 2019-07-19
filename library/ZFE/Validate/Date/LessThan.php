@@ -44,17 +44,17 @@ class ZFE_Validate_Date_LessThan extends My_Validate_Date_Abstract
      */
     public function isValid($value, $context = null)
     {
-        if ( ! $this->_setValue($value)) {
+        if (!$this->_setValue($value)) {
             return false;
         }
-        if ( ! $this->_parseDate($context)) {
+        if (!$this->_parseDate($context)) {
             return false;
         }
 
         $compare = $this->_value->compare($this->_date);
         $compare = ($this->_orEqual) ? ($compare <= 0) : ($compare < 0);
 
-        if ( ! $compare) {
+        if (!$compare) {
             $this->_error(self::NOT_LESS);
             return false;
         }

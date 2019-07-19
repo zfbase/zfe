@@ -76,7 +76,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
     {
         $modelName = $table->getClassnameToReturn();
 
-        if (in_array($columnName, $modelName::$booleanFields, true)) {
+        if (in_array($columnName, $modelName::$booleanFields)) {
             return $value ? 'да' : 'нет';
         }
 

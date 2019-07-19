@@ -27,12 +27,12 @@
                             <? $sumTime = 0; ?>
                             <? $numEvents = 0; ?>
                             <? foreach (Doctrine_Manager::connection()->getListener() as $key => $event) : /** @var Doctrine_Event $event */ ?>
-                                <? if ( ! in_array($event->getName(), ['fetch', 'prepare'], true)): ?>
+                                <? if (!in_array($event->getName(), ['fetch', 'prepare'])): ?>
                                     <? $sumTime += $time = $event->getElapsedSecs(); ?>
                                     <? if (++$numEvents <= $config->debug->limitShowQueries): ?>
                                         <?
                                             $params = $event->getParams();
-                                            if ( ! empty($params)) {
+                                            if (!empty($params)) {
                                                 $params = '<pre><ol><li>' . implode('</li><li>', $params) . '</li></ol></pre>';
                                             } else {
                                                 $params = '';

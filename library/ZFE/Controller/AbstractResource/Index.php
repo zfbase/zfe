@@ -59,7 +59,7 @@ trait ZFE_Controller_AbstractResource_Index
         $q = $this->_getBaseSearchQueryDoctrine();
 
         $title = $this->getParam('title');
-        if ( ! empty($title)) {
+        if (!empty($title)) {
             $q->addWhere('LOWER(' . (static::$_modelName)::$titleField . ') LIKE LOWER(?)', '%' . $title . '%');
         }
 
@@ -106,11 +106,11 @@ trait ZFE_Controller_AbstractResource_Index
     protected function _addOrderForSearchQuery(ZFE_Query $q)
     {
         $order = $this->_request->getParam('order');
-        if ( ! empty($order)) {
+        if (!empty($order)) {
             $pos = mb_strrpos($order, '_');
             $field = mb_substr($order, 0, $pos);
             $direction = mb_strtoupper(mb_substr($order, $pos + 1));
-            if (in_array($direction, ['ASC', 'DESC'], true)) {
+            if (in_array($direction, ['ASC', 'DESC'])) {
                 $order = $field . ' ' . $direction;
             }
 
@@ -122,7 +122,7 @@ trait ZFE_Controller_AbstractResource_Index
 
             $q->orderBy($query);
             $this->view->order = $order;
-        } elseif ( ! empty((static::$_modelName)::$defaultOrder)) {
+        } elseif (!empty((static::$_modelName)::$defaultOrder)) {
             $q->orderBy((static::$_modelName)::$defaultOrder);
         }
 
@@ -159,13 +159,13 @@ trait ZFE_Controller_AbstractResource_Index
      */
     public function indexAction()
     {
-        if ( ! in_array('index', static::$_enableActions, true)) {
+        if (!in_array('index', static::$_enableActions)) {
             $this->abort(404);
         }
 
         $this->_helper->postToGet();
 
-        if ( ! empty(static::$_searchFormName)) {
+        if (!empty(static::$_searchFormName)) {
             $searchForm = new static::$_searchFormName();
             if ('1' === $this->getParam('deleted')) {
                 $searchForm->addElement('hidden', 'deleted', ['value' => 1]);

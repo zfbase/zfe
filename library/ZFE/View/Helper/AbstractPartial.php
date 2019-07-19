@@ -60,7 +60,7 @@ class ZFE_View_Helper_AbstractPartial extends Zend_View_Helper_Partial
             $model = $module;
         }
 
-        if ( ! empty($model)) {
+        if (!empty($model)) {
             if (is_array($model)) {
                 $view->assign($model);
             } elseif (is_object($model)) {

@@ -13,7 +13,7 @@ trait ZFE_Controller_AbstractResource_View
 
     public function viewAction()
     {
-        if ( ! static::$_enableViewAction) {
+        if (!static::$_enableViewAction) {
             $this->abort(404);
         }
 

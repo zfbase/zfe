@@ -22,7 +22,7 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
     /**
      * Использовать простой общий индекс?
      *
-     * @var boolean
+     * @var bool
      */
     protected $_useSimpleCommonIndex = false;
 
@@ -49,7 +49,9 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
             echo "  > <info>composer tool indexer {$example}</info>\n";
             echo "  > <info>composer tool indexer 1 4</info>\n";
             return;
-        } elseif ('all' === $params[0]) {
+        }
+
+        if ('all' === $params[0]) {
             $models = $this->_getAllModels();
         } else {
             $models = $params;

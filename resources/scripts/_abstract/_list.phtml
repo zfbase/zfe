@@ -34,7 +34,7 @@
                         <?= $hasEdited ? $this->lastEditedCell($item) : '' ?>
                         <td class="text-right">
                             
-                            <? if ($this->canDelete && ! $item->isDeleted()): ?>
+                            <? if ($this->canDelete && !$item->isDeleted()): ?>
                                 <a data-confirm="Вы уверены, что хотите удалить <?= $item::$nameSingular ?> «<?= $this->escape($item->getTitle()) ?>»?"
                                    href="<?= $item->getDeleteUrl() . $downHash ?>"
                                    class="btn btn-link btn-xs">

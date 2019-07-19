@@ -86,7 +86,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
         ];
 
         foreach ($request->getParams() as $param => $value) {
-            if (in_array($param, $ignore, true)) {
+            if (in_array($param, $ignore)) {
                 continue;
             }
 
@@ -111,7 +111,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
         if (count($ret)) {
             $url .= '/' . implode('/', $ret);
         }
-        if ( ! empty($get)) {
+        if (!empty($get)) {
             $url .= '?' . implode('&', $get);
         }
 

@@ -57,12 +57,12 @@ abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
             $options = func_get_args();
             $temp['model'] = array_shift($options);
             $temp['field'] = array_shift($options);
-            if ( ! empty($options)) {
+            if (!empty($options)) {
                 $temp['where'] = array_shift($options);
             }
 
             $options = $temp;
-        } elseif ( ! is_array($options)) {
+        } elseif (!is_array($options)) {
             throw new Zend_Validate_Exception('Не допустимый параметр!');
         }
 
@@ -154,7 +154,7 @@ abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
     {
         if (is_string($where)) {
             $where = [$where];
-        } elseif ( ! is_array($where) && null !== $where) {
+        } elseif (!is_array($where) && null !== $where) {
             throw new Zend_Validate_Exception('Не верный формат дополнительных условий');
         }
 

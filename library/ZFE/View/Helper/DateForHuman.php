@@ -33,7 +33,7 @@ class ZFE_View_Helper_DateForHuman extends Zend_View_Helper_Abstract
      */
     public function dateForHuman($date)
     {
-        if ( ! $date || ! $timestamp = strtotime($date)) {
+        if (!$date || !$timestamp = strtotime($date)) {
             return '';
         }
 

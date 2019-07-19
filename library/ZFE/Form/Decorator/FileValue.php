@@ -30,7 +30,7 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
         $id = $element->getName();
 
         if ('multiple' === $element->getAttrib('multiple')) {
-            if ( ! count($files = $element->getFiles())) {
+            if (!count($files = $element->getFiles())) {
                 return $content;
             }
         } else {
@@ -91,8 +91,8 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
             }
         }
 
-        if ($file->canDelete() && ! $disabled) {
-            if ( ! $file->hasPreview()) {
+        if ($file->canDelete() && !$disabled) {
+            if (!$file->hasPreview()) {
                 $value .= ' &nbsp;';
             }
             $value .= '<a href="' . $file->getDeleteUrl() . '" class="text-danger">'

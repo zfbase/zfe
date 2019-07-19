@@ -9,7 +9,7 @@
     <small>(<?= number_format(ZFE_Paginator::getInstance()->getNumResults(), 0, ',', '&nbsp;') ?>)</small>
     
     <?
-        if ( ! $this->readonly) {
+        if (!$this->readonly) {
             $buttons = [];
 
             if ($this->canCreate) {
@@ -37,7 +37,7 @@
         }
     ?>
     
-    <? if ( ! $this->readonly && $this->canRestore): ?>
+    <? if (!$this->readonly && $this->canRestore): ?>
         <a href="<?= $modelName::getIndexUrl() . ('1' !== $this->deleted ? '/deleted/1' : '') ?>" 
            class="btn btn-default pull-right<?= '1' === $this->deleted ? ' active' : '' ?>">
             <span class="glyphicon glyphicon-trash"></span>

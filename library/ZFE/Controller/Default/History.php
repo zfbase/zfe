@@ -76,7 +76,7 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
 
         try {  // Если класс не удалось создать, либо он не потомок абстрактной модели, то что-то тут не то
             $this->view->modelName = $modelName = AbstractRecord::getModelNameByTableName($resource);
-            if ( ! (new $modelName() instanceof AbstractRecord)) {
+            if (!(new $modelName() instanceof AbstractRecord)) {
                 throw new ZFE_Controller_Exception();
             }
         } catch (Throwable $ex) {

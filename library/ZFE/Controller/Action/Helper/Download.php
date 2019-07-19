@@ -23,7 +23,7 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
         /** @var Zend_Config $config */
         $config = Zend_Registry::get('config');
 
-        if ( ! $config->webserver) {
+        if (!$config->webserver) {
             throw new Zend_Controller_Action_Exception('В конфигурации не указан используемый веб-сервер (параметр webserver)');
         }
 

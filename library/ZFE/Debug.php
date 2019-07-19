@@ -22,7 +22,7 @@ class ZFE_Debug extends Zend_Debug
     {
         $output = parent::dump($var, $label, false);
 
-        if ('cli' !== self::getSapi() && ! extension_loaded('xdebug')) {
+        if ('cli' !== self::getSapi() && !extension_loaded('xdebug')) {
             $output = preg_replace('/^<pre>/', '<pre class="zfe-dump"><code>', $output);
             $output = preg_replace('/<\/pre>$/', '</code></pre>', $output);
         }

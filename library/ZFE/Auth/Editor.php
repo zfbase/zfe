@@ -1,9 +1,11 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_Auth_Editor
- *
- * Класс программного контроля аутентификации пользователя
+ * Класс программного контроля аутентификации пользователя.
  */
 class ZFE_Auth_Editor
 {
@@ -18,8 +20,9 @@ class ZFE_Auth_Editor
     }
 
     /**
-     * @return int
      * @throws Zend_Auth_Exception
+     *
+     * @return int
      */
     public function getId()
     {
@@ -32,18 +35,20 @@ class ZFE_Auth_Editor
     }
 
     /**
-     * Возвращает аутентифицированного пользователя, если это допустимо
+     * Возвращает аутентифицированного пользователя, если это допустимо.
+     *
+     * @throws Zend_Auth_Exception
      *
      * @return Editors|null
-     * @throws Zend_Auth_Exception
      */
-    public function get() : ?Editors
+    public function get(): ?Editors
     {
         return Editors::findForAuth($this->getId());
     }
 
     /**
      * @param Editors $editor
+     *
      * @throws Zend_Auth_Storage_Exception
      */
     public function set(Editors $editor)
@@ -54,9 +59,6 @@ class ZFE_Auth_Editor
         $auth->getStorage()->write(['id' => $editor->id]);
     }
 
-    /**
-     *
-     */
     public function clear()
     {
         $auth = Zend_Auth::getInstance();

@@ -128,11 +128,11 @@ trait ZFE_Model_AbstractRecord_Urls
         $rightVersion = (int) $rightVersion;
         $leftVersion = (int) $leftVersion;
 
-        if ( ! $rightVersion) {  // По умолчанию, текущая версия
+        if (!$rightVersion) {  // По умолчанию, текущая версия
             $rightVersion = $this->version;
         }
 
-        if ( ! $leftVersion) {  // По умолчанию, предыдущая перед правой
+        if (!$leftVersion) {  // По умолчанию, предыдущая перед правой
             $leftVersion = $rightVersion > 1
                 ? $rightVersion - 1
                 : 1;

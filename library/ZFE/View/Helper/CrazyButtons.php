@@ -93,7 +93,7 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
     {
         $label = $button['label'];
 
-        if ( ! empty($button['ico'])) {
+        if (!empty($button['ico'])) {
             $ico = $this->view->tag('span', ['class' => $button['ico']]);
         } else {
             $ico = '';

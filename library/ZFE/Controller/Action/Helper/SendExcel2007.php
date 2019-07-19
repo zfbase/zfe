@@ -16,7 +16,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
      *
      * @param PHPExcel|PHPSpreadsheet $excel
      * @param string                  $fileName
-     * 
+     *
      * @throws Zend_Controller_Action_Exception
      */
     public function direct($excel, $fileName)

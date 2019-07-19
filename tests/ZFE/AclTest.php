@@ -10,7 +10,7 @@ class ZFE_AclTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        if ( ! self::$_config) {
+        if (!self::$_config) {
             self::$_config = new Zend_Config_Ini(RESOURCES_PATH . '/Acl/config.ini');
         }
     }

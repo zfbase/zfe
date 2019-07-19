@@ -18,7 +18,7 @@ class ZFE_Form_Decorator_Feedback extends Twitter_Bootstrap3_Form_Decorator_Feed
 
         $element = $this->getElement();
         $container = $element->getDecorator('Container');
-        if ( ! empty($container)) {
+        if (!empty($container)) {
             $classes = explode(' ', $container->getOption('class'));
             $container->setOption('class', implode(' ', array_diff($classes, ['has-feedback'])));
         }

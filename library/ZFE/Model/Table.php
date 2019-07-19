@@ -27,15 +27,15 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function getElementTypeForColumn($columnName)
     {
-        if ( ! isset($this->_columns[$columnName])) {
+        if (!isset($this->_columns[$columnName])) {
             throw new ZFE_Model_Exception('Невозможно получить тип столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
-        if ( ! isset($this->_formInfo[$columnName]) || ! isset($this->_formInfo[$columnName]['type'])) {
+        if (!isset($this->_formInfo[$columnName]) || !isset($this->_formInfo[$columnName]['type'])) {
             $formConfig = Zend_Registry::get('config')->forms;
             $modelName = $this->getClassnameToReturn();
 
-            if (in_array($columnName, $modelName::$booleanFields, true)) {
+            if (in_array($columnName, $modelName::$booleanFields)) {
                 $form = 'checkbox';
             }
 
@@ -52,7 +52,7 @@ class ZFE_Model_Table extends Doctrine_Table
                 $form = 'select';
             }
 
-            if ( ! isset($form)) {
+            if (!isset($form)) {
                 switch ($this->_columns[$columnName]['type']) {
                     case 'integer':
                     case 'float':
@@ -97,7 +97,7 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function getElementMaxLengthForColumn($columnName)
     {
-        if ( ! isset($this->_columns[$columnName])) {
+        if (!isset($this->_columns[$columnName])) {
             throw new ZFE_Model_Exception('Невозможно получить максимальную длину столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
@@ -117,7 +117,7 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function isElementRequiredForColumn($columnName)
     {
-        if ( ! isset($this->_columns[$columnName])) {
+        if (!isset($this->_columns[$columnName])) {
             throw new ZFE_Model_Exception('Невозможно проверить обязательность столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
@@ -137,7 +137,7 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function isElementPositiveForColumn($columnName)
     {
-        if ( ! isset($this->_columns[$columnName])) {
+        if (!isset($this->_columns[$columnName])) {
             throw new ZFE_Model_Exception('Невозможно проверить беззнаковость столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
@@ -157,11 +157,11 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function getElementLabelForColumn($columnName)
     {
-        if ( ! isset($this->_columns[$columnName])) {
+        if (!isset($this->_columns[$columnName])) {
             throw new ZFE_Model_Exception('Невозможно получить заголовок столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
-        if ( ! isset($this->_formInfo[$columnName]) || ! isset($this->_formInfo[$columnName]['label'])) {
+        if (!isset($this->_formInfo[$columnName]) || !isset($this->_formInfo[$columnName]['label'])) {
             $modelName = $this->getClassnameToReturn();
             $this->_formInfo[$columnName]['label'] = $modelName::getFieldName($columnName);
         }
@@ -178,11 +178,11 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function getElementValidatorsForColumn($columnName)
     {
-        if ( ! isset($this->_columns[$columnName])) {
+        if (!isset($this->_columns[$columnName])) {
             throw new ZFE_Model_Exception('Невозможно получить валидаторы столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
-        if ( ! isset($this->_formInfo[$columnName]) || ! isset($this->_formInfo[$columnName]['validators'])) {
+        if (!isset($this->_formInfo[$columnName]) || !isset($this->_formInfo[$columnName]['validators'])) {
             $maxLength = $this->getElementMaxLengthForColumn($columnName);
 
             $validators = [];
@@ -207,7 +207,7 @@ class ZFE_Model_Table extends Doctrine_Table
                         if (isset($this->_columns[$columnName]['scale'])) {
                             $max = str_repeat('9', $maxLength - $this->_columns[$columnName]['scale']) .
                                 '.' . str_repeat('9', $this->_columns[$columnName]['scale']);
-                        } elseif ( ! $maxLength) {
+                        } elseif (!$maxLength) {
                             break;
                         } else {
                             $max = str_repeat('9', $maxLength);
@@ -338,7 +338,7 @@ class ZFE_Model_Table extends Doctrine_Table
                 } else {
                     throw new ZFE_Model_Exception('Невозможно получить допустимые значения для столбца "' . $columnName . '" модели "' . $modelName . '"');
                 }
-                if ( ! $options['required']) {
+                if (!$options['required']) {
                     $list = [null => ''] + $list;
                 }
                 $options['multiOptions'] = $list;

@@ -240,7 +240,7 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
      */
     public function getResultRowObject($returnColumns = null, $omitColumns = null)
     {
-        if ( ! $this->_resultRow) {
+        if (!$this->_resultRow) {
             return false;
         }
 
@@ -249,7 +249,7 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
         if (null !== $returnColumns) {
             $availableColumns = array_keys($this->_resultRow);
             foreach ((array) $returnColumns as $returnColumn) {
-                if (in_array($returnColumn, $availableColumns, true)) {
+                if (in_array($returnColumn, $availableColumns)) {
                     $returnObject->{$returnColumn} = $this->_resultRow[$returnColumn];
                 }
             }
@@ -260,7 +260,7 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
         if (null !== $omitColumns) {
             $omitColumns = (array) $omitColumns;
             foreach ($this->_resultRow as $resultColumn => $resultValue) {
-                if ( ! in_array($resultColumn, $omitColumns, true)) {
+                if (!in_array($resultColumn, $omitColumns)) {
                     $returnObject->{$resultColumn} = $resultValue;
                 }
             }

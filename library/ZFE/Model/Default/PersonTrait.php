@@ -5,7 +5,7 @@
  */
 
 /**
- * Стандартная функциональность для моделей персон
+ * Стандартная функциональность для моделей персон.
  */
 trait ZFE_Model_Default_PersonTrait
 {
@@ -18,11 +18,11 @@ trait ZFE_Model_Default_PersonTrait
     {
         $name = $this->second_name . ' ';
 
-        if ( ! empty($this->first_name)) {
+        if (!empty($this->first_name)) {
             $name .= mb_substr($this->first_name, 0, 1) . '.';
         }
 
-        if ( ! empty($this->middle_name)) {
+        if (!empty($this->middle_name)) {
             $name .= mb_substr($this->middle_name, 0, 1) . '.';
         }
 
@@ -38,11 +38,11 @@ trait ZFE_Model_Default_PersonTrait
     {
         $name = $this->second_name;
 
-        if ( ! empty($this->first_name)) {
+        if (!empty($this->first_name)) {
             $name .= ' ' . $this->first_name;
         }
 
-        if ( ! empty($this->middle_name)) {
+        if (!empty($this->middle_name)) {
             $name .= ' ' . $this->middle_name;
         }
 
@@ -50,7 +50,7 @@ trait ZFE_Model_Default_PersonTrait
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getTitle()
     {
@@ -62,7 +62,7 @@ trait ZFE_Model_Default_PersonTrait
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public static function getKeyValueList($keyField = 'id', $valueField = "CONCAT_WS(' ', second_name, first_name, middle_name)", $where = null, $order = 'KEY_FIELD ASC', $groupby = null, $filterByStatus = null)
     {

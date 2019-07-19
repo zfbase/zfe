@@ -53,7 +53,7 @@ class ZFE_SqlManipulator
         $parser = new PHPSQLParser\PHPSQLParser();
         $orderByMap = $parser->parse('ORDER BY ' . $orderBy)['ORDER'];
 
-        if ( ! isset($this->_map['ORDER']) || 0 === count($this->_map['ORDER'])) {
+        if (!isset($this->_map['ORDER']) || 0 === count($this->_map['ORDER'])) {
             $this->_map['ORDER'] = [];
         }
 
@@ -72,7 +72,7 @@ class ZFE_SqlManipulator
             $this->_map['LIMIT']['rowcount'] = $limit;
             if (is_int($offset) && $offset >= 0) {
                 $this->_map['LIMIT']['offset'] = $offset;
-            } elseif ( ! isset($this->_map['LIMIT']['offset'])) {
+            } elseif (!isset($this->_map['LIMIT']['offset'])) {
                 $this->_map['LIMIT']['offset'] = '';
             }
         }

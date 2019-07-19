@@ -33,19 +33,19 @@ trait ZFE_Controller_AbstractResource_Edit
      */
     public function editAction($redirectUrl = null, array $formOptions = [])
     {
-        if ( ! in_array('edit', static::$_enableActions, true)) {
+        if (!in_array('edit', static::$_enableActions)) {
             $this->abort(404);
         }
 
         $modelName = static::$_modelName;
 
-        if ( ! key_exists('modelName', $formOptions)) {
+        if (!key_exists('modelName', $formOptions)) {
             $formOptions['modelName'] = $modelName;
         }
 
         $formName = static::$_editFormName;
-        if ( ! ($this->view->form instanceof Zend_Form)) {
-            if ( ! empty($formName) && is_string($formName)) {
+        if (!($this->view->form instanceof Zend_Form)) {
+            if (!empty($formName) && is_string($formName)) {
                 $this->view->form = new $formName($formOptions);
             } else {
                 $this->abort(500, 'Некорректная форма');
@@ -55,8 +55,8 @@ trait ZFE_Controller_AbstractResource_Edit
             $this->view->form->setDisabled(true);
         }
         $form = $this->view->form; /** @var ZFE_Form_Horizontal $form */
-        if ( ! ($this->view->item instanceof Doctrine_Record)) {
-            if ( ! static::$_canCreate && ! $this->hasParam('id')) {
+        if (!($this->view->item instanceof Doctrine_Record)) {
+            if (!static::$_canCreate && !$this->hasParam('id')) {
                 $this->abort(403, 'Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
             }
             $itemId = (int) $this->getParam('id');
@@ -69,7 +69,7 @@ trait ZFE_Controller_AbstractResource_Edit
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
-        if ($this->_request->isPost() && ! $item->isDeleted() && ! static::$_readonly) {
+        if ($this->_request->isPost() && !$item->isDeleted() && !static::$_readonly) {
             $post = $this->_request->getPost();
 
             $this->_beforeValid($item, $form, $post);
@@ -86,7 +86,8 @@ trait ZFE_Controller_AbstractResource_Edit
                     if ($item->exists()) {
                         $this->success(
                             $modelName::decline('%s успешно сохранен.', '%s успешно сохранена.', '%s успешно сохранено.'),
-                            false !== $redirectUrl);
+                            false !== $redirectUrl
+                        );
 
                         if (false !== $redirectUrl) {
                             if (null === $redirectUrl) {

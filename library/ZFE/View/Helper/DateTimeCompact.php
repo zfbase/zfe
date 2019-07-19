@@ -18,7 +18,7 @@ class ZFE_View_Helper_DateTimeCompact extends Zend_View_Helper_Abstract
      */
     public function dateTimeCompact($dateTime)
     {
-        if ( ! $dateTime || ! $timestamp = strtotime($dateTime)) {
+        if (!$dateTime || !$timestamp = strtotime($dateTime)) {
             return '';
         }
 

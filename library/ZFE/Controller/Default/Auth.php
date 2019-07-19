@@ -44,7 +44,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
         if ($this->getRequest()->isPost()) {
             $formData = $this->_request->getPost();
             if ($form->isValid($formData)) {
-                if ( ! empty($formData['remember'])) {
+                if (!empty($formData['remember'])) {
                     Zend_Session::rememberMe();
                 }
 
@@ -60,7 +60,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
                 $result = $auth->authenticate($authAdapter);
 
-                if ( ! $result->isValid()) {
+                if (!$result->isValid()) {
                     $this->view->error = 'Неверный логин или пароль';
                 } else {
                     $data = $authAdapter->getResultRowObject();
@@ -69,13 +69,13 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                     $this->onAuthSuccess($data);
 
                     // Исполнение требования принудительной смены пароля
-                    if ( ! empty($data->request_password_change)) {
+                    if (!empty($data->request_password_change)) {
                         $passwordCheck = $this->_getCheckPasswordSession($data->id);
                         $passwordCheck->setExpirationSeconds(120);
                         $passwordCheck->code = uniqid();
 
                         $fpcUrl = '/auth/force-password-change';
-                        if ( ! empty($requestUri) && '/auth/logout' !== $requestUri) {
+                        if (!empty($requestUri) && '/auth/logout' !== $requestUri) {
                             $fpcUrl .= '/redirect/' . urlencode($requestUri);
                         }
                         $this->_redirect($fpcUrl);
@@ -123,12 +123,12 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
     {
         $auth = Zend_Auth::getInstance();
 
-        if ( ! Zend_Registry::get('user')->canSwitchRoles) {
+        if (!Zend_Registry::get('user')->canSwitchRoles) {
             $this->abort(403, 'Изменение роли запрещено');
         }
 
         $role = $this->getParam('role');
-        if (in_array($role, array_keys(Editors::$roles), true)) {
+        if (in_array($role, array_keys(Editors::$roles))) {
             if ($auth->hasIdentity()) {
                 $storage = $auth->getStorage();
                 $data = $storage->read();
@@ -165,7 +165,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                     ->from('Editors')
                     ->where('id = ?', $userId)
                 ;
-                if ( ! $passwordCheck) {
+                if (!$passwordCheck) {
                     $q->andWhere('password = ' . Editors::$credentialTreatment, $form->getValue('password'));
                 }
                 $user = $q->fetchOne(); /** @var Editors $user */

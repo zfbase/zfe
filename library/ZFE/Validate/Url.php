@@ -65,7 +65,7 @@ class ZFE_Validate_Url extends Zend_Validate_Abstract
                    // resource path
                  . '(?:/\S*)?'
                  . '$_iuS';
-        if ( ! preg_match($pattern, $value)) {
+        if (!preg_match($pattern, $value)) {
             $this->_setValue((string) $value);
             $this->_error(self::INVALID);
             return false;

@@ -10,20 +10,20 @@
 abstract class ZFE_Model_Default_Tasks extends BaseTasks
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setUp()
     {
         parent::setUp();
-        $nestedset0 = new Doctrine_Template_NestedSet(array(
+        $nestedset0 = new Doctrine_Template_NestedSet([
             'hasManyRoots' => true,
             'rootColumnName' => 'root_id',
-        ));
+        ]);
         $this->actAs($nestedset0);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function preInsert($event)
     {
@@ -41,6 +41,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
 
     /**
      * @param string $code
+     *
      * @return ZFE_Model_Default_Tasks
      */
     public function setPerformerCode(string $code)
@@ -59,6 +60,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
 
     /**
      * @param int $itemId
+     *
      * @return ZFE_Model_Default_Tasks
      */
     public function setRelatedId(int $itemId)
@@ -77,6 +79,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
 
     /**
      * @param int $state
+     *
      * @return ZFE_Model_Default_Tasks
      */
     public function setState(int $state)
@@ -95,6 +98,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
 
     /**
      * @param DateTime $dt
+     *
      * @return ZFE_Model_Default_Tasks
      */
     public function setScheduledAt(DateTime $dt)
@@ -113,6 +117,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
 
     /**
      * @param string $errors
+     *
      * @return ZFE_Model_Default_Tasks
      */
     public function setErrors(string $errors)
@@ -131,6 +136,8 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
 
     /**
      * @param mixed $done_at
+     * @param mixed $doneAt
+     *
      * @return ZFE_Model_Default_Tasks
      */
     public function setDoneAt($doneAt)
@@ -164,9 +171,10 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
 
     /**
      * @param ZFE_Model_Default_Tasks $task
+     *
      * @return ZFE_Model_Default_Tasks
      */
-    public function saveAsChildOf(ZFE_Model_Default_Tasks $task)
+    public function saveAsChildOf(self $task)
     {
         $this->created_at = new Doctrine_Expression('NOW()');
         $this->related_id = $task->getRelatedId();

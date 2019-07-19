@@ -62,10 +62,10 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
         // Определяем перечень классов
         if (isset($attribs['class'])) {
             $classes = explode(' ', $attribs['class']);
-            if ( ! in_array('multiac', $classes, true)) {
+            if (!in_array('multiac', $classes)) {
                 array_unshift($classes, 'multiac');
             }
-            if ( ! in_array('form-control', $classes, true)) {
+            if (!in_array('form-control', $classes)) {
                 array_unshift($classes, 'form-control');
             }
             $attribs['class'] = implode(' ', $classes);
@@ -122,8 +122,8 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
                 }
                 ++$i;
 
-                $editBtn = $editUrl && ! $disable ? '<div class="btn btn-edit">...</div>' : '';
-                $formBtn = $hasFormBtn && ! $editBtn ? '<a href="' . sprintf($attribs['data-itemform'], $item['id']) . '" target="_blank" class="btn btn-form"><span class="glyphicon glyphicon-share-alt"></span></a>' : '';
+                $editBtn = $editUrl && !$disable ? '<div class="btn btn-edit">...</div>' : '';
+                $formBtn = $hasFormBtn && !$editBtn ? '<a href="' . sprintf($attribs['data-itemform'], $item['id']) . '" target="_blank" class="btn btn-form"><span class="glyphicon glyphicon-share-alt"></span></a>' : '';
                 $removeBtn = $disable ? '' : '<div class="btn btn-remove"><span class="glyphicon glyphicon-remove"></span></div>';
 
                 $item_attrs = [];

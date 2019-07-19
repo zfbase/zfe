@@ -39,7 +39,7 @@ trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
     public static function getMultiCheckOrSelectOptions($field, $multiOptions = [])
     {
         // Проверяем, является ли поле автокомплитом
-        if ( ! key_exists($field, static::$multiCheckOrSelectCols)) {
+        if (!key_exists($field, static::$multiCheckOrSelectCols)) {
             return false;
         }
 
@@ -52,7 +52,7 @@ trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
         $alias = $options['relAlias'];
 
         // не будем пересобирать варианты, если они уже собраны
-        if ( ! empty($multiOptions)) {
+        if (!empty($multiOptions)) {
             $options['multiOptions'] = $multiOptions;
         } else {
             $options['multiOptions'] = $alias::getKeyValueList();
@@ -77,7 +77,7 @@ trait ZFE_Model_AbstractRecord_MultiCheckOrSelect
     protected function _multiCheckOrSelectFromArray(array $array)
     {
         foreach (static::$multiCheckOrSelectCols as $key => $options) {
-            if ( ! isset($array[$key])) {
+            if (!isset($array[$key])) {
                 $array[$key] = [];
             }
 

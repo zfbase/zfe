@@ -30,7 +30,7 @@ class ZFE_Console_Command_UserAdd extends ZFE_Console_Command_Abstract
             return;
         }
 
-        $password = substr(uniqid('', true), 0, 8);
+        $password = mb_substr(uniqid('', true), 0, 8);
 
         $item = new Editors();
         $item->second_name = $login;
@@ -38,7 +38,7 @@ class ZFE_Console_Command_UserAdd extends ZFE_Console_Command_Abstract
         $item->role = 'admin';
         $item->setPassword($password);
         $item->save();
-        
-        print "Добавлен пользователь c логином <info>{$login}</info> и паролем <info>{$password}</info>.\n";
+
+        echo "Добавлен пользователь c логином <info>{$login}</info> и паролем <info>{$password}</info>.\n";
     }
 }

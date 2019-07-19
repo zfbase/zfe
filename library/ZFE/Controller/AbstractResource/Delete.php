@@ -27,11 +27,11 @@ trait ZFE_Controller_AbstractResource_Delete
     {
         $modelName = static::$_modelName;
 
-        if ( ! in_array('delete', static::$_enableActions, true)) {
+        if (!in_array('delete', static::$_enableActions)) {
             $this->abort(404);
         }
 
-        if ( ! static::$_canDelete) {
+        if (!static::$_canDelete) {
             $this->abort(403, 'Невозможно удалить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
 
@@ -84,11 +84,11 @@ trait ZFE_Controller_AbstractResource_Delete
     {
         $modelName = static::$_modelName;
 
-        if ( ! in_array('undelete', static::$_enableActions, true)) {
+        if (!in_array('undelete', static::$_enableActions)) {
             $this->abort(404);
         }
 
-        if ( ! static::$_canRestore) {
+        if (!static::$_canRestore) {
             $this->abort(403, 'Невозможно восстановить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
 
@@ -103,7 +103,8 @@ trait ZFE_Controller_AbstractResource_Delete
 
             $this->success(
                 $modelName::decline('%s успешно восстановлен.', '%s успешно восстановлена.', '%s успешно восстановлено.'),
-                false !== $redirectUrl);
+                false !== $redirectUrl
+            );
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {

@@ -223,7 +223,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     {
         $array = parent::toArray($deep, $prefixKey);
 
-        if ( ! is_array($array)) {
+        if (!is_array($array)) {
             return $array;
         }
 
@@ -283,7 +283,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     {
         foreach ($array as $key => $value) {
             if ('month' === $key || 'month_' === mb_substr($key, 0, 6)) {
-                if ( ! empty($array[$key]) && preg_match('/[0-9]{4}\-[0-1][0-9]/', $array[$key])) {
+                if (!empty($array[$key]) && preg_match('/[0-9]{4}\-[0-1][0-9]/', $array[$key])) {
                     $array[$key] .= '-01';
                 } else {
                     $array[$key] = null;
@@ -330,7 +330,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public function isDeleted()
     {
-        if ( ! $this->contains('deleted')) {
+        if (!$this->contains('deleted')) {
             return false;
         }
 
@@ -351,9 +351,9 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     }
 
     /**
-     * Режим миграции
+     * Режим миграции.
      *
-     * @var boolean
+     * @var bool
      */
     public static $migrationMode = false;
 
@@ -364,7 +364,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     {
         parent::setUp();
 
-        if ( ! self::$migrationMode) {
+        if (!self::$migrationMode) {
             $this->actAs(new ZFE_Model_Template_History());
             $this->actAs(new ZFE_Model_Template_SoftDelete());
         }

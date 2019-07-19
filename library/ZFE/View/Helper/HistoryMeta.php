@@ -22,8 +22,8 @@ class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
     public function historyMeta(AbstractRecord $item, $showCreator = true, $showEditor = true, $showVersion = true)
     {
         $creation = '';
-        $showCreator = $showCreator && $item->contains('creator_id') && ! empty($item->creator_id);
-        $showCreator = $showCreator && $item->contains('datetime_created') && ! empty($item->datetime_created);
+        $showCreator = $showCreator && $item->contains('creator_id') && !empty($item->creator_id);
+        $showCreator = $showCreator && $item->contains('datetime_created') && !empty($item->datetime_created);
         if ($showCreator) {
             $creator = $item->Creator;
             $fullName = '<span>' . $creator->getNameWithContactInfo() . '</span>';
@@ -33,8 +33,8 @@ class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
         }
 
         $editing = '';
-        $showEditor = $showEditor && $item->contains('editor_id') && ! empty($item->editor_id);
-        $showEditor = $showEditor && $item->contains('datetime_edited') && ! empty($item->datetime_edited);
+        $showEditor = $showEditor && $item->contains('editor_id') && !empty($item->editor_id);
+        $showEditor = $showEditor && $item->contains('datetime_edited') && !empty($item->datetime_edited);
         $showEditor = $showEditor && $item->datetime_edited !== $item->datetime_created;
         if ($showEditor) {
             $editor = $item->Editor;
@@ -45,7 +45,7 @@ class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
         }
 
         $version = '';
-        $showVersion = $showVersion && $item->contains('version') && ! empty($item->version);
+        $showVersion = $showVersion && $item->contains('version') && !empty($item->version);
         $showVersion = $showVersion && $item->contains('id') && $item->exists();
         if ($showVersion) {
             $caption = '<span class="caption">Версия:</span>';

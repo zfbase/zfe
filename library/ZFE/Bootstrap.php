@@ -184,7 +184,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             if (isset($identity['role']) && $canSwitchRoles) {
                 $role = $identity['role'];
             }
-        } elseif (PHP_SAPI == 'cli' && isset($config->cli->userId)) {
+        } elseif (PHP_SAPI === 'cli' && isset($config->cli->userId)) {
             $user = Editors::find($config->cli->userId);
         }
 
@@ -202,7 +202,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      * Пользователь может менять свою роль?
      *
      * @param Editors $user
-     * 
+     *
      * @return bool
      */
     protected function _canSwitchRoles(Editors $user)
@@ -241,7 +241,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $layout = Zend_Layout::startMvc();
         $layout->setViewBasePath($zfeResourcesPath . ':/views');
 
-        if ( ! Zend_Auth::getInstance()->hasIdentity()) {
+        if (!Zend_Auth::getInstance()->hasIdentity()) {
             $layout->setLayout('layout_guest');
         }
 

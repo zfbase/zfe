@@ -42,7 +42,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     protected function _getCurrentUserId()
     {
-        if ( ! Zend_Registry::isRegistered('user')) {
+        if (!Zend_Registry::isRegistered('user')) {
             return null;
         }
 
@@ -198,11 +198,11 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
                 $hiddenColumns = $invokerModelName::getHistoryHiddenFields();
 
                 foreach ($newData as $column => $newValue) {
-                    if (in_array($column, $ignoreColumns, true)) {
+                    if (in_array($column, $ignoreColumns)) {
                         continue;
                     }
 
-                    if (in_array($column, $hiddenColumns, true)) {
+                    if (in_array($column, $hiddenColumns)) {
                         $newValue = null;
                     } elseif ($newValue instanceof Doctrine_Expression) {
                         $newValue = (string) $newValue;

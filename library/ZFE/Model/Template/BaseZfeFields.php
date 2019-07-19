@@ -81,7 +81,7 @@ class ZFE_Model_Template_BaseZfeFields extends Doctrine_Template
                 'default' => '0',
                 'comment' => 'Статус',
             ],
-            'disabled' => false,  
+            'disabled' => false,
         ],
     ];
 

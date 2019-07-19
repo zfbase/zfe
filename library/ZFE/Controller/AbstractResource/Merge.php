@@ -21,22 +21,22 @@ trait ZFE_Controller_AbstractResource_Merge
      */
     public function mergeAction()
     {
-        if ( ! in_array('merge', static::$_enableActions, true)) {
+        if (!in_array('merge', static::$_enableActions)) {
             $this->abort(404);
         }
 
-        if ( ! (static::$_modelName)::isMergeable()) {
+        if (!(static::$_modelName)::isMergeable()) {
             $this->abort(404, (static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.');
         }
     }
 
     public function searchDuplicatesAction()
     {
-        if ( ! in_array('search-duplicates', static::$_enableActions, true)) {
+        if (!in_array('search-duplicates', static::$_enableActions)) {
             $this->abort(404);
         }
 
-        if ( ! (static::$_modelName)::isMergeable()) {
+        if (!(static::$_modelName)::isMergeable()) {
             $this->abort(404, (static::$_modelName)::$namePlural . ' не поддерживают стандартный механизм объединения.');
         }
 
@@ -53,8 +53,8 @@ trait ZFE_Controller_AbstractResource_Merge
         if (empty($ids)) {
             $this->abort(400, $modelName::$namePlural . ' для объединения не выбраны.');
         }
-        if ( ! is_array($ids)) {
-            if ( ! is_string($ids)) {
+        if (!is_array($ids)) {
+            if (!is_string($ids)) {
                 $this->abort(400, 'Не корректные параметры запроса.');
             }
             $ids = explode(',', $ids);
@@ -92,7 +92,7 @@ trait ZFE_Controller_AbstractResource_Merge
                 $weights[] = "COUNT(DISTINCT ${uniq})";
             }
         }
-        if ( ! empty($weights)) {
+        if (!empty($weights)) {
             $q->addSelect('(' . implode(' + ', $weights) . ') weight');
         } else {
             $q->addSelect('0 weight');
@@ -106,7 +106,7 @@ trait ZFE_Controller_AbstractResource_Merge
         $serviceFields[] = 'weight';
         foreach ($items as $item) {
             foreach ($item->toArray(false) as $field => $value) {
-                if ( ! in_array($field, $serviceFields, true)) {
+                if (!in_array($field, $serviceFields)) {
                     if (null !== $value) {
                         $map[$field][$item['id']] = $value;
                     }
@@ -203,7 +203,7 @@ trait ZFE_Controller_AbstractResource_Merge
                 }
             }
 
-            if ( ! empty($weights)) {
+            if (!empty($weights)) {
                 $q->addSelect('(' . implode(' + ', $weights) . ') weight');
             } else {
                 $q->addSelect('0 weight');
@@ -214,17 +214,17 @@ trait ZFE_Controller_AbstractResource_Merge
 
         // Фильтры
         $exclude = $this->getParam('exclude', []);
-        if ( ! empty($exclude) && is_array($exclude)) {
+        if (!empty($exclude) && is_array($exclude)) {
             $q->andWhereNotIn('x.id', $exclude);
         }
 
         $term = $this->getParam('term');
-        if ( ! empty($term)) {
+        if (!empty($term)) {
             $q->addWhere('LOWER(' . (static::$_modelName)::$titleField . ') LIKE LOWER(?)', '%' . $term . '%');
         }
 
         $ignoreMerged = $this->getParam('ignore_merged');
-        if ( ! empty($ignoreMerged)) {
+        if (!empty($ignoreMerged)) {
             $q->addWhere('x.merged = 0');
         }
 

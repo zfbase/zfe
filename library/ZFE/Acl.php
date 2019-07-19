@@ -39,7 +39,7 @@ class ZFE_Acl extends Zend_Acl
     protected function _loadRoles(Zend_Config $roles)
     {
         foreach ($roles as $name => $parents) {
-            if ( ! $this->hasRole($name)) {
+            if (!$this->hasRole($name)) {
                 if (empty($parents)) {
                     $parents = null;
                 } else {
@@ -61,7 +61,7 @@ class ZFE_Acl extends Zend_Acl
             foreach ($controllers as $controller => $actions) {
                 if ('all' === $controller) {
                     $controller = null;
-                } elseif ( ! $this->has($controller)) {
+                } elseif (!$this->has($controller)) {
                     $this->add(new Zend_Acl_Resource($controller));
                 }
 
@@ -104,7 +104,7 @@ class ZFE_Acl extends Zend_Acl
      */
     public function hasResource($resource)
     {
-        return in_array($resource, $this->getResources(), true);
+        return in_array($resource, $this->getResources());
     }
 
     /**

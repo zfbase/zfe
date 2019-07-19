@@ -26,12 +26,12 @@ class ZFE_View_Helper_DateTime extends Zend_View_Helper_Abstract
      */
     public function dateTime($dateTime, $time = true)
     {
-        if (in_array($dateTime, ['0000-00-00', '0000-00-00 00:00:00'], true)) {
+        if (in_array($dateTime, ['0000-00-00', '0000-00-00 00:00:00'])) {
             return '';
         }
 
         $timestamp = strtotime($dateTime);
-        if ( ! $timestamp) {
+        if (!$timestamp) {
             return '';
         }
 

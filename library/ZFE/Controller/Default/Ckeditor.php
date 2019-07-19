@@ -34,7 +34,7 @@ class ZFE_Controller_Default_Ckeditor extends Controller_Abstract
             'url' => $baseUrl . '/' . $localDir . '/' . $fileName,
         ];
 
-        if ( ! $adapter->receive()) {
+        if (!$adapter->receive()) {
             $response['error'] = [
                 'message' => implode("\n", $adapter->getMessages()),
             ];

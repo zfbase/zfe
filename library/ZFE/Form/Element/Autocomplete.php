@@ -30,14 +30,14 @@ class ZFE_Form_Element_Autocomplete extends Zend_Form_Element_Xhtml
             return $this;
         }
 
-        if ( ! is_array($value)) {
+        if (!is_array($value)) {
             return $this;
         }
 
         // Допускаются только значения с заголовками
-        if ( ! empty($value['title'])) {
+        if (!empty($value['title'])) {
             // Значения без ID допускаются, только если
-            if ( ! empty($value['id']) || $this->getAttrib('canCreate')) {
+            if (!empty($value['id']) || $this->getAttrib('canCreate')) {
                 $this->_value = $value;
             }
         }

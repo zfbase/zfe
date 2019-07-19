@@ -19,7 +19,7 @@ class ZFE_Sphinx
      */
     public static function config()
     {
-        if ( ! self::$_config) {
+        if (!self::$_config) {
             self::$_config = Zend_Registry::get('config')->sphinx;
         }
         return self::$_config;
@@ -117,7 +117,7 @@ class ZFE_Sphinx
     public static function fetchOne(SphinxQL $query, $table)
     {
         $id = self::fetchOneId($query);
-        if ( ! $id) {
+        if (!$id) {
             return null;
         }
         return ZFE_Query::create()

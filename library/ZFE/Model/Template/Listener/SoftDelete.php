@@ -62,7 +62,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             $field = $params['alias'] . '.deleted';
             $query = $event->getQuery();
 
-            if ($table->hasField('deleted') && ! $query->isHard()) {
+            if ($table->hasField('deleted') && !$query->isHard()) {
                 if (empty($params['component']['ref'])) {
                     $query->addWhere($field . ' IS NULL OR ' . $field . ' = 0');
                 }

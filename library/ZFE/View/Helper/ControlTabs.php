@@ -104,7 +104,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      */
     public function addTab(string $name, array $tab, bool $replace = false)
     {
-        if ( ! $replace && key_exists($name, $this->_tabs)) {
+        if (!$replace && key_exists($name, $this->_tabs)) {
             throw new ZFE_View_Helper_Exception("Вкладка с названием '${name}' уже зарегистрирована.");
         }
 
@@ -126,7 +126,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      */
     public function modifyTab(string $name, array $settings, bool $skipMissing = false)
     {
-        if ( ! key_exists($name, $this->_tabs)) {
+        if (!key_exists($name, $this->_tabs)) {
             if ($skipMissing) {
                 return $this;
             }
@@ -138,7 +138,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
     }
 
     /**
-     * Удалить вкладку по коду вкладки
+     * Удалить вкладку по коду вкладки.
      *
      * @param string $name
      *
@@ -165,7 +165,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
 
     public function __toString()
     {
-        if ( ! ($this->_item instanceof ZFE_Model_AbstractRecord)) {
+        if (!($this->_item instanceof ZFE_Model_AbstractRecord)) {
             trigger_error('Невозможно отобразить вкладки: не передана запись $item.', E_USER_WARNING);
             return '';
         }
@@ -195,7 +195,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         foreach ($this->_tabs as $tab) {
             $resource = $tab['resource'] ?? $this->_resource ?? $request->getControllerName();
             $privilege = $tab['privilege'] ?? $tab['action'];
-            if ( ! $this->view->isAllowedMe($resource, $privilege)) {
+            if (!$this->view->isAllowedMe($resource, $privilege)) {
                 continue;
             }
 
@@ -214,7 +214,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             }
 
             $isActive = $request->getActionName() === $tab['action'];
-            if ($isActive && ! empty($tab['params'])) {
+            if ($isActive && !empty($tab['params'])) {
                 foreach ($tab['params'] as $param => $value) {
                     if ($request->getParam($param) !== $value) {
                         $isActive = false;
@@ -223,7 +223,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
                 }
             }
 
-            $isDisabled = ($onlyRegistered && ! $this->_item->exists())
+            $isDisabled = ($onlyRegistered && !$this->_item->exists())
                        || ($onlyValid && $this->_item->isDeleted());
 
             $class = [];

@@ -35,7 +35,7 @@ class ZFE_Console_HelperBroker
      */
     public static function getInstance()
     {
-        if ( ! static::$_instance) {
+        if (!static::$_instance) {
             static::$_instance = new static();
         }
         return static::$_instance;

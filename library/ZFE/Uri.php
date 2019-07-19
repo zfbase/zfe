@@ -77,35 +77,35 @@ class ZFE_Uri
         $components = static::parseUri($string);
         $uri = new static();
 
-        if ( ! empty($components['scheme'])) {
+        if (!empty($components['scheme'])) {
             $uri->setScheme($components['scheme']);
         }
 
-        if ( ! empty($components['login'])) {
+        if (!empty($components['login'])) {
             $uri->setLogin($components['login']);
         }
 
-        if ( ! empty($components['pass'])) {
+        if (!empty($components['pass'])) {
             $uri->setPassword($components['pass']);
         }
 
-        if ( ! empty($components['host'])) {
+        if (!empty($components['host'])) {
             $uri->setHost($components['host']);
         }
 
-        if ( ! empty($components['port'])) {
+        if (!empty($components['port'])) {
             $uri->setPort($components['port']);
         }
 
-        if ( ! empty($components['path'])) {
+        if (!empty($components['path'])) {
             $uri->setPath($components['path']);
         }
 
-        if ( ! empty($components['query'])) {
+        if (!empty($components['query'])) {
             $uri->setQuery($uri->parseQuery($components['query']));
         }
 
-        if ( ! empty($components['fragment'])) {
+        if (!empty($components['fragment'])) {
             $uri->setFragment($components['fragment']);
         }
 
@@ -160,7 +160,7 @@ class ZFE_Uri
      * Указать схему.
      *
      * @param string|null $scheme
-     * 
+     *
      * @return static|$this
      */
     public function setScheme(?string $scheme)
@@ -183,7 +183,7 @@ class ZFE_Uri
      * Указать логин.
      *
      * @param string|null $login
-     * 
+     *
      * @return static|$this
      */
     public function setLogin(?string $login)
@@ -206,7 +206,7 @@ class ZFE_Uri
      * Указать пароль.
      *
      * @param string|null $password
-     * 
+     *
      * @return static|$this
      */
     public function setPassword(?string $password)
@@ -229,7 +229,7 @@ class ZFE_Uri
      * Указать хост.
      *
      * @param string|null $host
-     * 
+     *
      * @return static|$this
      */
     public function setHost(?string $host)
@@ -252,7 +252,7 @@ class ZFE_Uri
      * Указать порт.
      *
      * @param int|null $port
-     * 
+     *
      * @return static|$this
      */
     public function setPort(?int $port)
@@ -275,7 +275,7 @@ class ZFE_Uri
      * Указать путь.
      *
      * @param string|null $path
-     * 
+     *
      * @return static|$this
      */
     public function setPath(?string $path)
@@ -298,7 +298,7 @@ class ZFE_Uri
      * Указать запрос.
      *
      * @param string|array $query
-     * 
+     *
      * @return static|$this
      */
     public function setQuery($query)
@@ -319,7 +319,7 @@ class ZFE_Uri
      *
      * @param string $key
      * @param mixed  $value
-     * 
+     *
      * @return static|$this
      */
     public function setQueryPart(string $key, $value)
@@ -332,7 +332,7 @@ class ZFE_Uri
      * Удалить параметр запроса.
      *
      * @param string $key
-     * 
+     *
      * @return static|$this
      */
     public function removeQueryPart(string $key)
@@ -345,7 +345,7 @@ class ZFE_Uri
      * Разобрать запрос на составляющие.
      *
      * @param string $string
-     * 
+     *
      * @return array
      */
     public static function parseQuery(string $string)
@@ -389,7 +389,7 @@ class ZFE_Uri
      * Указать фрагмент.
      *
      * @param string|null $fragment
-     * 
+     *
      * @return static|$this
      */
     public function setFragment(?string $fragment)
@@ -417,37 +417,37 @@ class ZFE_Uri
     {
         $uri = '';
 
-        if ( ! empty($this->_scheme)) {
+        if (!empty($this->_scheme)) {
             $uri .= $this->_scheme . '://';
         }
 
-        if ( ! empty($this->_login)) {
+        if (!empty($this->_login)) {
             $uri .= $this->_login;
 
-            if ( ! empty($this->_password)) {
+            if (!empty($this->_password)) {
                 $uri .= ':' . $this->_password;
             }
 
             $uri .= '@';
         }
 
-        if ( ! empty($this->_host)) {
+        if (!empty($this->_host)) {
             $uri .= $this->_host;
 
-            if ( ! empty($this->_port)) {
+            if (!empty($this->_port)) {
                 $uri .= ':' . $this->_port;
             }
         }
 
-        if ( ! empty($this->_path)) {
+        if (!empty($this->_path)) {
             $uri .= $this->_path;
         }
 
-        if ( ! empty($this->_query)) {
+        if (!empty($this->_query)) {
             $uri .= '?' . $this->getQuery();
         }
 
-        if ( ! empty($this->_fragment)) {
+        if (!empty($this->_fragment)) {
             $uri .= '#' . $this->_fragment;
         }
 
@@ -480,7 +480,7 @@ class ZFE_Uri
             'fragment' => $this->_fragment,
         ];
 
-        if ( ! $showEmpty) {
+        if (!$showEmpty) {
             return array_diff($parts, ['', null, []]);
         }
 

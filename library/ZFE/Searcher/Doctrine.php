@@ -41,7 +41,7 @@ class ZFE_Searcher_Doctrine extends ZFE_Searcher_Abstract
      */
     public function getQueryBuilder()
     {
-        if ( ! $this->_queryBuilder) {
+        if (!$this->_queryBuilder) {
             $this->_queryBuilder = new ZFE_Searcher_QueryBuilder_Doctrine($this->_modelName);
         }
 
@@ -62,7 +62,7 @@ class ZFE_Searcher_Doctrine extends ZFE_Searcher_Abstract
 
         $revertHash = $params['rh'] ?? null;
         $resultNumber = $params['rn'] ?? null;
-        if ( ! empty($resultNumber) && ! empty($revertHash)) {
+        if (!empty($resultNumber) && !empty($revertHash)) {
             $query->offset($resultNumber - 1);
             $query->limit(1);
             $item = $query->fetchOne();

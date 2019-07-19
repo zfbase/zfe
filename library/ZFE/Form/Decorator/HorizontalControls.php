@@ -11,12 +11,12 @@ class ZFE_Form_Decorator_HorizontalControls extends Twitter_Bootstrap3_Form_Deco
         $element = $this->getElement();
         $class = ' ' . $this->getOption('class');
 
-        if (in_array(mb_substr($element->getType(), -10), ['_FileImage', '_FileAudio'], true)) {
+        if (in_array(mb_substr($element->getType(), -10), ['_FileImage', '_FileAudio'])) {
             $class .= ' form-control-static';
         }
 
         $class = trim($class);
-        if ( ! empty($class)) {
+        if (!empty($class)) {
             $this->setOption('class', $class);
         }
 

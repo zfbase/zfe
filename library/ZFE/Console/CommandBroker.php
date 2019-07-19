@@ -42,7 +42,7 @@ class ZFE_Console_CommandBroker
      */
     public static function getInstance()
     {
-        if ( ! static::$_instance) {
+        if (!static::$_instance) {
             static::$_instance = new static();
         }
         return static::$_instance;
@@ -90,7 +90,9 @@ class ZFE_Console_CommandBroker
         foreach ($directory as $file) {  /** @var SplFileInfo $file */
             if ($file->isDot()) {
                 continue;
-            } elseif ($file->isDir()) {
+            }
+
+            if ($file->isDir()) {
                 $name = $file->getBasename();
                 $this->loadCommands(
                     $path . DIRECTORY_SEPARATOR . $name,
@@ -107,9 +109,9 @@ class ZFE_Console_CommandBroker
                 if (Zend_Loader::isReadable($fileName)) {
                     include_once $fileName;
                     if (class_exists($className, false)) {
-                        if ( ! $this->hasCommandByClass($className)) {
+                        if (!$this->hasCommandByClass($className)) {
                             $reflection = new ReflectionClass($className);
-                            if ($reflection->isSubclassOf(ZFE_Console_Command_Abstract::class) && ! $reflection->isAbstract()) {
+                            if ($reflection->isSubclassOf(ZFE_Console_Command_Abstract::class) && !$reflection->isAbstract()) {
                                 $this->registerCommand($className);
                             }
                         }
@@ -139,7 +141,7 @@ class ZFE_Console_CommandBroker
             throw new ZFE_Console_Exception('Нельзя зарегистрировать команду без ключа.');
         }
 
-        if (key_exists($name, $this->_commands) && ! $replace) {
+        if (key_exists($name, $this->_commands) && !$replace) {
             $prevCommand = $this->_commands[$name];
             if (is_object($prevCommand)) {
                 $prevCommand = get_class($prevCommand);
@@ -237,7 +239,7 @@ class ZFE_Console_CommandBroker
      */
     public function getCommand(string $name)
     {
-        if ( ! key_exists($name, $this->_commands)) {
+        if (!key_exists($name, $this->_commands)) {
             throw new ZFE_Console_Exception("Команда '${name}' не зарегистрирована.");
         }
 
@@ -247,7 +249,7 @@ class ZFE_Console_CommandBroker
             $command = new $class();
         }
 
-        if ( ! $command instanceof ZFE_Console_Command_Abstract) {
+        if (!$command instanceof ZFE_Console_Command_Abstract) {
             throw new ZFE_Console_Exception('Команда не валидна.');
         }
 

@@ -33,7 +33,7 @@ trait ZFE_Model_AbstractRecord_HistoryHiddenFields
      */
     protected static function _addHistoryHiddenFields(array $fields)
     {
-        if ( ! is_array(static::$_historyHiddenFields)) {
+        if (!is_array(static::$_historyHiddenFields)) {
             static::_clearHistoryHiddenFields();
         }
 

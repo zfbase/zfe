@@ -35,10 +35,10 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         $create = $canCreate ? 'allow' : 'deny';
 
         // Определяем источник данных
-        if (empty($attribs['source']) && ! empty($attribs['relModel'])) {
+        if (empty($attribs['source']) && !empty($attribs['relModel'])) {
             $attribs['source'] = $attribs['relModel']::getAutocompleteUrl();
         }
-        if (empty($attribs['data-source']) && ! empty($attribs['source'])) {
+        if (empty($attribs['data-source']) && !empty($attribs['source'])) {
             $attribs['data-source'] = $attribs['source'];
             unset($attribs['source']);
         }
@@ -51,10 +51,10 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         // Определяем перечень классов
         if (isset($attribs['class'])) {
             $classes = explode(' ', $attribs['class']);
-            if ( ! in_array('autocomplete', $classes, true)) {
+            if (!in_array('autocomplete', $classes)) {
                 array_unshift($classes, 'autocomplete');
             }
-            if ( ! in_array('form-control', $classes, true)) {
+            if (!in_array('form-control', $classes)) {
                 array_unshift($classes, 'form-control');
             }
             $attribs['class'] = implode(' ', $classes);
@@ -94,8 +94,10 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             $helpIcon . ' Будет создана запись'
         );
 
-        return $this->view->tag('div',
+        return $this->view->tag(
+            'div',
             ['id' => $id . '-wrap', 'class' => 'autocomplete-wrap'],
-            $idInput . $titleInput . $searchPack . $helpBlock);
+            $idInput . $titleInput . $searchPack . $helpBlock
+        );
     }
 }

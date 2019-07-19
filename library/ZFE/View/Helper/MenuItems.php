@@ -35,7 +35,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 ? (object) $page
                 : $page;
 
-            if ( ! $disabledAcl && ! $this->_isAllowed($page)) {
+            if (!$disabledAcl && !$this->_isAllowed($page)) {
                 continue;
             }
 
@@ -43,7 +43,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 $html .= '<li class="divider"></li>';
 
                 // если это не просто разделитель, но еще и с названием раздела, выйдем после названия
-                if ( ! isset($page->itemsHeader)) {
+                if (!isset($page->itemsHeader)) {
                     continue;
                 }
             }
@@ -59,9 +59,9 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                        . '<span class="visible-xs-inline">' . $page->label->text . '</span>';
                 $title = isset($page->title) ? $page->title : $page->label->text;
             } else {
-                if ( ! empty($page->label) && is_string($page->label)) {
+                if (!empty($page->label) && is_string($page->label)) {
                     $label = $page->label;
-                } elseif ( ! empty($page->controller)) {
+                } elseif (!empty($page->controller)) {
                     $dispatcher = Zend_Controller_Front::getInstance()->getDispatcher();
                     $controller = $dispatcher->formatControllerName($page->controller);
                     $dispatcher->loadClass($controller);
@@ -89,7 +89,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 $label .= ' <span class="' . $badgeClass . '">' . $badgeValue . '</span>';
             }
 
-            $hasChildren = isset($page->pages) && ! empty($page->pages);
+            $hasChildren = isset($page->pages) && !empty($page->pages);
 
             if (isset($page->uri)) {
                 $uri = $page->uri;
@@ -101,7 +101,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 $uri .= '/' . $page->controller;
                 if (isset($page->action)) {
                     $uri .= '/' . $page->action;
-                } elseif (isset($page->params) && ! empty($page->params)) {
+                } elseif (isset($page->params) && !empty($page->params)) {
                     $uri .= '/index';
                 }
                 if (isset($page->params)) {
@@ -191,7 +191,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             if (isset($page->action)) {
                 $privilege = $page->action;
             }
-        } elseif (isset($page->pages) && ! empty($page->pages)) {
+        } elseif (isset($page->pages) && !empty($page->pages)) {
             foreach ($page->pages as $id => $child) {
                 if ($child == '') {
                     $child = (object) ['controller' => $id];
@@ -245,7 +245,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             }
         }
 
-        if (isset($page->pages) && ! empty($page->pages)) {
+        if (isset($page->pages) && !empty($page->pages)) {
             foreach ($page->pages as $child) {
                 if ($this->_isActiveRecursive($child, $autoActive)) {
                     return true;

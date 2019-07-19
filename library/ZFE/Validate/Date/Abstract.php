@@ -135,7 +135,7 @@ class ZFE_Validate_Date_Abstract extends Zend_Validate_Abstract
     public function setDate($date)
     {
         require_once 'Zend/Date.php';
-        if ( ! $date instanceof Zend_Date) {
+        if (!$date instanceof Zend_Date) {
             if (Zend_Date::isDate($date, $this->_format, $this->_locale)) {
                 $date = new Zend_Date($date, $this->_format, $this->_locale);
             }
@@ -231,7 +231,7 @@ class ZFE_Validate_Date_Abstract extends Zend_Validate_Abstract
      */
     protected function _setValue($value)
     {
-        if ( ! $value instanceof Zend_Date) {
+        if (!$value instanceof Zend_Date) {
             // Before we convert our value to Zend_Date, let's make sure it's valid.
             require_once 'Zend/Validate/Date.php';
             $validator = new Zend_Validate_Date($this->_format, $this->_locale);
@@ -262,7 +262,7 @@ class ZFE_Validate_Date_Abstract extends Zend_Validate_Abstract
         // If our $date is a string and exists in our context array, then this means
         // the user passed in a field name as the date to parse.  Let's get the value
         // from the field and convert it to a Zend_Date
-        if ( ! $this->_date instanceof Zend_Date) {
+        if (!$this->_date instanceof Zend_Date) {
             if (is_array($context) && key_exists($this->_date, $context)) {
                 // Get the field value from the context array
                 $date = $context[$this->_date];

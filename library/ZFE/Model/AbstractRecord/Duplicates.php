@@ -70,7 +70,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
             }
         }
 
-        if ( ! empty($weights)) {
+        if (!empty($weights)) {
             $q->addSelect('(' . implode(' + ', $weights) . ') weight');
         } else {
             $q->addSelect('0 weight');

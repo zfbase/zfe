@@ -1,12 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Dezzpil
- * Date: 09.02.2019
- * Time: 18:28
+
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
  */
 
+/**
+ * Ошибка исполнителя отложенных задач.
+ */
 class ZFE_Tasks_Performer_Exception extends ZFE_Tasks_Exception
 {
-
 }

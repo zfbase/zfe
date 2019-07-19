@@ -14,7 +14,7 @@ class ZFE_Searcher_QueryBuilder_HistoryDoctrine extends ZFE_Searcher_QueryBuilde
         parent::_filters();
 
         $editorId = trim((string) $this->getParam('editor'));
-        if ( ! empty($editorId)) {
+        if (!empty($editorId)) {
             $this->_query->addWhere('x.user_id = ?', $editorId);
         }
 

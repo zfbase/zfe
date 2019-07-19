@@ -77,7 +77,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
      */
     public static function getSearcher()
     {
-        if ( ! static::$_searcher) {
+        if (!static::$_searcher) {
             static::$_searcher = new static::$_searcherName(static::$_modelName);
         }
         return static::$_searcher;
@@ -128,21 +128,21 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $this->view->canMerge = static::$_canMerge
                              && $modelName::isMergeable()
                              && $acl->isAllowedMe($resource, 'merge')
-                             && ! static::$_readonly;
+                             && !static::$_readonly;
 
         $this->view->canCreate = static::$_canCreate
                               && $acl->isAllowedMe($resource, 'edit')
-                              && ! static::$_readonly;
+                              && !static::$_readonly;
 
         $this->view->canDelete = static::$_canDelete
                               && $modelName::isRemovable()
                               && $acl->isAllowedMe($resource, 'delete')
-                              && ! static::$_readonly;
+                              && !static::$_readonly;
 
         $this->view->canRestore = static::$_canRestore
                                && $modelName::isRemovable()
                                && $acl->isAllowedMe($resource, 'restore')
-                               && ! static::$_readonly;
+                               && !static::$_readonly;
     }
 
     /**
@@ -162,7 +162,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
      */
     public function indexAction()
     {
-        if ( ! in_array('index', static::$_enableActions, true)) {
+        if (!in_array('index', static::$_enableActions)) {
             $this->abort(404);
         }
 
@@ -176,7 +176,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $searchFormName = static::$_searchFormName;
         if ($this->view->searchForm instanceof Zend_Form) {
             $searchForm = $this->view->searchForm;
-        } elseif ( ! empty($searchFormName) && is_string($searchFormName)) {
+        } elseif (!empty($searchFormName) && is_string($searchFormName)) {
             $searchForm = new static::$_searchFormName();
             if ($deleted) {
                 $searchForm->addElement('hidden', 'deleted', ['value' => 1]);
@@ -197,7 +197,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $searchAdvancedFormName = static::$_searchAdvancedFormName;
         if ($this->view->formAdvanced instanceof Zend_Form) {
             $searchAdvancedForm = $this->view->formAdvanced;
-        } elseif ( ! empty($searchAdvancedFormName) && is_string($searchAdvancedFormName)) {
+        } elseif (!empty($searchAdvancedFormName) && is_string($searchAdvancedFormName)) {
             $searchAdvancedForm = new static::$_searchAdvancedFormName();
             if ($deleted) {
                 $searchAdvancedForm->addElement('hidden', 'deleted', ['value' => 1]);
@@ -254,7 +254,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
      */
     public function autocompleteAction()
     {
-        if ( ! in_array('autocomplete', static::$_enableActions, true)) {
+        if (!in_array('autocomplete', static::$_enableActions)) {
             $this->abort(404, 'Action "autocomplete" does not exist');
         }
 
@@ -269,7 +269,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
      * Если $this->view->item уже загружен, просто вернуть его значение.
      *
      * @param string $param
-     * 
+     *
      * @return ZFE_Model_AbstractRecord
      */
     protected function _loadItemOrFall($param = 'id')

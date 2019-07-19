@@ -430,7 +430,7 @@ class ZFE_File
 
         if (null === $this->_hasIcon) {
             $iconClass = $this->getIconClass();
-            $this->_hasIcon = ! empty($iconClass);
+            $this->_hasIcon = !empty($iconClass);
         }
 
         return $this->_hasIcon;
@@ -460,7 +460,7 @@ class ZFE_File
 
         if (null === $this->_hasPreview) {
             $url = $this->getPreviewUrl();
-            $this->_hasPreview = ! empty($url);
+            $this->_hasPreview = !empty($url);
         }
 
         return $this->_hasPreview;
@@ -490,7 +490,7 @@ class ZFE_File
 
         if (null === $this->_canDownload) {
             $url = $this->getDownloadUrl();
-            $this->_canDownload = ! empty($url);
+            $this->_canDownload = !empty($url);
         }
 
         return $this->_canDownload;
@@ -520,7 +520,7 @@ class ZFE_File
 
         if (null === $this->_canView) {
             $url = $this->getViewUrl();
-            $this->_canView = ! empty($url);
+            $this->_canView = !empty($url);
         }
 
         return $this->_canView;
@@ -550,7 +550,7 @@ class ZFE_File
 
         if (null === $this->_canEdit) {
             $url = $this->getEditUrl();
-            $this->_canEdit = ! empty($url);
+            $this->_canEdit = !empty($url);
         }
 
         return $this->_canEdit;
@@ -580,7 +580,7 @@ class ZFE_File
 
         if (null === $this->_canDelete) {
             $url = $this->getDeleteUrl();
-            $this->_canDelete = ! empty($url);
+            $this->_canDelete = !empty($url);
         }
 
         return $this->_canDelete;
@@ -692,8 +692,8 @@ class ZFE_File
      */
     public static function makePath($path)
     {
-        if ( ! file_exists($path)) {
-            if ( ! @mkdir($path, 0755, true)) {
+        if (!file_exists($path)) {
+            if (!@mkdir($path, 0755, true)) {
                 throw new Exception("Mkdir failed for path '{$path}'");
             }
         }
@@ -756,7 +756,7 @@ class ZFE_File
         }
 
         if ($ext) {
-            if (in_array($ext, self::$_blackExtensions, true)) {
+            if (in_array($ext, self::$_blackExtensions)) {
                 $ext = '_' . $ext;
             }
 
@@ -779,7 +779,7 @@ class ZFE_File
      */
     public static function generationPath($basePath, $id = 0, $ext = '', $isUrl = false, $andRand = false)
     {
-        if ( ! $isUrl) {
+        if (!$isUrl) {
             $basePath = realpath($basePath);
         }
 
@@ -787,7 +787,7 @@ class ZFE_File
         $fileName = array_pop($strparts);
         $subPath = implode('/', $strparts);
 
-        if ( ! $isUrl && ! file_exists($basePath . '/' . $subPath)) {
+        if (!$isUrl && !file_exists($basePath . '/' . $subPath)) {
             self::makePath($basePath . '/' . $subPath);
             self::fixPath($basePath, $subPath);
         }
@@ -808,7 +808,7 @@ class ZFE_File
      */
     public static function getIconByFileName($name)
     {
-        if ( ! is_string($name) || empty($name)) {
+        if (!is_string($name) || empty($name)) {
             return null;
         }
 

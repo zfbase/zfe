@@ -93,7 +93,7 @@ class ZFE_Console_Tools
      */
     public function getCommandBroker()
     {
-        if ( ! $this->_commandBroker) {
+        if (!$this->_commandBroker) {
             $brokerClass = Zend_Registry::get('config')->console->commandBroker ?? 'ZFE_Console_CommandBroker';
             $this->_commandBroker = $brokerClass::getInstance();
         }
@@ -121,7 +121,7 @@ class ZFE_Console_Tools
      */
     public function getHelperBroker()
     {
-        if ( ! $this->_helperBroker) {
+        if (!$this->_helperBroker) {
             $brokerClass = Zend_Registry::get('config')->console->helperBroker ?? 'ZFE_Console_HelperBroker';
             $this->_helperBroker = $brokerClass::getInstance();
         }
@@ -149,7 +149,7 @@ class ZFE_Console_Tools
      */
     public function getLogger()
     {
-        if ( ! $this->_logger) {
+        if (!$this->_logger) {
             $loggerClass = Zend_Registry::get('config')->console->logger ?? 'ZFE_Console_Logger';
             $this->_logger = new $loggerClass();
         }

@@ -101,7 +101,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         $custom = static::$autocompleteCols[$field];
 
         // Проверяем, является ли поле автокомплитом
-        if ( ! key_exists($field, static::$autocompleteCols)) {
+        if (!key_exists($field, static::$autocompleteCols)) {
             return false;
         }
 
@@ -109,7 +109,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable(static::class);
         $relAlias = $table->getModelNameForColumn($field);
-        $relModel = ! empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
+        $relModel = !empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
         $default = [
             'label' => static::getFieldName($field),
             'source' => $relModel::getAutocompleteUrl(),
@@ -133,7 +133,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
     public static function getMultiAutocompleteOptions($field)
     {
         // Проверяем, является ли поле автокомплитом
-        if ( ! key_exists($field, static::$multiAutocompleteCols)) {
+        if (!key_exists($field, static::$multiAutocompleteCols)) {
             return false;
         }
 
@@ -144,7 +144,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         }
         $relAlias = $custom['relAlias'];
 
-        $relModel = ! empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
+        $relModel = !empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
 
         /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable(static::class);
@@ -226,12 +226,12 @@ trait ZFE_Model_AbstractRecord_Autocomplete
     {
         $title = trim($title);
 
-        if ( ! empty($id)) {
+        if (!empty($id)) {
             if ($this->{$alias}->exists() && $this->{$alias}->id === $id) {
                 return;
             }
             $this->link($alias, $id);
-        } elseif ( ! empty($title)) {
+        } elseif (!empty($title)) {
             $modelName = $this->getTable()->getRelation($alias)->getClass();
             $item = new $modelName();
             $item->setTitle($title);
@@ -264,7 +264,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                         'priority' => 0,
                     ];
 
-                if ( ! empty($options['sortable'])) {
+                if (!empty($options['sortable'])) {
                     $rel = $this->getTable()->getRelation($alias);
                     if ($rel instanceof Doctrine_Relation_Association) {
                         $modelClassName = $rel->getAssociationTable()->getComponentName();
@@ -302,7 +302,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         foreach (static::$multiAutocompleteCols as $key => $options) {
             $options = static::getMultiAutocompleteOptions($key);
 
-            if ( ! isset($array[$key])) {
+            if (!isset($array[$key])) {
                 $array[$key] = [];
             }
 
@@ -323,7 +323,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
             }
             $this->_linkIds($alias, $ids);
 
-            if ( ! empty($options['sortable'])) {
+            if (!empty($options['sortable'])) {
                 $rel = $this->getTable()->getRelation($alias);
                 if ($rel instanceof Doctrine_Relation_Association) {
                     $modelClassName = $rel->getAssociationTable()->getComponentName();

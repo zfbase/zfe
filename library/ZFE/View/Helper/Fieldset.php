@@ -27,7 +27,7 @@ class ZFE_View_Helper_Fieldset extends Zend_View_Helper_FormElement
         $legend = '';
         if (isset($attribs['legend'])) {
             $legendString = trim($attribs['legend']);
-            if ( ! empty($legendString)) {
+            if (!empty($legendString)) {
                 $legend = (empty($attribs['legend_class']) ? '<legend>' : '<legend class="' . $attribs['legend_class'] . '">')
                         . (($escape) ? $this->view->escape($legendString) : $legendString)
                         . (empty($attribs['description']) ? '' : ' <small>' . $this->view->escape($attribs['description']) . '</small>')
@@ -36,7 +36,7 @@ class ZFE_View_Helper_Fieldset extends Zend_View_Helper_FormElement
             unset($attribs['legend']);
         }
 
-        if ( ! empty($id)) {
+        if (!empty($id)) {
             $attribs['id'] = $id;
         }
 

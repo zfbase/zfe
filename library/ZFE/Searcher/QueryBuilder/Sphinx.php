@@ -54,7 +54,7 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
      */
     public function getIndexName()
     {
-        if ( ! $this->_indexName) {
+        if (!$this->_indexName) {
             $modelName = $this->_modelName;
             $this->_indexName = $modelName::getSphinxIndexName();
         }
@@ -160,7 +160,7 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
                 case 'rt_attr_multi':
                 case 'rt_attr_multi_64':
                     $items = $this->getParam($fieldName, []);
-                    if (is_array($items) && ! empty($items)) {
+                    if (is_array($items) && !empty($items)) {
                         $ids = array_map(function ($data) {
                             return (int) $data['id'];
                         }, $items);

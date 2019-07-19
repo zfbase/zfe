@@ -1,22 +1,34 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_Tasks_Performer
+ * Абстрактный исполнитель отложенных задач.
  */
 abstract class ZFE_Tasks_Performer
 {
-    static public function forge($code)
+    /**
+     * @param string $name
+     * 
+     * @return ZFE_Tasks_Performer
+     */
+    public static function forge($code)
     {
-        $performerClassName = ZFE_Tasks_Performer::class . '_' . $code;
+        $performerClassName = self::class . '_' . $code;
         return new $performerClassName;
     }
 
-    final public function __construct() {}
+    final public function __construct()
+    {
+    }
 
     /**
-     * Получить код исполнителя
+     * Получить код исполнителя.
      * Код исполнителя определяется как последняя часть имени класс по PSR-0:
-     * Application_Performer_LazyPerson -> LazyPerson
+     * Application_Performer_LazyPerson -> LazyPerson.
+     *
      * @return string
      */
     final public function getCode()
@@ -27,7 +39,7 @@ abstract class ZFE_Tasks_Performer
     }
 
     /**
-     * Выполнить необходимые действия по задаче для указанной по id записи в БД
+     * Выполнить необходимые действия по задаче для указанной по id записи в БД.
      *
      * @param int $relatedItemId Идентификатор записи БД
      * @throw ZFE_Tasks_Performer_Exception

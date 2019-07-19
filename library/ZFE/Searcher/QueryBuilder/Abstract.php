@@ -123,7 +123,7 @@ abstract class ZFE_Searcher_QueryBuilder_Abstract implements ZFE_Searcher_QueryB
     {
         $order = $this->getParam('order');
 
-        if ( ! empty($order)) {
+        if (!empty($order)) {
             $pos = mb_strrpos($order, '_');
             $field = mb_substr($order, 0, $pos);
             $direction = mb_strtoupper(mb_substr($order, $pos + 1));

@@ -111,7 +111,7 @@ abstract class ZFE_Console_Command_Abstract
      */
     public function getLogger()
     {
-        if ( ! $this->_logger) {
+        if (!$this->_logger) {
             $this->_logger = new ZFE_Console_Logger();
         }
 

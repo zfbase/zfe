@@ -23,7 +23,7 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
         // Определяем перечень классов
         if (isset($attribs['class'])) {
             $classes = explode(' ', $attribs['class']);
-            if ( ! in_array('form-control', $classes, true)) {
+            if (!in_array('form-control', $classes)) {
                 array_unshift($classes, 'form-control');
             }
             $attribs['class'] = implode(' ', $classes);

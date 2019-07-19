@@ -73,7 +73,7 @@ class ZFE_Uri_Route extends ZFE_Uri
      * Указать модуль.
      *
      * @param string $module
-     * 
+     *
      * @return static|$this
      */
     public function setModule(?string $module)
@@ -102,7 +102,7 @@ class ZFE_Uri_Route extends ZFE_Uri
      * Указать контроллер.
      *
      * @param string $controller
-     * 
+     *
      * @return static|$this
      */
     public function setController(?string $controller)
@@ -131,7 +131,7 @@ class ZFE_Uri_Route extends ZFE_Uri
      * Указать действие.
      *
      * @param string $action
-     * 
+     *
      * @return static|$this
      */
     public function setAction(?string $action)
@@ -160,7 +160,7 @@ class ZFE_Uri_Route extends ZFE_Uri
      * Установить параметры.
      *
      * @param array $params
-     * 
+     *
      * @return static|$this
      */
     public function setParams(array $params)
@@ -174,12 +174,12 @@ class ZFE_Uri_Route extends ZFE_Uri
      *
      * @param string $key
      * @param mixed  $value
-     * 
+     *
      * @return static|$this
      */
     public function setParam(string $key, $value)
     {
-        if (in_array($value, [null, ''], true)) {
+        if (in_array($value, [null, ''])) {
             unset($this->_params[$key]);
         } else {
             $this->_params[$key] = $value;
@@ -203,7 +203,7 @@ class ZFE_Uri_Route extends ZFE_Uri
      * Получить параметр.
      *
      * @param string $key
-     * 
+     *
      * @return mixed
      */
     public function getParam(string $key)
@@ -235,7 +235,7 @@ class ZFE_Uri_Route extends ZFE_Uri
 
     /**
      * Удалить все параметры.
-     * 
+     *
      * @return static|$this
      */
     public function clearParams()
@@ -270,7 +270,7 @@ class ZFE_Uri_Route extends ZFE_Uri
         }
 
         $query = $uri->getQueryParts();
-        if ( ! empty($query)) {
+        if (!empty($query)) {
             foreach ($query as $key => $value) {
                 $uri->setParam($key, $value);
             }
@@ -314,7 +314,7 @@ class ZFE_Uri_Route extends ZFE_Uri
 
     /**
      * Упростить параметры.
-     * 
+     *
      * @return static|$this
      */
     public function simplifyParams()
@@ -327,7 +327,7 @@ class ZFE_Uri_Route extends ZFE_Uri
      * Упростить массив рекурсивно.
      *
      * @param array $array
-     * 
+     *
      * @return array
      */
     private static function _simplifyParamsRecursive(array $array)
@@ -335,7 +335,7 @@ class ZFE_Uri_Route extends ZFE_Uri
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 foreach (self::_simplifyParamsRecursive($value) as $v_key => $v_value) {
-                    if ( ! in_array($v_value, [null, ''])) {
+                    if (!in_array($v_value, [null, ''])) {
                         $array[$key . '_' . $v_key] = $v_value;
                     }
                 }
@@ -359,7 +359,7 @@ class ZFE_Uri_Route extends ZFE_Uri
             'params' => $this->getParams(),
         ];
 
-        if ( ! $showEmpty) {
+        if (!$showEmpty) {
             return array_diff($parts, ['', null, []]);
         }
 

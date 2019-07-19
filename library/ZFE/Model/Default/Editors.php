@@ -141,7 +141,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      */
     public function fromArray(array $array, $deep = true)
     {
-        if ( ! empty($array['password'])) {
+        if (!empty($array['password'])) {
             $salt = $array['password_salt'] ?? null;
             $this->setPassword($array['password'], $salt);
         }
@@ -218,9 +218,9 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     {
         $name = $this->getFullName();
 
-        if ( ! empty($this->email)) {
+        if (!empty($this->email)) {
             $name .= ' (' . $this->email . ')';
-        } elseif ( ! empty($this->phone)) {
+        } elseif (!empty($this->phone)) {
             $name .= ' (' . $this->phone . ')';
         }
 

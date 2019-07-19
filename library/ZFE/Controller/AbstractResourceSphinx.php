@@ -27,7 +27,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
     {
         $this->_helper->postToGet();
 
-        if ( ! empty(static::$_searchFormName)) {
+        if (!empty(static::$_searchFormName)) {
             $searchForm = new static::$_searchFormName();
             if ('1' === $this->getParam('deleted')) {
                 $searchForm->addElement('hidden', 'deleted', ['value' => 1]);
@@ -37,7 +37,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
         }
 
         $ids = $this->_getIdsParam();
-        if ( ! $ids) {
+        if (!$ids) {
             $sphinxQuery = $this->_getSearchQuerySphinx();
             $sphinxQuery = $this->_addSphinxCaseForTrash($sphinxQuery);
             $sphinxQuery = $this->_addOrderForSearchQuerySphinx($sphinxQuery);
@@ -139,7 +139,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
                     break;
                 case 'rt_attr_multi':
                     $items = $this->getParam(mb_substr($field, 5), []);
-                    if (is_array($items) && ! empty($items)) {
+                    if (is_array($items) && !empty($items)) {
                         $ids = array_map(function ($data) {
                             return (int) $data['id'];
                         }, $items);
@@ -167,7 +167,7 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
     protected function _addOrderForSearchQuerySphinx(SphinxQL $q, $reset = false)
     {
         $order = $this->_request->getParam('order');
-        if ( ! empty($order)) {
+        if (!empty($order)) {
             $pos = mb_strrpos($order, '_');
             $field = mb_substr($order, 0, $pos);
             $direction = mb_strtoupper(mb_substr($order, $pos + 1));

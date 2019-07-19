@@ -13,14 +13,14 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
     {
         $attribs = parent::getAttribs();
 
-        if ( ! key_exists('data-type', $attribs)) {
+        if (!key_exists('data-type', $attribs)) {
             $dateType = $this->getDataType();
             if ($dateType) {
                 $attribs['data-type'] = $dateType;
             }
         }
 
-        if ( ! key_exists('accept', $attribs)) {
+        if (!key_exists('accept', $attribs)) {
             $allowExtensions = $this->getAllowExtensions();
             $allowMimeTypes = $this->getAllowMimeTypes();
             if ($allowExtensions || $allowMimeTypes) {
@@ -51,7 +51,7 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
      */
     public function setDateType($dateType)
     {
-        if ( ! in_array($dateType, $this->dateTypesValid, true)) {
+        if (!in_array($dateType, $this->dateTypesValid)) {
             throw new ZFE_Form_Exception('Не допустимый тип данных элемента загрузки файлов.');
         }
 
@@ -80,7 +80,7 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
      */
     public function addAllowExtension($extension)
     {
-        if ( ! in_array($extension, $this->_allowExtensions, true)) {
+        if (!in_array($extension, $this->_allowExtensions)) {
             if ('.' !== $extension[0]) {
                 throw new ZFE_Form_Exception('Разрешенные расширения должны начинаться с точки.');
             }
@@ -147,7 +147,7 @@ class ZFE_Form_Element_File extends Zend_Form_Element_File
      */
     public function addAllowMimeType($mimeType)
     {
-        if ( ! in_array($mimeType, $this->_allowMimeTypes, true)) {
+        if (!in_array($mimeType, $this->_allowMimeTypes)) {
             $this->_allowMimeTypes[] = $mimeType;
         }
 

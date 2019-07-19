@@ -36,7 +36,7 @@ class ZFE_Searcher_QueryBuilder_Doctrine extends ZFE_Searcher_QueryBuilder_Abstr
     protected function _filters()
     {
         $title = trim((string) $this->getParam('title'));
-        if ( ! empty($title)) {
+        if (!empty($title)) {
             $this->_query->addWhere('LOWER(' . ($this->_modelName)::$titleField . ') LIKE LOWER(?)', '%' . $title . '%');
         }
 
@@ -61,7 +61,7 @@ class ZFE_Searcher_QueryBuilder_Doctrine extends ZFE_Searcher_QueryBuilder_Abstr
     protected function _caseForTrash()
     {
         if (($this->_modelName)::isRemovable() && ($this->_modelName)::$saveHistory) {
-            if ( ! $this->hasParam('ids')) {
+            if (!$this->hasParam('ids')) {
                 if ($this->getParam('deleted')) {
                     $this->_query->addWhere('x.deleted = 1');
                     $this->_query->setHard(true);

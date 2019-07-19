@@ -21,12 +21,12 @@ trait ZFE_Controller_AbstractResource_History
      */
     public function historyAction()
     {
-        if ( ! in_array('history', static::$_enableActions, true)) {
+        if (!in_array('history', static::$_enableActions)) {
             $this->abort(404);
         }
 
         $modelName = static::$_modelName;
-        if ( ! ($this->view->item instanceof $modelName) && $this->hasParam('id')) {
+        if (!($this->view->item instanceof $modelName) && $this->hasParam('id')) {
             $itemId = (int) $this->getParam('id');
             $this->view->item = $modelName::hardFind($itemId);
         }
@@ -74,12 +74,12 @@ trait ZFE_Controller_AbstractResource_History
         $this->view->milestones = History::getVersionsListFor($curItem);
 
         $rightVersion = (int) $this->getParam('right');
-        if ( ! $rightVersion) {  // По умолчанию, текущая версия
+        if (!$rightVersion) {  // По умолчанию, текущая версия
             $rightVersion = $curItem->version;
         }
 
         $leftVersion = (int) $this->getParam('left');
-        if ( ! $leftVersion) {  // По умолчанию, предыдущая перед правой
+        if (!$leftVersion) {  // По умолчанию, предыдущая перед правой
             $leftVersion = $rightVersion > 1
                 ? $rightVersion - 1
                 : 1;
@@ -106,7 +106,7 @@ trait ZFE_Controller_AbstractResource_History
         $version = $this->getParam('version');
         $modelName = static::$_modelName;
 
-        if ( ! static::$_canRestore) {
+        if (!static::$_canRestore) {
             $this->abort(403, 'Невозможно откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version . ': доступ запрещен');
         }
 

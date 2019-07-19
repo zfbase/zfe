@@ -38,7 +38,7 @@ trait ZFE_Form_Extensions
      */
     public function getDefaultDecoratorsByElementType($type)
     {
-        if (in_array($type, ['range', 'duration'], true)) {
+        if (in_array($type, ['range', 'duration'])) {
             if (is_array($this->_simpleElementDecorators)) {
                 return $this->_simpleElementDecorators;
             }
@@ -101,11 +101,11 @@ trait ZFE_Form_Extensions
      */
     public function createElement($type, $name, $options = null)
     {
-        if (in_array($type, ['range', 'duration'], true)) {
+        if (in_array($type, ['range', 'duration'])) {
             if (null === $options) {
                 $options = ['class' => 'form-control'];
             } elseif (key_exists('class', $options)) {
-                if ( ! mb_strstr($options['class'], 'form-control')) {
+                if (!mb_strstr($options['class'], 'form-control')) {
                     $options['class'] .= ' form-control';
                     $options['class'] = trim($options['class']);
                 }

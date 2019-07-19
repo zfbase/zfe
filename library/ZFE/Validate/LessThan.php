@@ -64,22 +64,22 @@ class ZFE_Validate_LessThan extends Zend_Validate_Abstract
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
-        } elseif ( ! is_array($options)) {
+        } elseif (!is_array($options)) {
             $options = func_get_args();
             $temp['max'] = array_shift($options);
-            if ( ! empty($options)) {
+            if (!empty($options)) {
                 $temp['inclusive'] = array_shift($options);
             }
 
             $options = $temp;
         }
 
-        if ( ! key_exists('max', $options)) {
+        if (!key_exists('max', $options)) {
             require_once 'Zend/Validate/Exception.php';
             throw new Zend_Validate_Exception("Missing option 'max'");
         }
 
-        if ( ! key_exists('inclusive', $options)) {
+        if (!key_exists('inclusive', $options)) {
             $options['inclusive'] = true;
         }
 

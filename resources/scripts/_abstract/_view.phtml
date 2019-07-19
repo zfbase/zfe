@@ -9,13 +9,13 @@
     <? foreach ($modelName::getViewFields() as $field): ?>
         <? $options = is_string($field) ? ['field' => $field] : $field; ?>
         <? if (($table->hasRelation($options['field']) && $item->{$options['field']}->count())
-            || ($table->hasColumn($options['field']) && ! empty($item->{$options['field']}))): ?>
+            || ($table->hasColumn($options['field']) && !empty($item->{$options['field']}))): ?>
             <tr>
                 <th><?= $options['title'] ?? $modelName::getFieldName($options['field']) ?></th>
                 <td>
-                    <? if ( ! empty($options['viewHelper'])): ?>
+                    <? if (!empty($options['viewHelper'])): ?>
                         <?= $this->{$options['viewHelper']}($item->{$options['field']}) ?>
-                    <? elseif ( ! empty($options['viewMethod'])): ?>
+                    <? elseif (!empty($options['viewMethod'])): ?>
                         <?= ($options['viewMethod'])($item) ?>
                     <? elseif ($table->hasRelation($options['field'])): ?>
                         <?= $this->showTitles($item->{$options['field']}) ?>

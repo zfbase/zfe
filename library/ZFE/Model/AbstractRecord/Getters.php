@@ -109,17 +109,17 @@ trait ZFE_Model_AbstractRecord_Getters
      */
     public static function getFieldName($field, $default = null)
     {
-        if ( ! empty(static::$nameFields[$field])) {
+        if (!empty(static::$nameFields[$field])) {
             return static::$nameFields[$field];
         }
 
-        if ( ! empty(static::$_nameBaseFields[$field])) {
+        if (!empty(static::$_nameBaseFields[$field])) {
             return static::$_nameBaseFields[$field];
         }
 
         $table = Doctrine_Core::getTable(static::class);
         $definition = $table->getColumnDefinition($field);
-        if ( ! empty($definition['comment'])) {
+        if (!empty($definition['comment'])) {
             return $definition['comment'];
         }
 
@@ -153,7 +153,7 @@ trait ZFE_Model_AbstractRecord_Getters
      */
     public static function getDictionary($field)
     {
-        if ( ! static::isDictionaryField($field)) {
+        if (!static::isDictionaryField($field)) {
             throw new ZFE_Model_Exception('Обращение к неопределенному словарю');
         }
 

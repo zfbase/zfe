@@ -67,7 +67,7 @@ class ZFE_Paginator
      */
     public static function getInstance()
     {
-        if ( ! self::$_instance) {
+        if (!self::$_instance) {
             self::$_instance = new static();
         }
 
@@ -119,7 +119,7 @@ class ZFE_Paginator
      */
     public function getPageNumber()
     {
-        if ( ! $this->_pageNumber) {
+        if (!$this->_pageNumber) {
             $this->setPageNumber($this->_request->getParam('page', 1));
         }
         return $this->_pageNumber;
@@ -162,7 +162,7 @@ class ZFE_Paginator
      */
     public function getUri()
     {
-        if ( ! $this->_uri) {
+        if (!$this->_uri) {
             $this->setUri(ZFE_Uri_Route::fromRequest($this->_request));
         }
         return $this->_uri;
@@ -175,7 +175,7 @@ class ZFE_Paginator
      */
     public function getUrl()
     {
-        if ( ! $this->_uri) {
+        if (!$this->_uri) {
             $this->setUri(ZFE_Uri_Route::fromRequest($this->_request));
         }
         return $this->_uri->getUri();
@@ -190,7 +190,7 @@ class ZFE_Paginator
      */
     public function getPager()
     {
-        if ( ! ($this->_pager instanceof Doctrine_Pager)) {
+        if (!($this->_pager instanceof Doctrine_Pager)) {
             throw new Zend_Exception('Component Paginator not executed');
         }
         return $this->_pager;

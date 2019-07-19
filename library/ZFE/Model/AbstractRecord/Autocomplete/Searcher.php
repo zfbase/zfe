@@ -86,13 +86,13 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
             $q->where('attr_deleted', 0);
         }
 
-        if ( ! empty($params['term']) && $term = trim($params['term'])) {
+        if (!empty($params['term']) && $term = trim($params['term'])) {
             $q->match('*', $term);
         } else {
             $term = null;
         }
 
-        if (isset($params['exclude']) && ! empty($params['exclude'])) {
+        if (isset($params['exclude']) && !empty($params['exclude'])) {
             $exclude = [];
             foreach (explode(',', $params['exclude']) as $id) {
                 $exclude[] = (int) $id;
@@ -150,7 +150,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         }
 
         // Add check Exclude ids
-        if (isset($params['exclude']) && ! empty($params['exclude'])) {
+        if (isset($params['exclude']) && !empty($params['exclude'])) {
             $q->andWhereIn('x.id', explode(',', $params['exclude']), true);
         }
 

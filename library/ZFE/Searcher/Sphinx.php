@@ -45,7 +45,7 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
 
             $revertHash = $params['rh'] ?? null;
             $resultNumber = $params['rn'] ?? null;
-            if ( ! empty($resultNumber) && ! empty($revertHash)) {
+            if (!empty($resultNumber) && !empty($revertHash)) {
                 $sphinxQuery->option('max_matches', $resultNumber + 1);
                 $sphinxQuery->offset($resultNumber - 1);
                 $sphinxQuery->limit(1);
@@ -65,7 +65,8 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
                 $sphinxResult = $sphinxQuery
                     ->limit($count)
                     ->option('max_matches', $count)
-                    ->execute();
+                    ->execute()
+                ;
             }
 
             $ids = ZFE_Sphinx::fetchIds($sphinxResult);
@@ -104,7 +105,7 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
      */
     public function getSphinxQueryBuilder()
     {
-        if ( ! $this->_sphinxQueryBuilder) {
+        if (!$this->_sphinxQueryBuilder) {
             $this->_sphinxQueryBuilder = new ZFE_Searcher_QueryBuilder_Sphinx($this->_modelName);
         }
 
@@ -131,7 +132,7 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
      */
     public function getDoctrineQueryBuilder()
     {
-        if ( ! $this->_doctrineQueryBuilder) {
+        if (!$this->_doctrineQueryBuilder) {
             $this->_doctrineQueryBuilder = new ZFE_Searcher_QueryBuilder_Doctrine($this->_modelName);
         }
 

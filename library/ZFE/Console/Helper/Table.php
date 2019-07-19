@@ -140,7 +140,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
     public function setHeaders(array $headers)
     {
         $headers = array_values($headers);
-        if ( ! empty($headers) && ! is_array($headers[0])) {
+        if (!empty($headers) && !is_array($headers[0])) {
             $headers = [$headers];
         }
 
@@ -182,7 +182,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
         $this->prepare();
 
         $markup = $this->renderRowSeparator();
-        if ( ! empty($this->_headers)) {
+        if (!empty($this->_headers)) {
             foreach ($this->_headers as $header) {
                 $markup .= $this->renderRow($header);
                 $markup .= $this->renderRowSeparator();
@@ -191,7 +191,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
         foreach ($this->_rows as $row) {
             $markup .= $this->renderRow($row);
         }
-        if ( ! empty($this->_rows)) {
+        if (!empty($this->_rows)) {
             $markup .= $this->renderRowSeparator();
         }
 
