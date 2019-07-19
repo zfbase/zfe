@@ -25,6 +25,8 @@ trait ZFE_Controller_AbstractResource_Delete
      */
     public function deleteAction($redirectUrl = null)
     {
+        $modelName = static::$_modelName;
+
         if ( ! in_array('delete', static::$_enableActions, true)) {
             $this->abort(404);
         }
@@ -33,13 +35,8 @@ trait ZFE_Controller_AbstractResource_Delete
             $this->abort(403, 'Невозможно удалить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
 
-        $modelName = static::$_modelName;
-
         /** @var AbstractRecord $item */
-        $item = $modelName::find($this->getParam('id'));
-        if (empty($item)) {
-            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
-        }
+        $item = $this->_loadItemOrFall();
 
         try {
             $item->delete();
@@ -48,12 +45,7 @@ trait ZFE_Controller_AbstractResource_Delete
             if ($item->canUndeleted()) {
                 $msg .= ' <a href="' . $item->getUndeleteUrl() . '">Отменить удаление?</a>';
             }
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_json(self::STATUS_SUCCESS, [], $msg);
-            }
-
-            $this->_helper->Notices->ok($msg);
+            $this->success($msg, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {
@@ -68,7 +60,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
-            $this->error('Не удалось удалить ' . mb_strtolower($modelName::$nameSingular), $ex);
+            $this->error('Не удалось удалить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {
@@ -90,6 +82,8 @@ trait ZFE_Controller_AbstractResource_Delete
      */
     public function undeleteAction($redirectUrl = null)
     {
+        $modelName = static::$_modelName;
+
         if ( ! in_array('undelete', static::$_enableActions, true)) {
             $this->abort(404);
         }
@@ -97,8 +91,6 @@ trait ZFE_Controller_AbstractResource_Delete
         if ( ! static::$_canRestore) {
             $this->abort(403, 'Невозможно восстановить ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
         }
-
-        $modelName = static::$_modelName;
 
         /** @var AbstractRecord $item */
         $item = $modelName::hardFind($this->getParam('id'));
@@ -109,13 +101,9 @@ trait ZFE_Controller_AbstractResource_Delete
         try {
             $item->undelete();
 
-            $msg = $modelName::decline('%s успешно восстановлен.', '%s успешно восстановлена.', '%s успешно восстановлено.');
-
-            if ($this->_request->isXmlHttpRequest()) {
-                $this->_json(self::STATUS_SUCCESS, [], $msg);
-            }
-
-            $this->_helper->Notices->ok($msg);
+            $this->success(
+                $modelName::decline('%s успешно восстановлен.', '%s успешно восстановлена.', '%s успешно восстановлено.'),
+                false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {
@@ -126,7 +114,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
-            $this->error('Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular), $ex);
+            $this->error('Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
                 if (null === $redirectUrl) {

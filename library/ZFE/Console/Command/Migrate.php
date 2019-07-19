@@ -13,6 +13,11 @@ class ZFE_Console_Command_Migrate extends ZFE_Console_Command_Abstract
     protected static $_description = 'Миграция БД';
     protected static $_allowInApp = false;
 
+    public function __construct()
+    {
+        ZFE_Model_AbstractRecord::$migrationMode = true;
+    }
+
     /**
      * {@inheritdoc}
      */

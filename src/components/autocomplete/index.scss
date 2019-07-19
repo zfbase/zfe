@@ -5,6 +5,7 @@
 .tt-menu {
   text-align: left;
   width: 100%;
+  min-width: fit-content;
   margin-top: 8px;
   padding: 8px 0;
   background-color: #fff;
@@ -54,11 +55,11 @@
   color: #aaa;
 }
 
-.multiac-wrap {
+.multiac-linked-wrap {
   padding: 5px 0 0;
 }
 
-.multiac-wrap:empty {
+.multiac-linked-wrap:empty {
   padding: 0;
 }
 
@@ -225,4 +226,26 @@
           border-bottom-right-radius: 0;
       }
   }
+}
+
+.multiac-left {
+    .tt-icon-right {
+        width: 200px;
+        float: right;
+    }
+
+    .multiac-linked-wrap {
+        margin-right: 205px;
+    }
+}
+
+.multiac-right {
+    .tt-icon-right {
+        width: 200px;
+        float: left;
+    }
+
+    .multiac-linked-wrap {
+        margin-left: 205px;
+    }
 }

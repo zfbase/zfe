@@ -20,11 +20,36 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
     protected $_table;
 
     /**
+     * Использовать простой общий индекс?
+     *
+     * @var boolean
+     */
+    protected $_useSimpleCommonIndex = false;
+
+    /**
      * {@inheritdoc}
      */
     public function execute(array $params = [])
     {
-        if (empty($params) || 'all' === $params[0]) {
+        if (empty($params)) {
+            /** @var ZFE_Console_Helper_Table $table */
+            $table = $this->_table = $this->getHelperBroker()->get('Table');
+            $table->setHeaders(['Код', 'Модель']);
+            $models = $this->_getAllModels();
+            foreach ($models as $i => $model) {
+                $table->addRow([$i, $model]);
+            }
+            $table->render();
+
+            $example = (array_shift($models) ?? 'Tags') . ' ' . (array_shift($models) ?? 'Items');
+            echo "Для индексации всех моделей передайте параметром all:\n";
+            echo "  > <info>composer tool indexer all</info>\n";
+
+            echo "Для индексации конкретных моделей перечислите их названия или коды через пробел:\n";
+            echo "  > <info>composer tool indexer {$example}</info>\n";
+            echo "  > <info>composer tool indexer 1 4</info>\n";
+            return;
+        } elseif ('all' === $params[0]) {
             $models = $this->_getAllModels();
         } else {
             $models = $params;
@@ -32,9 +57,16 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
 
         $timeStart = time();
 
+        $allModels = $this->_getAllModels();
+        $allModelsMap = array_flip(array_map('mb_strtolower', $allModels));
         $maxLenModelName = 0;
-        foreach ($models as $model) {
-            $len = mb_strlen($model);
+        foreach ($models as $i => $model) {
+            if (!is_numeric($model)) {
+                $model = $allModelsMap[mb_strtolower($model)];
+            }
+
+            $models[$i] = $allModels[$model];
+            $len = mb_strlen($models[$i]);
             if ($maxLenModelName < $len) {
                 $maxLenModelName = $len;
             }
@@ -86,19 +118,18 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
         $conn = Doctrine_Manager::connection()->getDbh();
         $q = $conn->prepare($query->getSql());
 
-        $total = (int) $conn->query("SELECT COUNT(*) FROM (${sql}) _base_query")->fetch()[0];
-
         /** @var ZFE_Console_Helper_ProgressBar $progressBar */
         $progressBar = $this->getHelperBroker()->get('ProgressBar');
         $progressBar->setTemplate('[placeholder] [percent]');
         $progressBar->setFinishTemplate('[value] из [max]');
         $progressBar->setPlaceholderWidth(50);
 
-        echo trim($this->_table->renderRow([
-            $model,
-            $progressBar->start($total, null, null, false),
-            (string) $progressBar->getTime(),
-        ]));
+        echo trim($this->_table->renderRow([$model, '', '0.000']));
+
+        $startTime = microtime(true);
+        $total = (int) $conn->query("SELECT COUNT(*) FROM (${sql}) _base_query")->fetch()[0];
+        $progressBar->start($total, null, null, $startTime, false);
+        $this->_updateRow($model, $progressBar);
 
         $id = 0;
         $prevId = 0;
@@ -107,27 +138,44 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
             $prevId = $id;
             $q->execute([$id]);
             ZFE_Sphinx::query()->transactionBegin();
-            //ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionBegin();
+            if ($this->_useSimpleCommonIndex) {
+                ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionBegin();
+            }
             while ($row = $q->fetch(PDO::FETCH_ASSOC)) {
                 $data = $model::filterIndexData($row);
                 ZFE_Sphinx::replaceIndexData($indexName, $data);
-                //Utils_Sphinx::updateCommonIndexByModelAndData($model, $data);
+                if ($this->_useSimpleCommonIndex) {
+                    Utils_Sphinx::updateCommonIndexByModelAndData($model, $data);
+                }
                 $id = $row['attr_id'];
-                echo "\r" . trim($this->_table->renderRow([
-                    $model,
-                    $progressBar->setValue(++$done, false),
-                    (string) $progressBar->getTime(),
-                ]));
+                $this->_updateRow($model, $progressBar, ++$done);
             }
-            //ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionCommit();
+            if ($this->_useSimpleCommonIndex) {
+                ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionCommit();
+            }
             ZFE_Sphinx::query()->transactionCommit();
         } while ($prevId !== $id);
 
-        echo "\r" . $this->_table->renderRow([
-            $model,
-            $progressBar->finish(false),
-            (string) $progressBar->getTime(),
-        ]);
+        $progressBar->finish(false);
+        $this->_updateRow($model, $progressBar);
+        echo "\n";
+
         unset($progressBar);
+    }
+
+    /**
+     * Обновить последнюю строку таблицы с прогрессом индексации модели.
+     *
+     * @param string                         $model
+     * @param ZFE_Console_Helper_ProgressBar $progressBar
+     * @param float|null                     $done
+     */
+    protected function _updateRow(string $model, ZFE_Console_Helper_ProgressBar $progressBar, ?float $done = null)
+    {
+        echo "\r" . trim($this->_table->renderRow([
+            $model,
+            $done ? $progressBar->setValue($done, false) : $progressBar->render(false),
+            sprintf('%.3f', $progressBar->getTime()),
+        ]));
     }
 }

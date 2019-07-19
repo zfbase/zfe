@@ -98,7 +98,8 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
         $page = $this->getParam('page');
         if ($page) {
             // Для возможности перехода на 51 страницу (при 20 результатах на странице)
-            $this->_query->option('max_matches', $page * 50);
+            $this->_query->option('max_matches', $page
+                * ZFE_Sphinx_Paginator::getInstance()->getItemsPerPage());
         }
     }
 

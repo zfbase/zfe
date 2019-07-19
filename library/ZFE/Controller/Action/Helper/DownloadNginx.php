@@ -19,6 +19,8 @@ class ZFE_Controller_Action_Helper_DownloadNginx extends Zend_Controller_Action_
      * @param string $path путь до файла в файловой системе
      * @param string $url  защищенный виртуальный URL
      * @param string $name новое имя файла
+     *
+     * @throws Zend_Controller_Action_Exception
      */
     public function direct($path, $url, $name)
     {
@@ -48,6 +50,6 @@ class ZFE_Controller_Action_Helper_DownloadNginx extends Zend_Controller_Action_
             exit;
         }
 
-        $this->abort(404, 'Файл не найден');
+        throw new Zend_Controller_Action_Exception('Файл не найден', 404);
     }
 }

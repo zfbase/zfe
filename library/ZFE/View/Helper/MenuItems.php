@@ -26,7 +26,11 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
     public function menuItems($pages = null, $autoActive = true, $disabledAcl = false, $dropdownEnable = true)
     {
         $html = '';
-        foreach ($pages as $page) {
+        foreach ($pages as $id => $page) {
+            if ($page == '') {
+                $page = ['controller' => $id];
+            }
+
             $page = is_array($page)
                 ? (object) $page
                 : $page;
@@ -50,7 +54,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 continue;
             }
 
-            if ($page->label instanceof Zend_Config) {
+            if (isset($page->label) && $page->label instanceof Zend_Config) {
                 $label = '<span class="' . $page->label->ico . ' hidden-xs"></span>'
                        . '<span class="visible-xs-inline">' . $page->label->text . '</span>';
                 $title = isset($page->title) ? $page->title : $page->label->text;
@@ -188,7 +192,11 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 $privilege = $page->action;
             }
         } elseif (isset($page->pages) && ! empty($page->pages)) {
-            foreach ($page->pages as $child) {
+            foreach ($page->pages as $id => $child) {
+                if ($child == '') {
+                    $child = (object) ['controller' => $id];
+                }
+
                 if ($this->_isAllowed($child)) {
                     return true;
                 }

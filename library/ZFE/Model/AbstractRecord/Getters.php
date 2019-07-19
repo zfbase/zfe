@@ -109,12 +109,18 @@ trait ZFE_Model_AbstractRecord_Getters
      */
     public static function getFieldName($field, $default = null)
     {
-        if (isset(static::$nameFields[$field])) {
+        if ( ! empty(static::$nameFields[$field])) {
             return static::$nameFields[$field];
         }
 
-        if (isset(static::$_nameBaseFields[$field])) {
+        if ( ! empty(static::$_nameBaseFields[$field])) {
             return static::$_nameBaseFields[$field];
+        }
+
+        $table = Doctrine_Core::getTable(static::class);
+        $definition = $table->getColumnDefinition($field);
+        if ( ! empty($definition['comment'])) {
+            return $definition['comment'];
         }
 
         if (null !== $default) {

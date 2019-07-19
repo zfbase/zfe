@@ -203,7 +203,6 @@ class ZFEMultiAutocomplete {
 
   initTypeahead() {
     const datasetSettings = {
-      name: this.settings.name,
       source: this.engine.ttAdapter(),
       templates: this.settings.templates,
       display: 'value',

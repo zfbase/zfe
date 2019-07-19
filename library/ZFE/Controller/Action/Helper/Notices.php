@@ -59,12 +59,19 @@ class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper
     /**
      * Установить сообщение об ошибке.
      *
-     * @param string $message сообщение
+     * @param string|Throwable $message сообщение
      *
      * @return ZFE_Controller_Action_Helpers_Notices
      */
     public function err($message)
     {
+        if ($message instanceof Throwable) {
+            $code = $message->getCode();
+            $message = $message->getMessage();
+            if ($code) {
+                $message = sprintf('[%s] %s', $code, $message);
+            }
+        }
         return $this->add($message, ['type' => 'danger', 'delay' => '9000']);
     }
 

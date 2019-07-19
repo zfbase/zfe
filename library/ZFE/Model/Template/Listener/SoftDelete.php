@@ -48,4 +48,25 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             }
         }
     }
+
+    /**
+     * Хук preDqlSelect.
+     *
+     * @param Doctrine_Event $event
+     */
+    public function preDqlSelect(Doctrine_Event $event)
+    {
+        if ($this->_allowSoftDelete) {
+            $params = $event->getParams();
+            $table = $params['component']['table'];
+            $field = $params['alias'] . '.deleted';
+            $query = $event->getQuery();
+
+            if ($table->hasField('deleted') && ! $query->isHard()) {
+                if (empty($params['component']['ref'])) {
+                    $query->addWhere($field . ' IS NULL OR ' . $field . ' = 0');
+                }
+            }
+        }
+    }
 }

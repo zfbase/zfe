@@ -17,6 +17,11 @@ class ZFE_Console_Command_ApplySchema extends ZFE_Console_Command_Abstract
         '2. и обновляет описание моделей, приводя их в соответствие с описанием в схеме, с помощью задачи generate-models-yaml';
     protected static $_allowInApp = false;
 
+    public function __construct()
+    {
+        ZFE_Model_AbstractRecord::$migrationMode = true;
+    }
+
     /**
      * {@inheritdoc}
      */

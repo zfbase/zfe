@@ -104,8 +104,8 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $manager = Doctrine_Manager::getInstance();
         $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
-        $manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
-        $manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
+        //$manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');  // В миграциях нужно что бы не было указано схемы
+        //$manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
         $manager->setAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES, true);
         $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
 
@@ -125,6 +125,16 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         if ('mysql' === $driver) {
             $conn->exec('SET NAMES utf8;');
+
+            // отключить режим ONLY_FULL_GROUP_BY, включенный по-умолчанию в MySQL 5.7.5 и старше
+            $q = $conn->execute("SHOW VARIABLES LIKE 'sql_mode'");
+            $sqlMode = explode(',', $q->fetch()[1]);
+            $nextSqlMode = array_filter($sqlMode, function ($value) {
+                return $value != 'ONLY_FULL_GROUP_BY';
+            });
+            if (count($sqlMode) > count($nextSqlMode)) {
+                $conn->exec('SET SESSION sql_mode = ?', [implode(',', $nextSqlMode)]);
+            }
         }
 
         if ($dbConfig->profile) {
@@ -143,6 +153,16 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('Loader');
         $this->bootstrap('Doctrine');
 
+        Zend_Registry::set('user', (object) $this->_makeAuthData());
+    }
+
+    /**
+     * Определить авторизационные данные.
+     *
+     * @return array
+     */
+    protected function _makeAuthData()
+    {
         $config = Zend_Registry::get('config');
         $auth = Zend_Auth::getInstance();
 
@@ -164,18 +184,27 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             if (isset($identity['role']) && $canSwitchRoles) {
                 $role = $identity['role'];
             }
+        } elseif (PHP_SAPI == 'cli' && isset($config->cli->userId)) {
+            $user = Editors::find($config->cli->userId);
         }
 
-        Zend_Registry::set('user', (object) [
+        return [
             'data' => $user,
             'role' => $role,
             'isAuthorized' => (bool) $user,
             'displayName' => $user ? $user->getShortName() : 'Гость',
             'canSwitchRoles' => $canSwitchRoles,
             'noticeDetails' => $config->noticeDetails,
-        ]);
+        ];
     }
 
+    /**
+     * Пользователь может менять свою роль?
+     *
+     * @param Editors $user
+     * 
+     * @return bool
+     */
     protected function _canSwitchRoles(Editors $user)
     {
         return 'admin' === $user->role;

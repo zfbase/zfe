@@ -109,7 +109,8 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
         $page = $this->getParam('page');
         if ($page) {
             // Для возможности перехода на 51 страницу (при 20 результатах на странице)
-            $q->option('max_matches', $page * 50);
+            $q->option('max_matches', $page
+                * ZFE_Sphinx_Paginator::getInstance()->getItemsPerPage());
         }
 
         return $q;

@@ -70,7 +70,7 @@ class ZFE_Uri
      *
      * @param string $string
      *
-     * @return ZFE_Uri
+     * @return static|$this
      */
     public static function fromString(string $string)
     {
@@ -118,7 +118,7 @@ class ZFE_Uri
      * @param Zend_Controller_Request_Abstract $request
      * @param bool                             $includePost
      *
-     * @return ZFE_Uri
+     * @return static|$this
      */
     public static function fromRequest(Zend_Controller_Request_Abstract $request, bool $includePost = false)
     {
@@ -160,10 +160,13 @@ class ZFE_Uri
      * Указать схему.
      *
      * @param string|null $scheme
+     * 
+     * @return static|$this
      */
     public function setScheme(?string $scheme)
     {
         $this->_scheme = $scheme;
+        return $this;
     }
 
     /**
@@ -180,10 +183,13 @@ class ZFE_Uri
      * Указать логин.
      *
      * @param string|null $login
+     * 
+     * @return static|$this
      */
     public function setLogin(?string $login)
     {
         $this->_login = $login;
+        return $this;
     }
 
     /**
@@ -200,10 +206,13 @@ class ZFE_Uri
      * Указать пароль.
      *
      * @param string|null $password
+     * 
+     * @return static|$this
      */
     public function setPassword(?string $password)
     {
         $this->_password = $password;
+        return $this;
     }
 
     /**
@@ -220,10 +229,13 @@ class ZFE_Uri
      * Указать хост.
      *
      * @param string|null $host
+     * 
+     * @return static|$this
      */
     public function setHost(?string $host)
     {
         $this->_host = $host;
+        return $this;
     }
 
     /**
@@ -240,10 +252,13 @@ class ZFE_Uri
      * Указать порт.
      *
      * @param int|null $port
+     * 
+     * @return static|$this
      */
     public function setPort(?int $port)
     {
         $this->_port = $port;
+        return $this;
     }
 
     /**
@@ -260,10 +275,13 @@ class ZFE_Uri
      * Указать путь.
      *
      * @param string|null $path
+     * 
+     * @return static|$this
      */
     public function setPath(?string $path)
     {
         $this->_path = $path;
+        return $this;
     }
 
     /**
@@ -280,6 +298,8 @@ class ZFE_Uri
      * Указать запрос.
      *
      * @param string|array $query
+     * 
+     * @return static|$this
      */
     public function setQuery($query)
     {
@@ -290,6 +310,8 @@ class ZFE_Uri
         if (is_array($query)) {
             $this->_query = $query;
         }
+
+        return $this;
     }
 
     /**
@@ -297,26 +319,34 @@ class ZFE_Uri
      *
      * @param string $key
      * @param mixed  $value
+     * 
+     * @return static|$this
      */
     public function setQueryPart(string $key, $value)
     {
         $this->_query[$key] = $value;
+        return $this;
     }
 
     /**
      * Удалить параметр запроса.
      *
      * @param string $key
+     * 
+     * @return static|$this
      */
     public function removeQueryPart(string $key)
     {
         unset($this->_query[$key]);
+        return $this;
     }
 
     /**
      * Разобрать запрос на составляющие.
      *
      * @param string $string
+     * 
+     * @return array
      */
     public static function parseQuery(string $string)
     {
@@ -359,10 +389,13 @@ class ZFE_Uri
      * Указать фрагмент.
      *
      * @param string|null $fragment
+     * 
+     * @return static|$this
      */
     public function setFragment(?string $fragment)
     {
         $this->_fragment = $fragment;
+        return $this;
     }
 
     /**

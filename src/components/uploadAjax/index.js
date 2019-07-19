@@ -173,7 +173,7 @@ class Loader {
   }
 
   previewImage(file) {
-    const $preview = $('<p>', { class: 'help-block preview-image' });
+    const $preview = $('<p>', { class: 'help-block preview-image image-uploaded' });
 
     let $title = null;
     if (file.previewUrl) {
