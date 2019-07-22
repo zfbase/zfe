@@ -1,8 +1,11 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_LoadableAccess
- * Класс управления записью файла, для которой происходит работа с ФС
+ * Класс управления записью файла, для которой происходит работа с ФС.
  */
 abstract class ZFE_File_LoadableAccess
 {
@@ -13,19 +16,21 @@ abstract class ZFE_File_LoadableAccess
 
     /**
      * @param Files $record
+     *
      * @return $this
      */
-    public function setRecord(Files $record) : self
+    public function setRecord(Files $record): self
     {
         $this->record = $record;
         return $this;
     }
 
     /**
-     * @return Files|Doctrine_Record
      * @throws ZFE_File_Exception
+     *
+     * @return Files|Doctrine_Record
      */
-    public function getRecord() : Files
+    public function getRecord(): Files
     {
         if (empty($this->record)) {
             throw new ZFE_File_Exception('Объект не задан');

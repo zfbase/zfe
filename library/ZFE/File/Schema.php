@@ -1,7 +1,10 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_Schema
  * Схема файла - это описание параметров и уникального кода для загрузки файла/файлов и их разделения между собой по смыслу.
  * Для любой модели, для которой существует менеджер, управляющий ее файлами, может быть определена коллекция схем файлов.
  */
@@ -13,12 +16,12 @@ class ZFE_File_Schema
 
     protected $fieldName = 'file';
     protected $fileTypeCode = 0;
-    protected $processor = null;
+    protected $processor;
     protected $multiple = false;
     protected $accept = '*'; //'.xls, .xlsx';
     protected $title = 'Файл';
     protected $required = false;
-    protected $tooltip = null;
+    protected $tooltip;
 
     /**
      * @return string
@@ -30,9 +33,10 @@ class ZFE_File_Schema
 
     /**
      * @param string $title
+     *
      * @return ZFE_File_Schema
      */
-    public function setTitle(string $title): ZFE_File_Schema
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -48,9 +52,10 @@ class ZFE_File_Schema
 
     /**
      * @param bool $multiple
+     *
      * @return ZFE_File_Schema
      */
-    public function setMultiple(bool $multiple): ZFE_File_Schema
+    public function setMultiple(bool $multiple): self
     {
         $this->multiple = $multiple;
         return $this;
@@ -66,9 +71,10 @@ class ZFE_File_Schema
 
     /**
      * @param string $accept
+     *
      * @return ZFE_File_Schema
      */
-    public function setAccept(string $accept): ZFE_File_Schema
+    public function setAccept(string $accept): self
     {
         $this->accept = $accept;
         return $this;
@@ -76,9 +82,10 @@ class ZFE_File_Schema
 
     /**
      * @param string $fieldName
+     *
      * @return ZFE_File_Schema
      */
-    public function setFieldName(string $fieldName): ZFE_File_Schema
+    public function setFieldName(string $fieldName): self
     {
         $this->fieldName = $fieldName;
         return $this;
@@ -86,9 +93,10 @@ class ZFE_File_Schema
 
     /**
      * @param int $fileTypeCode
+     *
      * @return ZFE_File_Schema
      */
-    public function setFileTypeCode(int $fileTypeCode): ZFE_File_Schema
+    public function setFileTypeCode(int $fileTypeCode): self
     {
         $this->fileTypeCode = $fileTypeCode;
         return $this;
@@ -96,7 +104,9 @@ class ZFE_File_Schema
 
     /**
      * @param ZFE_File_Processor $processor
+     *
      * @return ZFE_File_Schema
+     *
      *@deprecated
      * use setProcessing
      */
@@ -108,6 +118,7 @@ class ZFE_File_Schema
 
     /**
      * @param ZFE_File_Processing $processing
+     *
      * @return $this
      */
     public function setProcessing(ZFE_File_Processing $processing)
@@ -132,10 +143,7 @@ class ZFE_File_Schema
         return $this->fileTypeCode;
     }
 
-    /**
-     * @return null
-     */
-    public function getProcessor() : ?ZFE_File_Processor
+    public function getProcessor(): ?ZFE_File_Processor
     {
         return $this->processor;
     }
@@ -150,17 +158,15 @@ class ZFE_File_Schema
 
     /**
      * @param bool $required
+     *
      * @return ZFE_File_Schema
      */
-    public function setRequired(bool $required): ZFE_File_Schema
+    public function setRequired(bool $required): self
     {
         $this->required = $required;
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getTooltip()
     {
         return $this->tooltip;
@@ -168,6 +174,7 @@ class ZFE_File_Schema
 
     /**
      * @param null $tooltip
+     *
      * @return ZFE_File_Schema
      */
     public function setTooltip($tooltip)
@@ -175,5 +182,4 @@ class ZFE_File_Schema
         $this->tooltip = $tooltip;
         return $this;
     }
-
 }

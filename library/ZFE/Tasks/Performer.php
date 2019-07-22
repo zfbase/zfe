@@ -10,8 +10,8 @@
 abstract class ZFE_Tasks_Performer
 {
     /**
-     * @param string $name
-     * 
+     * @param string $code
+     *
      * @return ZFE_Tasks_Performer
      */
     public static function forge($code)
@@ -26,6 +26,7 @@ abstract class ZFE_Tasks_Performer
 
     /**
      * Получить код исполнителя.
+     *
      * Код исполнителя определяется как последняя часть имени класс по PSR-0:
      * Application_Performer_LazyPerson -> LazyPerson.
      *
@@ -42,7 +43,8 @@ abstract class ZFE_Tasks_Performer
      * Выполнить необходимые действия по задаче для указанной по id записи в БД.
      *
      * @param int $relatedItemId Идентификатор записи БД
-     * @throw ZFE_Tasks_Performer_Exception
+     *
+     * @throws ZFE_Tasks_Performer_Exception
      */
     abstract public function perform(int $relatedItemId);
 }

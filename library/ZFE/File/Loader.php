@@ -1,8 +1,11 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_Loader
- * Класс знает все о том, как надо сохранить загруженный файл в ФС или удалить его в ФС
+ * Класс знает все о том, как надо сохранить загруженный файл в ФС или удалить его в ФС.
  */
 final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 {
@@ -28,7 +31,9 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 
     /**
      * ZFE_File_Loader constructor.
+     *
      * @param Zend_Config $config секция files
+     *
      * @throws ZFE_File_Exception
      */
     public function __construct(Zend_Config $config)
@@ -44,11 +49,12 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 
     /**
      * @param string $resultPath
+     *
      * @return string
      */
-    public function relateFilePath(string $resultPath) : string
+    public function relateFilePath(string $resultPath): string
     {
-        if (strpos($resultPath, $this->dataDir) !== false) {
+        if (mb_strpos($resultPath, $this->dataDir) !== false) {
             $tmp = str_replace($this->dataDir, '', $resultPath);
         } else {
             throw new ZFE_File_Exception('Невозможно определить относительный путь файла для ' . $resultPath);
@@ -58,36 +64,39 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
     }
 
     /**
-     * @return string
      * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      * @throws ZFE_File_Exception
      * @throws Zend_Exception
+     *
+     * @return string
      */
-    public function absFilePath() : string
+    public function absFilePath(): string
     {
         $file = $this->getRecord();
         return $this->dataDir . $file->get('path');
     }
 
     /**
-     * @return string
      * @throws ZFE_File_Exception
      * @throws Zend_Exception
+     *
+     * @return string
      */
-    public function getBaseDir() : string
+    public function getBaseDir(): string
     {
         return $this->dataDir;
     }
 
     /**
-     * Генерировать путь для файла
+     * Генерировать путь для файла.
      *
-     * @param string $basePath
-     * @param integer|string $id
-     * @param string $ext
-     * @param boolean $isUrl
-     * @param boolean $andRand
+     * @param string     $basePath
+     * @param int|string $id
+     * @param string     $ext
+     * @param bool       $isUrl
+     * @param bool       $andRand
+     *
      * @return string
      */
     protected function generatePath($basePath, $id = 0, $ext = '', $isUrl = false, $andRand = false)
@@ -97,7 +106,7 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
             throw new ZFE_File_Exception('Путь ' . $basePath . ' недоступен для записи');
         }
 
-        if (strlen($id) > $this->div) {
+        if (mb_strlen($id) > $this->div) {
             $parts = str_split($id, $this->div);
         } else {
             $parts = [$id];
@@ -106,42 +115,42 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
         $fileName = array_pop($parts);
         $subPath = implode('/', $parts);
 
-        if (! $isUrl && ! file_exists($basePath . '/' . $subPath)) {
+        if (!$isUrl && !file_exists($basePath . '/' . $subPath)) {
             $this->makePath($basePath . '/' . $subPath);
             $this->fixPath($basePath, $subPath);
         }
 
-        $result = $basePath . '/' .
+        return $basePath . '/' .
             (!empty($subPath) ? $subPath . '/' : '') .
             $fileName .
             (empty($ext) ? '' : '.' . $ext) .
-            ($isUrl && $andRand ? '?r=' . rand() : '');
-
-        return $result;
+            ($isUrl && $andRand ? '?r=' . mt_rand() : '');
     }
 
     /**
-     * Безопасно рекурсивно создать директорию
-     * Если родительской директории нету – создать.
+     * Безопасно рекурсивно создать директорию.
+     * Если родительская директория отсутствует – создать.
      *
-     * @param $path
+     * @param string $path
+     *
      * @throws Exception
      */
     protected function makePath($path)
     {
-        if ( ! file_exists($path)) {
-            if ( ! @mkdir($path, 0755, true)) {
+        if (!file_exists($path)) {
+            if (!@mkdir($path, 0755, true)) {
                 throw new Exception("Mkdir failed for path '{$path}'");
             }
         }
     }
 
     /**
-     * Настроить права на директорию файла
+     * Настроить права на директорию файла.
      * Настраивать права на все папки от базовой до конкретной.
      *
-     * @param $basePath
-     * @param null $subPath
+     * @param string $basePath
+     * @param string $subPath
+     *
      * @throws Zend_Exception
      */
     public function fixPath($basePath, $subPath = null)
@@ -157,14 +166,14 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
     }
 
     /**
-     * @return string
-     *
      * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
      * @throws ZFE_File_Exception
+     *
+     * @return string
      */
-    public function getResultPath() : string
+    public function getResultPath(): string
     {
         $baseDir = $this->getBaseDir();
         if (empty($this->record->path)) {
@@ -172,16 +181,19 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
         } else {
             $path = $baseDir . $this->record->path;
         }
+
         // if (is_writable($path)) {
-            // $resultPath = $path . '/' . $this->getRecord()->title;
-            // return $resultPath;
-        //}
+        //   $resultPath = $path . '/' . $this->getRecord()->title;
+        //   return $resultPath;
+        // }
+
         return $path;
     }
 
     /**
-     * Копировать файлы в целевую директорию во время загрузки
-     * @return $this
+     * Копировать файлы в целевую директорию во время загрузки.
+     *
+     * @return ZFE_File_Loader
      */
     public function useCopy()
     {
@@ -190,8 +202,9 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
     }
 
     /**
-     * Перемещать файлы в целевую директорию во время загрузки
-     * @return $this
+     * Перемещать файлы в целевую директорию во время загрузки.
+     *
+     * @return ZFE_File_Loader
      */
     public function useMove()
     {
@@ -201,13 +214,14 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 
     /**
      * @param string $fromPath
-     * @return Files
      *
      * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
+     *
+     * @return Files
      */
-    public function upload(string $fromPath = null) : Files
+    public function upload(string $fromPath = null): Files
     {
         $file = $this->getRecord();
         if (!$fromPath) {
@@ -240,12 +254,13 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
     }
 
     /**
-     * @return bool
      * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
+     *
+     * @return bool
      */
-    public function erase() : bool
+    public function erase(): bool
     {
         try {
             $resultPath = $this->getResultPath();

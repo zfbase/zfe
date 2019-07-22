@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 class ZFE_File_PathMapper
 {
     const KEY_MAPPED_PATH = 'tmp_path';
@@ -11,6 +15,7 @@ class ZFE_File_PathMapper
 
     /**
      * Helper_File_PathMapper constructor.
+     *
      * @param Files $file
      */
     public function __construct(Files $file)
@@ -20,9 +25,10 @@ class ZFE_File_PathMapper
 
     /**
      * @param string $path
+     *
      * @return ZFE_File_PathMapper
      */
-    public function map(string $path) : self
+    public function map(string $path): self
     {
         $key = static::KEY_MAPPED_PATH;
         $this->file->mapValue($key, $path);
@@ -32,17 +38,18 @@ class ZFE_File_PathMapper
     /**
      * @return bool
      */
-    public function isMapped() : bool
+    public function isMapped(): bool
     {
         $key = static::KEY_MAPPED_PATH;
         return $this->file->hasMappedValue($key);
     }
 
     /**
-     * @return string
      * @throws Doctrine_Record_Exception
+     *
+     * @return string
      */
-    public function getMapped() : string
+    public function getMapped(): string
     {
         $key = static::KEY_MAPPED_PATH;
         return $this->file->get($key);

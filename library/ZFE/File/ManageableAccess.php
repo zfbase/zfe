@@ -1,8 +1,11 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_ManageableAccess
- * Класс управления записью модели для управления ее файлами
+ * Класс управления записью модели для управления ее файлами.
  */
 abstract class ZFE_File_ManageableAccess
 {
@@ -13,19 +16,21 @@ abstract class ZFE_File_ManageableAccess
 
     /**
      * @param ZFE_File_Manageable $record
+     *
      * @return $this
      */
-    public function setRecord(ZFE_File_Manageable $record) : self
+    public function setRecord(ZFE_File_Manageable $record): self
     {
         $this->record = $record;
         return $this;
     }
 
     /**
-     * @return ZFE_File_Manageable|Doctrine_Record
      * @throws ZFE_File_Exception
+     *
+     * @return ZFE_File_Manageable|Doctrine_Record
      */
-    public function getRecord() : ZFE_File_Manageable
+    public function getRecord(): ZFE_File_Manageable
     {
         if (empty($this->record)) {
             throw new ZFE_File_Exception('Объект не задан');

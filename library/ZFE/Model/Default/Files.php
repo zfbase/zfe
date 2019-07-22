@@ -1,5 +1,8 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
 
 class ZFE_Model_Default_Files extends BaseFiles
 {
@@ -29,14 +32,14 @@ class ZFE_Model_Default_Files extends BaseFiles
      *
      * @var string
      */
-    public static $titleField = "x.title_original";
+    public static $titleField = 'x.title_original';
 
     /**
      * Сортировка записей по умолчанию.
      *
      * @var string
      */
-    public static $defaultOrder = "x.model_name ASC, x.item_id ASC, x.id ASC";
+    public static $defaultOrder = 'x.model_name ASC, x.item_id ASC, x.id ASC';
 
     /**
      * Ключ сортировки по умолчанию.
@@ -87,28 +90,31 @@ class ZFE_Model_Default_Files extends BaseFiles
     }
 
     /**
-     * Получить запись, для который был загружен данный файл
+     * Получить запись, для который был загружен данный файл.
+     *
      * @return ZFE_File_Manageable|null
      */
-    public function getManageableItem() : ?ZFE_File_Manageable
+    public function getManageableItem(): ?ZFE_File_Manageable
     {
         $modelName = $this->model_name;
         $itemId = $this->item_id;
         $q = ZFE_Query::create()->setHard(true)
             ->select()
             ->from($modelName)
-            ->where('id = ?', $itemId);
+            ->where('id = ?', $itemId)
+        ;
         return $q->fetchOne() ?: null;
     }
 
     /**
-     * Возвращает описание допустимых обработок для файлов
+     * Возвращает описание допустимых обработок для файлов.
+     *
      * @param bool $refresh Загрузить коллекцию по-новой?
+     *
      * @return ZFE_File_Processor_Mapping|null
      */
-    public function getProcessings($refresh = false) : ZFE_File_Processor_Mapping
+    public function getProcessings($refresh = false): ZFE_File_Processor_Mapping
     {
-        $mapping = new ZFE_File_Processor_Mapping($this);
-        return $mapping;
+        return new ZFE_File_Processor_Mapping($this);
     }
 }

@@ -1,8 +1,11 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_Schema_Collection
- * Коллекция схем (см. ZFE_File_Schema), про которые знает менеджер файлов
+ * Коллекция схем (см. ZFE_File_Schema), про которые знает менеджер файлов.
  */
 class ZFE_File_Schema_Collection implements IteratorAggregate
 {
@@ -10,7 +13,7 @@ class ZFE_File_Schema_Collection implements IteratorAggregate
     protected $required = 0;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getIterator()
     {
@@ -19,9 +22,10 @@ class ZFE_File_Schema_Collection implements IteratorAggregate
 
     /**
      * @param ZFE_File_Schema $schema
+     *
      * @return bool
      */
-    protected function checkIsTypeUnic(ZFE_File_Schema $schema) : bool
+    protected function checkIsTypeUnic(ZFE_File_Schema $schema): bool
     {
         return !array_key_exists($schema->getFileTypeCode(), $this->map);
     }
@@ -29,17 +33,19 @@ class ZFE_File_Schema_Collection implements IteratorAggregate
     /**
      * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         return count($this->map);
     }
 
     /**
      * @param ZFE_File_Schema $schema
-     * @return ZFE_File_Schema_Collection
+     *
      * @throws ZFE_File_Exception
+     *
+     * @return ZFE_File_Schema_Collection
      */
-    public function add(ZFE_File_Schema $schema) : self
+    public function add(ZFE_File_Schema $schema): self
     {
         $code = $schema->getFileTypeCode();
         if ($this->checkIsTypeUnic($schema)) {
@@ -48,18 +54,17 @@ class ZFE_File_Schema_Collection implements IteratorAggregate
                 $this->required++;
             }
         } else {
-            throw new ZFE_File_Exception(
-                'Схема поля файла с кодом ' . $code . ' уже присутствует в коллекции'
-            );
+            throw new ZFE_File_Exception("Схема поля файла с кодом {$code} уже присутствует в коллекции");
         }
         return $this;
     }
 
     /**
      * @param ZFE_File_Schema $schema
+     *
      * @return ZFE_File_Schema_Collection
      */
-    public function remove(ZFE_File_Schema $schema) : self
+    public function remove(ZFE_File_Schema $schema): self
     {
         $code = $schema->getFileTypeCode();
         return $this->removeByCode($code);
@@ -67,9 +72,10 @@ class ZFE_File_Schema_Collection implements IteratorAggregate
 
     /**
      * @param int $code
+     *
      * @return ZFE_File_Schema_Collection
      */
-    public function removeByCode(int $code) : self
+    public function removeByCode(int $code): self
     {
         if (array_key_exists($code, $this->map)) {
             if ($this->map[$code]->isRequired()) {
@@ -82,46 +88,49 @@ class ZFE_File_Schema_Collection implements IteratorAggregate
 
     /**
      * @param int $typeCode
-     * @return ZFE_File_Schema
+     *
      * @throws ZFE_File_Exception
+     *
+     * @return ZFE_File_Schema
      */
-    public function get(int $typeCode) : ZFE_File_Schema
+    public function get(int $typeCode): ZFE_File_Schema
     {
         if (array_key_exists($typeCode, $this->map)) {
             return $this->map[$typeCode];
         }
-        throw new ZFE_File_Exception('Схемы поля файла с кодом ' . $typeCode . ' не найдено');
+        throw new ZFE_File_Exception("Схемы поля файла с кодом {$typeCode} не найдено");
     }
 
     /**
      * @param Files $file
-     * @return ZFE_File_Schema
+     *
      * @throws ZFE_File_Exception
      * @throws Doctrine_Record_Exception
+     *
+     * @return ZFE_File_Schema
      */
-    public function getFor(Files $file) : ZFE_File_Schema
+    public function getFor(Files $file): ZFE_File_Schema
     {
-        /* @var $file Doctrine_Record */
         return $this->get($file->get('type'));
     }
 
     /**
      * @return bool
      */
-    public function hasRequired() : bool
+    public function hasRequired(): bool
     {
         return boolval($this->required);
     }
 
     /**
-     * @return ZFE_File_Schema_Collection
      * @throws ZFE_File_Exception
+     *
+     * @return ZFE_File_Schema_Collection
      */
-    public function getRequired() : ZFE_File_Schema_Collection
+    public function getRequired(): self
     {
-        $subCollection = new ZFE_File_Schema_Collection;
-        foreach ($this->map as $code => $schema) {
-            /* @var $schema ZFE_File_Schema */
+        $subCollection = new self;
+        foreach ($this->map as $code => $schema) {  /** @var ZFE_File_Schema $schema */
             if ($schema->isRequired()) {
                 $subCollection->add($schema);
             }

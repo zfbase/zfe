@@ -1,32 +1,33 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_Agent
+ * Class ZFE_File_Agent.
  *
  * Агент представляет файл:
  * презентация/отображение файла, getName, getSize и т.д.
  * отвечает за доступ к нему с помощью методов isAllowedTo*
  * предоставляет карту возможных и проведенных обработок файла
  *
- * @property int $id
- * @property int $creator_id
- * @property int $created_at
+ * @property int    $id
+ * @property int    $creator_id
+ * @property int    $created_at
  * @property string $title
  * @property string $hash
- * @property int $size
- * @property int $type
+ * @property int    $size
+ * @property int    $type
  * @property string $ext
  * @property string $path
  *
  * @method canDelete
  * @method getDeleteUrl
- *
  * @method canDownload
  * @method getDownloadUrl
- *
  * @method canDownloadAll
  * @method getDownloadAllUrl
- *
  * @method canProcess
  * @method getProcessUrl
  */
@@ -50,16 +51,16 @@ class ZFE_File_Agent
     /**
      * @var null|ZFE_File_Processor_Mapping
      */
-    protected $processings = null;
+    protected $processings;
 
     /**
      * @var bool
      */
     protected $processHandlyPlan = false;
 
-
     /**
      * Helper_File_Agent constructor.
+     *
      * @param Files $file
      *
      * @throws Doctrine_Connection_Exception
@@ -75,7 +76,9 @@ class ZFE_File_Agent
 
     /**
      * Определить управление доступом
+     *
      * @param ZFE_File_Accessor $accessor
+     *
      * @return $this
      */
     public function useAccessor(ZFE_File_Accessor $accessor)
@@ -98,8 +101,10 @@ class ZFE_File_Agent
     }
 
     /**
-     * Определить перечень иконок для файла
+     * Определить перечень иконок для файла.
+     *
      * @param ZFE_File_Icons $set
+     *
      * @return $this
      */
     public function useIconsSet(ZFE_File_Icons $set)
@@ -111,20 +116,21 @@ class ZFE_File_Agent
     /**
      * @param $name
      * @param $arguments
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
     {
         // proxy calls to accesssor
 
-        if (strpos($name, 'can') === 0) {
-            $accessorMethod = 'isAllowTo' . substr($name, 3);
-            return $this->accessor->$accessorMethod();
+        if (mb_strpos($name, 'can') === 0) {
+            $accessorMethod = 'isAllowTo' . mb_substr($name, 3);
+            return $this->accessor->{$accessorMethod}();
         }
 
         // strrev('Url') -> lrU
-        if (strpos(strrev($name), 'lrU') === 0) {
-            return $this->accessor->$name($this->file);
+        if (mb_strpos(strrev($name), 'lrU') === 0) {
+            return $this->accessor->{$name}($this->file);
         }
 
         throw new BadFunctionCallException();
@@ -132,6 +138,7 @@ class ZFE_File_Agent
 
     /**
      * @param $name
+     *
      * @return mixed
      */
     public function __get($name)
@@ -141,37 +148,41 @@ class ZFE_File_Agent
     }
 
     /**
-     * Получить читаемый размер файла
+     * Получить читаемый размер файла.
+     *
      * @return string
      */
-    public function getSize() : string
+    public function getSize(): string
     {
         return ZFE_File::humanFileSize(intval($this->file->size));
     }
 
     /**
-     * Получить оформленное название записи файла
+     * Получить оформленное название записи файла.
+     *
      * @return string
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->file->getTitle();
     }
 
     /**
-     * Получить иконку для файла
+     * Получить иконку для файла.
+     *
      * @return string
      */
-    public function getIconClass() : string
+    public function getIconClass(): string
     {
         return $this->iconsSet->getFor($this->file->ext);
     }
 
     /**
      * Файл можно обработать?
+     *
      * @return bool
      */
-    public function isProcessable() : bool
+    public function isProcessable(): bool
     {
         // TODO каждый доступный процессор должен сообщать о наборе расширений, который он способен обрабатывать
         if (array_search($this->file->ext, ['zip', 'rar', 'exe', 'tar']) !== false) {
@@ -182,20 +193,23 @@ class ZFE_File_Agent
     }
 
     /**
-     * Получить обработки для файла
+     * Получить обработки для файла.
+     *
      * @return ZFE_File_Processor_Mapping
      */
-    public function getProcessings() : ZFE_File_Processor_Mapping
+    public function getProcessings(): ZFE_File_Processor_Mapping
     {
         return $this->processings;
     }
 
     /**
-     * Определить возможность ручного планирования обработки для файла
+     * Определить возможность ручного планирования обработки для файла.
+     *
      * @param bool $val
+     *
      * @return ZFE_File_Agent
      */
-    public function switchHandlyProcessing(bool $val) : self
+    public function switchHandlyProcessing(bool $val): self
     {
         $this->processHandlyPlan = $val;
         return $this;
@@ -203,9 +217,10 @@ class ZFE_File_Agent
 
     /**
      * Можно запланировать обработку вручную?
+     *
      * @return bool
      */
-    public function isHandlyProcessingSwitched() : bool
+    public function isHandlyProcessingSwitched(): bool
     {
         return $this->processHandlyPlan;
     }
