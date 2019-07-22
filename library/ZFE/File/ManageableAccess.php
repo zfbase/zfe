@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ZFE_File_ManageableAccess
+ * Класс управления записью модели для управления ее файлами
+ */
 abstract class ZFE_File_ManageableAccess
 {
     /**

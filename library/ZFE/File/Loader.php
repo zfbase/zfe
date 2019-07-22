@@ -2,6 +2,7 @@
 
 /**
  * Class ZFE_File_Loader
+ * Класс знает все о том, как надо сохранить загруженный файл в ФС или удалить его в ФС
  */
 final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 {

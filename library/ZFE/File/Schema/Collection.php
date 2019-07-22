@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ZFE_File_Schema_Collection
+ * Коллекция схем (см. ZFE_File_Schema), про которые знает менеджер файлов
+ */
 class ZFE_File_Schema_Collection implements IteratorAggregate
 {
     protected $map = [];

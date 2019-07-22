@@ -2,6 +2,10 @@
 
 /**
  * Class ZFE_File_Manager
+ * Менеджер файлов для модели, позволяет осуществить все необходимое для управления файлами модели, начиная
+ * с их загрузки и заканчивая их удалением.
+ * См. Интерфейс ZFE_File_Manageable, который определяет, что для модели существует ее менеджер, и т.о.
+ * для модели можно управлять файлами через ее менеджера.
  */
 abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
 {
@@ -54,7 +58,8 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
     /**
      * ZFE_File_Manager constructor.
      * @param ZFE_File_Manageable $record
-     * @throw ZFE_File_Exception
+     * @param Zend_Config $config
+     * @throws ZFE_File_Exception
      */
     public function __construct(ZFE_File_Manageable $record, Zend_Config $config)
     {
@@ -66,10 +71,7 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
     /**
      * @param Zend_Acl $acl
      * @param ZFE_Model_Default_Editors $user
-     *
      * @throws ZFE_File_Exception
-     * @throws Zend_Auth_Exception
-     * @throws Zend_Exception
      */
     public function initAccessControl(Zend_Acl $acl, ZFE_Model_Default_Editors $user)
     {
@@ -107,6 +109,9 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
     }
 
     /**
+     * Сохранить файлы для записи
+     * Метод выполняет все операции, обусловленные схемой поля, указанной с помощью typeCode
+     *
      * @param array $tmpPaths пути откуда забрать файлы
      * @param int $typeCode Код схемы файла
      *
@@ -222,7 +227,7 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
     }
 
     /**
-     * Создать записи файлов
+     * Создать запись файла
      *
      * @param string $path
      * @param int $typeCode

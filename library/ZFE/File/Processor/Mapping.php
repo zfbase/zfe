@@ -1,11 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Dezzpil
- * Date: 20.10.2018
- * Time: 17:59
- */
 
+/**
+ * Class ZFE_File_Processor_Mapping
+ * Описание допустимых обработок для записи файла
+ */
 class ZFE_File_Processor_Mapping extends ZFE_File_LoadableAccess implements IteratorAggregate
 {
     /**

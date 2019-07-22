@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ZFE_File_LoadableAccess
+ * Класс управления записью файла, для которой происходит работа с ФС
+ */
 abstract class ZFE_File_LoadableAccess
 {
     /**
