@@ -1,17 +1,20 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_Manager_Default
- * Стандартный менеджер с единственным полем для загрузки любых файлов
+ * Стандартный менеджер с единственным полем для загрузки любых файлов.
  */
 class ZFE_File_Manager_Default extends ZFE_File_Manager
 {
     const TYPE_COMMON = 10;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getFieldsSchemas() : ZFE_File_Schema_Collection
+    public function getFieldsSchemas(): ZFE_File_Schema_Collection
     {
         $schemas = new ZFE_File_Schema_Collection;
 
@@ -21,18 +24,18 @@ class ZFE_File_Manager_Default extends ZFE_File_Manager
             ->setTitle('Файлы')
             ->setMultiple(true)
             ->setRequired(false)
-            ->setTooltip('Приложите файлы для записи, если это необходимо');
+            ->setTooltip('Приложите файлы для записи, если это необходимо')
+        ;
         $schemas->add($common);
 
         return $schemas;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    protected function initAccessor(Zend_Acl $acl, ZFE_Model_Default_Editors $user) : ZFE_File_Accessor
+    protected function initAccessor(Zend_Acl $acl, ZFE_Model_Default_Editors $user): ZFE_File_Accessor
     {
         return new ZFE_File_Accessor_Acl($acl, $user);
     }
-
 }

@@ -1,7 +1,10 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Class ZFE_File_PluploadHandler
  * @see https://github.com/moxiecode/plupload-handler-php
  */
 class ZFE_File_PluploadHandler
@@ -17,66 +20,66 @@ class ZFE_File_PluploadHandler
     const DS = DIRECTORY_SEPARATOR;
 
     /**
-     * @property array $conf
+     * @var array
      */
     protected $conf;
 
     /**
      * Resource containing the reference to the file that we will write to.
-     * @property resource $out
+     *
+     * @var resource
      */
     protected $out;
 
     /**
      * In case of the error, will contain error code.
-     * @property int [$error=null]
+     *
+     * @var int
      */
-    protected $error = null;
+    protected $error;
 
-    function __construct($conf = [])
+    public function __construct($conf = [])
     {
         $this->conf = array_merge(
             [
                 'file_data_name' => 'file',
-                'tmp_dir' => ini_get("upload_tmp_dir") . static::DS . "plupload",
+                'tmp_dir' => ini_get('upload_tmp_dir') . static::DS . 'plupload',
                 'target_dir' => false,
                 'cleanup' => true,
-                'max_file_age' => 5 * 3600, // in hours
-                'max_execution_time' => 5 * 60, // in seconds (5 minutes by default)
+                'max_file_age' => 5 * 3600,  // in hours
+                'max_execution_time' => 5 * 60,  // in seconds (5 minutes by default)
                 'chunk' => isset($_REQUEST['chunk']) ? intval($_REQUEST['chunk']) : 0,
                 'chunks' => isset($_REQUEST['chunks']) ? intval($_REQUEST['chunks']) : 0,
                 'append_chunks_to_target' => true,
                 'combine_chunks_on_complete' => true,
-                'file_name' => isset($_REQUEST['name']) ? $_REQUEST['name'] : false,
+                'file_name' => $_REQUEST['name'] ?? false,
                 'allow_extensions' => false,
-                'delay' => 0, // in seconds
-                'cb_sanitize_file_name' => array($this, 'sanitize_file_name'),
+                'delay' => 0,  // in seconds
+                'cb_sanitize_file_name' => [$this, 'sanitize_file_name'],
                 'cb_check_file' => false,
-                'cb_filesize' => array($this, 'filesize'),
-                'error_strings' => array(
-                    static::PLUPLOAD_MOVE_ERR => "Failed to move uploaded file.",
-                    static::PLUPLOAD_INPUT_ERR => "Failed to open input stream.",
-                    static::PLUPLOAD_OUTPUT_ERR => "Failed to open output stream.",
-                    static::PLUPLOAD_TMPDIR_ERR => "Failed to open temp directory.",
-                    static::PLUPLOAD_TYPE_ERR => "File type not allowed.",
-                    static::PLUPLOAD_UNKNOWN_ERR => "Failed due to unknown error.",
-                    static::PLUPLOAD_SECURITY_ERR => "File didn't pass security check."
-                ),
+                'cb_filesize' => [$this, 'filesize'],
+                'error_strings' => [
+                    static::PLUPLOAD_MOVE_ERR => 'Failed to move uploaded file.',
+                    static::PLUPLOAD_INPUT_ERR => 'Failed to open input stream.',
+                    static::PLUPLOAD_OUTPUT_ERR => 'Failed to open output stream.',
+                    static::PLUPLOAD_TMPDIR_ERR => 'Failed to open temp directory.',
+                    static::PLUPLOAD_TYPE_ERR => 'File type not allowed.',
+                    static::PLUPLOAD_UNKNOWN_ERR => 'Failed due to unknown error.',
+                    static::PLUPLOAD_SECURITY_ERR => "File didn't pass security check.",
+                ],
                 'debug' => false,
-                'log_path' => "error.log"
+                'log_path' => 'error.log',
             ],
             $conf
         );
     }
 
-
-    function __destruct()
+    public function __destruct()
     {
         $this->reset();
     }
 
-
-    function handleUpload()
+    public function handleUpload()
     {
         $conf = $this->conf;
 
@@ -118,14 +121,14 @@ class ZFE_File_PluploadHandler
                     $conf['allow_extensions'] = preg_split('{\s*,\s*}', $conf['allow_extensions']);
                 }
 
-                if (!in_array(strtolower(pathinfo($file_name, PATHINFO_EXTENSION)), $conf['allow_extensions'])) {
+                if (!in_array(mb_strtolower(pathinfo($file_name, PATHINFO_EXTENSION)), $conf['allow_extensions'])) {
                     throw new Exception('', static::PLUPLOAD_TYPE_ERR);
                 }
             }
 
             $this->lockTheFile($file_name);
 
-            $this->log("$file_name received" . ($conf['chunks'] ? ", chunks enabled: {$conf['chunk']} of {$conf['chunks']}" : ''));
+            $this->log($file_name . ' received' . ($conf['chunks'] ? ", chunks enabled: {$conf['chunk']} of {$conf['chunks']}" : ''));
 
             // Write file or chunk to appropriate temp location
             if ($conf['chunks']) {
@@ -138,19 +141,18 @@ class ZFE_File_PluploadHandler
             return $result;
         } catch (Exception $ex) {
             $this->error = $ex->getCode();
-            $this->log("ERROR: " . $this->getErrorMessage());
+            $this->log('ERROR: ' . $this->getErrorMessage());
             $this->unlockTheFile($file_name);
             return false;
         }
     }
 
-
     /**
-     * Retrieve the error code
+     * Retrieve the error code.
      *
      * @return int Error code
      */
-    function getErrorCode()
+    public function getErrorCode()
     {
         if (!$this->error) {
             return null;
@@ -163,79 +165,75 @@ class ZFE_File_PluploadHandler
         return $this->error;
     }
 
-
     /**
-     * Retrieve the error message
+     * Retrieve the error message.
      *
      * @return string Error message
      */
-    function getErrorMessage()
+    public function getErrorMessage()
     {
         if ($code = $this->getErrorCode()) {
             return $this->conf['error_strings'][$code];
-        } else {
-            return '';
         }
+        return '';
     }
-
 
     /**
      * Combine chunks for specified file name.
      *
+     * @param string $file_name
+     *
      * @throws Exception In case of error generates exception with the corresponding code
      *
-     * @param string $file_name
      * @return string Path to the target file
      */
-    function combineChunksFor($file_name)
+    public function combineChunksFor($file_name)
     {
         $file_path = $this->getTargetPathFor($file_name);
-        if (!$tmp_path = $this->writeChunksToFile("$file_path.dir.part", "$file_path.part")) {
+        if (!$tmp_path = $this->writeChunksToFile("${file_path}.dir.part", "${file_path}.part")) {
             return false;
         }
         return $this->rename($tmp_path, $file_path);
     }
 
-
     protected function handleChunk($chunk, $file_name)
     {
         $file_path = $this->getTargetPathFor($file_name);
 
-        $this->log($this->conf['append_chunks_to_target']
-            ? "chunks being appended directly to the target $file_path.part"
-            : "standalone chunks being written to $file_path.dir.part"
+        $this->log(
+            $this->conf['append_chunks_to_target']
+            ? "chunks being appended directly to the target ${file_path}.part"
+            : "standalone chunks being written to ${file_path}.dir.part"
         );
 
         if ($this->conf['append_chunks_to_target']) {
-            $chunk_path = $this->writeUploadTo("$file_path.part", false, 'ab');
+            $chunk_path = $this->writeUploadTo("${file_path}.part", false, 'ab');
 
             if ($this->isLastChunk($file_name)) {
                 return $this->rename($chunk_path, $file_path);
             }
         } else {
-            $chunk_path = $this->writeUploadTo("$file_path.dir.part" . static::DS . "$chunk.part");
+            $chunk_path = $this->writeUploadTo("${file_path}.dir.part" . static::DS . "${chunk}.part");
 
             if ($this->conf['combine_chunks_on_complete'] && $this->isLastChunk($file_name)) {
                 return $this->combineChunksFor($file_name);
             }
         }
 
-        return array(
+        return [
             'name' => $file_name,
             'path' => $chunk_path,
             'chunk' => $chunk,
-            'size' => call_user_func($this->conf['cb_filesize'], $chunk_path)
-        );
+            'size' => call_user_func($this->conf['cb_filesize'], $chunk_path),
+        ];
     }
-
 
     protected function handleFile($file_name)
     {
         $file_path = $this->getTargetPathFor($file_name);
-        $tmp_path = $this->writeUploadTo($file_path . ".part");
+        $tmp_path = $this->writeUploadTo($file_path . '.part');
         return $this->rename($tmp_path, $file_path);
     }
-
 
     protected function rename($tmp_path, $file_path)
     {
@@ -248,27 +246,28 @@ class ZFE_File_PluploadHandler
         }
 
         if (rename($tmp_path, $file_path)) {
-            $this->log("$tmp_path successfully renamed to $file_path");
+            $this->log("${tmp_path} successfully renamed to ${file_path}");
 
-            return array(
+            return [
                 'name' => basename($file_path),
                 'path' => $file_path,
-                'size' => call_user_func($this->conf['cb_filesize'], $file_path)
-            );
-        } else {
-            return false;
+                'size' => call_user_func($this->conf['cb_filesize'], $file_path),
+            ];
         }
-    }
 
+        return false;
+    }
 
     /**
      * Writes either a multipart/form-data message or a binary stream
      * to the specified file.
      *
+     * @param string $file_path      the path to write the file to
+     * @param string $file_data_name the name of the multipart field
+     * @param string $mode
+     *
      * @throws Exception In case of error generates exception with the corresponding code
      *
-     * @param string $file_path The path to write the file to
-     * @param string [$file_data_name='file'] The name of the multipart field
      * @return string Path to the target file
      */
     protected function writeUploadTo($file_path, $file_data_name = false, $mode = 'wb')
@@ -283,13 +282,13 @@ class ZFE_File_PluploadHandler
         }
 
         if (!empty($_FILES)) {
-            if (!isset($_FILES[$file_data_name]) || $_FILES[$file_data_name]["error"] || !is_uploaded_file($_FILES[$file_data_name]["tmp_name"])) {
+            if (!isset($_FILES[$file_data_name]) || $_FILES[$file_data_name]['error'] || !is_uploaded_file($_FILES[$file_data_name]['tmp_name'])) {
                 throw new Exception('', static::PLUPLOAD_INPUT_ERR);
             }
-            return $this->writeToFile($_FILES[$file_data_name]["tmp_name"], $file_path, $mode);
-        } else {
-            return $this->writeToFile("php://input", $file_path, $mode);
+            return $this->writeToFile($_FILES[$file_data_name]['tmp_name'], $file_path, $mode);
         }
+
+        return $this->writeToFile('php://input', $file_path, $mode);
     }
 
     /**
@@ -298,14 +297,15 @@ class ZFE_File_PluploadHandler
      * the target.
      *
      * @param array|string $source_paths
-     * @param string $target_path
-     * @param string [$mode='wb'] Mode to use (to append use 'ab')
-     * @return string Path to the written target file
+     * @param string       $target_path
+     * @param string       $mode         mode to use (to append use 'ab')
+     *
+     * @return string path to the written target file
      */
     protected function writeToFile($source_paths, $target_path, $mode = 'wb')
     {
         if (!is_array($source_paths)) {
-            $source_paths = array($source_paths);
+            $source_paths = [$source_paths];
         }
 
         if (!$out = @fopen($target_path, $mode)) {
@@ -313,7 +313,7 @@ class ZFE_File_PluploadHandler
         }
 
         foreach ($source_paths as $source_path) {
-            if (!$in = @fopen($source_path, "rb")) {
+            if (!$in = @fopen($source_path, 'rb')) {
                 throw new Exception('', static::PLUPLOAD_INPUT_ERR);
             }
 
@@ -323,7 +323,7 @@ class ZFE_File_PluploadHandler
 
             @fclose($in);
 
-            $this->log("$source_path " . ($mode == 'wb' ? "written" : "appended") . " to $target_path");
+            $this->log("${source_path} " . ($mode == 'wb' ? 'written' : 'appended') . " to ${target_path}");
         }
 
         fflush($out);
@@ -332,22 +332,22 @@ class ZFE_File_PluploadHandler
         return $target_path;
     }
 
-
     /**
      * Combine chunks from the specified folder into the single file.
      *
+     * @param string $chunk_dir   Directory containing the chunks
+     * @param string $target_path The file to write the chunks to
+     *
      * @throws Exception In case of error generates exception with the corresponding code
      *
-     * @param string $chunk_dir Directory containing the chunks
-     * @param string $target_path The file to write the chunks to
      * @return string File path containing combined chunks
      */
     protected function writeChunksToFile($chunk_dir, $target_path)
     {
-        $chunk_paths = array();
+        $chunk_paths = [];
 
         for ($i = 0; $i < $this->conf['chunks']; $i++) {
-            $chunk_path = $chunk_dir . static::DS . "$i.part";
+            $chunk_path = $chunk_dir . static::DS . "${i}.part";
             if (!file_exists($chunk_path)) {
                 throw new Exception('', static::PLUPLOAD_MOVE_ERR);
             }
@@ -356,7 +356,7 @@ class ZFE_File_PluploadHandler
 
         $this->writeToFile($chunk_paths, $target_path, 'ab');
 
-        $this->log("$chunk_dir combined into $target_path");
+        $this->log("${chunk_dir} combined into ${target_path}");
 
         // Cleanup
         if ($this->conf['cleanup']) {
@@ -370,7 +370,8 @@ class ZFE_File_PluploadHandler
      * Checks if currently processed chunk for the given filename is the last one.
      *
      * @param string $file_name
-     * @return boolean
+     *
+     * @return bool
      */
     protected function isLastChunk($file_name)
     {
@@ -380,9 +381,9 @@ class ZFE_File_PluploadHandler
             }
         } else {
             $file_path = $this->getTargetPathFor($file_name);
-            $chunks = sizeof(glob("$file_path.dir.part/*.part"));
+            $chunks = sizeof(glob($file_path . '.dir.part/*.part'));
             if ($result = $chunks == $this->conf['chunks']) {
-                $this->log("seems like last chunk ({$this->conf['chunk']}), 'cause there are $chunks out of {$this->conf['chunks']} *.part files in $file_path.dir.part.");
+                $this->log("seems like last chunk ({$this->conf['chunk']}), 'cause there are ${chunks} out of {$this->conf['chunks']} *.part files in ${file_path}.dir.part.");
             }
         }
 
@@ -392,88 +393,87 @@ class ZFE_File_PluploadHandler
     /**
      * Runs cb_check_file filter on the file if defined in config.
      *
-     * @param string $file_path Path to the file to check
-     * @return boolean
+     * @param string $path path to the file to check
+     *
+     * @return bool
      */
     protected function fileIsOK($path)
     {
         return !is_callable($this->conf['cb_check_file']) || call_user_func($this->conf['cb_check_file'], $path);
     }
 
-
     /**
      * Returns the size of the file in bytes for the given filename. Filename will be resolved
      * against target_dir value defined in the config.
      *
      * @param string $file_name
+     *
      * @return number|false
      */
-    function getFileSizeFor($file_name)
+    public function getFileSizeFor($file_name)
     {
         return call_user_func($this->conf['cb_filesize'], getTargetPathFor($file_name));
     }
-
 
     /**
      * Resolves given filename against target_dir value defined in the config.
      *
      * @param string $file_name
-     * @return string Resolved file path
+     *
+     * @return string resolved file path
      */
-    function getTargetPathFor($file_name)
+    public function getTargetPathFor($file_name)
     {
-        $target_dir = str_replace(array("/", "\/"), static::DS, rtrim($this->conf['target_dir'], "/\\"));
+        $target_dir = str_replace(['/', "\/"], static::DS, rtrim($this->conf['target_dir'], '/\\'));
         return $target_dir . static::DS . $file_name;
     }
-
 
     /**
      * Sends out headers that prevent caching of the output that is going to follow.
      */
-    function sendNoCacheHeaders()
+    public function sendNoCacheHeaders()
     {
         // Make sure this file is not cached (as it might happen on iOS devices, for example)
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Cache-Control: post-check=0, pre-check=0', false);
+        header('Pragma: no-cache');
     }
 
     /**
      * Handles CORS.
      *
-     * @param array $headers Additional headers to send out
-     * @param string [$origin='*'] Allowed origin
+     * @param array  $headers additional headers to send out
+     * @param string $origin  allowed origin
      */
-    function sendCORSHeaders($headers = array(), $origin = '*')
+    public function sendCORSHeaders($headers = [], $origin = '*')
     {
         $allow_origin_present = false;
 
         if (!empty($headers)) {
             foreach ($headers as $header => $value) {
-                if (strtolower($header) == 'access-control-allow-origin') {
+                if (mb_strtolower($header) == 'access-control-allow-origin') {
                     $allow_origin_present = true;
                 }
-                header("$header: $value");
+                header($header . ': ' . $value);
             }
         }
 
         if ($origin && !$allow_origin_present) {
-            header("Access-Control-Allow-Origin: $origin");
+            header('Access-Control-Allow-Origin: ' . $origin);
         }
 
         // other CORS headers if any...
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-            exit; // finish preflight CORS requests here
+            exit;  // finish preflight CORS requests here
         }
     }
-
 
     /**
      * Cleans up outdated *.part files and directories inside target_dir.
      * Files are considered outdated if they are older than max_file_age hours.
-     * (@see config options)
+     * (@see config options).
      */
     private function cleanup()
     {
@@ -492,9 +492,8 @@ class ZFE_File_PluploadHandler
         }
     }
 
-
     /**
-     * Sanitizes a filename replacing whitespace with dashes
+     * Sanitizes a filename replacing whitespace with dashes.
      *
      * Removes special characters that are illegal in filenames on certain
      * operating systems and special characters requiring special escaping
@@ -504,54 +503,57 @@ class ZFE_File_PluploadHandler
      *
      * @author WordPress
      *
-     * @param string $filename The filename to be sanitized
-     * @return string The sanitized filename
+     * @param string $filename the filename to be sanitized
+     *
+     * @return string the sanitized filename
      */
     protected function sanitizeFileName($filename)
     {
-        $special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}");
+        $special_chars = ['?', '[', ']', '/', '\\', '=', '<', '>', ':', ';', ',', "'", '"', '&', '$', '#', '*', '(', ')', '|', '~', '`', '!', '{', '}'];
         $filename = str_replace($special_chars, '', $filename);
         $filename = preg_replace('/[\s-]+/', '-', $filename);
-        $filename = trim($filename, '.-_');
-        return $filename;
+        return trim($filename, '.-_');
     }
 
-
     /**
-     * Concise way to recursively remove a directory
+     * Concise way to recursively remove a directory.
+     *
      * @see http://www.php.net/manual/en/function.rmdir.php#108113
      *
-     * @param string $dir Directory to remove
+     * @param string $dir directory to remove
      */
     private function rrmdir($dir)
     {
         foreach (glob($dir . '/*') as $file) {
-            if (is_dir($file))
+            if (is_dir($file)) {
                 $this->rrmdir($file);
-            else
+            } else {
                 unlink($file);
+            }
         }
+
         rmdir($dir);
     }
 
-
     /**
-     * PHPs filesize() fails to measure files larger than 2gb
+     * PHPs filesize() fails to measure files larger than 2gb.
+     *
      * @see http://stackoverflow.com/a/5502328/189673
      *
-     * @param string $file Path to the file to measure
+     * @param string $file path to the file to measure
+     *
      * @return int
      */
     protected function filesize($file)
     {
         if (!file_exists($file)) {
-            $this->log("cannot measure $file, 'cause it doesn't exist.");
+            $this->log("cannot measure ${file}, 'cause it doesn't exist.");
             return false;
         }
 
         static $iswin;
         if (!isset($iswin)) {
-            $iswin = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');
+            $iswin = (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) == 'WIN');
         }
 
         static $exec_works;
@@ -561,16 +563,16 @@ class ZFE_File_PluploadHandler
 
         // try a shell command
         if ($exec_works) {
-            $cmd = ($iswin) ? "for %F in (\"$file\") do @echo %~zF" : "stat -c%s \"$file\"";
+            $cmd = ($iswin) ? "for %F in (\"${file}\") do @echo %~zF" : "stat -c%s \"${file}\"";
             @exec($cmd, $output);
             if (is_array($output) && is_numeric($size = trim(implode("\n", $output)))) {
-                $this->log("filesize obtained via exec.");
+                $this->log('filesize obtained via exec.');
                 return $size;
             }
         }
 
         // try the Windows COM interface
-        if ($iswin && class_exists("COM")) {
+        if ($iswin && class_exists('COM')) {
             try {
                 $fsobj = new COM('Scripting.FileSystemObject');
                 $f = $fsobj->GetFile(realpath($file));
@@ -579,43 +581,40 @@ class ZFE_File_PluploadHandler
                 $size = null;
             }
             if (ctype_digit($size)) {
-                $this->log("filesize obtained via Scripting.FileSystemObject.");
+                $this->log('filesize obtained via Scripting.FileSystemObject.');
                 return $size;
             }
         }
 
         // if everything else fails
-        $this->log("filesize obtained via native filesize.");
+        $this->log('filesize obtained via native filesize.');
         return @filesize($file);
     }
-
 
     /**
      * Obtain the blocking lock on the specified file. All processes looking to work with
      * the same file will have to wait, until we release it (@see unlockTheFile).
      *
-     * @param string $file_name File to lock
+     * @param string $file_name file to lock
      */
     private function lockTheFile($file_name)
     {
         $file_path = $this->getTargetPathFor($file_name);
-        $this->out = fopen("$file_path.lock", 'w');
-        flock($this->out, LOCK_EX); // obtain blocking lock
+        $this->out = fopen($file_path . '.lock', 'w');
+        flock($this->out, LOCK_EX);  // obtain blocking lock
     }
-
 
     /**
      * Release the blocking lock on the specified file.
      *
-     * @param string $file_name File to lock
+     * @param string $file_name file to lock
      */
     private function unlockTheFile($file_name)
     {
         $file_path = $this->getTargetPathFor($file_name);
         fclose($this->out);
-        @unlink("$file_path.lock");
+        @unlink($file_path . '.lock');
     }
-
 
     /**
      * Reset private variables to their initial values.
@@ -630,7 +629,6 @@ class ZFE_File_PluploadHandler
         }
     }
 
-
     /**
      * Log the message to the log_path, but only if debug is set to true.
      * Each message will get prepended with the current timestamp.
@@ -642,7 +640,7 @@ class ZFE_File_PluploadHandler
         if (!$this->conf['debug']) {
             return;
         }
-        $msg = date("Y-m-d H:i:s") . ": $msg\n";
+        $msg = date('Y-m-d H:i:s') . ": ${msg}\n";
         file_put_contents($this->conf['log_path'], $msg, FILE_APPEND);
     }
 }

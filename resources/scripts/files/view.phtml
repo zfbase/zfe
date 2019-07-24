@@ -1,44 +1,45 @@
 <?php
-$files = $this->items;
+    $files = $this->items;
 ?>
-<? if ($files && count($files)) { ?>
+
+<? if ($files && count($files)) : ?>
     <table class="table table-condensed files">
         <colgroup>
             <col width="30%">
             <col width="70%">
         </colgroup>
         <tbody>
-            <? foreach ($files as $fieldName => $fieldFiles) { ?>
+        <? foreach ($files as $fieldName => $fieldFiles): ?>
             <tr>
                 <th>
                     <?= $fieldName ?>
                 </th>
                 <td>
-                <? if (empty($fieldFiles)) { ?>
+                <? if (empty($fieldFiles)): ?>
                     <span class="text-muted">не загружено</span>
-                <? } else { ?>
-                    <? foreach ($fieldFiles as $file) { /* @var $file ZFE_File_Agent */  ?>
-                        <? if ($file->canDownload()) { ?>
+                <? else: ?>
+                <? foreach ($fieldFiles as $file):  /* @var $file ZFE_File_Agent */ ?>
+                    <? if ($file->canDownload()): ?>
                         <a href="<?= $file->getDownloadUrl() ?>">
                             <i class="<?= $file->getIconClass() ?>"></i>
                             <?= $file->getName() ?>
-                            (<?= $file->getSize() ?>)</a>
-                        <? } else { ?>
-                            <p>
-                                <i class="<?= $file->getIconClass() ?>"></i>
-                                <?= $file->getName() ?>
-                                (<?= $file->getSize() ?>)&nbsp;
-                            </p>
-                        <? } ?>
-                        &nbsp;
-
-                    <? } ?>
-                <? } ?>
+                            (<?= $file->getSize() ?>)
+                        </a>
+                    <? else: ?>
+                        <p>
+                            <i class="<?= $file->getIconClass() ?>"></i>
+                            <?= $file->getName() ?>
+                            (<?= $file->getSize() ?>)&nbsp;
+                        </p>
+                    <? endif; ?>
+                    &nbsp;
+                <? endforeach; ?>
+                <? endif; ?>
                 </td>
             </tr>
-        <? } ?>
+        <? endforeach; ?>
         </tbody>
     </table>
-<? } else { ?>
+<? else: ?>
     <p class="text-muted">Файлы не загружены</p>
-<? } ?>
+<? endif; ?>

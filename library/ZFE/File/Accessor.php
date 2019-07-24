@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 16.10.18
- * Time: 14:33
+
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
  */
 
 /**
- * Class Helper_File_Accessor
+ * Стандартный контролер управления файлами.
  */
 abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
 {
@@ -17,7 +15,7 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     protected $acl;
 
     /**
-     * @var Editors
+     * @var ZFE_Model_Default_Editors
      */
     protected $user;
 
@@ -32,10 +30,10 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     protected $controller = 'files';
 
     /**
-     * Helper_File_Arbiter constructor.
      * @param Zend_Acl $acl
-     * @param Editors $user
-     * @param string $role
+     * @param Editors  $user
+     * @param string   $role
+     *
      * @throws Zend_Auth_Exception
      */
     public function __construct(Zend_Acl $acl, ZFE_Model_Default_Editors $user, string $role = null)
@@ -46,7 +44,7 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     }
 
     /**
-     * @return mixed
+     * @return ZFE_Model_Default_Editors
      */
     public function getUser()
     {
@@ -54,9 +52,9 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     }
 
     /**
-     * @param mixed $user
+     * @param ZFE_Model_Default_Editors $user
      */
-    public function setUser($user): void
+    public function setUser(ZFE_Model_Default_Editors $user): void
     {
         $this->user = $user;
     }
@@ -66,8 +64,11 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
         $r = $this->getRecord();
         $rClass = get_class($r);
         $baseUrl = sprintf(
-            "/%s/%s/m/%s/id/%d",
-            $this->controller, $action, $rClass, $r->id
+            '/%s/%s/m/%s/id/%d',
+            $this->controller,
+            $action,
+            $rClass,
+            $r->id
         );
         if ($file) {
             $baseUrl .= '/fid/' . $file->id;
@@ -77,18 +78,20 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
 
     /**
      * Проверить прав на просмотр всех файлов записи списком
+     *
      * @return bool
      */
-    function isAllowToView() : bool
+    public function isAllowToView(): bool
     {
         return true;
     }
 
     /**
      * Получить ссылку на просмотр файлов записи списком
+     *
      * @return null|string
      */
-    function getViewURL() : ?string
+    public function getViewURL(): ?string
     {
         if ($this->isAllowToView()) {
             return $this->generateURL('view');
@@ -98,18 +101,20 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
 
     /**
      * Проверить прав на просмотр всех файлов записи списком
+     *
      * @return bool
      */
-    function isAllowToControl() : bool
+    public function isAllowToControl(): bool
     {
         return true;
     }
 
     /**
-     * Получить ссылку на просмотр файлов записи списком
+     * Получить ссылку на просмотр файлов записи списком.
+     *
      * @return null|string
      */
-    function getControlURL() : ?string
+    public function getControlURL(): ?string
     {
         if ($this->isAllowToControl()) {
             return $this->generateURL('control');
@@ -118,20 +123,23 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     }
 
     /**
-     * Проверить права на удаление файла
+     * Проверить права на удаление файла.
+     *
      * @return bool
      */
-    function isAllowToDelete() : bool
+    public function isAllowToDelete(): bool
     {
         return true;
     }
 
     /**
-     * Получить ссылку на удаление файла записи
+     * Получить ссылку на удаление файла записи.
+     *
      * @param Files $file
+     *
      * @return null|string
      */
-    function getDeleteURL(Files $file) : ?string
+    public function getDeleteURL(Files $file): ?string
     {
         if ($this->isAllowToDelete()) {
             return $this->generateURL('delete', $file);
@@ -140,20 +148,23 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     }
 
     /**
-     * Проверить права на скачивание файла
+     * Проверить права на скачивание файла.
+     *
      * @return bool
      */
-    function isAllowToDownload() : bool
+    public function isAllowToDownload(): bool
     {
         return true;
     }
 
     /**
-     * Получить ссылку на скачивание файла записи
+     * Получить ссылку на скачивание файла записи.
+     *
      * @param Files $file
+     *
      * @return null|string
      */
-    function getDownloadURL(Files $file) : ?string
+    public function getDownloadURL(Files $file): ?string
     {
         if ($this->isAllowToDownload()) {
             return $this->generateURL('download', $file);
@@ -162,19 +173,21 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     }
 
     /**
-     * Проверить права на скачивание файлов одним архивом
+     * Проверить права на скачивание файлов одним архивом.
+     *
      * @return bool
      */
-    function isAllowToDownloadAll() : bool
+    public function isAllowToDownloadAll(): bool
     {
         return true;
     }
 
     /**
-     * Получить ссылку на скачивание скачивание файлов записи одним архивом
+     * Получить ссылку на скачивание скачивание файлов записи одним архивом.
+     *
      * @return null|string
      */
-    function getDownloadAllURL() : ?string
+    public function getDownloadAllURL(): ?string
     {
         if ($this->isAllowToDownloadAll()) {
             return $this->generateURL('download-all');
@@ -183,20 +196,23 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
     }
 
     /**
-     * Проверить права на скачивание файлов одним архивом
+     * Проверить права на скачивание файлов одним архивом.
+     *
      * @return bool
      */
-    function isAllowToProcess() : bool
+    public function isAllowToProcess(): bool
     {
         return true;
     }
 
     /**
-     * Получить ссылку на скачивание скачивание файлов записи одним архивом
+     * Получить ссылку на скачивание скачивание файлов записи одним архивом.
+     *
      * @param Files $file
+     *
      * @return null|string
      */
-    function getProcessURL(Files $file) : ?string
+    public function getProcessURL(Files $file): ?string
     {
         if ($this->isAllowToDownload()) {
             return $this->generateURL('process', $file);
@@ -206,9 +222,10 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
 
     /**
      * @param string $url
+     *
      * @return array
      */
-    final function decomposeURL(string $url) : array
+    final public function decomposeURL(string $url): array
     {
         $parts = explode('/', $url);
         $action = $parts[2];
@@ -220,7 +237,7 @@ abstract class ZFE_File_Accessor extends ZFE_File_ManageableAccess
             'module' => null,
             'controller' => $this->controller,
             'action' => $action,
-            'params' => $params
+            'params' => $params,
         ];
     }
 }

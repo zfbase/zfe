@@ -1,11 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dezzpil
- * Date: 19.10.18
- * Time: 16:10
+
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
  */
 
+/**
+ * Определитель иконок для файлов.
+ */
 class ZFE_File_Icons
 {
     public function getFor(string $ext)
@@ -49,9 +50,6 @@ class ZFE_File_Icons
             'pdf' =>  'fa fa-file-pdf-o',
         ];
 
-
-        return isset($matrix[$ext])
-            ? $matrix[$ext]
-            : 'fa fa-file-o';
+        return $matrix[$ext] ?? 'fa fa-file-o';
     }
 }

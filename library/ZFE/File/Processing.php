@@ -1,31 +1,32 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
- * Interface ZFE_File_Processing
- * Интерфейс для модели, которая хранит данные обработки файлов
+ * Интерфейс для модели, которая хранит данные обработки файлов.
  */
 interface ZFE_File_Processing
 {
     /**
-     * Получить процессор, соответств. модели
+     * Получить процессор, соответствующий модели.
+     *
      * @return ZFE_File_Processor
      */
-    function getProcessor() : ZFE_File_Processor;
+    public function getProcessor(): ZFE_File_Processor;
 
+    public function isPlanned(): bool;
 
-    function isPlanned() : bool;
+    public function isCompleted(): bool;
 
-    function isCompleted() : bool;
+    public function linkFile(Files $file): self;
 
+    public function getLinkedFile(): Files;
 
-    function linkFile(Files $file) : ZFE_File_Processing;
+    public function setError(int $code, string $message = null): self;
 
-    function getLinkedFile() : Files;
+    public function hasError(): bool;
 
-
-    function setError(int $code, string $message = null) : ZFE_File_Processing;
-
-    function hasError() : bool;
-
-    function getErrorDesc($withMsg = false);
+    public function getErrorDesc($withMsg = false);
 }

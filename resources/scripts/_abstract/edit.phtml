@@ -31,8 +31,9 @@
     <? endif; ?>
 </form>
 
-<? if ($item->exists() && $item instanceof ZFE_File_Manageable) { ?>
+<? if ($item->exists() && $item instanceof ZFE_File_Manageable): ?>
     <?= $this->action('control', 'files', null, [
-        'm' => get_class($item), 'id' => $item->id
+        'm' => get_class($item),
+        'id' => $item->id,
     ]) ?>
-<? } ?>
+<? endif; ?>
