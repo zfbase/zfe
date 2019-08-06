@@ -127,15 +127,9 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $conn->exec('SET NAMES utf8;');
 
             // отключить режим ONLY_FULL_GROUP_BY, включенный по-умолчанию в MySQL 5.7.5 и старше
-            $q = $conn->execute("SHOW VARIABLES LIKE 'sql_mode'");
-            $sqlMode = explode(',', $q->fetch()[1]);
-            $nextSqlMode = array_filter($sqlMode, function ($value) {
-                return $value != 'ONLY_FULL_GROUP_BY';
-            });
-            if (count($sqlMode) > count($nextSqlMode)) {
-                $conn->exec('SET SESSION sql_mode = ?', [implode(',', $nextSqlMode)]);
-            }
+            $conn->exec("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
         }
+
 
         if ($dbConfig->profile) {
             $conn->setListener(new Doctrine_Connection_Profiler());
