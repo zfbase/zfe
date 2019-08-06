@@ -514,8 +514,10 @@ trait ZFE_Form_Helpers_Templates
         }
 
         if (key_exists('emptyValueLabel', $options)) {
-            $options['multiOptions'] = [null => $options['emptyValueLabel']] + $columnOptions['multiOptions'];
-            unset($options['emptyValueLabel']);
+            $emptyValue = $options['emptyValue'] ?? null;
+            $emptyLabel = $options['emptyValueLabel'];
+            $options['multiOptions'] = [$emptyValue => $emptyLabel] + $columnOptions['multiOptions'];
+            unset($options['emptyValueLabel'], $options['emptyValue']);
         }
 
         return $this->addElement('select', $elementName ?: $id, $options);
