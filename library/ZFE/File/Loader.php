@@ -22,6 +22,11 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
     /**
      * @var string
      */
+    protected $dataTempDir;
+
+    /**
+     * @var string
+     */
     protected $method = 'rename';
 
     /**
@@ -38,13 +43,29 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
      */
     public function __construct(Zend_Config $config)
     {
+        if (!empty($config->files)) {
+            $config = $config->files;
+        }
         $this->config = $config;
+
         $dataDir = $config->path;
+        if (empty($dataDir)) {
+            throw new ZFE_File_Exception('Не задана настройка files.path в конфигурации');
+        }
         if (!is_dir($dataDir) || !is_writable($dataDir)) {
             throw new ZFE_File_Exception($dataDir . ' не существует или не доступна для записи');
         }
 
+        $dataTempDir = $config->tempPath;
+        if (empty($dataTempDir)) {
+            throw new ZFE_File_Exception('Не задана настройка files.tempPath в конфигурации');
+        }
+        if (!is_dir($dataTempDir) || !is_writable($dataTempDir)) {
+            throw new ZFE_File_Exception($dataTempDir . ' не существует или не доступна для записи');
+        }
+
         $this->dataDir = preg_replace('/\/+$/', '', $dataDir);
+        $this->dataTempDir = preg_replace('/\/+$/', '', $dataTempDir);
     }
 
     /**
@@ -86,6 +107,14 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
     public function getBaseDir(): string
     {
         return $this->dataDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTempDir(): string
+    {
+        return $this->dataTempDir;
     }
 
     /**

@@ -140,7 +140,7 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
         $toDeleteColl = null;
         if (!$schema->isMultiple()) {
             // для мультизагрузки не надо затирать файлы, надо добавлять
-            $toDeleteColl = $this->findExistedFiles($typeCode);
+            $toDeleteColl = $this->findFiles($typeCode);
         }
 
         $toSaveColl = new Doctrine_Collection(Files::class);
@@ -363,16 +363,14 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
 
     /**
      * Получить коллекцию файлов для данной записи.
-     *
+     * @deprecated использовать findFiles()!
      * @param string $indexBy
-     *
      * @throws Doctrine_Query_Exception
-     *
      * @return Doctrine_Collection|null
      */
     public function getFiles($indexBy = 'id'): ?Doctrine_Collection
     {
-        $files = $this->findExistedFiles();
+        $files = $this->findFiles();
         $rows = clone $files;
         $res = [];
         foreach ($rows as $row) {
@@ -385,15 +383,12 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
     }
 
     /**
-     * @param int|null $typeCode
-     *
-     * @throws ZFE_File_Exception
-     * @throws Doctrine_Collection_Exception
-     * @throws Doctrine_Query_Exception
-     *
+     * @param null $typeCode Код схемы поля
+     * @param string $indexBy Поля для индексирования, осторожнее с полем type!
      * @return Doctrine_Collection
+     * @throws Doctrine_Query_Exception
      */
-    protected function findExistedFiles($typeCode = null): Doctrine_Collection
+    public function findFiles($typeCode = null, $indexBy = 'id'): Doctrine_Collection
     {
         $itemId = $this->record->id;
         $modelName = get_class($this->record);
@@ -407,7 +402,22 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
         if ($typeCode !== null) {
             $q->addWhere('x.type = ?', $typeCode);
         }
-        return $q->execute();
+        $files = $q->execute();
+
+        if ($indexBy !== 'id') {
+            $items = clone $files;
+            $result = [];
+            foreach ($items as $item) {
+                // проблема в случае индексирования по type при наличии мультизагрузочных полей
+                // может быть несколько файлов с одинаковым type - они потеряются, останется только последний их них
+                $result[$item->{$indexBy}] = $item;
+            }
+            $items->setKeyColumn($indexBy);
+            $items->setData($result);
+            return $items;
+        }
+
+        return $files;
     }
 
     /**
@@ -422,11 +432,11 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
      */
     public function getFilesCount($types = []): int
     {
+        /** @var ZFE_Model_AbstractRecord $record */
         $record = $this->getRecord();
-        $relName = $record->getFilesRelationName();
         $q = Doctrine_Query::create()
             ->select('COUNT(*)')
-            ->from($relName)
+            ->from(Files::class)
             ->where('item_id = ?', $record->id)
         ;
         if (!empty($types)) {
@@ -471,15 +481,18 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
 
     /**
      * Удалить все файлы из ФС и записи о файлах в БД.
+     * Или указать код схемы поля для удаление файлов с нужным типом
+     *
+     * @param mixed $typeCode Код схемы поля для удаления
      *
      * @throws ZFE_File_Exception
      * @throws Doctrine_Query_Exception
      * @throws Doctrine_Record_Exception
      * @throws Zend_Exception
      */
-    public function purge()
+    public function purge($typeCode = null)
     {
-        $existedFiles = $this->getFiles();
+        $existedFiles = $this->findFiles($typeCode);
         if ($existedFiles->count()) {
             foreach ($existedFiles as $file) {  /** @var Files $file */
                 $this->getLoader()->setRecord($file)->erase();
