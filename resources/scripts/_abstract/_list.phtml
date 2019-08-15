@@ -1,4 +1,6 @@
 <?
+    /** @var ZFE_View $this */
+
     $tableInstance = Doctrine_Core::getTable($this->modelName);
     $hasStatus = $tableInstance->hasColumn('status');
     $hasEdited = $tableInstance->hasColumn('datetime_edited');

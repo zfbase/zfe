@@ -1,0 +1,71 @@
+<?php
+/** @var ZFE_View $this */
+?>
+
+<?php
+    $item = $this->item;  /** @var ZFE_File_Manageable $item */
+    $groups = $this->groups;  /** @var array $groups */
+    $schemas = $this->schemas;  /** @var ZFE_File_Schema_Collection $schemas */
+?>
+
+<? if ($groups && count($groups)) : ?>
+    <div class="files">
+    <? foreach ($groups as $fieldCode => $agents): ?>
+        <? $schema = $schemas->get($fieldCode);  /** @var ZFE_File_Schema $schema */ ?>
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <b>
+                    <?= $schema->getTitle() ?>
+                    <? if ($schema->isRequired()): ?>
+                        <span class="text-danger">*</span>
+                    <? endif; ?>
+                </b>
+                <div class="pull-right text-muted"><?= $schema->getTooltip() ?></div>
+            </div>
+
+            <ul class="list-group files-list">
+            <? foreach ($agents as $agent):  /** @var ZFE_File_Agent $agent */ ?>
+                <li class="list-group-item">
+                    <? if ($agent->canDownload()): ?>
+                        <a href="<?= $agent->getDownloadUrl() ?>">
+                            <i class="<?= $agent->getIconClass() ?>"></i>
+                            <?= $agent->getName() ?>
+                            (<?= $agent->getSize() ?>)</a>
+                    <? else: ?>
+                        <p>
+                            <i class="<?= $agent->getIconClass() ?>"></i>
+                            <?= $agent->getName() ?>
+                            (<?= $agent->getSize() ?>)&nbsp;
+                        </p>
+                    <? endif; ?>
+
+                    <? if ($agent->canDelete()): ?>
+                        <a href="<?= $agent->getDeleteUrl() ?>" class="text-danger pull-right">
+                            <small class="glyphicon glyphicon-remove"></small>
+                            Удалить
+                        </a>
+                    <? endif; ?>
+                </li>
+            <? endforeach; ?>
+            </ul>
+
+            <div class="panel-body">
+                <div class="plupload"
+                        data-model="<?= get_class($item) ?>"
+                        data-id="<?= $item->id ?>"
+                        data-code="<?= $fieldCode ?>"
+                        data-multi="<?= intval($schema->isMultiple()) ?>"
+                >
+                    <div class="plupload-browse btn btn-link">Обзор и выбор файлов</div>
+                    <div class="plupload-start btn btn-success">Загрузить</div>
+                    <div class="plupload-console pull-right"></div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+
+        </div>
+    <? endforeach; ?>
+    </div>
+<? else: // нет схем файлов, нечего показывать ?>
+<? endif; ?>
