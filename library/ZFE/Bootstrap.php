@@ -49,6 +49,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         APPLICATION_PATH . '/configs/menu.ini',
         APPLICATION_PATH . '/configs/forms.ini',
         APPLICATION_PATH . '/configs/ckeditor.ini',
+        APPLICATION_PATH . '/configs/sphinx.ini',
     ];
 
     /**
