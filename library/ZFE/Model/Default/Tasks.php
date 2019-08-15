@@ -12,19 +12,6 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     /**
      * {@inheritdoc}
      */
-    public function setUp()
-    {
-        parent::setUp();
-        $nestedset0 = new Doctrine_Template_NestedSet([
-            'hasManyRoots' => true,
-            'rootColumnName' => 'root_id',
-        ]);
-        $this->actAs($nestedset0);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function preInsert($event)
     {
         parent::preInsert($event);
