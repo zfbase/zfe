@@ -1,8 +1,8 @@
 <?
     /** @var ZFE_View $this */
 
-    $item = $this->item;  /** @var ZFE_Model_AbstractRecord $item */
-    $modelName = $this->modelName;
+    /** @var ZFE_Model_AbstractRecord $item */
+    $item = $this->item;
 ?>
 
 <div>
@@ -10,7 +10,7 @@
     <?= $this->searchPages()->getStepBtns() ?>
     
     <? if ($this->canCreate && !$this->readonly): ?>
-    <a role="button" class="btn btn-xs btn-default" href="<?= $modelName::getNewUrl() . $this->hopsHistory()->getSideHash('?') ?>">
+    <a role="button" class="btn btn-xs btn-default" href="<?= $item::getNewUrl() . $this->hopsHistory()->getSideHash('?') ?>">
         Добавить
         <span class="glyphicon glyphicon-plus">
     </a>

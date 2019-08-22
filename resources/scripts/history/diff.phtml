@@ -1,8 +1,6 @@
-<?php
-/** @var ZFE_View $this */
-?>
+<? /** @var ZFE_View $this */ ?>
 
-    <h2>Сравнение версий записи</h2>
+<h2>Сравнение версий записи</h2>
 
 <?
     if (file_exists(APPLICATION_PATH . '/views/scripts/' . $this->resource . '/_diff.phtml')) {
@@ -10,3 +8,4 @@
     } else {
         echo $this->render('_abstract/_diff.phtml');
     }
+?>

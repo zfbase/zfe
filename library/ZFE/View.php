@@ -43,5 +43,4 @@
  */
 class ZFE_View extends Zend_View
 {
-
 }

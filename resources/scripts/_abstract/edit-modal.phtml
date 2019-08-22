@@ -1,6 +1,5 @@
-<?php
-    /** @var ZFE_View $this */
-?>
+<? /** @var ZFE_View $this */ ?>
+
 <? if ($this->item->exists()): ?>
     <div class="pull-right" style="margin-bottom: 10px;">
         <a href="<?= $this->item->getEditUrl() ?>" target="_blank">
@@ -8,6 +7,7 @@
         </a>
     </div>
 <? endif; ?>
+
 <div class="clearfix"></div>
 <?= $this->alerts(); ?>
 <?= $this->abstractRender('_edit_form.phtml') ?>
