@@ -62,7 +62,9 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $config = new Zend_Config($this->getOptions(), true);
 
         foreach ($this->_configFiles as $file) {
-            $config->merge(new Zend_Config_Ini($file, APPLICATION_ENV));
+            if (is_readable($file)) {
+                $config->merge(new Zend_Config_Ini($file, APPLICATION_ENV));
+            }
         }
 
         return $config;
