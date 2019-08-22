@@ -282,6 +282,10 @@ class ZFE_Model_Table extends Doctrine_Table
         $options['required'] = $this->isElementRequiredForColumn($columnName);
         $options['validators'] = $this->getElementValidatorsForColumn($columnName);
 
+        if (isset($this->_columns[$columnName]['default'])) {
+            $options['value'] = $this->_columns[$columnName]['default'];
+        }
+
         switch ($this->getElementTypeForColumn($columnName)) {
             case 'textarea':
                 if (isset($formConfig->textarea->rows->default) && $formConfig->textarea->rows->default > 0) {
