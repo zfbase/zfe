@@ -1,4 +1,6 @@
-<?php
+<?
+    /** @var ZFE_View $this */
+
     $files = $this->items;
 ?>
 
@@ -18,7 +20,7 @@
                 <? if (empty($fieldFiles)): ?>
                     <span class="text-muted">не загружено</span>
                 <? else: ?>
-                <? foreach ($fieldFiles as $file):  /* @var $file ZFE_File_Agent */ ?>
+                <? foreach ($fieldFiles as $file):  /** @var ZFE_File_Agent $file */ ?>
                     <? if ($file->canDownload()): ?>
                         <a href="<?= $file->getDownloadUrl() ?>">
                             <i class="<?= $file->getIconClass() ?>"></i>

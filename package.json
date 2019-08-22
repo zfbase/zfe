@@ -1,6 +1,6 @@
 {
   "name": "zfe",
-  "version": "1.34.0-beta",
+  "version": "1.34.0-beta.1",
   "description": "ZFE – платформа для построения редакторских интерфейсов",
   "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
