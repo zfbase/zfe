@@ -40,23 +40,23 @@ class ZFE_View_Helper_DateForHuman extends Zend_View_Helper_Abstract
         $day = strtotime('midnight', $timestamp);
         $days_ago = floor((time() - $day) / 86400);
 
-        if (-2 === $days_ago) {
+        if (-2 == $days_ago) {
             return 'послезавтра';
         }
 
-        if (-1 === $days_ago) {
+        if (-1 == $days_ago) {
             return 'завтра';
         }
 
-        if (0 === $days_ago) {
+        if (0 == $days_ago) {
             return 'сегодня';
         }
 
-        if (1 === $days_ago) {
+        if (1 == $days_ago) {
             return 'вчера';
         }
 
-        if (2 === $days_ago) {
+        if (2 == $days_ago) {
             return 'позавчера';
         }
 
