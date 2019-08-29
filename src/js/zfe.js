@@ -15,6 +15,7 @@ import '../components/mergeHelper';
 import '../components/modals';
 import '../components/tableStickyHeader';
 import '../components/uploadAjax';
+import initPlaceholders from '../components/placeholders';
 
 const { confirm } = window;
 
@@ -49,7 +50,7 @@ const ZFE = {
     'initTableStickyHeader',
     'initTextareaAutosize',
     'initUploadAjax',
-
+    'initPlaceholders',
     'initRest',
   ],
 
@@ -193,6 +194,8 @@ const ZFE = {
   initUploadAjax: (container) => {
     $('input[data-ajax-url]', container).zfeUploadAjax();
   },
+
+  initPlaceholders: container => initPlaceholders(container),
 
   initContainer: container => $.each(ZFE.initalMethods, (i, method) => ZFE[method](container)),
 
