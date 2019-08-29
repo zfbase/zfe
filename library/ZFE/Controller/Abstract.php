@@ -131,7 +131,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
             $this->_json(self::STATUS_FAIL, [], $msg);
         }
 
-        $this->_helper->Notices->err($msg);
+        ZFE_Notices::err($msg);
     }
 
     /**
@@ -146,6 +146,6 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
             $this->_json(self::STATUS_SUCCESS, [], $message);
         }
 
-        $this->_helper->Notices->ok($message);
+        ZFE_Notices::ok($message);
     }
 }

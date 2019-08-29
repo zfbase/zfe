@@ -119,7 +119,7 @@ trait ZFE_Controller_AbstractResource_History
             $restoreItem = $curItem->getStateForVersion($version);
             $restoreItem->save();
 
-            $this->_helper->Notices->ok($modelName::decline('%s успешно откатан', '%s успешно откатана', '%s успешно откатано') . ' к версии ' . $version);
+            ZFE_Notices::ok($modelName::decline('%s успешно откатан', '%s успешно откатана', '%s успешно откатано') . ' к версии ' . $version);
 
             $status = true;
         } catch (Throwable $ex) {
