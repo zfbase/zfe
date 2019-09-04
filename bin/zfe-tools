@@ -16,10 +16,20 @@ if (isset($_SERVER) && key_exists('PWD', $_SERVER)) {
 require_once $appPath . '/vendor/autoload.php';
 require_once $appPath . '/constants.php';
 
-(new Zend_Application(
+$app = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
-))->bootstrap();
+);
+// auth, session, acl не инициализируем
+$app->getBootstrap()
+    ->bootstrap('shortAlias')
+    ->bootstrap('loader')
+    ->bootstrap('doctrine')
+;
+
+// отключаем историю для консольных скриптов
+Doctrine_core::debug(false);
+History::$globalRealtimeWhiteHistory = false;
 
 try {
     (new ZFE_Console_Tools())->run();

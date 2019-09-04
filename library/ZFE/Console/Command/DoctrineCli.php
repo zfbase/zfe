@@ -9,7 +9,11 @@
  */
 class ZFE_Console_Command_DoctrineCli extends ZFE_Console_Command_Abstract
 {
-    protected static $_name = 'doctrine';
+    public static function getName()
+    {
+        return 'doctrine';
+    }
+
     protected static $_description = 'Обертка над doctrine-cli';
 
     public function __construct()

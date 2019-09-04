@@ -10,13 +10,6 @@
 abstract class ZFE_Console_Command_Abstract
 {
     /**
-     * Код.
-     *
-     * @var string
-     */
-    protected static $_name;
-
-    /**
      * Описание.
      *
      * @var string|null
@@ -56,10 +49,7 @@ abstract class ZFE_Console_Command_Abstract
      *
      * @return string
      */
-    public static function getName()
-    {
-        return static::$_name;
-    }
+    abstract public static function getName();
 
     /**
      * Получить описание.

@@ -9,7 +9,11 @@
  */
 class ZFE_Console_Command_Migrate extends ZFE_Console_Command_Abstract
 {
-    protected static $_name = 'migrate';
+    public static function getName()
+    {
+        return 'migrate';
+    }
+
     protected static $_description = 'Миграция БД';
     protected static $_allowInApp = false;
 

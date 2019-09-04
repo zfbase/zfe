@@ -67,6 +67,15 @@ class ZFE_Tasks_Manager
     }
 
     /**
+     * Получить список исполнителей задач
+     * @return array
+     */
+    public function getPerformers() : array
+    {
+        return $this->performers;
+    }
+
+    /**
      * @param Zend_Log $logger
      *
      * @return $this

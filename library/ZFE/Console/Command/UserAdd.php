@@ -9,7 +9,11 @@
  */
 class ZFE_Console_Command_UserAdd extends ZFE_Console_Command_Abstract
 {
-    protected static $_name = 'useradd';
+    public static function getName()
+    {
+        return 'useradd';
+    }
+
     protected static $_description = 'Добавить пользователя';
     protected static $_help = 'Добавляет администратора с логином из обязательного параметра.';
 

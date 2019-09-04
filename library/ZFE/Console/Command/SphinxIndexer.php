@@ -6,7 +6,11 @@
 
 class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
 {
-    protected static $_name = 'indexer';
+    public static function getName()
+    {
+        return 'indexer';
+    }
+
     protected static $_description = 'Индексация Sphinx';
     protected static $_help =
         'При вызове без аргументов проиндексируются все модели.' . "\n" .

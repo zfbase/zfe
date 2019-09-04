@@ -6,7 +6,11 @@
 
 class ZFE_Console_Command_ModelsGenerate extends ZFE_Console_Command_Abstract
 {
-    protected static $_name = 'models';
+    public static function getName()
+    {
+        return 'models';
+    }
+
     protected static $_description = 'Сгенерировать модели Doctrine по БД';
     protected static $_allowInApp = false;
 

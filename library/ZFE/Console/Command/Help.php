@@ -9,7 +9,11 @@
  */
 class ZFE_Console_Command_Help extends ZFE_Console_Command_Abstract
 {
-    protected static $_name = 'help';
+    public static function getName()
+    {
+        return 'help';
+    }
+
     protected static $_description = 'Справка по доступным командам';
     protected static $_help =
         'При вызове без аргументов выведет список зарегистрированных команд с коротким описанием.' . "\n" .
