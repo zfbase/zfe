@@ -11,12 +11,24 @@ class ZFE_Auth_Editor
 {
     protected static $instance;
 
+    /**
+     * @return static
+     */
     public static function getInstance()
     {
         if (static::$instance === null) {
             static::$instance = new static;
         }
         return static::$instance;
+    }
+
+    protected function identify()
+    {
+        $auth = Zend_Auth::getInstance();
+        if (!$auth->hasIdentity()) {
+            throw new Zend_Auth_Exception('Пользователь не аутентифицирован');
+        }
+        return $auth->getIdentity();
     }
 
     /**
@@ -26,12 +38,18 @@ class ZFE_Auth_Editor
      */
     public function getId()
     {
-        $auth = Zend_Auth::getInstance();
-        if (!$auth->hasIdentity()) {
-            throw new Zend_Auth_Exception('Пользователь не аутентифицирован');
-        }
-        $identity = $auth->getIdentity();
+        $identity = $this->identify();
         return intval($identity['id']);
+    }
+
+    /**
+     * @return string
+     * @throws Zend_Auth_Exception
+     */
+    public function getRole()
+    {
+        $identity = $this->identify();
+        return $identity['role'];
     }
 
     /**
@@ -59,6 +77,9 @@ class ZFE_Auth_Editor
         $auth->getStorage()->write(['id' => $editor->id]);
     }
 
+    /**
+     *
+     */
     public function clear()
     {
         $auth = Zend_Auth::getInstance();
