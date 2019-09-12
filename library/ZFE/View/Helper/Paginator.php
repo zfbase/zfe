@@ -71,10 +71,12 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
      *                       separatorTemplate - разделитель страниц (ссылок)
      *                       containerPrefix - начало контейнера
      *                       containerPostfix - окончание контейнера
+     * @param ZFE_Paginator $paginator Задать экземпляр класса, используемого пагинатора, или будет
+     *                      использован ZFE_Paginator по-умолчанию
      *
      * @return string
      */
-    public function paginator(array $options = [])
+    public function paginator(array $options = [], ZFE_Paginator $paginator = null)
     {
         $pConfig = Zend_Registry::get('config')->view->paginator;
         $default = [
@@ -94,7 +96,8 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
         $rangeClass = 'Doctrine_Pager_Range_' . ucfirst($style);
         $range = new $rangeClass(['chunk' => $chunk]);
 
-        $pager = $this->_pager = ZFE_Paginator::getInstance()->getPager();
+        $pag = $paginator ?? ZFE_Paginator::getInstance();
+        $pager = $this->_pager = $pag->getPager();
         $url = str_replace('%7B%25page_number%7D', '{%page_number}', ZFE_Paginator::getInstance()->getUrl());
 
         $layout = $this->_layout = new Doctrine_Pager_Layout($pager, $range, $url);

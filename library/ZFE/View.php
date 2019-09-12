@@ -31,7 +31,7 @@
  * @method string menuItems($pages = null, $autoActive = true, $disabledAcl = false, $dropdownEnable = true) Сгенерировать меню.
  * @method string notices() Вернуть код вывода нотификации.
  * @method string number($number, $decimals = 0, $dec_point = '.', $thousands_sep = '&nbsp;') Отформатировать запрос
- * @method string paginator(array $options = []) Собрать пагинатор
+ * @method string paginator(array $options = [], ZFE_Paginator $paginator = null) Собрать пагинатор
  * @method string period($start, $end, $showTime = false) Форматировать период
  * @method ZFE_View_Helper_SearchPages searchPages() Кнопки для перехода к предыдущему и следующему результату поиска.
  * @method string shortenText($text, $max_len = 100) Укоротить текст до определенного размера.
