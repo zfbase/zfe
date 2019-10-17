@@ -163,6 +163,21 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $config = Zend_Registry::get('config');
         $auth = Zend_Auth::getInstance();
 
+        $cliUserId = null;
+        if (PHP_SAPI === 'cli') {
+            if (isset($config->cli->userId)) {
+                $cliUserId = $config->cli->userId;
+            }
+
+            // Специальный режим для работы до создания таблицы editors
+            if ($cliUserId == -1) {
+                return [
+                    'role' => 'guest',
+                    'isAuthorized' => false,
+                ];
+            }
+        }
+
         $user = null;
         $role = 'guest';
         $canSwitchRoles = false;

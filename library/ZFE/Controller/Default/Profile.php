@@ -38,7 +38,7 @@ class ZFE_Controller_Default_Profile extends Controller_Abstract
 
                     $user->fromArray($data);
                     $user->save();
-                    $this->_helper->Notices->ok('Профиль успешно обновлен');
+                    ZFE_Notices::ok('Профиль успешно обновлен');
                     $this->_redirect('/profile');
                 }
             }

@@ -6,22 +6,18 @@
 
 /**
  * Менеджер нотификаций.
+ *
+ * @deprecated 1.33.58
  */
 class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper_Abstract
 {
-    /**
-     * Данные нотификаций в сессии.
-     *
-     * @var Zend_Session_Namespace
-     */
-    protected $_session;
-
     /**
      * Хук, выполняющийся при инициализации контроллера.
      */
     public function init()
     {
-        $this->_session = new Zend_Session_Namespace('Notices');
+        trigger_error('Помощник ZFE_Controller_Action_Helper_Notices устарел. '
+                    . 'Используйте современный способ с ZFE_Notices. ', E_USER_DEPRECATED);
     }
 
     /**
@@ -42,17 +38,13 @@ class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper
      * Если запрос через AJAX, то сообщение отправляется сразу же.
      *
      * @param string $message сообщение
-     * @param array  $options параметры (см. библиотеку bootstrap-growl)
+     * @param array  $options параметры
      *
-     * @return ZFE_Controller_Action_Helpers_Notices
+     * @return ZFE_Controller_Action_Helper_Notices
      */
     public function add($message, array $options = [])
     {
-        $this->_session->events[] = [
-            'message' => $message,
-            'options' => $options,
-        ];
-
+        ZFE_Notices::add($message, $options);
         return $this;
     }
 
@@ -61,18 +53,12 @@ class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper
      *
      * @param string|Throwable $message сообщение
      *
-     * @return ZFE_Controller_Action_Helpers_Notices
+     * @return ZFE_Controller_Action_Helper_Notices
      */
     public function err($message)
     {
-        if ($message instanceof Throwable) {
-            $code = $message->getCode();
-            $message = $message->getMessage();
-            if ($code) {
-                $message = sprintf('[%s] %s', $code, $message);
-            }
-        }
-        return $this->add($message, ['type' => 'danger', 'delay' => '9000']);
+        ZFE_Notices::err($message);
+        return $this;
     }
 
     /**
@@ -80,11 +66,12 @@ class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper
      *
      * @param string $message сообщение
      *
-     * @return ZFE_Controller_Action_Helpers_Notices
+     * @return ZFE_Controller_Action_Helper_Notices
      */
     public function warn($message)
     {
-        return $this->add($message, ['type' => 'warning', 'delay' => '7000']);
+        ZFE_Notices::warn($message);
+        return $this;
     }
 
     /**
@@ -92,11 +79,12 @@ class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper
      *
      * @param string $message сообщение
      *
-     * @return ZFE_Controller_Action_Helpers_Notices
+     * @return ZFE_Controller_Action_Helper_Notices
      */
     public function ok($message)
     {
-        return $this->add($message, ['type' => 'success', 'delay' => '5000']);
+        ZFE_Notices::ok($message);
+        return $this;
     }
 
     /**
@@ -104,21 +92,22 @@ class ZFE_Controller_Action_Helper_Notices extends Zend_Controller_Action_Helper
      *
      * @param string $message сообщение
      *
-     * @return ZFE_Controller_Action_Helpers_Notices
+     * @return ZFE_Controller_Action_Helper_Notices
      */
     public function msg($message)
     {
-        return $this->add($message, ['type' => 'info']);
+        ZFE_Notices::msg($message);
+        return $this;
     }
 
     /**
      * Удалить ранее установленные сообщения.
      *
-     * @return ZFE_Controller_Action_Helpers_Notices
+     * @return ZFE_Controller_Action_Helper_Notices
      */
     public function clear()
     {
-        $this->_session->events = null;
+        ZFE_Notices::clear();
         return $this;
     }
 }

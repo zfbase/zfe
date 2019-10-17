@@ -59,6 +59,7 @@ class ZFE_Model_Table extends Doctrine_Table
                     case 'decimal':
                         $form = 'number';
                         break;
+                    case 'json':
                     case 'string':
                         // Длина поля может быть не указана, например если тип MEDIUMTEXT
                         $length = $this->getElementMaxLengthForColumn($columnName);
@@ -281,6 +282,10 @@ class ZFE_Model_Table extends Doctrine_Table
         $options['label'] = $this->getElementLabelForColumn($columnName);
         $options['required'] = $this->isElementRequiredForColumn($columnName);
         $options['validators'] = $this->getElementValidatorsForColumn($columnName);
+
+        if (isset($this->_columns[$columnName]['default'])) {
+            $options['value'] = $this->_columns[$columnName]['default'];
+        }
 
         switch ($this->getElementTypeForColumn($columnName)) {
             case 'textarea':

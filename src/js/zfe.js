@@ -2,6 +2,7 @@ import $ from 'jquery';
 import autosize from 'autosize';
 import plupload from 'plupload';
 import '@zfbase/typeahead.js/dist/typeahead.jquery';
+import 'inputmask/dist/inputmask/jquery.inputmask';
 
 import '../lib/jquery.tmpl';
 import '../components/audio';
@@ -16,6 +17,7 @@ import '../components/mergeHelper';
 import '../components/modals';
 import '../components/tableStickyHeader';
 import '../components/uploadAjax';
+import initPlaceholders from '../components/placeholders';
 
 const { confirm } = window;
 
@@ -42,6 +44,7 @@ const ZFE = {
     'initDuplicates',
     'initFormFileHelper',
     'initHtmlEditors',
+    'initInputMask',
     'initItemDetailsPopover',
     'initMerge',
     'initMergeHelper',
@@ -51,6 +54,7 @@ const ZFE = {
     'initTextareaAutosize',
     'initUploadAjax',
     'initUploadCartFiles',
+    'initPlaceholders',
     'initRest',
   ],
 
@@ -144,6 +148,11 @@ const ZFE = {
         ZFE.htmlEditor.create(el, ZFE.ckeditorConfig);
       }
     });
+  },
+
+  /** Подключить маски для полей ввода */
+  initInputMask: (container) => {
+    $(':input', container).inputmask();
   },
 
   /** Всплывающая справка по всем заполненным полям записи */
@@ -240,6 +249,8 @@ const ZFE = {
 
     });
   },
+
+  initPlaceholders: container => initPlaceholders(container),
 
   initContainer: container => $.each(ZFE.initalMethods, (i, method) => ZFE[method](container)),
 

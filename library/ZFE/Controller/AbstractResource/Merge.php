@@ -134,13 +134,13 @@ trait ZFE_Controller_AbstractResource_Merge
                     $this->_json(self::STATUS_SUCCESS, [], $msg);
                 }
 
-                $this->_helper->Notices->ok($msg);
+                ZFE_Notices::ok($msg);
             } catch (Throwable $ex) {
                 if ($this->_request->isXmlHttpRequest()) {
                     $this->_json(self::STATUS_FAIL, [], $ex->getMessage());
                 }
 
-                $this->_helper->Notices->ok($msg);
+                ZFE_Notices::ok($msg);
             }
 
             $this->_redirect($returnTo);

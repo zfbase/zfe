@@ -18,19 +18,13 @@ class ZFE_View_Helper_Alerts extends Zend_View_Helper_Abstract
     {
         $alerts = [];
 
-        $session = new Zend_Session_Namespace('Notices');
-
-        if (!isset($session->events) || empty($session->events)) {
-            return '';
-        }
-
-        foreach ($session->events as $event) {
+        foreach (ZFE_Notices::getAll() as $event) {
             $alerts[] = $this->_makeAlert(
                 $event['message'],
                 isset($event['options']['type']) && !empty($event['options']['type']) ? $event['options']['type'] : null
             );
         }
-        $session->events = null;
+        ZFE_Notices::clear();
 
         return implode('', $alerts);
     }
