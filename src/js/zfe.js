@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import autosize from 'autosize';
 import '@zfbase/typeahead.js/dist/typeahead.jquery';
+import 'inputmask/dist/inputmask/jquery.inputmask';
 
 import '../lib/jquery.tmpl';
 import '../components/audio';
@@ -42,6 +43,7 @@ const ZFE = {
     'initDuplicates',
     'initFormFileHelper',
     'initHtmlEditors',
+    'initInputMask',
     'initItemDetailsPopover',
     'initMerge',
     'initMergeHelper',
@@ -144,6 +146,11 @@ const ZFE = {
         ZFE.htmlEditor.create(el, ZFE.ckeditorConfig);
       }
     });
+  },
+
+  /** Подключить маски для полей ввода */
+  initInputMask: (container) => {
+    $(':input', container).inputmask();
   },
 
   /** Всплывающая справка по всем заполненным полям записи */
