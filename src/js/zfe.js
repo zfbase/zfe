@@ -34,7 +34,7 @@ const matchControllerAction = (arg, val) => {
 };
 
 const ZFE = {
-  initalMethods: [
+  initialMethods: [
     'initAudio',
     'initAutocompletes',
     'initMultiAC',
@@ -124,16 +124,16 @@ const ZFE = {
     }
   },
 
-  /** data-action="merge-dublications" */
+  /** data-action="merge-duplications" */
   initDuplicates: (container) => {
-    $('.zfe-dublications', container).zfeDuplicates();
+    $('.zfe-duplications', container).zfeDuplicates();
   },
 
   /** Замена файла для элемента загрузки одного файла */
   initFormFileHelper: (container) => {
     $(container).on('click', '[data-btn="replace"]', (event) => {
       const $btn = $(event.currentTarget);
-      $($btn.data('newupload')).removeClass('hide');
+      $($btn.data('new-upload')).removeClass('hide');
       $($btn.data('current')).remove();
       $btn.hide();
     });
@@ -180,7 +180,7 @@ const ZFE = {
     }).trigger('input');
   },
 
-  /** Помошник для наделения строк функционалом ссылок */
+  /** Помощник для наделения строк функционалом ссылок */
   initTableRowLinkHelper: (container) => {
     $(container).on('click', 'tr[role="button"]', (event) => {
       window.location = $(event.currentTarget).data('href');
@@ -204,7 +204,7 @@ const ZFE = {
 
   initPlaceholders: container => initPlaceholders(container),
 
-  initContainer: container => $.each(ZFE.initalMethods, (i, method) => ZFE[method](container)),
+  initContainer: container => $.each(ZFE.initialMethods, (i, method) => ZFE[method](container)),
 
   /** Инициализация приложения */
   init: (app) => {

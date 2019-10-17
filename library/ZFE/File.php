@@ -783,9 +783,9 @@ class ZFE_File
             $basePath = realpath($basePath);
         }
 
-        $strparts = str_split($id, self::$div);
-        $fileName = array_pop($strparts);
-        $subPath = implode('/', $strparts);
+        $strParts = str_split($id, self::$div);
+        $fileName = array_pop($strParts);
+        $subPath = implode('/', $strParts);
 
         if (!$isUrl && !file_exists($basePath . '/' . $subPath)) {
             self::makePath($basePath . '/' . $subPath);

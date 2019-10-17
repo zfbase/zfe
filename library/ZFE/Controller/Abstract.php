@@ -103,28 +103,30 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      * А также отправить информацию об ошибке в логи.
      *
      * @param string    $msg
-     * @param bool      $allowAjax
      * @param Throwable $e
+     * @param bool      $allowAjax
      */
-    public function error($msg, Throwable $ex = null, $allowAjax = true)
+    public function error($msg, Throwable $e = null, $allowAjax = true)
     {
-        if ($log = Zend_Registry::get('log')) {
-            $log->log(
-                $ex->getMessage(),
-                Zend_Log::ERR,
-                [
-                    'errno' => $ex->getCode(),
-                    'file' => $ex->getFile(),
-                    'line' => $ex->getLine(),
-                    'context' => $ex->getTraceAsString(),
-                ]
-            );
-        }
+        if ($e) {
+            if ($log = Zend_Registry::get('log')) {
+                $log->log(
+                    $e->getMessage(),
+                    Zend_Log::ERR,
+                    [
+                        'errno' => $e->getCode(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'context' => $e->getTraceAsString(),
+                    ]
+                );
+            }
 
-        if ($ex && Zend_Registry::get('user')->noticeDetails) {
-            $msg = '<strong>' . $msg . '</strong><br>'
-                 . $ex->getMessage()
-                 . '<pre>' . $ex->getTraceAsString() . '</pre>';
+            if (Zend_Registry::get('user')->noticeDetails) {
+                $msg = '<strong>' . $msg . '</strong><br>'
+                    . $e->getMessage()
+                    . '<pre>' . $e->getTraceAsString() . '</pre>';
+            }
         }
 
         if ($this->_request->isXmlHttpRequest() && $allowAjax) {
