@@ -14,7 +14,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initShortAlias()
     {
-        ZFE_Utilites::loadShortAlias();
+        ZFE_Utilities::loadShortAlias();
     }
 
     /**

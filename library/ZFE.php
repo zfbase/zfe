@@ -9,6 +9,6 @@
  *
  * @category  ZFE
  */
-class ZFE extends ZFE_Utilites
+class ZFE extends ZFE_Utilities
 {
 }

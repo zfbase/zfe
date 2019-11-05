@@ -342,7 +342,7 @@ class Loader {
   restoreForm() {
     if (this.settings.multiple === false) {
       this.$formContainer.fadeIn();
-      $(`[data-newupload="${this.settings.name}-new-upload"]`)
+      $(`[data-new-upload="${this.settings.name}-new-upload"]`)
         .hide();
     }
   }

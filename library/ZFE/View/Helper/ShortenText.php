@@ -19,6 +19,6 @@ class ZFE_View_Helper_ShortenText extends Zend_View_Helper_Abstract
      */
     public function shortenText($text, $max_len = 100)
     {
-        return ZFE_Utilites::shortenText($text, $max_len);
+        return ZFE_Utilities::shortenText($text, $max_len);
     }
 }

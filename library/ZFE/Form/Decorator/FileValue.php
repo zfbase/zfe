@@ -53,7 +53,7 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
             $btnReplace = '<a class="btn btn-link"'
                                . ' data-btn="replace"'
                                . ' data-current="#' . $id . '-current-file"'
-                               . ' data-newupload="#' . $id . '-new-upload"'
+                               . ' data-new-upload="#' . $id . '-new-upload"'
                                . '><span class="glyphicon glyphicon-repeat small"></span> Заменить</a>';
             $showHtml = '<span id="' . $id . '-current-file" class="formfile-current-file">' . $html . '</span>';
             $hideHtml = '<span id="' . $id . '-new-upload" class="hide">' . $content . '</span>';
