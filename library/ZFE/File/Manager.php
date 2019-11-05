@@ -267,7 +267,7 @@ abstract class ZFE_File_Manager extends ZFE_File_ManageableAccess
 
         $file->set('ext', mb_strtolower(pathinfo($path, PATHINFO_EXTENSION)));
 
-        $file->set('created_at', date('Y-m-d H:i:s'));
+        $file->set('datetime_created', date('Y-m-d H:i:s'));
         if ($this->user) {
             $file->set('creator_id', $this->user->id);
         }

@@ -15,7 +15,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     public function preInsert($event)
     {
         parent::preInsert($event);
-        $this->created_at = new Doctrine_Expression('NOW()');
+        $this->datetime_created = new Doctrine_Expression('NOW()');
     }
 
     /**
@@ -146,7 +146,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function saveAsRoot()
     {
-        $this->created_at = new Doctrine_Expression('NOW()');
+        $this->datetime_created = new Doctrine_Expression('NOW()');
         $this->save();
 
         $this->root_id = $this->id;
@@ -163,7 +163,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function saveAsChildOf(self $task)
     {
-        $this->created_at = new Doctrine_Expression('NOW()');
+        $this->datetime_created = new Doctrine_Expression('NOW()');
         $this->related_id = $task->getRelatedId();
         $this->performer_code = $task->getPerformerCode();
 

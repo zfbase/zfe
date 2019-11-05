@@ -6,8 +6,11 @@
 	],
 	"settings": {
 		"cSpell.words": [
+			"handly",
 			"inputmask",
-			"multiac"
+			"multiac",
+			"plupload",
+			"processings"
 		]
 	}
 }

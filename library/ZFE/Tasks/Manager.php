@@ -164,7 +164,7 @@ class ZFE_Tasks_Manager
         $q = $table->createQuery('x')
             ->where('x.state = ?', static::STATE_TODO)
             ->addWhere('x.scheduled_at is null OR (x.scheduled_at is not null AND x.scheduled_at < NOW())')
-            ->orderBy('x.created_at ASC')
+            ->orderBy('x.datetime_created ASC')
             ->limit($limit)
         ;
         if ($onDemand) {

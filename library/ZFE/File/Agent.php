@@ -14,7 +14,7 @@
  *
  * @property int    $id
  * @property int    $creator_id
- * @property int    $created_at
+ * @property int    $datetime_created
  * @property string $title
  * @property string $hash
  * @property int    $size
@@ -22,14 +22,14 @@
  * @property string $ext
  * @property string $path
  *
- * @method canDelete
- * @method getDeleteUrl
- * @method canDownload
- * @method getDownloadUrl
- * @method canDownloadAll
- * @method getDownloadAllUrl
- * @method canProcess
- * @method getProcessUrl
+ * @method bool   canDelete()
+ * @method string getDeleteUrl()
+ * @method bool   canDownload()
+ * @method string getDownloadUrl()
+ * @method bool   canDownloadAll()
+ * @method string getDownloadAllUrl()
+ * @method bool   canProcess()
+ * @method string getProcessUrl()
  */
 class ZFE_File_Agent
 {
