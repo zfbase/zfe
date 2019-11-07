@@ -57,6 +57,33 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     }
 
     /**
+     * Используется в хуках для проверки, сохранять ли историю
+     * Проверяет поле в модели и глобальную настройку.
+     *
+     * @return bool
+     */
+    protected function _historyEnabled()
+    {
+        return $this->_saveHistory && History::$globalRealtimeWhiteHistory;
+    }
+
+    /**
+     * Получить первичный ключ записи, если он состоит из одного поля 'id'.
+     *
+     * @param $record Doctrine_Record
+     *
+     * @return null|int
+     */
+    protected static function _getRecordSingleColumnId($record)
+    {
+        $ids = $record->identifier('id');
+        if (count($ids) === 1 && array_key_exists('id', $ids)) {
+            return $record->id;
+        }
+        return null;
+    }
+
+    /**
      * Хук preInsert.
      *
      * @param Doctrine_Event $event
@@ -97,47 +124,52 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     public function postInsert(Doctrine_Event $event)
     {
-        if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var ZFE_Model_AbstractRecord $invoker */
-            $invoker = $event->getInvoker();
-
-            $userId = $this->_getCurrentUserId();
-
-            // Используем только первичный ключ по полю id
-            $ids = $invoker->identifier('id');
-            if (1 === count($ids) && key_exists('id', $ids)) {
-                $history = new History();
-                $history->table_name = $invoker->getTableName();
-                $history->content_id = $invoker->id;
-                $history->action_type = History::ACTION_TYPE_INSERT;
-                $history->user_id = $userId;
-                $history->datetime_action = new Doctrine_Expression('NOW()');
-                $history->content_version = 1;
-                $history->save();
-
-                $relations = $invoker->getTable()->getRelations();
-                foreach ($relations as $rel) {
-                    if ($rel instanceof Doctrine_Relation_LocalKey) {
-                        $relAlias = $rel->getAlias();
-                        $relObj = $invoker->get($relAlias);
-                        $relIds = $relObj->identifier('id');
-                        if (1 === count($relIds) && key_exists('id', $relIds)) {
-                            $history = new History();
-                            $history->table_name = $relObj->getTableName();
-                            $history->content_id = $relObj->id;
-                            $history->column_name = $relAlias;
-                            $history->content_old = null;
-                            $history->content_new = $invoker->id;
-                            $history->action_type = History::ACTION_TYPE_LINK;
-                            $history->user_id = $userId;
-                            $history->datetime_action = new Doctrine_Expression('NOW()');
-                            $history->content_version = null;
-                            $history->save();
-                        }
-                    }
-                }
-            }
+        if (!$this->_historyEnabled()) {
+            return;
         }
+
+        /** @var ZFE_Model_AbstractRecord $invoker */
+        $invoker = $event->getInvoker();
+
+        $userId = $this->_getCurrentUserId();
+        $id = static::_getRecordSingleColumnId($invoker);
+        if ($id === null) {
+            return;
+        }
+
+        $historyRows = [
+            [
+                'table_name' => $invoker->getTableName(),
+                'content_id' => $invoker->id,
+                'action_type' => History::ACTION_TYPE_INSERT,
+                'user_id' => $userId,
+                'content_version' => 1,
+            ],
+        ];
+
+        $relations = $invoker->getTable()->getRelations();
+        foreach ($relations as $rel) {
+            if (!$rel instanceof Doctrine_Relation_LocalKey) {
+                continue;
+            }
+            $relAlias = $rel->getAlias();
+            $relObj = $invoker->get($relAlias);
+            $relId = static::_getRecordSingleColumnId($relObj);
+            if ($relId === null) {
+                continue;
+            }
+            $historyRows[] = [
+                'table_name' => $relObj->getTableName(),
+                'content_id' => $relObj->id,
+                'column_name' => $relAlias,
+                'content_old' => null,
+                'content_new' => $invoker->id,
+                'action_type' => History::ACTION_TYPE_LINK,
+                'user_id' => $userId,
+                'content_version' => null,
+            ];
+        }
+        $this->writeHistoryRows($historyRows);
     }
 
     /**
@@ -170,102 +202,101 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     public function postUpdate(Doctrine_Event $event)
     {
-        if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var ZFE_Model_AbstractRecord $invoker */
-            $invoker = $event->getInvoker();
-            $invokerModelName = get_class($invoker);
-            $tableName = $invoker->getTableName();
+        if (!$this->_historyEnabled()) {
+            return;
+        }
 
-            $userId = $this->_getCurrentUserId();
+        /** @var ZFE_Model_AbstractRecord $invoker */
+        $invoker = $event->getInvoker();
+        $invokerModelName = get_class($invoker);
+        $tableName = $invoker->getTableName();
 
-            // Используем только первичный ключ по полю id
-            $ids = $invoker->identifier('id');
-            $id = 1 === count($ids) && key_exists('id', $ids)
-                ? $invoker->id
-                : null;
+        $userId = $this->_getCurrentUserId();
 
-            $version = $invoker->contains('version')
-                ? $invoker->version
-                : null;
+        $historyRows = [];
 
-            // Имеет смысл записывать что конкретно изменилось
-            // только если можем записать id изменившейся записи.
-            if ($id) {
-                $oldData = $invoker->getModified(true, true);
-                $newData = $invoker->getModified(false, true);
+        // Используем только первичный ключ по полю id
+        $id = static::_getRecordSingleColumnId($invoker);
 
-                $ignoreColumns = $invokerModelName::getServiceFields();
-                $hiddenColumns = $invokerModelName::getHistoryHiddenFields();
+        $version = $invoker->contains('version')
+            ? $invoker->version
+            : null;
 
-                foreach ($newData as $column => $newValue) {
-                    if (in_array($column, $ignoreColumns)) {
-                        continue;
-                    }
+        // Имеет смысл записывать что конкретно изменилось
+        // только если можем записать id изменившейся записи.
+        if ($id === null) {
+            $historyRows[] = [
+                'table_name' => $invokerModelName,
+                'action_type' => History::ACTION_TYPE_UPDATE,
+                'user_id' => $userId,
+                'datetime_action' => new Doctrine_Expression('NOW()'),
+                'content_version' => $version,
+            ];
+        } else {
+            $oldData = $invoker->getModified(true, true);
+            $newData = $invoker->getModified(false, true);
 
-                    if (in_array($column, $hiddenColumns)) {
-                        $newValue = null;
-                    } elseif ($newValue instanceof Doctrine_Expression) {
-                        $newValue = (string) $newValue;
-                    }
+            $ignoreColumns = $invokerModelName::getServiceFields();
+            $hiddenColumns = $invokerModelName::getHistoryHiddenFields();
 
-                    $history = new History();
-                    $history->table_name = $tableName;
-                    $history->content_id = $id;
-                    $history->column_name = $column;
-                    $history->content_old = $oldData[$column];
-                    $history->content_new = $newValue;
-                    $history->action_type = History::ACTION_TYPE_UPDATE;
-                    $history->user_id = $userId;
-                    $history->datetime_action = new Doctrine_Expression('NOW()');
-                    $history->content_version = $version;
-                    $history->save();
+            foreach ($newData as $column => $newValue) {
+                if (in_array($column, $ignoreColumns)) {
+                    continue;
                 }
 
-                // Unlinks
-                foreach ($invoker->getPendingUnlinks() as $relAlias => $relIdsData) {
-                    $relIds = array_keys($relIdsData);
-                    foreach ($relIds as $relId) {
-                        $history = new History();
-                        $history->table_name = $tableName;
-                        $history->content_id = $id;
-                        $history->column_name = $relAlias;
-                        $history->content_old = $relId;
-                        $history->content_new = null;
-                        $history->action_type = History::ACTION_TYPE_UNLINK;
-                        $history->user_id = $userId;
-                        $history->datetime_action = new Doctrine_Expression('NOW()');
-                        $history->content_version = $version;
-                        $history->save();
-                    }
+                if (in_array($column, $hiddenColumns)) {
+                    $newValue = null;
+                } elseif ($newValue instanceof Doctrine_Expression) {
+                    $newValue = (string) $newValue;
                 }
 
-                // Links
-                foreach ($invoker->getPendingLinks() as $relAlias => $relIdsData) {
-                    $relIds = array_keys($relIdsData);
-                    foreach ($relIds as $relId) {
-                        $history = new History();
-                        $history->table_name = $tableName;
-                        $history->content_id = $id;
-                        $history->column_name = $relAlias;
-                        $history->content_old = null;
-                        $history->content_new = $relId;
-                        $history->action_type = History::ACTION_TYPE_LINK;
-                        $history->user_id = $userId;
-                        $history->datetime_action = new Doctrine_Expression('NOW()');
-                        $history->content_version = $version;
-                        $history->save();
-                    }
+                $historyRows[] = [
+                    'table_name' => $tableName,
+                    'content_id' => $id,
+                    'column_name' => $column,
+                    'content_old' => $oldData[$column],
+                    'content_new' => $newValue,
+                    'action_type' => History::ACTION_TYPE_UPDATE,
+                    'user_id' => $userId,
+                    'content_version' => $version,
+                ];
+            }
+
+            // Unlinks
+            foreach ($invoker->getPendingUnlinks() as $relAlias => $relIdsData) {
+                $relIds = array_keys($relIdsData);
+                foreach ($relIds as $relId) {
+                    $historyRows[] = [
+                        'table_name' => $tableName,
+                        'content_id' => $id,
+                        'column_name' => $relAlias,
+                        'content_old' => $relId,
+                        'content_new' => null,
+                        'action_type' => History::ACTION_TYPE_UNLINK,
+                        'user_id' => $userId,
+                        'content_version' => $version,
+                    ];
                 }
-            } else {
-                $history = new History();
-                $history->table_name = $invokerModelName;
-                $history->action_type = History::ACTION_TYPE_UPDATE;
-                $history->user_id = $userId;
-                $history->datetime_action = new Doctrine_Expression('NOW()');
-                $history->content_version = $version;
-                $history->save();
+            }
+
+            // Links
+            foreach ($invoker->getPendingLinks() as $relAlias => $relIdsData) {
+                $relIds = array_keys($relIdsData);
+                foreach ($relIds as $relId) {
+                    $historyRows[] = [
+                        'table_name' => $tableName,
+                        'content_id' => $id,
+                        'column_name' => $relAlias,
+                        'content_old' => null,
+                        'content_new' => $relId,
+                        'action_type' => History::ACTION_TYPE_LINK,
+                        'user_id' => $userId,
+                        'content_version' => $version,
+                    ];
+                }
             }
         }
+        $this->writeHistoryRows($historyRows);
     }
 
     /**
@@ -275,26 +306,37 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     public function postDelete(Doctrine_Event $event)
     {
-        if ($this->_saveHistory && History::$globalRealtimeWhiteHistory) {
-            /** @var ZFE_Model_AbstractRecord $invoker */
-            $invoker = $event->getInvoker();
-
-            // Используем только первичный ключ по полю id
-            $ids = $invoker->identifier('id');
-            $id = 1 === count($ids) && key_exists('id', $ids)
-                ? $invoker->id
-                : null;
-
-            $history = new History();
-            $history->table_name = $invoker->getTableName();
-            $history->content_id = $id;
-            $history->action_type = History::ACTION_TYPE_DELETE;
-            $history->user_id = $this->_getCurrentUserId();
-            $history->datetime_action = new Doctrine_Expression('NOW()');
-            if ($invoker->contains('version')) {
-                $history->content_version = $invoker->version;
-            }
-            $history->save();
+        if (!$this->_historyEnabled()) {
+            return;
         }
+
+        /** @var ZFE_Model_AbstractRecord $invoker */
+        $invoker = $event->getInvoker();
+
+        $id = static::_getRecordSingleColumnId($invoker);
+
+        $historyRow = [
+            'table_name' => $invoker->getTableName(),
+            'content_id' => $id,
+            'action_type' => History::ACTION_TYPE_DELETE,
+            'user_id' => $this->_getCurrentUserId(),
+        ];
+        if ($invoker->contains('version')) {
+            $historyRow['content_version'] = $invoker->version;
+        }
+        $this->writeHistoryRows([$historyRow]);
+    }
+
+    public function writeHistoryRows($rows, $event= '', $record = null)
+    {
+        $conn = Doctrine_Manager::connection();
+        $conn->beginTransaction();
+        foreach ($rows as $row) {
+            $row['datetime_action'] = new Doctrine_Expression('NOW()');
+            $item = new History();
+            $item->fromArray($row);
+            $item->save($conn);
+        }
+        $conn->commit();
     }
 }
