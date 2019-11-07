@@ -45,7 +45,6 @@ trait ZFE_Model_AbstractRecord_Duplicates
             ->from(static::class . ' x')
             ->where(static::$titleField . ' = ?', $duplicate['title'])
             ->orderBy('weight DESC')
-            ->groupBy('x.id')
             ;
 
         if ($tableInstance->hasRelation('Editor')) {
@@ -61,17 +60,14 @@ trait ZFE_Model_AbstractRecord_Duplicates
         $relations = $tableInstance->getRelations();
         foreach ($relations as $relation) {
             if ($relation instanceof Doctrine_Relation_ForeignKey) {
-                $class = $relation->getAlias();
-                $q->leftJoin('x.' . $class . ' rel_' . $class);
-
-                $pk = $relation->getTable()->getIdentifier();
-                $uniq = "rel_${class}." . (is_array($pk) ? implode(", rel_${class}.", $pk) : $pk);
-                $weights[] = "COUNT(DISTINCT ${uniq})";
+                $col = $relation->getForeignColumnName();
+                $table = $relation->getTable()->getTableName();
+                $weights[] = '(select count(*) from ' . $table . ' where ' . $col . ' = x.id)';
             }
         }
 
         if (!empty($weights)) {
-            $q->addSelect('(' . implode(' + ', $weights) . ') weight');
+            $q->addSelect((new Doctrine_Expression('(' . implode(' + ', $weights) . ')')) . ' AS weight');
         } else {
             $q->addSelect('0 weight');
         }
@@ -99,7 +95,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
 
             $unique = array_unique($values);
             if (count($unique) > 1) {
-                new ZFE_Model_Exception('Не возможно объединить: не выбран правильный вариант');
+                new ZFE_Model_Exception('Невозможно объединить: не выбран правильный вариант');
             }
         }
 

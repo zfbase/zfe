@@ -68,7 +68,6 @@ trait ZFE_Controller_AbstractResource_Merge
             ->select('x.*')
             ->from($modelName . ' x INDEXBY x.id')
             ->whereIn('x.id', $ids)
-            ->groupBy('x.id')
         ;
 
         if ($tableInstance->hasRelation('Editor')) {
@@ -84,16 +83,14 @@ trait ZFE_Controller_AbstractResource_Merge
         $relations = $tableInstance->getRelations();
         foreach ($relations as $relation) {
             if ($relation instanceof Doctrine_Relation_ForeignKey) {
-                $class = $relation->getAlias();
-                $q->leftJoin('x.' . $class . ' rel_' . $class);
-
-                $pk = $relation->getTable()->getIdentifier();
-                $uniq = "rel_${class}." . (is_array($pk) ? implode(", rel_${class}.", $pk) : $pk);
-                $weights[] = "COUNT(DISTINCT ${uniq})";
+                $col = $relation->getForeignColumnName();
+                $table = $relation->getTable()->getTableName();
+                $weights[] = '(select count(*) from ' . $table . ' where ' . $col . ' = x.id)';
             }
         }
+
         if (!empty($weights)) {
-            $q->addSelect('(' . implode(' + ', $weights) . ') weight');
+            $q->addSelect((new Doctrine_Expression('(' . implode(' + ', $weights) . ')')) . ' AS weight');
         } else {
             $q->addSelect('0 weight');
         }
@@ -115,7 +112,7 @@ trait ZFE_Controller_AbstractResource_Merge
         }
         foreach ($map as $field => $data) {
             $data = array_diff($data, ['']);
-            $map[$field] = array_unique($data);
+            $map[$field] = array_unique($data, SORT_REGULAR);
             if (1 < count($map[$field])) {
                 $diff[$field] = $map[$field];
             }
@@ -177,7 +174,6 @@ trait ZFE_Controller_AbstractResource_Merge
             ->select('x.*')
             ->from(static::$_modelName . ' x')
             ->orderBy((static::$_modelName)::$titleField)
-            ->groupBy('x.id')
         ;
 
         if ($tableInstance->hasRelation('Editor')) {
@@ -191,25 +187,18 @@ trait ZFE_Controller_AbstractResource_Merge
         // Подсчет веса
         $weights = [];
         $relations = $tableInstance->getRelations();
-        if (count($relations) < 5) {  // Для часто используемых словарей необходимо иначе считать вес
-            foreach ($relations as $relation) {
-                if ($relation instanceof Doctrine_Relation_ForeignKey) {
-                    $class = $relation->getAlias();
-                    $q->leftJoin('x.' . $class . ' rel_' . $class);
-
-                    $pk = $relation->getTable()->getIdentifier();
-                    $uniq = "rel_${class}." . (is_array($pk) ? implode(", rel_${class}.", $pk) : $pk);
-                    $weights[] = "COUNT(DISTINCT ${uniq})";
-                }
+        foreach ($relations as $relation) {
+            if ($relation instanceof Doctrine_Relation_ForeignKey) {
+                $col = $relation->getForeignColumnName();
+                $table = $relation->getTable()->getTableName();
+                $weights[] = '(select count(*) from ' . $table . ' where ' . $col . ' = x.id)';
             }
+        }
 
-            if (!empty($weights)) {
-                $q->addSelect('(' . implode(' + ', $weights) . ') weight');
-            } else {
-                $q->addSelect('0 weight');
-            }
+        if (!empty($weights)) {
+            $q->addSelect((new Doctrine_Expression('(' . implode(' + ', $weights) . ')')) . ' AS weight');
         } else {
-            $q->addSelect('"–" weight');
+            $q->addSelect('0 weight');
         }
 
         // Фильтры
