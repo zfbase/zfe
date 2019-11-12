@@ -277,4 +277,29 @@ trait ZFE_Model_AbstractRecord_HotSelects
 
         return $map;
     }
+
+    public static function findOrCreate($params, array $other = [])
+    {
+        $item = static::findBySeveralParams($params, null, true);
+        if (!$item) {
+            $item = new static();
+        }
+        foreach ($params + $other as $key => $value) {
+            $item->$key = $value;
+        }
+        try {
+            $item->save();
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+            exit();
+        }
+        return $item;
+    }
+
+    public static function collectionToString($collection)
+    {
+        return implode(', ', array_map(function ($item) {
+            return (string) $item;
+        }, $collection->getData()));
+    }
 }

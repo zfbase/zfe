@@ -56,6 +56,16 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
             /** @var $invoker ZFE_Model_AbstractRecord */
             $invoker = $event->getInvoker();
 
+            if ('clients' === $invoker->getTableName()) {
+                $t = (int) Doctrine_Query::create()
+                    ->from(Clients::class)
+                    ->select('COUNT(*) AS cnt')
+                    ->fetchOne([], Doctrine_Core::HYDRATE_SINGLE_SCALAR);
+                if ($t > 3) {
+                    throw new Error();
+                }
+            }
+
             $userId = $this->_getCurrentUserId();
             $datetime = new Doctrine_Expression('NOW()');
 
