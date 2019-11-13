@@ -1,9 +1,5 @@
 <?php
 
-/*
- * ZFE – платформа для построения редакторских интерфейсов.
- */
-
 class ZFE_Uploads
 {
     protected static function find(array $params)
@@ -27,33 +23,23 @@ class ZFE_Uploads
     {
         $params['hash'] = strtolower($params['hash']);
         $item = static::find(['hash' => $params['hash']]);
-        if ( ! $item) {
+        if (!$item) {
             return [
                 'exists' => false,
                 'size' => null,
                 'completed' => false,
             ];
         }
-        $uploaded = $item->size === $item->uploaded_size;
+        $uploaded = $item->size == $item->uploaded_size;
         $actualHash = $item->getUploadedDataHash();
-        $sameHash = $uploaded && ($actualHash === ($item->proxy_hash ?: $item->hash));
-        $res = [
+        $sameHash = $uploaded && ($actualHash == $item->hash);
+        return [
             'exists' => true,
             'size' => (int) $item->uploaded_size,
             'completed' => $uploaded && $sameHash,
-            'badHash' => $uploaded && ! $sameHash,
+            'badHash' => $uploaded && !$sameHash,
             '_deprecated_actualHash' => $uploaded ? $actualHash : null,
         ];
-
-        if ($item->size === $item->uploaded_size && ! $item->is_completed) {
-            if ($sameHash) {
-                $item->is_completed = 1;
-                $item->save();
-                $item->analyze();
-            }
-        }
-
-        return $res;
     }
 
     public static function validateUploadParams($params)
@@ -76,7 +62,7 @@ class ZFE_Uploads
         if (empty($params['hash'])) {
             return 'querystring.hash should be a string';
         }
-        if (empty($params['size']) || (string) ((int) ($params['size'])) !== $params['size'] || $params['size'] < 1) {
+        if (empty($params['size']) || strval(intval($params['size'])) !== $params['size'] || $params['size'] < 1) {
             return 'querystring.size should be a positive integer';
         }
         return null;
@@ -96,7 +82,7 @@ class ZFE_Uploads
             'client_id' => $client->id,
             'hash' => $params['hash'],
         ]);
-        if ( ! $item) {
+        if (!$item) {
             $item = new Uploads();
             $item->client_id = $client->id;
             $item->hash = $params['hash'];
@@ -105,7 +91,7 @@ class ZFE_Uploads
             $item->datetime_edited = date('Y-m-d H:i:s');
             $item->uploaded_size = 0;
             $item->datetime_modified = isset($params['fileModified']) ? static::parseDate($params['fileModified']) : null;
-            $item->is_manual = isset($params['isManual']) && 'true' === $params['isManual'] ? 1 : 0;
+            $item->is_manual = isset($params['isManual']) && $params['isManual'] == 'true' ? 1 : 0;
             $item->file_path = $params['filePath'] ?? null;
             $item->base_dir = $params['baseDir'] ?? null;
 
@@ -114,12 +100,12 @@ class ZFE_Uploads
             $item->date_rec = isset($params['recordDate']) ? static::parseDate($params['recordDate']) : null;
             $item->rec_order = $params['fileNumber'] ?? null;
             $item->rec_channel = $params['channelNumber'] ?? null;
-
+            
             $item->save();
         }
 
         $offset = isset($params['offset']) ? $params['offset'] : null;
-        $firstChunk = 1 === $offset && 0 === $item->is_completed;
+        $firstChunk = $offset === 1 && $item->is_completed == 0;
 
         if ($firstChunk) {
             $item->quality = $params['transQuality'] ?? null;
@@ -137,12 +123,12 @@ class ZFE_Uploads
         $res = [
             'size' => (int) $item->uploaded_size,
             'hash' => null,
-            'completed' => (bool) $item->is_completed,
+            'completed' => !!$item->is_completed,
         ];
 
-        if ($item->size === $item->uploaded_size && ! $item->is_completed) {
+        if ($item->size == $item->uploaded_size && !$item->is_completed) {
             $res['hash'] = $item->getUploadedDataHash();
-            if ($res['hash'] === ($item->proxy_hash ?: $item->hash)) {
+            if ($res['hash'] == ($item->proxy_hash ?: $item->hash)) {
                 $res['completed'] = true;
                 $item->is_completed = 1;
                 $item->save();
@@ -151,7 +137,7 @@ class ZFE_Uploads
                 $res['badHash'] = true;
             }
         }
-
+        
         return $res;
     }
 
