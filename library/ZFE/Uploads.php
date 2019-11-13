@@ -36,14 +36,24 @@ class ZFE_Uploads
         }
         $uploaded = $item->size === $item->uploaded_size;
         $actualHash = $item->getUploadedDataHash();
-        $sameHash = $uploaded && ($actualHash === $item->hash);
-        return [
+        $sameHash = $uploaded && ($actualHash === ($item->proxy_hash ?: $item->hash));
+        $res = [
             'exists' => true,
             'size' => (int) $item->uploaded_size,
             'completed' => $uploaded && $sameHash,
             'badHash' => $uploaded && ! $sameHash,
             '_deprecated_actualHash' => $uploaded ? $actualHash : null,
         ];
+
+        if ($item->size === $item->uploaded_size && ! $item->is_completed) {
+            if ($sameHash) {
+                $item->is_completed = 1;
+                $item->save();
+                $item->analyze();
+            }
+        }
+
+        return $res;
     }
 
     public static function validateUploadParams($params)
