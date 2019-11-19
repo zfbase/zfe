@@ -194,6 +194,10 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                 'id' => $related ? $related->id : '',
                 'title' => $related ? $related->__toString() : '',
             ];
+
+            foreach (static::$autocompleteSelectCols as $field) {
+                $array[$key][$field] = $related ? $related->{$field} : '';
+            }
         }
         return $array;
     }
