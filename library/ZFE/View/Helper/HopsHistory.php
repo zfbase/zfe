@@ -86,7 +86,7 @@ class ZFE_View_Helper_HopsHistory extends Zend_View_Helper_Abstract
 
         return $this->view->tag('a', [
             'role' => 'button',
-            'class' => 'btn btn-xs btn-default',
+            'class' => 'btn btn-xs btn-default btn-history-up',
             'href' => $url,
         ], $label . ' ' . $icon);
     }
