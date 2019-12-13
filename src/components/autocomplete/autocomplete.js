@@ -126,7 +126,7 @@ class ZFEAutocomplete {
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
-    $input.on('typeahead:close', (e) => {
+    $input.on('typeahead:close', () => {
       const title = $.trim($input.typeahead('val'));
       if (title === '') {
         this.clear();
@@ -142,8 +142,12 @@ class ZFEAutocomplete {
 
     $input.on('keypress', (e) => {
       if (e.keyCode === keyCode.ENTER) {
-        $input.trigger('typeahead:close');
-        e.preventDefault();
+        const lastValue = this.getValue();
+        const freshValue = $input.typeahead('val');
+        if (lastValue.title !== freshValue) {
+          $input.trigger('typeahead:close');
+          e.preventDefault();
+        }
       }
     });
 

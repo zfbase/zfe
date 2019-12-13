@@ -255,8 +255,10 @@ class ZFEMultiAutocomplete {
 
     $input.on('keypress', (e) => {
       if (e.keyCode === keyCode.ENTER) {
-        $input.trigger('typeahead:closed');
-        e.preventDefault();
+        if ($input.typeahead('val') !== '') {
+          $input.trigger('typeahead:close');
+          e.preventDefault();
+        }
       }
     });
 
