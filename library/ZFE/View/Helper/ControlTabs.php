@@ -26,6 +26,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * * ?array  $params          – параметры запроса
      * * string  $title           – заголовок вкладки
      * * ?string $class           – класс элемента li вкладки
+     * * ?string $id              - id элемента li вкладки
      * * ?bool   $onlyRegistered  – только для зарегистрированных (если есть id), по умолчанию false
      * * ?bool   $onlyValid       - только не удаленные (deleted != 0), по умолчанию true
      * * ?int    $order           - порядок отображения
@@ -231,11 +232,15 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             $class[] = $isActive ? 'active' : '';
             $class[] = $isDisabled ? 'disabled' : '';
             $class = array_diff($class, ['']);
-            if (count($class)) {
-                $markup .= '<li class="' . implode(' ', $class) . '">';
-            } else {
-                $markup .= '<li>';
+
+            $markup .= '<li';
+            if (!empty($tab['id'])) {
+                $markup .= ' id="' . $tab['id'] . '"';
             }
+            if (count($class)) {
+                $markup .= ' class="' . implode(' ', $class) . '"';
+            }
+            $markup .= '>';
 
             if ($isActive || $isDisabled) {
                 $markup .= '<a>';
