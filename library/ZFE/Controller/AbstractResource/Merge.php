@@ -101,9 +101,10 @@ trait ZFE_Controller_AbstractResource_Merge
         $map = [];
         $serviceFields = $modelName::getServiceFields();
         $serviceFields[] = 'weight';
+        $multiAutocompleteFields = array_keys($modelName::$multiAutocompleteCols);
         foreach ($items as $item) {
             foreach ($item->toArray(false) as $field => $value) {
-                if (!in_array($field, $serviceFields)) {
+                if (!in_array($field, $serviceFields) && !in_array($field, $multiAutocompleteFields)) {
                     if (null !== $value) {
                         $map[$field][$item['id']] = $value;
                     }
