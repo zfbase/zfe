@@ -71,8 +71,10 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             $attribs['data-limit'] = ($attribs['relModel'])::$acLimit;
         }
 
-        $idInput = $this->_hidden($name . '[id]', $value['id']);
-        $titleInput = $this->_hidden($name . '[title]', $value['title']);
+        $fields = [];
+        foreach ($value as $key => $val) {
+            $fields[] = $this->_hidden($name . '[' . $key  . ']', $val);
+        }
 
         $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-menu-down']);
         $separator = $this->view->tag('i', ['class' => 'tt-separator']);
@@ -97,7 +99,7 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         return $this->view->tag(
             'div',
             ['id' => $id . '-wrap', 'class' => 'autocomplete-wrap'],
-            $idInput . $titleInput . $searchPack . $helpBlock
+            implode('', $fields) . $searchPack . $helpBlock
         );
     }
 }
