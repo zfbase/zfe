@@ -62,6 +62,17 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             $attribs['class'] = 'form-control autocomplete';
         }
 
+        $storage = [];
+        $fields = ['id', 'title'];
+        if (isset($attribs['relModel']) && class_exists($attribs['relModel'])) {
+            $fields = array_merge($fields, ($attribs['relModel'])::$autocompleteSelectCols);
+        } else if (isset($attribs['relAlias']) && class_exists($attribs['relAlias'])) {
+            $fields = array_merge($fields, ($attribs['relAlias'])::$autocompleteSelectCols);
+        }
+        foreach ($fields as $field) {
+            $storage[] = $this->_hidden($name . '[' . $field  . ']', $value[$field] ?? null);
+        }
+
         // Очищаем лишнее
         if (isset($attribs['relAlias'])) {
             unset($attribs['relAlias']);
@@ -69,11 +80,6 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
 
         if (isset($attribs['relModel'])) {
             $attribs['data-limit'] = ($attribs['relModel'])::$acLimit;
-        }
-
-        $fields = [];
-        foreach ($value as $key => $val) {
-            $fields[] = $this->_hidden($name . '[' . $key  . ']', $val);
         }
 
         $searchIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-menu-down']);
@@ -99,7 +105,7 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         return $this->view->tag(
             'div',
             ['id' => $id . '-wrap', 'class' => 'autocomplete-wrap'],
-            implode('', $fields) . $searchPack . $helpBlock
+            implode('', $storage) . $searchPack . $helpBlock
         );
     }
 }

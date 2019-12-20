@@ -17,15 +17,18 @@ trait ZFE_Controller_AbstractResource_View
             $this->abort(404);
         }
 
+        $modelName = static::$_modelName;
+
         /** @var AbstractRecord $item */
-        $item = (static::$_modelName)::find($this->getParam('id'));
+        $item = $modelName::hardFind($this->getParam('id'));
         if (empty($item)) {
-            if (Zend_Registry::get('acl')->isAllowedMe((static::$_modelName)::getControllerName(), 'edit')) {
-                $this->redirect($item->getEditUrl());
-            } else {
-                $this->abort(404, (static::$_modelName)::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
-            }
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
+
+        if (Zend_Registry::get('acl')->isAllowedMe($modelName::getControllerName(), 'edit')) {
+            $this->redirect($item->getEditUrl());
+        }
+
         $this->view->item = $item;
         $this->view->title($item->getTitle());
     }
