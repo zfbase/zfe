@@ -85,6 +85,10 @@ trait ZFE_Model_AbstractRecord_Autocomplete
             if ($table->hasField($col)) {
                 $data[$col] = $item[$col];
             }
+            $method = 'get' . ucfirst($col) . 'ForAutocomplete';
+            if (is_object($item) && method_exists($item, $method)) {
+                $data[$col] = $item->$method();
+            }
         }
         return $data;
     }
