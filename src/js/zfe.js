@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import autosize from 'autosize';
 import plupload from 'plupload';
-import '@zfbase/typeahead.js/dist/typeahead.jquery';
+import 'zfe-typeahead/dist/typeahead.jquery';
 import 'inputmask/dist/inputmask/jquery.inputmask';
 
 import '../lib/jquery.tmpl';

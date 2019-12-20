@@ -1,6 +1,6 @@
 {
   "name": "zfe",
-  "version": "1.34.0-beta.7",
+  "version": "1.34.0-beta.8",
   "description": "ZFE – платформа для построения редакторских интерфейсов",
   "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
@@ -13,12 +13,12 @@
   "main": "src/js/zfe",
   "module": "src/js/zfe",
   "dependencies": {
-    "@zfbase/typeahead.js": "git+https://github.com/zfbase/typeahead.js.git",
     "autosize": "^4.0.2",
     "bloodhound-js": "^1.2.2",
     "html5sortable": "^0.9.3",
     "plupload": "^2.3.6",
-    "inputmask": "^4.0.9"
+    "inputmask": "^4.0.9",
+    "zfe-typeahead": "^0.11.1"
   },
   "files": [
     "/src"
