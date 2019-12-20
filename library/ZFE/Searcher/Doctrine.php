@@ -62,13 +62,24 @@ class ZFE_Searcher_Doctrine extends ZFE_Searcher_Abstract
 
         $revertHash = $params['rh'] ?? null;
         $resultNumber = $params['rn'] ?? null;
+        $targetAction = $params['ta'] ?? null;
         if (!empty($resultNumber) && !empty($revertHash)) {
             $query->offset($resultNumber - 1);
             $query->limit(1);
             $item = $query->fetchOne();
 
+            switch ($targetAction) {
+                case 'edit':
+                    $baseUrl = $item->getEditUrl();
+                break;
+                case 'view':
+                    $baseUrl = $item->getViewUrl();
+                break;
+                default:
+                    $baseUrl = $item->getUrl();
+            }
             $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
-            $redirector->setGotoUrl($item->getUrl() . '?h=' . $revertHash . '&rn=' . $resultNumber);
+            $redirector->setGotoUrl($baseUrl . '?h=' . $revertHash . '&rn=' . $resultNumber);
         }
 
         $paginator = $this->getPaginator();

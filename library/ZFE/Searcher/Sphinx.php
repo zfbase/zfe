@@ -45,14 +45,25 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
 
             $revertHash = $params['rh'] ?? null;
             $resultNumber = $params['rn'] ?? null;
+            $targetAction = $params['ta'] ?? null;
             if (!empty($resultNumber) && !empty($revertHash)) {
                 $sphinxQuery->option('max_matches', $resultNumber + 1);
                 $sphinxQuery->offset($resultNumber - 1);
                 $sphinxQuery->limit(1);
                 $item = ZFE_Sphinx::fetchOne($sphinxQuery, $this->_modelName);
 
+                switch ($targetAction) {
+                    case 'edit':
+                        $baseUrl = $item->getEditUrl();
+                    break;
+                    case 'view':
+                        $baseUrl = $item->getViewUrl();
+                    break;
+                    default:
+                        $baseUrl = $item->getUrl();
+                }
                 $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
-                $redirector->setGotoUrl($item->getUrl() . '?h=' . $revertHash . '&rn=' . $resultNumber);
+                $redirector->setGotoUrl($baseUrl . '?h=' . $revertHash . '&rn=' . $resultNumber);
             }
 
             if ($paginator) {

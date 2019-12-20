@@ -145,6 +145,8 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
             throw new UnderflowException();
         }
 
+        $targetAction = $request->getActionName();
+
         if ('-1' === $offset) {
             $rowNumber = $curentRowNumber - 1;
         } elseif ('+1' === $offset) {
@@ -162,6 +164,7 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
         $url .= (false === mb_strpos($url, '?')) ? '?' : '&';
         $url .= 'rh=' . $hash;  // revert hash
         $url .= '&rn=' . $rowNumber;
+        $url .= '&ta=' . $targetAction;
 
         return $url;
     }
