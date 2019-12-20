@@ -4,6 +4,8 @@ import plupload from 'plupload';
 import 'zfe-typeahead/dist/typeahead.jquery';
 import 'inputmask/dist/inputmask/jquery.inputmask';
 
+import '../components/keyboard';
+
 import '../lib/jquery.tmpl';
 import '../components/audio';
 import '../components/autocomplete/autocomplete';

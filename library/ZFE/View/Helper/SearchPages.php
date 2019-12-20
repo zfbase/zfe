@@ -71,30 +71,32 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
             return '';
         }
 
+        $btnBaseClass = 'btn btn-' . $btnSize . ' btn-default';
+
         if ('1' !== $currentRowNumber) {
             $prevUrl = $this->getPrevUrl();
-            $prevBtn = '<a role="button" class="btn btn-' . $btnSize . ' btn-default" href="' . $prevUrl . '">'
+            $prevBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-prev" href="' . $prevUrl . '">'
                      . '<span class="glyphicon glyphicon-arrow-left"></span>'
                      . '</a>';
         } else {
-            $prevBtn = '<a role="button" class="btn btn-' . $btnSize . ' btn-default disabled" href="#">'
+            $prevBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-prev disabled" href="#">'
                      . '<span class="glyphicon glyphicon-arrow-left"></span>'
                      . '</a>';
         }
 
         if ($currentRowNumber < $hops->{$hash}['params']['totalResults']) {
             $nextUrl = $this->getNextUrl();
-            $nextBtn = '<a role="button" class="btn btn-' . $btnSize . ' btn-default" href="' . $nextUrl . '">'
+            $nextBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-next" href="' . $nextUrl . '">'
                      . '<span class="glyphicon glyphicon-arrow-right"></span>'
                      . '</a>';
         } else {
-            $nextBtn = '<a role="button" class="btn btn-' . $btnSize . ' btn-default disabled" href="#">'
+            $nextBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-next disabled" href="#">'
                      . '<span class="glyphicon glyphicon-arrow-right"></span>'
                      . '</a>';
         }
 
         if ($prevBtn || $nextBtn) {
-            return '<div class="btn-group ' . $containerClass . '" role="group">' . $prevBtn . $nextBtn . '</div>';
+            return '<div class="btn-steps btn-group ' . $containerClass . '" role="group">' . $prevBtn . $nextBtn . '</div>';
         }
 
         return '';
