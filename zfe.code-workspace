@@ -1,7 +1,20 @@
 {
 	"folders": [
 		{
+			"name": "ZFE",
 			"path": "."
+		},
+		{
+			 "name": "Zend",
+			 "path": "vendor/shardj/zf1-future"
+		},
+		{
+			 "name": "Doctrine",
+			 "path": "vendor/zfbase/doctrine1"
+		},
+		{
+			"name": "Bootstrap for Zend",
+			"path": "vendor/zfbase/zend1-bootstrap3"
 		}
 	],
 	"settings": {
