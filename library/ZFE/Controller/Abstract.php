@@ -16,6 +16,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     // Статусы стандартизированных Ajax ответов
     const STATUS_SUCCESS = '0';  // Статус успеха
     const STATUS_FAIL    = '1';  // Статус ошибки
+    const STATUS_WARNING = '2';  // Статус предупреждения
 
     /**
      * Класс контейнера всей страницы.
@@ -98,42 +99,16 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     }
 
     /**
-     * Отправить сообщение об ошибке и дополнить его данными из исключения,
-     * если расширенная информация об ошибках включена для пользователя.
-     * А также отправить информацию об ошибке в логи.
+     * Отправить сообщение об ошибке.
      *
      * @param string    $msg
      * @param Throwable $e
      * @param bool      $allowAjax
      */
-    public function error($msg, Throwable $e = null, $allowAjax = true)
+    public function error($message, Throwable $ex = null, $allowAjax = true)
     {
-        if ($e) {
-            if ($log = Zend_Registry::get('log')) {
-                $log->log(
-                    $e->getMessage(),
-                    Zend_Log::ERR,
-                    [
-                        'errno' => $e->getCode(),
-                        'file' => $e->getFile(),
-                        'line' => $e->getLine(),
-                        'context' => $e->getTraceAsString(),
-                    ]
-                );
-            }
-
-            if (Zend_Registry::get('user')->noticeDetails) {
-                $msg = '<strong>' . $msg . '</strong><br>'
-                    . $e->getMessage()
-                    . '<pre>' . $e->getTraceAsString() . '</pre>';
-            }
-        }
-
-        if ($this->_request->isXmlHttpRequest() && $allowAjax) {
-            $this->_json(self::STATUS_FAIL, [], $msg);
-        }
-
-        ZFE_Notices::err($msg);
+        $this->notice(self::STATUS_FAIL, $message, $ex, $allowAjax);
+        ZFE_Notices::err($message);
     }
 
     /**
@@ -144,10 +119,56 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      */
     public function success($message, $allowAjax = true)
     {
-        if ($this->_request->isXmlHttpRequest() && $allowAjax) {
-            $this->_json(self::STATUS_SUCCESS, [], $message);
+        $this->notice(self::STATUS_SUCCESS, $message, null, $allowAjax);
+        ZFE_Notices::ok($message);
+    }
+
+    /**
+     * Отправить сообщение об предупреждении.
+     *
+     * @param string $message
+     * @param Throwable $ex
+     * @param boolean $allowAjax
+     */
+    public function warning($message, Throwable $ex = null, $allowAjax = true)
+    {
+        $this->notice(self::STATUS_WARNING, $message, $ex, $allowAjax);
+        ZFE_Notices::msg($message);
+    }
+
+    /**
+     * Отправить сообщение.
+     *
+     * @param string $status
+     * @param string $message
+     * @param Throwable $ex
+     * @param boolean $allowAjax
+     */
+    public function notice($status, $message, Throwable $ex = null, $allowAjax = true)
+    {
+        if ($ex) {
+            if ($log = Zend_Registry::get('log')) {
+                $log->log(
+                    $ex->getMessage(),
+                    Zend_Log::ERR,
+                    [
+                        'errno' => $ex->getCode(),
+                        'file' => $ex->getFile(),
+                        'line' => $ex->getLine(),
+                        'context' => $ex->getTraceAsString(),
+                    ]
+                );
+            }
+
+            if (Zend_Registry::get('user')->noticeDetails) {
+                $message = '<strong>' . $message . '</strong><br>'
+                    . $ex->getMessage()
+                    . '<pre>' . $ex->getTraceAsString() . '</pre>';
+            }
         }
 
-        ZFE_Notices::ok($message);
+        if ($this->_request->isXmlHttpRequest() && $allowAjax) {
+            $this->_json($status, [], $message);
+        }
     }
 }
