@@ -47,17 +47,19 @@ class ZFE_Model_Template_BaseZfeFields extends Doctrine_Template
             'name' => 'datetime_created',
             'type' => 'timestamp',
             'length' => '25',
-            'options' => [],
+            'options' => [
+                'comment' => 'Дата и время создания',
+            ],
             'disabled' => false,
-            'comment' => 'Дата и время создания',
         ],
         'datetime_edited' => [
             'name' => 'datetime_edited',
             'type' => 'timestamp',
             'length' => '25',
-            'options' => [],
+            'options' => [
+                'comment' => 'Дата и время последнего изменения',
+            ],
             'disabled' => false,
-            'comment' => 'Дата и время последнего изменения',
         ],
         'deleted' => [
             'name' => 'deleted',
