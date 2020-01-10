@@ -28,19 +28,24 @@ class ZFE_Console_Command_UserAdd extends ZFE_Console_Command_Abstract
         }
 
         $login = array_shift($params);
+        $model = Zend_Registry::get('config')->userModel ?? 'Editors';
 
-        if (Editors::findOneBy('login', $login)) {
+        if ($model::findOneBy('login', $login)) {
             echo "<error>Пользователь с таким логином уже существует.</error>\n";
             return;
         }
 
         $password = mb_substr(uniqid('', true), 0, 8);
 
-        $item = new Editors();
+        /** @var ZFE_Model_Default_Editors $item */
+        $item = new $model();
         $item->second_name = $login;
         $item->login = $login;
         $item->role = 'admin';
         $item->setPassword($password);
+        if ($item->contains('request_password_change')) {
+            $item->request_password_change = true;
+        }
         $item->save();
 
         echo "Добавлен пользователь c логином <info>{$login}</info> и паролем <info>{$password}</info>.\n";
