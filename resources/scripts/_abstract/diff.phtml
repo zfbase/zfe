@@ -3,11 +3,11 @@
 
     $item = $this->item = $this->curItem;
 
-    $this->controlTabs[] = [
+    $this->ControlTabs()->addTab('diff', [
         'action' => 'diff',
         'title' => 'Сравнение версий',
         'class' => 'pull-right',
-    ];
+    ]);
 ?>
 
 <?= $this->abstractRender('_header.phtml') ?>
