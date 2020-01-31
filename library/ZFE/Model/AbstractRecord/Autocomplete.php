@@ -320,7 +320,11 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         foreach (static::$multiAutocompleteCols as $key => $options) {
             $options = static::getMultiAutocompleteOptions($key);
 
-            if ( ! isset($array[$key])) {
+            if (!array_key_exists($key, $array)) {
+                continue;
+            }
+
+            if ($array[$key] === null) {
                 $array[$key] = [];
             }
 
