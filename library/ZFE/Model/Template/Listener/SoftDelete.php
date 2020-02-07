@@ -21,9 +21,13 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
      *
      * @param bool $mode
      */
-    public function allowSoftDelete($mode)
+    public function allowSoftDelete($mode = null)
     {
-        $this->_allowSoftDelete = $mode;
+        if ($mode !== null) {
+            $this->_allowSoftDelete = $mode;
+        }
+
+        return $this->_allowSoftDelete;
     }
 
     /**
