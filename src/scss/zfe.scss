@@ -132,3 +132,14 @@ tr[role="button"] {
     font-size: 80%;
     opacity: 0.9;
 }
+
+
+.zfe-dump::after {
+    display: block;
+    content: attr(data-place);
+    font-size: 0.8em;
+    padding: 9.5px;
+    margin: -9.5px;
+    margin-top: 9.5px;
+    border-top: 1px solid #ccc;
+  }
