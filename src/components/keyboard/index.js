@@ -2,7 +2,16 @@ import $ from 'jquery';
 import { keyCode } from '../../js/constants';
 
 $(document).on('keyup', (e) => {
+  if (!e.altKey && !e.ctrlKey) {
+    return;
+  }
+
   if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+    return;
+  }
+
+  // Костяль для динамического отключения.
+  if ($('body').hasClass('zfe-keyboard-disable')) {
     return;
   }
 

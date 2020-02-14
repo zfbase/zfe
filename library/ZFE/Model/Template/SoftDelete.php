@@ -28,6 +28,16 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
     }
 
     /**
+     * Установит флаг: Разрешить мягкое удаление?
+     *
+     * @param bool|null $mode
+     */
+    public function allowSoftDelete($mode = null)
+    {
+        return $this->_listener->allowSoftDelete($mode);
+    }
+
+    /**
      * Удалить в обход механизма истории.
      *
      * @param Doctrine_Connection $conn

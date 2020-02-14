@@ -56,6 +56,7 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
                 . '</span>';
 
         return '<div class="datelist">'
+             . '<input type="hidden" name="' . $name . '[]" />'  // Псевдо значение для передачи данных о наличии элемента в форме
              . '<div class="datelist-entities">' . $curValues . '</div>'
              . '<div class="input-group">' . $input . $btnSet . '</div>'
              . '</div>';

@@ -23,7 +23,10 @@ class ZFE_Debug extends Zend_Debug
         $output = parent::dump($var, $label, false);
 
         if ('cli' !== self::getSapi() && !extension_loaded('xdebug')) {
-            $output = preg_replace('/^<pre>/', '<pre class="zfe-dump"><code>', $output);
+            list($place) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+            $preOpen = '<pre class="zfe-dump" data-place="' . $place['file'] . ':' . $place['line'] . '">';
+
+            $output = preg_replace('/^<pre>/', $preOpen . '<code>', $output);
             $output = preg_replace('/<\/pre>$/', '</code></pre>', $output);
         }
 

@@ -419,12 +419,13 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function hardFind()
     {
-        if ($this->hasTemplate('ZFE_Model_Template_History')) {
-            $template = $this->getTemplate('ZFE_Model_Template_History');
+        if ($this->hasTemplate('ZFE_Model_Template_SoftDelete')) {
+            $template = $this->getTemplate('ZFE_Model_Template_SoftDelete');
 
-            $template->saveHistory(false);
+            $allowSoftDelete = $template->allowSoftDelete();
+            $template->allowSoftDelete(false);
             $result = call_user_func_array([$this, 'find'], func_get_args());
-            $template->saveHistory(true);
+            $template->allowSoftDelete($allowSoftDelete);
         } else {
             $result = call_user_func_array([$this, 'find'], func_get_args());
         }
