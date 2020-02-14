@@ -35,6 +35,24 @@ class ZFE_Debug extends Zend_Debug
     }
 
     /**
+     * Форматировать и отправить в консоль результат работы var_dump().
+     *
+     * @param mixed  $var   Переменная для дампа
+     * @param string $label Название переменной
+     */
+    public static function console($var, $label = null)
+    {
+        $label = ($label === null) ? '' : rtrim($label) . PHP_EOL;
+
+        ob_start();
+        var_dump($var);
+        $output = ob_get_clean();
+        $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
+
+        error_log($label . $output);
+    }
+
+    /**
      * Форматирует и оборачивает SQL-запрос
      *
      * @param string|ZFE_Query $sql  Строка запроса
