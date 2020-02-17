@@ -52,7 +52,10 @@ class ZFE_Debug extends Zend_Debug
         $output = ob_get_clean();
         $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
 
-        error_log($label . $output);
+        list($place) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $callPoint = $place['file'] . ':' . $place['line'] . PHP_EOL;
+
+        error_log($callPoint . $label . $output);
     }
 
     /**
