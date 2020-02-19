@@ -383,6 +383,8 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      *     ['field' => 'body', 'viewMethod' => function ($item) {  - использовать для отображения лямбду
      *         return strip_tags($item->preview);
      *     ],
+     *     ['field' => 'total', 'prefix' => '€'],                  - добавить префикс
+     *     ['field' => 'circulation', 'postfix' => 'экз.'],        - добавить постфикс
      * ]
      */
     public static function getViewFields()
