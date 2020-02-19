@@ -392,6 +392,6 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         $relations = array_map(function ($options) {
             return $options['relAlias'];
         }, static::$multiAutocompleteCols);
-        return array_merge($columns, $relations);
+        return array_merge(array_combine($columns, $columns), $relations);
     }
 }
