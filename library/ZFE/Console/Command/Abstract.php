@@ -49,7 +49,12 @@ abstract class ZFE_Console_Command_Abstract
      *
      * @return string
      */
-    abstract public static function getName();
+    public static function getName()
+    {
+        $parts = explode('_', static::class);
+        $name = array_pop($parts);
+        return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $name));
+    }
 
     /**
      * Получить описание.
