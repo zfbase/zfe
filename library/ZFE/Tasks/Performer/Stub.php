@@ -9,8 +9,12 @@
  */
 class ZFE_Tasks_Performer_Stub extends ZFE_Tasks_Performer
 {
-    public function perform(int $relatedItemId)
+    public function perform(int $relatedId): void
     {
-        return $this;
+    }
+
+    public static function checkRelated(AbstractRecord $item): bool
+    {
+        return true;
     }
 }

@@ -10,18 +10,11 @@
 abstract class ZFE_Tasks_Performer
 {
     /**
-     * @param string $code
-     *
-     * @return ZFE_Tasks_Performer
+     * Создать экземпляр исполнителя.
      */
-    public static function forge($code)
+    public static function factory(): ZFE_Tasks_Performer
     {
-        $performerClassName = self::class . '_' . $code;
-        return new $performerClassName;
-    }
-
-    final public function __construct()
-    {
+        return new static;
     }
 
     /**
@@ -29,10 +22,8 @@ abstract class ZFE_Tasks_Performer
      *
      * Код исполнителя определяется как последняя часть имени класс по PSR-0:
      * Application_Performer_LazyPerson -> LazyPerson.
-     *
-     * @return string
      */
-    final public function getCode()
+    public static function getCode(): string
     {
         $parts = explode('_', static::class);
         $code = array_pop($parts);
@@ -40,11 +31,14 @@ abstract class ZFE_Tasks_Performer
     }
 
     /**
-     * Выполнить необходимые действия по задаче для указанной по id записи в БД.
-     *
-     * @param int $relatedItemId Идентификатор записи БД
+     * Выполнить необходимые действия по задаче для объекта с указанным ID.
      *
      * @throws ZFE_Tasks_Performer_Exception
      */
-    abstract public function perform(int $relatedItemId);
+    abstract public function perform(int $relatedId): void;
+
+    /**
+     * Метод для проверки, что передаётся допустимый объект исполнения.
+     */
+    abstract public static function checkRelated(AbstractRecord $item): bool;
 }

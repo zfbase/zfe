@@ -9,8 +9,13 @@
  */
 class ZFE_Tasks_Performer_ErrorStub extends ZFE_Tasks_Performer
 {
-    public function perform(int $relatedItemId)
+    public function perform(int $relatedId): void
     {
         throw new ZFE_Tasks_Performer_Exception('error');
+    }
+
+    public static function checkRelated(AbstractRecord $item): bool
+    {
+        return true;
     }
 }
