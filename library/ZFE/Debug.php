@@ -43,14 +43,18 @@ class ZFE_Debug extends Zend_Debug
      * @param mixed  $var   Переменная для дампа
      * @param string $label Название переменной
      */
-    public static function console($var, $label = null)
+    public static function console($var = null, $label = null)
     {
         $label = ($label === null) ? '' : rtrim($label) . PHP_EOL;
 
-        ob_start();
-        var_dump($var);
-        $output = ob_get_clean();
-        $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
+        if ($var !== null || $label !== '') {
+            ob_start();
+            var_dump($var);
+            $output = ob_get_clean();
+            $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
+        } else {
+            $output = '';
+        }
 
         list($place) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
         $callPoint = $place['file'] . ':' . $place['line'] . PHP_EOL;
