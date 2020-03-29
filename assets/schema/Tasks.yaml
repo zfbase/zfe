@@ -1,0 +1,54 @@
+Tasks:
+  connection: dbh
+  tableName: tasks
+  actAs:
+    Timestampable:
+      created:
+        name: created_at
+      updated:
+        disabled: true
+  columns:
+    id:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+      primary: true
+      autoincrement: true
+      comment: Идентификатор
+    datetime_created:
+      type: timestamp
+      notnull: true
+      comment: Дата добавления
+    datetime_schedule:
+      type: timestamp
+      comment: Плановое время запуска
+    datetime_done:
+      type: timestamp
+      comment: Окончание исполнения
+    performer_code:
+      type: string(63)
+      comment: Код исполнителя
+    related_id:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+      comment: Объект исполнения
+    parent_id:
+      type: integer(4)
+      unsigned: true
+      comment: Родительская задача
+    revision:
+      type: integer(1)
+      unsigned: true
+      notnull: true
+      default: '1'
+      comment: Номер попытки исполнения
+    state:
+      type: integer(1)
+      unsigned: true
+      notnull: true
+      default: '0'
+      comment: Состояние
+    errors:
+      type: string(1000)
+      comment: Ошибки
