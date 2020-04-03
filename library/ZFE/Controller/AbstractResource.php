@@ -146,6 +146,16 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
     }
 
     /**
+     * Получить включенные стандартные экшены.
+     *
+     * @return array<string>|string[]
+     */
+    public static function getEnableActions()
+    {
+        return static::$_enableActions;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function postDispatch()
