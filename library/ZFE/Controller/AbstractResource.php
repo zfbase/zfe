@@ -276,17 +276,20 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
 
     /**
      * Загрузить и получить текущую запись или упасть с исключением.
-     * Если $this->view->item уже загружен, просто вернуть его значение.
+     * Если $this->view->item уже загружен и запрошена модель контроллера, просто вернуть его значение.
      *
      * @param string $param
+     * @param string $modelName
      *
      * @return ZFE_Model_AbstractRecord
      */
-    protected function _loadItemOrFall($param = 'id')
+    protected function _loadItemOrFall($param = 'id', $modelName = null)
     {
-        $modelName = static::$_modelName;
+        if (!$modelName) {
+            $modelName = static::$_modelName;
+        }
 
-        if ($this->view->item instanceof $modelName) {
+        if (($this->view->item instanceof $modelName) && $modelName == static::$_modelName) {
             return $this->view->item;
         }
 
@@ -300,7 +303,10 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
-        $this->view->item = $item;
+        if ($modelName == static::$_modelName) {
+            $this->view->item = $item;
+        }
+
         return $item;
     }
 }
