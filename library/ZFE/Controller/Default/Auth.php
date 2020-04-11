@@ -48,16 +48,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                     Zend_Session::rememberMe();
                 }
 
-                $tableConn = Doctrine_Core::getConnectionByTableName('editors');
-                $authAdapter = new ZFE_Auth_Adapter_Doctrine($tableConn);
-                $authAdapter->setTableName('editors')
-                    ->setIdentityColumn(Editors::$identityColumn)
-                    ->setCredentialColumn('password')
-                    ->setCredentialTreatment(Editors::$credentialTreatment . ' ' . self::$_credentialTreatmentAdditional)
-                    ->setIdentity($formData['login'])
-                    ->setCredential($formData['password'])
-                ;
-
+                $authAdapter = $this->getAuthAdapter($formData);
                 $result = $auth->authenticate($authAdapter);
 
                 if (!$result->isValid()) {
@@ -104,6 +95,25 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
         $this->view->form = $form;
         $this->view->redirect = $requestUri;
+    }
+
+    /**
+     * Получить настроенный адаптер авторизации.
+     *
+     * @return Zend_Auth_Adapter_Interface
+     */
+    protected function getAuthAdapter($data)
+    {
+        $tableConn = Doctrine_Core::getConnectionByTableName('editors');
+        $authAdapter = new ZFE_Auth_Adapter_Doctrine($tableConn);
+        $authAdapter->setTableName('editors')
+            ->setIdentityColumn(Editors::$identityColumn)
+            ->setCredentialColumn('password')
+            ->setCredentialTreatment(Editors::$credentialTreatment . ' ' . self::$_credentialTreatmentAdditional)
+            ->setIdentity($data['login'])
+            ->setCredential($data['password'])
+        ;
+        return $authAdapter;
     }
 
     /**
