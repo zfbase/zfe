@@ -222,6 +222,7 @@ class ZFE_Tasks_Manager
             }
 
             try {
+                $this->log("Start task # {$task->id}");
                 $performer->perform($task->getRelatedId());
 
                 $task = $this->finish($task);
