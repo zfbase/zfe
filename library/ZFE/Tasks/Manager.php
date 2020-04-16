@@ -83,6 +83,11 @@ class ZFE_Tasks_Manager
     public function setLogger(Zend_Log $logger)
     {
         $this->logger = $logger;
+
+        foreach ($this->performers as $performer) {
+            $performer->setLogger($logger);
+        }
+
         return $this;
     }
 

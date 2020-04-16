@@ -9,6 +9,19 @@
  */
 abstract class ZFE_Tasks_Performer
 {
+    private $logger;
+
+    /**
+     * @param Zend_Log $logger
+     *
+     * @return $this
+     */
+    public function setLogger(Zend_Log $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
     /**
      * @param string $code
      *
@@ -47,4 +60,20 @@ abstract class ZFE_Tasks_Performer
      * @throws ZFE_Tasks_Performer_Exception
      */
     abstract public function perform(int $relatedItemId);
+
+    /**
+     * Записать сообщение в лог.
+     *
+     * @param $message
+     * @param int $level
+     *
+     * @return $this
+     */
+    protected function log($message, $level = Zend_Log::INFO)
+    {
+        if ($this->logger) {
+            $this->logger->log($message, $level);
+        }
+        return $this;
+    }
 }
