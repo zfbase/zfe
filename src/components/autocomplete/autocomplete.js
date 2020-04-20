@@ -17,6 +17,7 @@ class ZFEAutocomplete {
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
     this.$hint = this.$group.find('.tt-hint');
+    this.$inlineLink = this.$group.find('.tt-link');
     this.valueData = null;
   }
 
@@ -198,8 +199,8 @@ class ZFEAutocomplete {
   }
 
   setValue({ id = '', title = '' } = {}) {
-    const { $input, $group, $iconRight } = this;
-    const { $idInput, $titleInput, canCreate } = this.settings;
+    const { $input, $group, $iconRight, $inlineLink } = this;
+    const { $idInput, $titleInput, canCreate, itemForm } = this.settings;
     const hasId = !!id;
     const hasTitle = !!title;
     const isNew = !hasId && hasTitle;
@@ -218,6 +219,10 @@ class ZFEAutocomplete {
     $titleInput.val(title);
     $iconRight.toggleClass('tt-fill', !isEmpty);
     $group.toggleClass('has-warning', isNew);
+
+    if (itemForm) {
+      $inlineLink.attr('href', id ? itemForm.replace('%d', id) : null);
+    }
 
     this.$input.trigger('zfe.ac.change');
   }

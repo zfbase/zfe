@@ -91,6 +91,15 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             unset($attribs['menuUp']);
         }
 
+        $linkBtnAttribs = [
+            'class' => 'glyphicon glyphicon-share-alt tt-link',
+            'target' => '_blank',
+        ];
+        if (!empty($attribs['data-itemform']) && !empty($value['id'])) {
+            $linkBtnAttribs['href'] = sprintf($attribs['data-itemform'], $value['id']);
+        }
+        $linkBtn = $this->view->tag('a', $linkBtnAttribs);
+
         $searchIcon = $this->view->tag('i', ['class' => "glyphicon glyphicon-menu-{$menuDirection}"]);
         $separator = $this->view->tag('i', ['class' => 'tt-separator']);
         $clearIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-remove clear']);
@@ -101,8 +110,8 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             'value' => $value['title'],
             'data-create' => $create,
         ]);
-        $searchPackClass = 'tt-icon-right' . ($disable ? ' tt-disabled' : '');
-        $searchPack = $this->view->tag('div', ['class' => $searchPackClass], $clearIcon . $separator . $searchIcon . $searchInput);
+        $searchPackClass = 'tt-icon-right' . ($disable ? ' tt-disabled' : '') . (empty($attribs['data-itemform']) ? '' : ' has-itemform');
+        $searchPack = $this->view->tag('div', ['class' => $searchPackClass], $linkBtn . $clearIcon . $separator . $searchIcon . $searchInput);
 
         $helpIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-warning-sign']);
         $helpBlock = $this->view->tag(
