@@ -15,6 +15,7 @@
             <tr>
                 <th><?= $options['title'] ?? $modelName::getFieldName($options['field']) ?></th>
                 <td>
+                    <?= $options['prefix'] ?? '' ?>
                     <? if (!empty($options['viewHelper'])): ?>
                         <?= $this->{$options['viewHelper']}($item->{$options['field']}) ?>
                     <? elseif (!empty($options['viewMethod'])): ?>
@@ -24,6 +25,7 @@
                     <? elseif ($table->hasColumn($options['field'])): ?>
                         <?= ZFE::shortenText($this->autoFormat($item->{$options['field']}, $options['field'], $modelName), 400) ?>
                     <? endif; ?>
+                    <?= $options['postfix'] ?? '' ?>
                 </td>
             </tr>
         <? endif; ?>

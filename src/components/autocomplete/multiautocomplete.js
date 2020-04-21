@@ -241,7 +241,7 @@ class ZFEMultiAutocomplete {
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
-    $input.on('typeahead:closed', (e) => {
+    $input.on('typeahead:close', (e) => {
       if (e.keyCode !== keyCode.ESCAPE) {
         const newValue = $.trim($input.typeahead('val'));
         if (newValue !== '' && canCreate) {

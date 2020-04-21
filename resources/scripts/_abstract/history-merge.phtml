@@ -6,11 +6,11 @@
     $allColumns = $tableInstance->getColumnNames();
     $serviceFields = $modelName::getServiceFields();
     $columns = array_diff($allColumns, $serviceFields);
-    $this->controlTabs[] = [
+    $this->ControlTabs()->addTab('history-merge', [
         'action' => 'history-merge',
         'title' => 'Объединенные записи',
         'class' => 'pull-right',
-    ];
+    ]);
     $downHash = $this->hopsHistory()->getDownHash('К истории', '?');
 ?>
 
