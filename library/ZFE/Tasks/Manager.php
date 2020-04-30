@@ -19,11 +19,10 @@ class ZFE_Tasks_Manager
      *
      * @return ZFE_Tasks_Manager
      */
-    public static function getInstance(?Zend_Config $config = null, Zend_Log $logger = null)
+    public static function getInstance()
     {
         if (static::$instance === null) {
-            $config = $config ?? Zend_Registry::get('config');
-            static::$instance = new static($config, $logger);
+            static::$instance = new static();
         }
 
         return static::$instance;
@@ -41,19 +40,13 @@ class ZFE_Tasks_Manager
     protected $performers = [];
 
     /**
-     * Логгер.
-     *
-     * @var $logger Zend_Log
-     */
-    protected $logger;
-
-    /**
      * Конструктор.
      *
      * @throws ZFE_Tasks_Exception
      */
-    protected function __construct(Zend_Config $config, Zend_Log $logger = null)
+    protected function __construct()
     {
+        $config = Zend_Registry::get('config');
         if (empty($config->tasks) || empty($config->tasks->performers)) {
             throw new ZFE_Tasks_Exception('В конфигурации не перечислены исполнители задач: tasks.performers');
         }
@@ -68,10 +61,6 @@ class ZFE_Tasks_Manager
             } else {
                 throw new ZFE_Tasks_Exception("Класс ${performerClassName} не является классом-исполнителем");
             }
-        }
-
-        if ($logger) {
-            $this->logger = $logger;
         }
     }
 
@@ -92,20 +81,6 @@ class ZFE_Tasks_Manager
                 return is_string($performer) ? $performer : get_class($performer);
             }
         }, $this->performers);
-    }
-
-    /**
-     * Записать в лог.
-     *
-     * @return ZFE_Tasks_Manager
-     */
-    protected function log(string $message, int $level = Zend_Log::INFO)
-    {
-        if ($this->logger) {
-            $this->logger->log($message, $level);
-        }
-
-        return $this;
     }
 
     /**
@@ -203,7 +178,7 @@ class ZFE_Tasks_Manager
      *
      * @return Количество успешно выполненных задач.
      */
-    final public function manage(Doctrine_Collection_OnDemand $tasks): int
+    final public function manage(Doctrine_Collection_OnDemand $tasks, Zend_Log $logger = null): int
     {
         $managed = 0;
 
@@ -215,27 +190,41 @@ class ZFE_Tasks_Manager
             try {
                 $performer = $this->assign($task);
             } catch (ZFE_Tasks_Exception $e) {
-                $this->log($e->getMessage(), Zend_Log::ERR);
+                $this->logHelper($logger, $e->getMessage(), Zend_Log::ERR);
                 continue;
             }
 
             try {
                 $task->perform();
-                $performer->perform($task->related_id);
+                $performer->perform($task->related_id, $logger);
 
                 $task->done();
-                $this->log("Task #{$task->id} performed successfully");
+                $this->logHelper($logger, "Task #{$task->id} performed successfully");
 
                 $managed++;
             } catch (ZFE_Tasks_Performer_Exception $e) {
                 $task->errors = $e->getMessage();
                 $task->save();
 
-                $this->log("Task #{$task->id} performed with error: {$e->getMessage()}");
+                $this->logHelper($logger, "Task #{$task->id} performed with error: {$e->getMessage()}");
             }
         }
 
         return $managed;
+    }
+
+    /**
+     * Записать в лог.
+     *
+     * @return ZFE_Tasks_Manager
+     */
+    protected function logHelper(?Zend_Log $logger, string $message, int $level = Zend_Log::INFO)
+    {
+        if ($logger) {
+            $logger->log($message, $level);
+        }
+
+        return $this;
     }
 
     /**
