@@ -16,10 +16,8 @@ class ZFE_Tasks_Manager
 
     /**
      * Получить экземпляр менеджера отложенных задач.
-     *
-     * @return ZFE_Tasks_Manager
      */
-    public static function getInstance()
+    public static function getInstance(): ZFE_Tasks_Manager
     {
         if (static::$instance === null) {
             static::$instance = new static();
@@ -84,7 +82,7 @@ class ZFE_Tasks_Manager
     }
 
     /**
-     * Найти все повторные задачи для указанной.
+     * Найти все повторные задачи для указанной с любым статусом.
      */
     public function findAllRevisionsFor(Tasks $task): ?Doctrine_Collection
     {
@@ -93,7 +91,7 @@ class ZFE_Tasks_Manager
             ->from('Tasks x')
             ->where('x.parent_id = ?', $task->parent_id ?: $task->id)
             ->andWhere('x.revision > ?', $task->revision)
-            ->orderBy('x.id DESC')
+            ->orderBy('x.datetime_created DESC')
         ;
         $tasks = $q->execute();
         return $tasks->count() ? $tasks : null;
@@ -111,44 +109,36 @@ class ZFE_Tasks_Manager
             ->from('Tasks x')
             ->where('x.related_id = ?', $relatedId)
             ->addWhere('x.performer_code = ?', $code)
-            ->addWhere('x.state = ?', Tasks::STATE_TODO)
-            ->orderBy('x.datetime_created ASC')
+            ->addWhere('x.datetime_started IS NULL')
+            ->addWhere('x.datetime_done IS NULL')
+            ->addWhere('x.return_code IS NULL')
+            ->addWhere('x.datetime_canceled IS NULL')
+            ->orderBy('x.priority ASC')
+            ->addOrderBy('x.datetime_created ASC')
             ->limit(1)
         ;
         return $q->fetchOne() ?: null;
     }
 
     /**
-     * Найти все задачи для выполнения.
+     * Найти все задачи для выполнения в порядке убывания приоритета.
      */
     public function findAllToDo(int $limit = 100): Doctrine_Collection_OnDemand
     {
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from('Tasks x')
-            ->where('x.state = ?', Tasks::STATE_TODO)
+            ->where('x.datetime_started IS NULL')
+            ->addWhere('x.datetime_done IS NULL')
+            ->addWhere('x.return_code IS NULL')
+            ->addWhere('x.datetime_canceled IS NULL')
             ->addWhere('x.datetime_schedule IS NULL OR (x.datetime_schedule IS NOT NULL AND x.datetime_schedule < NOW())')
-            ->orderBy('x.datetime_created ASC')
+            ->orderBy('x.priority ASC')
+            ->addOrderBy('x.datetime_created ASC')
             ->limit($limit)
             ->setHydrationMode(Doctrine_Core::HYDRATE_ON_DEMAND)
         ;
         return $q->execute();
-    }
-
-    /**
-     * Найти последнюю задачу.
-     */
-    public function getLastTask(string $code, int $relatedId)
-    {
-        $q = ZFE_Query::create()
-            ->select('x.*')
-            ->from('Tasks x')
-            ->where('x.related_id = ?', $relatedId)
-            ->addWhere('x.performer_code = ?', $code)
-            ->orderBy('x.datetime_created ASC')
-            ->limit(1)
-        ;
-        return $q->fetchOne() ?: null;
     }
 
     /**
@@ -183,7 +173,7 @@ class ZFE_Tasks_Manager
         $managed = 0;
 
         foreach ($tasks as $task) {  /** @var Tasks $task */
-            if ($task->state != Tasks::STATE_TODO) {
+            if (!$task->isNew()) {
                 continue;
             }
 
@@ -196,11 +186,10 @@ class ZFE_Tasks_Manager
 
             try {
                 $task->perform();
-                $performer->perform($task->related_id, $logger);
+                $resultCode = $performer->perform($task->related_id, $logger);
+                $task->done($resultCode);
 
-                $task->done();
                 $this->logHelper($logger, "Task #{$task->id} performed successfully");
-
                 $managed++;
             } catch (ZFE_Tasks_Performer_Exception $e) {
                 $task->errors = $e->getMessage();
@@ -233,8 +222,14 @@ class ZFE_Tasks_Manager
      * @param $performerClass   класс исполнителя
      * @param $related          объект исполнения
      * @param $scheduleDateTime срок начала исполнения (не раньше, но можно позднее)
+     * @param $priority         приоритет (чем выше, тем раньше выполнится)
      */
-    public function plan(string $performerClass, AbstractRecord $related, DateTime $scheduleDateTime = null): Tasks
+    public function plan(
+        string $performerClass,
+        AbstractRecord $related,
+        DateTime $scheduleDateTime = null,
+        int $priority = 0
+    ): Tasks
     {
         if (!is_a($performerClass, ZFE_Tasks_Performer::class, true)) {
             throw new ZFE_Tasks_Exception("{$performerClass} не является классом исполнителя");
@@ -258,6 +253,8 @@ class ZFE_Tasks_Manager
             $task = new Tasks;
             $task->performer_code = $performerCode;
             $task->related_id = $relatedId;
+            $task->priority = $priority;
+            $task->datetime_created = new Doctrine_Expression('NOW()');
         }
 
         if ($scheduleDateTime) {
@@ -272,33 +269,27 @@ class ZFE_Tasks_Manager
      * Запланировать повторное выполнение задачи.
      *
      * @throws ZFE_Tasks_Exception
-     *
-     * @param $force запланировать даже если она успешно выполнена.
      */
-    public function revision(Tasks $task, bool $force = false): Tasks
+    public function revision(Tasks $task): Tasks
     {
-        if ($task->state == Tasks::STATE_PERFORM) {
+        if ($task->isPerformed()) {
             throw new ZFE_Tasks_Exception('Невозможно перезапустить задачу во время её выполнения.');
         }
 
-        if ($task->errors || $force) {
-            if ($task->state == Tasks::STATE_TODO) {
-                $task->cancel();
-            }
-
-            $taskRevision = new Tasks;
-            $taskRevision->performer_code = $task->performer_code;
-            $taskRevision->related_id = $task->related_id;
-            $taskRevision->parent_id = $task->parent_id ?: $task->id;
-            $taskRevision->revision = $task->revision + 1;
-            $taskRevision->save();
-            return $taskRevision;
+        if (!$task->isDone()) {
+            throw new ZFE_Tasks_Exception('Задача еще не выполнена, перезапуск не возможен.');
         }
 
-        if ($task->state == Tasks::STATE_DONE) {
-            throw new ZFE_Tasks_Exception('Задача была выполнена успешно, доработка невозможна');
+        if ($task->isNew()) {
+            $task->cancel();
         }
 
-        throw new ZFE_Task_Exception('Задача еще не выполнена, перезапуск не возможен.');
+        $taskRevision = new Tasks;
+        $taskRevision->performer_code = $task->performer_code;
+        $taskRevision->related_id = $task->related_id;
+        $taskRevision->parent_id = $task->parent_id ?: $task->id;
+        $taskRevision->revision = $task->revision + 1;
+        $taskRevision->save();
+        return $taskRevision;
     }
 }

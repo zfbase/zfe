@@ -35,7 +35,7 @@ abstract class ZFE_Tasks_Performer
      *
      * @throws ZFE_Tasks_Performer_Exception
      */
-    abstract public function perform(int $relatedId): void;
+    abstract public function perform(int $relatedId, ?Zend_Log $logger = null): int;
 
     /**
      * Метод для проверки, что передаётся допустимый объект исполнения.

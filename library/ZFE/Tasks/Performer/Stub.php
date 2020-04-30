@@ -9,8 +9,9 @@
  */
 class ZFE_Tasks_Performer_Stub extends ZFE_Tasks_Performer
 {
-    public function perform(int $relatedId): void
+    public function perform(int $relatedId, ?Zend_Log $logger = null): int
     {
+        return 0;
     }
 
     public static function checkRelated(AbstractRecord $item): bool

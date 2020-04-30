@@ -1,12 +1,5 @@
 Tasks:
-  connection: dbh
   tableName: tasks
-  actAs:
-    Timestampable:
-      created:
-        name: created_at
-      updated:
-        disabled: true
   columns:
     id:
       type: integer(4)
@@ -18,15 +11,27 @@ Tasks:
     datetime_created:
       type: timestamp
       notnull: true
-      comment: Дата добавления
+      comment: Дата и время добавления
     datetime_schedule:
       type: timestamp
-      comment: Плановое время запуска
+      comment: Дата и время планового запуска
+    datetime_started:
+      type: timestamp
+      comment: Дата и время начала исполнения
     datetime_done:
       type: timestamp
-      comment: Окончание исполнения
+      comment: Дата и время окончания исполнения
+    datetime_canceled:
+      type: timestamp
+      comment: Дата и время отменены
+    priority:
+      type: integer(1)
+      notnull: true
+      default: '0'
+      comment: Приоритет
     performer_code:
       type: string(63)
+      notnull: true
       comment: Код исполнителя
     related_id:
       type: integer(4)
@@ -43,12 +48,10 @@ Tasks:
       notnull: true
       default: '1'
       comment: Номер попытки исполнения
-    state:
+    return_code:
       type: integer(1)
       unsigned: true
-      notnull: true
-      default: '0'
-      comment: Состояние
+      comment: Код результата исполнения
     errors:
       type: string(1000)
       comment: Ошибки
