@@ -21,6 +21,11 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
     public static $acMaxLengthForLimit = 7;
 
     /**
+     * ID в индексе сфинкса.
+     */
+    protected static $acSphinxId = 'id';
+
+    /**
      * Получить список для автокомплита.
      *
      * @param array $params
@@ -46,17 +51,15 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
     public static function sphinxAutocomplete(array $params)
     {
         $sphinxQuery = static::_getSphinxQueryForAutocomplete($params);
-        $doctrineQuery = static::_getDoctrineQueryForAutocomplete();
-
         $ids = ZFE_Sphinx::fetchIds($sphinxQuery->execute());
-        if (count($ids) > 0) {
-            $doctrineQuery->andWhereIn('x.id', $ids);
-            $doctrineQuery->removeDqlQueryPart('orderby');
-            $doctrineQuery->orderByField('x.id', $ids);
-        } else {
+        if (!count($ids)) {
             return [];
         }
 
+        $doctrineQuery = static::_getDoctrineQueryForAutocomplete();
+        $doctrineQuery->andWhereIn('x.id', $ids);
+        $doctrineQuery->removeDqlQueryPart('orderby');
+        $doctrineQuery->orderByField('x.id', $ids);
         return array_map(
             [static::class, 'mapAutocompleteResultRow'],
             $doctrineQuery->execute()
@@ -73,7 +76,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
     protected static function _getSphinxQueryForAutocomplete(array $params = [])
     {
         /** @var \Foolz\SphinxQL\SphinxQL $q */
-        $q = ZFE_Sphinx::query()->select('id')
+        $q = ZFE_Sphinx::query()->select(static::$acSphinxId)
             ->from(static::getSphinxIndexName())
             ->limit(static::$acLimit)
         ;

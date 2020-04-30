@@ -171,7 +171,8 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             return '';
         }
 
-        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $front = Zend_Controller_Front::getInstance();
+        $request = $front->getRequest();
 
         $markup = '<ul class="nav nav-tabs" style="margin-bottom: 20px;">';
 
@@ -193,10 +194,23 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
 
             return ($a < $b) ? -1 : 1;
         });
+
+        $dispatcher = $front->getDispatcher();
+        $controllerName = $request->getControllerName();
+        $controllerClass = $dispatcher->formatControllerName($controllerName);
+        $dispatcher->loadClass($controllerClass);
+
         foreach ($this->_tabs as $tab) {
-            $resource = $tab['resource'] ?? $this->_resource ?? $request->getControllerName();
+            $resource = $tab['resource'] ?? $this->_resource ?? $controllerName;
             $privilege = $tab['privilege'] ?? $tab['action'];
             if (!$this->view->isAllowedMe($resource, $privilege)) {
+                continue;
+            }
+
+            if (
+                in_array($privilege, Controller_AbstractResource::getEnableActions())
+                && !in_array($privilege, $controllerClass::getEnableActions())
+            ) {
                 continue;
             }
 
