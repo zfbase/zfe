@@ -85,7 +85,7 @@ class ZFE_Tasks_Manager
      */
     public function getPerformers(bool $init = false) : array
     {
-        return array_map(function ($performer) {
+        return array_map(function ($performer) use ($init) {
             if ($init) {
                 return is_string($performer) ? $performer::factory() : $performer;
             } else {
