@@ -47,7 +47,7 @@ class ZFE_Tasks_Manager
     protected function __construct()
     {
         $config = Zend_Registry::get('config');
-        if (empty($config->tasks) || empty($config->tasks->performers)) {
+        if (empty($config->tasks->performers) || !is_iterable($config->tasks->performers)) {
             throw new ZFE_Tasks_Exception('В конфигурации не перечислены исполнители задач: tasks.performers');
         }
 
