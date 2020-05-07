@@ -70,7 +70,7 @@ class ZFE_Tasks_Manager
      * @return array|string[]              массив классов исполнителей
      * @return array|ZFE_Tasks_Performer[] массив инициализированных исполнителей
      */
-    public function getPerformers(bool $init = false) : array
+    public function getPerformers(bool $init = false): array
     {
         return array_map(function ($performer) use ($init) {
             if ($init) {
@@ -82,7 +82,32 @@ class ZFE_Tasks_Manager
     }
 
     /**
+     * Получить исполнителя задачи по коду.
+     * 
+     * @param $init вернуть инициализированного исполнителя?
+     * 
+     * @return string              класс исполнителя
+     * @return ZFE_Tasks_Performer инициализированный исполнитель
+     */
+    public function getPerformer(string $code, bool $init = false)
+    {
+        if (!array_key_exists($code, $this->performers)) {
+            throw new ZFE_Tasks_Exception("Исполнитель с кодом {$code} не зарегистрирован");
+        }
+
+        $performer = $this->performers[$code];
+
+        if ($init) {
+            return is_string($performer) ? $performer::factory() : $performer;
+        } else {
+            return is_string($performer) ? $performer : get_class($performer);
+        }
+    }
+
+    /**
      * Найти все повторные задачи для указанной с любым статусом.
+     *
+     * @return Doctrine_Collection<Tasks>
      */
     public function findAllRevisionsFor(Tasks $task): ?Doctrine_Collection
     {
@@ -121,7 +146,27 @@ class ZFE_Tasks_Manager
     }
 
     /**
+     * Найти последнюю задачу.
+     *
+     * Позволяет проверить текущий статус выполнения операции без привязки к конкретной задачи.
+     */
+    public function getLastTask(string $code, int $relatedId): ?Tasks
+    {
+        $q = ZFE_Query::create()
+            ->select('x.*')
+            ->from('Tasks x')
+            ->where('x.related_id = ?', $relatedId)
+            ->addWhere('x.performer_code = ?', $code)
+            ->orderBy('x.datetime_created ASC')
+            ->limit(1)
+        ;
+        return $q->fetchOne() ?: null;
+    }
+
+    /**
      * Найти все задачи для выполнения в порядке убывания приоритета.
+     * 
+     * @return Doctrine_Collection_OnDemand<Tasks>
      */
     public function findAllToDo(int $limit = 100): Doctrine_Collection_OnDemand
     {
@@ -165,14 +210,26 @@ class ZFE_Tasks_Manager
      * 2. определяет исполнителя для каждой
      * 3. передает задачу на исполнение
      * 4. сохраняет результат
+     * 
+     * @param array|Tasks[]|Doctrine_Collection<Tasks>|Doctrine_Collection_OnDemand<Tasks> $tasks
      *
      * @return Количество успешно выполненных задач.
      */
-    final public function manage(Doctrine_Collection_OnDemand $tasks, Zend_Log $logger = null): int
+    final public function manage($tasks, Zend_Log $logger = null): int
     {
+        if (!is_array($tasks) && !($tasks instanceof Doctrine_Collection) && !($tasks instanceof Doctrine_Collection_OnDemand)) {
+            throw new ZFE_Tasks_Exception(
+                'Выполнить можно задачи только в коллекции Doctrine_Collection или Doctrine_Collection_OnDemand либо массиве'
+            );
+        }
+
         $managed = 0;
 
         foreach ($tasks as $task) {  /** @var Tasks $task */
+            if (!($task instanceof ZFE_Model_Default_Tasks)) {
+                throw new ZFE_Tasks_Exception('Выполняемые задачи должны быть наследниками ZFE_Model_Default_Tasks');
+            }
+
             if (!$task->isNew()) {
                 continue;
             }
@@ -219,27 +276,23 @@ class ZFE_Tasks_Manager
     /**
      * Запланировать задачу.
      * 
-     * @param $performerClass   класс исполнителя
+     * @param $performerCode    код исполнителя
      * @param $related          объект исполнения
      * @param $scheduleDateTime срок начала исполнения (не раньше, но можно позднее)
      * @param $priority         приоритет (чем выше, тем раньше выполнится)
      */
     public function plan(
-        string $performerClass,
+        string $performerCode,
         AbstractRecord $related,
         DateTime $scheduleDateTime = null,
         int $priority = 0
     ): Tasks
     {
-        if (!is_a($performerClass, ZFE_Tasks_Performer::class, true)) {
-            throw new ZFE_Tasks_Exception("{$performerClass} не является классом исполнителя");
-        }
-
-        $performerCode = $performerClass::getCode();
         if (!array_key_exists($performerCode, $this->performers)) {
-            throw new ZFE_Tasks_Exception("Исполнителя с кодом {$performerCode} не зарегистрировано");
+            throw new ZFE_Tasks_Exception("Исполнитель с кодом {$performerCode} не зарегистрирован");
         }
 
+        $performerClass = $this->getPerformer($performerCode, false);
         $relatedId = $related->id;
         if (!$performerClass::checkRelated($related)) {
             $relatedClass = $related::class();
