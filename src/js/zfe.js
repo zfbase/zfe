@@ -20,6 +20,7 @@ import '../components/modals';
 import '../components/tableStickyHeader';
 import '../components/uploadAjax';
 import initPlaceholders from '../components/placeholders';
+import { createFileAjax } from 'zfe-files';
 
 const { confirm } = window;
 
@@ -58,6 +59,7 @@ const ZFE = {
     'initUploadCartFiles',
     'initPlaceholders',
     'initRest',
+    'initFileAjax',
   ],
 
   autocompleteTemplates: {},
@@ -250,6 +252,10 @@ const ZFE = {
       });
 
     });
+  },
+
+  initFileAjax: (container) => {
+    $('.zfe-files-ajax', container).each((i, el) => createFileAjax(el));
   },
 
   initPlaceholders: container => initPlaceholders(container),

@@ -38,6 +38,7 @@
         "php": ">=7.1",
         "shardj/zf1-future": "^1.14",
         "zfbase/zend1-bootstrap3": "~1",
+        "zfbase/zfe-files": "^0.0.7",
         "jdorn/sql-formatter": "~1",
         "judev/php-htmltruncator": "^1.1",
         "greenlion/php-sql-parser": "^4.3",

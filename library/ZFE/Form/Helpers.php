@@ -9,9 +9,10 @@
  */
 trait ZFE_Form_Helpers
 {
-    use ZFE_Form_Helpers_Templates,  // Коллекция стандартных элементов форм
-        ZFE_Form_Helpers_Generator,  // Генератор элементов форм по модели
-        ZFE_Form_Helpers_Frequent;   // Наиболее часто используемые элементы форм
+    use ZFE_Form_Helpers_Templates;  // Коллекция стандартных элементов форм
+    use ZFE_Form_Helpers_Generator;  // Генератор элементов форм по модели
+    use ZFE_Form_Helpers_Frequent;   // Наиболее часто используемые элементы форм
+    use ZfeFiles_Form_Helpers;       // Помощники элементов формы ZFE Files
 
     /**
      * Название модели, соответствующей форме
@@ -55,6 +56,14 @@ trait ZFE_Form_Helpers
             'ZFE/Filter/',
             'filter'
         );
+
+
+        $this->addPrefixPath(
+            'ZfeFiles_Form_Element',
+            __DIR__ . '/Element',
+            'element'
+        );
+
 
         $config = Zend_Registry::get('config');
 

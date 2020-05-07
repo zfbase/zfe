@@ -262,6 +262,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view
             ->addHelperPath('Twitter/Bootstrap3/View/Helper', 'Twitter_Bootstrap3_View_Helper_')
             ->addHelperPath('ZFE/View/Helper', 'ZFE_View_Helper_')
+            ->addHelperPath('ZfeFiles/View/Helper', 'ZfeFiles_View_Helper_')
             ->addHelperPath(APPLICATION_PATH . '/views/helpers', 'Helper_')
         ;
 

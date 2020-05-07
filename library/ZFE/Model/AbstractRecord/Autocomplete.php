@@ -205,6 +205,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                 }
             }
         }
+
         return $array;
     }
 
