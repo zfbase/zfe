@@ -58,11 +58,7 @@ trait ZFE_Form_Helpers
         );
 
 
-        $this->addPrefixPath(
-            'ZfeFiles_Form_Element',
-            __DIR__ . '/Element',
-            'element'
-        );
+        $this->ZfeFilesInitializePrefixes();
 
 
         $config = Zend_Registry::get('config');
