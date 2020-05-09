@@ -9,6 +9,7 @@
  *
  * Содержит общие методы для всех контроллеров приложения.
  *
+ * @property ZFE_View                           $view
  * @property ZFE_Controller_Action_HelperBroker $_helper
  */
 abstract class ZFE_Controller_Abstract extends Zend_Controller_Action

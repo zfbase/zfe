@@ -2,6 +2,8 @@
 
 /**
  * Class ZFE_View
+ * 
+ * (!) Класс используется только для подсказок в IDE. В коде он не используется.
  *
  * @uses Use name of method for find corresponded view helper class!
  *
