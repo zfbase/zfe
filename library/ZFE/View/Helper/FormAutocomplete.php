@@ -89,7 +89,7 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
             'type' => 'text',
             'id' => $id,
             'name' => $name,
-            'value' => $value['title'],
+            'value' => $value['title'] ?? null,
             'data-create' => $create,
         ]);
         $searchPackClass = 'tt-icon-right' . ($disable ? ' tt-disabled' : '');
