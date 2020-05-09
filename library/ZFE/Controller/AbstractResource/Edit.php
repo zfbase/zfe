@@ -26,7 +26,9 @@ trait ZFE_Controller_AbstractResource_Edit
     /**
      * Редактор записи.
      *
-     * @param bool|string $redirectUrl адрес для перенаправления в случае успеха; если адрес равен FALSE, то перенаправление не произойдет
+     * @param bool|string $redirectUrl адрес для перенаправления в случае успеха;
+     *      если адрес равен FALSE, то перенаправление не произойдет;
+     *      в адресе можно единоразово использовать %d для вставки id записи
      * @param array       $formOptions конфигурация формы редактирования (по умолчанию содержит класс редактируемой записи
      *
      * @return bool|void В случае отсутствия перенаправления и успешного сохранения, возвращает TRUE, в остальных случаях NULL
@@ -93,7 +95,7 @@ trait ZFE_Controller_AbstractResource_Edit
                             if (null === $redirectUrl) {
                                 $redirectUrl = $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
                             }
-                            $this->_redirect($redirectUrl);
+                            $this->_redirect(sprintf($redirectUrl, $item->id));
                         } else {
                             return true;
                         }
