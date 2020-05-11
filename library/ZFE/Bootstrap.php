@@ -276,6 +276,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Controller_Action_HelperBroker::getPluginLoader()->clearPaths();
         Zend_Controller_Action_HelperBroker::addPath('Zend/Controller/Action/Helper', 'Zend_Controller_Action_Helper');
         Zend_Controller_Action_HelperBroker::addPath('ZFE/Controller/Action/Helper', 'ZFE_Controller_Action_Helper');
+        ZfeFiles_Helpers::_addPathForActionHelperBroker();
         Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH . '/controllers/helpers', 'Application_Controller_Helper');
     }
 
