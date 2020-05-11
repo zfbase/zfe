@@ -60,15 +60,15 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     }
 
     /**
-     * Задача новая?
+     * Задача в ожидании исполнения?
      */
-    public function isNew(): bool
+    public function inTodo(): bool
     {
-        return $this->datetime_started === NULL
+        return $this->datetime_canceled === NULL
+            && $this->datetime_started === NULL
             && $this->datetime_done === NULL
             && $this->return_code === NULL
-            && $this->errors === NULL
-            && $this->cancel == 0;
+            && $this->errors === NULL;
     }
 
     /**
@@ -79,8 +79,15 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
         return $this->datetime_started !== NULL
             && $this->datetime_done === NULL
             && $this->return_code === NULL
-            && $this->errors === NULL
-            && $this->cancel == 0;
+            && $this->errors === NULL;
+    }
+
+    /**
+     * Задача отменена?
+     */
+    public function isCanceled(): bool
+    {
+        return $this->datetime_canceled !== NULL;
     }
 
     /**

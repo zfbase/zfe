@@ -230,7 +230,7 @@ class ZFE_Tasks_Manager
                 throw new ZFE_Tasks_Exception('Выполняемые задачи должны быть наследниками ZFE_Model_Default_Tasks');
             }
 
-            if (!$task->isNew()) {
+            if (!$task->inTodo()) {
                 continue;
             }
 
@@ -333,7 +333,7 @@ class ZFE_Tasks_Manager
             throw new ZFE_Tasks_Exception('Задача еще не выполнена, перезапуск не возможен.');
         }
 
-        if ($task->isNew()) {
+        if ($task->inTodo()) {
             $task->cancel();
         }
 
