@@ -223,7 +223,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Авторизируем пользователя.
+     * Авторизуем пользователя.
      */
     protected function _initAcl()
     {
@@ -257,12 +257,13 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $layout->setLayout('layout_guest');
         }
 
+        /** @var ZFE_View $view */
         $view = $layout->getView();
         $view->addBasePath($zfeResourcesPath);
         $view
             ->addHelperPath('Twitter/Bootstrap3/View/Helper', 'Twitter_Bootstrap3_View_Helper_')
             ->addHelperPath('ZFE/View/Helper', 'ZFE_View_Helper_')
-            ->addHelperPath('ZfeFiles/View/Helper', 'ZfeFiles_View_Helper_')
+            ->addHelperPath(ZfeFiles_Helpers::getRoot() . '/View/Helper', 'ZfeFiles_View_Helper_')
             ->addHelperPath(APPLICATION_PATH . '/views/helpers', 'Helper_')
         ;
 
@@ -276,7 +277,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Controller_Action_HelperBroker::getPluginLoader()->clearPaths();
         Zend_Controller_Action_HelperBroker::addPath('Zend/Controller/Action/Helper', 'Zend_Controller_Action_Helper');
         Zend_Controller_Action_HelperBroker::addPath('ZFE/Controller/Action/Helper', 'ZFE_Controller_Action_Helper');
-        ZfeFiles_Helpers::_addPathForActionHelperBroker();
+        Zend_Controller_Action_HelperBroker::addPath(ZfeFiles_Helpers::getRoot() . '/Controller/Action/Helper', 'ZfeFiles_Controller_Action_Helper');
         Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH . '/controllers/helpers', 'Application_Controller_Helper');
     }
 
