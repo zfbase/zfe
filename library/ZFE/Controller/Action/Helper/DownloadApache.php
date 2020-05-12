@@ -44,8 +44,8 @@ class ZFE_Controller_Action_Helper_DownloadApache extends Zend_Controller_Action
                 readfile($path);
                 die;
             }
-        } else {
-            throw new Zend_Controller_Action_Exception('Файл не найден', 404);
         }
+
+        throw new Zend_Controller_Action_Exception('Файл не найден', 404);
     }
 }

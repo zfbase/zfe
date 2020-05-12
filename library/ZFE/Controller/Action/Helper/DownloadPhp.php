@@ -46,6 +46,6 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends Zend_Controller_Action_He
             exit;
         }
 
-        $this->abort(404, 'Файл не найден');
+        throw new Zend_Controller_Action_Exception('Файл не найден:' . $path, 404);
     }
 }
