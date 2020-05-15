@@ -103,6 +103,8 @@ trait ZFE_Controller_AbstractResource_Edit
                         $this->abort(500, 'После сохранения в записи отсутствует ID.');
                     }
                 } catch (Throwable $ex) {
+                    ZFE::popupException($ex);
+
                     $this->error('Сохранить не удалось', $ex);
                 }
             }
