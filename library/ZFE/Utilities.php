@@ -258,4 +258,15 @@ class ZFE_Utilities
 
         return $text;
     }
+
+    /**
+     * Пропустить перехват исключения (если в конфигурации разрешено).
+     */
+    public static function popupException(Exception $ex)
+    {
+        $config = Zend_Registry::get('config');
+        if ($config->debug->popupExceptions ?? false) {
+            throw $ex;
+        }
+    }
 }

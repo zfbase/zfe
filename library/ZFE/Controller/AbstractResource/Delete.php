@@ -60,6 +60,8 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
+            ZFE::popupException($ex);
+
             $this->error('Не удалось удалить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
@@ -115,6 +117,8 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
+            ZFE::popupException($ex);
+
             $this->error('Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 
             if (false !== $redirectUrl) {
