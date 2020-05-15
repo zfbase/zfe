@@ -298,9 +298,9 @@ class ZFE_Tasks_Manager
         $performerClass = $this->getPerformer($performerCode, false);
         $relatedId = $related->id;
         if (!$performerClass::checkRelated($related)) {
-            $relatedClass = $related::class();
+            $relatedClass = get_class($related);
             throw new ZFE_Tasks_Exception(
-                "Объект исполнения {$relatedClass}#{$relatedId} не поддерживается исполнителем {$performerClass}"
+                "Объект исполнения {$relatedClass} #{$relatedId} не поддерживается исполнителем {$performerClass}"
             );
         }
 
