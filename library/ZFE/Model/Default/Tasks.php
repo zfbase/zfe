@@ -64,6 +64,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function inTodo(): bool
     {
+        $this->refresh();
         return $this->datetime_canceled === NULL
             && $this->datetime_started === NULL
             && $this->datetime_done === NULL
@@ -76,6 +77,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function isPerformed(): bool
     {
+        $this->refresh();
         return $this->datetime_started !== NULL
             && $this->datetime_done === NULL
             && $this->return_code === NULL
@@ -87,6 +89,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function isCanceled(): bool
     {
+        $this->refresh();
         return $this->datetime_canceled !== NULL;
     }
 
@@ -95,6 +98,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function isDone(): bool
     {
+        $this->refresh();
         return $this->datetime_done !== NULL
             || $this->return_code !== NULL
             || $this->errors !== NULL;
@@ -105,6 +109,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function isSuccess(): bool
     {
+        $this->refresh();
         return $this->return_code == 0
             && $this->errors === NULL;
     }
@@ -114,6 +119,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
      */
     public function isFailed(): bool
     {
+        $this->refresh();
         return $this->return_code > 0
             || $this->errors !== NULL;
     }
