@@ -89,7 +89,7 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
         if ($ids) {
             $doctrineQuery = $this->getDoctrineQueryBuilder()->getQuery(['ids' => $ids]);
             $doctrineQuery->orderByField('x.id', $ids);
-            $doctrineQuery->setHard(true);
+            // $doctrineQuery->setHard(true);
             return $doctrineQuery->execute();
         }
 
