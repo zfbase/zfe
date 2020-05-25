@@ -31,6 +31,13 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                 $page = ['controller' => $id];
             }
 
+            if (is_string($page)) {
+                $page = [
+                    'controller' => $id,
+                    'label' => $page,
+                ];
+            }
+
             $page = is_array($page)
                 ? (object) $page
                 : $page;
