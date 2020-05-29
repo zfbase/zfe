@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import autosize from 'autosize';
-import plupload from 'plupload';
 import 'zfe-typeahead/dist/typeahead.jquery';
 import 'inputmask/dist/inputmask/jquery.inputmask';
 
@@ -56,7 +55,6 @@ const ZFE = {
     'initTableStickyHeader',
     'initTextareaAutosize',
     'initUploadAjax',
-    'initUploadCartFiles',
     'initPlaceholders',
     'initRest',
     'initFileAjax',
@@ -206,52 +204,6 @@ const ZFE = {
   /** AJAX загрузчик файлов */
   initUploadAjax: (container) => {
     $('input[data-ajax-url]', container).zfeUploadAjax();
-  },
-
-  /** Загрузка файлов в карточках */
-  initUploadCartFiles: (container) => {
-    const containers = $('.plupload', container);
-    containers.each((index, cont) => {
-      const $cont = $(cont);
-      const modelName = $cont.data('model');
-      const itemId = $cont.data('id');
-      const code = $cont.data('code');
-      const isMulti = !!$cont.data('multi');
-
-      var uploader = new plupload.Uploader({
-        browse_button: $cont.find('.plupload-browse')[0],
-        url: `/upload.php?m=${modelName}&id=${itemId}&c=${code}`,
-        chunk_size: '8mb',
-        max_retries: 3,
-        multi_selection: isMulti,
-        filters: {
-          prevent_duplicates: true,
-        }
-      });
-
-      uploader.bind('FilesAdded', function(up, files) {
-        let html = '';
-        plupload.each(files, function(file) {
-          html += '<li id="file-' + file.id + '" class="list-group-item">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
-        });
-        $cont.parents('.panel').find('.files-list').append(html);
-      });
-
-      uploader.bind('UploadProgress', function(up, file) {
-        document.getElementById('file-' + file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-      });
-
-      uploader.bind('Error', function(up, err) {
-        $cont.find('.plupload-console')[0].innerHTML += "\nError #" + err.code + ": " + err.message;
-      });
-
-      uploader.init();
-
-      $cont.find('.plupload-start').on('click', () => {
-        uploader.start();
-      });
-
-    });
   },
 
   initFileAjax: (container) => {
