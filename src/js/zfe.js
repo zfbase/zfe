@@ -19,6 +19,8 @@ import '../components/modals';
 import '../components/tableStickyHeader';
 import '../components/uploadAjax';
 import initPlaceholders from '../components/placeholders';
+
+// eslint-disable-next-line import/order
 import { createFileAjax } from 'zfe-files';
 
 const { confirm } = window;
