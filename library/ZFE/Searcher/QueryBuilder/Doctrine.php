@@ -67,7 +67,7 @@ class ZFE_Searcher_QueryBuilder_Doctrine extends ZFE_Searcher_QueryBuilder_Abstr
                     $this->_query->setHard(true);
                 }
             } else {
-                $this->_query->setHard(true);
+                // $this->_query->setHard(true);
             }
         }
     }

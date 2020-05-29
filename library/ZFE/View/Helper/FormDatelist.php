@@ -35,6 +35,10 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
 
         if (is_array($value)) {
             foreach ($value as $item) {
+                if (empty($item)) {
+                    continue;
+                }
+
                 $date = strtotime($item);
                 $hidden = $this->_hidden($name . '[]', $item);
                 $label = '<div class="title">' . ($date ? date('d.m.Y', $date) : $item) . '</div>';
