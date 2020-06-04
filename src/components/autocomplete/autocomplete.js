@@ -7,6 +7,7 @@ const pluginName = 'zfeAutocomplete';
 const defaults = {
   templates: {},
   limit: 7,
+  exclude: null,
 };
 
 class ZFEAutocomplete {
@@ -48,21 +49,32 @@ class ZFEAutocomplete {
   }
 
   initBloodhound() {
-    const { minLength, sourceUrl } = this.settings;
+    const { minLength, sourceUrl, exclude } = this.settings;
     this.engine = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       limit: 1000,
       remote: {
         url: sourceUrl,
-        replace: (url, query) => {
+        replace: (initialUrl, query) => {
+          let url = initialUrl;
+
           if (query.length >= minLength) {
-            return `${url}/?term=${encodeURIComponent(query)}`;
+            url += `/?term=${encodeURIComponent(query)}`;
+          } else if (query.length > 0) {
+            return false;
           }
-          if (query.length === 0) {
-            return sourceUrl;
+
+          if (exclude) {
+            url += (query.length >= minLength) ? '&' : '?';
+            if (typeof exclude === 'function') {
+              url += `exclude=${exclude().join(',')}`;
+            } else {
+              url += `exclude=${exclude.join(',')}`;
+            }
           }
-          return false;
+
+          return url;
         },
       },
     });
