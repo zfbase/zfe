@@ -32,8 +32,8 @@ class ZFEAutocomplete {
       $titleInput: $group.find(`[name="${name}[title]"]`),
       sourceUrl: data.source,
       canCreate: data.create === 'allow',
-      itemForm: data.itemform,
-      minLength: data.termMinLength || 3,
+      itemForm: data.itemForm || data.itemform, // атрибут data-item-form
+      minLength: data.termMinLength || 3, // атрибут data-term-min-length
       limit: data.limit,
     };
   }
