@@ -10,7 +10,8 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
     protected static $_description = 'Индексация Sphinx';
     protected static $_help =
         'При вызове без аргументов проиндексируются все модели.' . "\n" .
-        'Для индексации определенных моделей перечислите их через пробел.';
+        'Для индексации определенных моделей перечислите их через пробел.' . "\n" .
+        'Для отключения прогресс-бара добавьте аргумент _noProgress.';
 
     /**
      * Помощник для рендеринга таблиц.
@@ -27,10 +28,23 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
     protected $_useSimpleCommonIndex = false;
 
     /**
+     * Показывать прогресс-бар индексации?
+     *
+     * @var bool
+     */
+    protected $_showProgress = true;
+
+    /**
      * {@inheritdoc}
      */
     public function execute(array $params = [])
     {
+        $noProgressIndex = array_search('_noProgress', $params);
+        if ($noProgressIndex !== false) {
+            $this->_showProgress = false;
+            unset($params[$noProgressIndex]);
+        }
+
         if (empty($params)) {
             /** @var ZFE_Console_Helper_Table $table */
             $table = $this->_table = $this->getHelperBroker()->get('Table');
@@ -51,7 +65,7 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
             return;
         }
 
-        if ('all' === $params[0]) {
+        if (in_array('all', $params)) {
             $models = $this->_getAllModels();
         } else {
             $models = $params;
@@ -74,23 +88,30 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
             }
         }
 
-        $header = ['Модель', 'Прогресс / Результат', 'Время, сек'];
+        if ($this->_showProgress) {
+            $header = ['Модель', 'Прогресс / Результат', 'Время, сек'];
 
-        /** @var ZFE_Console_Helper_Table $table */
-        $table = $this->_table = $this->getHelperBroker()->get('Table');
-        $table->setHeaders($header);
-        $table->setColumnWidth(0, $maxLenModelName);
-        $table->setColumnWidth(1, 55);
-        $table->setColumnAlign(2, ZFE_Console_Helper_Table::ALIGN_RIGHT);
+            /** @var ZFE_Console_Helper_Table $table */
+            $table = $this->_table = $this->getHelperBroker()->get('Table');
+            $table->setHeaders($header);
+            $table->setColumnWidth(0, $maxLenModelName);
+            $table->setColumnWidth(1, 55);
+            $table->setColumnAlign(2, ZFE_Console_Helper_Table::ALIGN_RIGHT);
 
-        $table->prepare();
-        echo $table->renderRowSeparator();
-        echo $table->renderRow($header);
-        echo $table->renderRowSeparator();
+            $table->prepare();
+            echo $table->renderRowSeparator();
+            echo $table->renderRow($header);
+            echo $table->renderRowSeparator();
+        }
+
         foreach ($models as $model) {
             $this->_indexer($model);
         }
-        echo $table->renderRowSeparator();
+
+        if ($this->_showProgress) {
+            echo $table->renderRowSeparator();
+        }
+
         echo 'Общее время индексации – ' . (time() - $timeStart) . " сек.\n";
     }
 
@@ -120,18 +141,22 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
         $conn = Doctrine_Manager::connection()->getDbh();
         $q = $conn->prepare($query->getSql());
 
-        /** @var ZFE_Console_Helper_ProgressBar $progressBar */
-        $progressBar = $this->getHelperBroker()->get('ProgressBar');
-        $progressBar->setTemplate('[placeholder] [percent]');
-        $progressBar->setFinishTemplate('[value] из [max]');
-        $progressBar->setPlaceholderWidth(50);
-
-        echo trim($this->_table->renderRow([$model, '', '0.000']));
-
         $startTime = microtime(true);
-        $total = (int) $conn->query("SELECT COUNT(*) FROM (${sql}) _base_query")->fetch()[0];
-        $progressBar->start($total, null, null, $startTime, false);
-        $this->_updateRow($model, $progressBar);
+        if ($this->_showProgress) {
+            /** @var ZFE_Console_Helper_ProgressBar $progressBar */
+            $progressBar = $this->getHelperBroker()->get('ProgressBar');
+            $progressBar->setTemplate('[placeholder] [percent]');
+            $progressBar->setFinishTemplate('[value] из [max]');
+            $progressBar->setPlaceholderWidth(50);
+
+            echo trim($this->_table->renderRow([$model, '', '0.000']));
+
+            $total = (int) $conn->query("SELECT COUNT(*) FROM (${sql}) _base_query")->fetch()[0];
+            $progressBar->start($total, null, null, $startTime, false);
+            $this->_updateRow($model, $progressBar);
+        } else {
+            echo "Индексация {$model} ... ";
+        }
 
         $id = 0;
         $prevId = 0;
@@ -150,7 +175,10 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
                     Utils_Sphinx::updateCommonIndexByModelAndData($model, $data);
                 }
                 $id = $row['attr_id'];
-                $this->_updateRow($model, $progressBar, ++$done);
+
+                if ($this->_showProgress) {
+                    $this->_updateRow($model, $progressBar, ++$done);
+                }
             }
             if ($this->_useSimpleCommonIndex) {
                 ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionCommit();
@@ -158,11 +186,15 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
             ZFE_Sphinx::query()->transactionCommit();
         } while ($prevId !== $id);
 
-        $progressBar->finish(false);
-        $this->_updateRow($model, $progressBar);
-        echo "\n";
+        if ($this->_showProgress) {
+            $progressBar->finish(false);
+            $this->_updateRow($model, $progressBar);
+            unset($progressBar);
+        } else {
+            printf('выполнена за %.3f сек.', microtime(true) - $startTime);
+        }
 
-        unset($progressBar);
+        echo "\n";
     }
 
     /**
