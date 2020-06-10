@@ -193,7 +193,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
             'value' => $row['title'],
         ];
         foreach (static::$autocompleteSelectCols as $col) {
-            $data[$col] = $row[$col];
+            $data[$col] = $row[$col] ?? null;
         }
         return $data;
     }
