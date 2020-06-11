@@ -27,9 +27,9 @@ class ZFEMultiAutocomplete {
     $input.removeAttr('name');
     return {
       canCreate: data.create === 'allow',
-      editUrl: data.editUrl,
-      itemForm: data.itemform,
-      minLength: data.termMinLength || 3,
+      editUrl: data.editUrl, // атрибут data-edit-url
+      itemForm: data.itemForm || data.itemform, // атрибут data-item-form
+      minLength: data.termMinLength || 3, // атрибут data-term-min-length
       name,
       sourceUrl: data.source,
       limit: data.limit,
