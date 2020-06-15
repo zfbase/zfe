@@ -138,9 +138,9 @@ class ZFEMultiAutocomplete {
     if (this.settings.editUrl) {
       $('<div class="btn btn-edit">...</div>')
         .appendTo($linkedEntity);
-    } else if (this.$wrap.data('itemform')) {
+    } else if (this.$wrap.data('item-form')) {
       $('<a class="btn btn-form" target="_blank"/>')
-        .attr('href', this.$wrap.data('itemform').replace('%d', id))
+        .attr('href', this.$wrap.data('item-form').replace('%d', id))
         .append('<span class="glyphicon glyphicon-share-alt"/>')
         .appendTo($linkedEntity);
     }

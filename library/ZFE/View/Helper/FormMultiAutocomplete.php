@@ -87,9 +87,9 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
         }
 
         // Определяем, нужны ли ссылки с выбранных вариантов на их страницы
-        $hasFormBtn = isset($attribs['data-itemform']);
+        $hasFormBtn = isset($attribs['data-item-form']);
         if ($hasFormBtn) {
-            $itemFormUrl = ' data-itemform="' . $attribs['data-itemform'] . '"';
+            $itemFormUrl = ' data-item-form="' . $attribs['data-item-form'] . '"';
         } else {
             $itemFormUrl = '';
         }
@@ -123,7 +123,7 @@ class ZFE_View_Helper_FormMultiAutocomplete extends Zend_View_Helper_FormElement
                 ++$i;
 
                 $editBtn = $editUrl && !$disable ? '<div class="btn btn-edit">...</div>' : '';
-                $formBtn = $hasFormBtn && !$editBtn ? '<a href="' . sprintf($attribs['data-itemform'], $item['id']) . '" target="_blank" class="btn btn-form"><span class="glyphicon glyphicon-share-alt"></span></a>' : '';
+                $formBtn = $hasFormBtn && !$editBtn ? '<a href="' . sprintf($attribs['data-item-form'], $item['id']) . '" target="_blank" class="btn btn-form"><span class="glyphicon glyphicon-share-alt"></span></a>' : '';
                 $removeBtn = $disable ? '' : '<div class="btn btn-remove"><span class="glyphicon glyphicon-remove"></span></div>';
 
                 $item_attrs = [];
