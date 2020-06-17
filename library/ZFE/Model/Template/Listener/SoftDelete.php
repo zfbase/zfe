@@ -82,7 +82,8 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     public function preDqlDelete(Doctrine_Event $event)
     {
         $query = $event->getQuery();
-        if ($this->_allowSoftDelete && !$query->isHard()) {
+        $invoker = $event->getInvoker();
+        if ($this->_allowSoftDelete && $invoker->contains('deleted') && !$query->isHard()) {
             $query->update()->set('deleted', '?', 1);
         }
     }
