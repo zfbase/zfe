@@ -163,11 +163,12 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $config = Zend_Registry::get('config');
         $auth = Zend_Auth::getInstance();
 
-        $cliUserId = null;
+        $user = null;
+        $role = 'guest';
+        $canSwitchRoles = false;
+
         if (PHP_SAPI === 'cli') {
-            if (isset($config->cli->userId)) {
-                $cliUserId = $config->cli->userId;
-            }
+            $cliUserId = $config->cli->userId ?? null;
 
             // Специальный режим для работы до создания таблицы editors
             if ($cliUserId == -1) {
@@ -176,13 +177,18 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'isAuthorized' => false,
                 ];
             }
-        }
 
-        $user = null;
-        $role = 'guest';
-        $canSwitchRoles = false;
+            if (!$cliUserId) {
+                die("<error>Не указан пользователь для CLI. Необходимо указать в конфигурации параметр `cli.userId`</error>\n");
+            }
 
-        if ($auth->hasIdentity()) {
+            $user = Editors::find($cliUserId);
+            if (!$user) {
+                die("<error>Пользователь с ID = {$cliUserId} не найден</error>\n");
+            }
+
+            $role = $user->role;
+        } elseif ($auth->hasIdentity()) {
             $identity = $auth->getIdentity();
 
             $userModel = $config->userModel;
@@ -196,8 +202,6 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             if (isset($identity['role']) && $canSwitchRoles) {
                 $role = $identity['role'];
             }
-        } elseif (PHP_SAPI === 'cli' && isset($config->cli->userId)) {
-            $user = Editors::find($config->cli->userId);
         }
 
         return [
@@ -253,7 +257,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $layout = Zend_Layout::startMvc();
         $layout->setViewBasePath($zfeResourcesPath . ':/views');
 
-        if (!Zend_Auth::getInstance()->hasIdentity()) {
+        if (PHP_SAPI != 'cli' && !Zend_Auth::getInstance()->hasIdentity()) {
             $layout->setLayout('layout_guest');
         }
 

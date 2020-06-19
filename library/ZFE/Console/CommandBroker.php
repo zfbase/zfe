@@ -86,6 +86,10 @@ class ZFE_Console_CommandBroker
      */
     public function loadCommands(string $path, string $prefix)
     {
+        if (!file_exists($path)) {
+            return;
+        }
+
         $directory = new DirectoryIterator($path);
         foreach ($directory as $file) {  /** @var SplFileInfo $file */
             if ($file->isDot()) {
