@@ -9,11 +9,6 @@
  */
 class ZFE_Console_Command_ApplySchema extends ZFE_Console_Command_Abstract
 {
-    public static function getName()
-    {
-        return 'apply-schema';
-    }
-
     protected static $_description = 'Скрипт для актуализации описания моделей';
     protected static $_help =
         'Скрипт берет $config->yaml_schema_path (schema.yml) как актуальное описание схемы и:' . "\n" .

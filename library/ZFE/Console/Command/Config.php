@@ -9,11 +9,6 @@
  */
 class ZFE_Console_Command_Config extends ZFE_Console_Command_Abstract
 {
-    public static function getName()
-    {
-        return 'config';
-    }
-
     protected static $_description = 'Получить используемую конфигурацию';
     protected static $_help = 'При указании аргументом подсекции, будет отображено только её содержание';
 
