@@ -3,7 +3,9 @@
 class ZFE_Console_Command_TaskManual extends ZFE_Console_Command_Abstract
 {
     protected static $_description = 'Выполнить отложенную задачу';
-    protected static $_help = 'Команда ожидает указание ID задачи (параметр id) или код исполнителя (performer) и ID объекта исполнения (rel). Примеры: `id 1`, `performer MakeProxy rel 12`';
+    protected static $_help =
+        'Команда ожидает указание ID задачи (параметр id) или код исполнителя (performer) с ID объекта исполнения (rel).' . "\n" .
+        'Примеры: `task-manual id 1`, `task-manual performer MakeProxy rel 12`';
 
     // Возвращаемые коды ошибок
     const ERROR_INCORRECT_TASK_ID = 1;
@@ -21,9 +23,10 @@ class ZFE_Console_Command_TaskManual extends ZFE_Console_Command_Abstract
     public function execute(array $params = [])
     {
         $manager = ZFE_Tasks_Manager::getInstance();
+        $numParams = count($params);
 
 
-        if (count($params) === 2 && $params[0] === 'id' && is_numeric($params[1])) {
+        if ($numParams == 2 && $params[0] == 'id' && is_numeric($params[1])) {
             $task = Tasks::hardFind($params[1]);
 
             if (!$task) {
@@ -36,11 +39,11 @@ class ZFE_Console_Command_TaskManual extends ZFE_Console_Command_Abstract
                 return static::ERROR_REMOTE_TASK_ID;
             }
 
-        } elseif (count($params) === 4) {
-            if ($params[0] === 'performer' && $params[2] === 'rel' && is_numeric($params[3])) {
+        } elseif ($numParams == 4 || $numParams == 5) {
+            if ($params[0] == 'performer' && $params[2] == 'rel' && is_numeric($params[3])) {
                 $performerCode = $params[1];
                 $relatedId = $params[3];
-            } elseif ($params[0] === 'rel' && is_numeric($params[1]) && $params[2] === 'performer') {
+            } elseif ($params[0] == 'rel' && is_numeric($params[1]) && $params[2] === 'performer') {
                 $performerCode = $params[3];
                 $relatedId = $params[1];
             } else {
