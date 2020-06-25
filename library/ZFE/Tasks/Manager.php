@@ -243,11 +243,14 @@ class ZFE_Tasks_Manager
             }
 
             try {
+                $this->logHelper($logger, "Start task # {$task->id}");
                 $task->perform();
-                $resultCode = $performer->perform($task->related_id, $logger);
-                $task->done($resultCode);
 
+                $resultCode = $performer->perform($task->related_id, $logger);
+
+                $task->done($resultCode);
                 $this->logHelper($logger, "Task #{$task->id} performed successfully");
+
                 $managed++;
             } catch (ZFE_Tasks_Performer_Exception $e) {
                 ZFE::popupException($e);

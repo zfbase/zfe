@@ -42,7 +42,7 @@
         "jdorn/sql-formatter": "~1",
         "judev/php-htmltruncator": "^1.1",
         "greenlion/php-sql-parser": "^4.3",
-        "ltd-beget/sphinx-configuration-tokenizer": "~1.0.5",
+        "ltd-beget/sphinx-configuration-tokenizer": "~1.0.4",
         "foolz/sphinxql-query-builder": "^1.2",
         "zfbase/doctrine1": "^1.2",
         "ext-json": "*"

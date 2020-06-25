@@ -13,7 +13,7 @@ class ZFE_Utilities
      * Укоротить текст до определенного размера.
      *
      * @param string $text    исходный текст
-     * @param string $max_len максимальная длина
+     * @param int    $max_len максимальная длина
      *
      * @return string сокращенный текст
      */
@@ -106,6 +106,8 @@ class ZFE_Utilities
      * @param string $pad_string
      * @param int    $pad_type
      * @param string $encoding
+     *
+     * @return string
      */
     public static function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = 'UTF-8')
     {
@@ -121,7 +123,7 @@ class ZFE_Utilities
     }
 
     /**
-     * Отформатировать размер
+     * Форматировать размер в байтах.
      *
      * @param int $bytes
      * @param int $precision
@@ -140,6 +142,14 @@ class ZFE_Utilities
         return $bytes . ' Б';
     }
 
+    /**
+     * Форматировать продолжительность в секундах.
+     *
+     * @param int $seconds
+     * @param int $precision
+     *
+     * @return string
+     */
     public static function formatDuration($seconds, $precision = 0)
     {
         $duration = '';
@@ -167,6 +177,33 @@ class ZFE_Utilities
         }
 
         return $duration ?: number_format(0, $precision) . ' сек.';
+    }
+
+    /**
+     * Форматировать дату (и время).
+     *
+     * @param string $dateTime
+     * @param bool   $time
+     *
+     * @return string
+     */
+    public static function formatDateTime($dateTime, $time = true)
+    {
+        if (in_array($dateTime, ['0000-00-00', '0000-00-00 00:00:00'])) {
+            return '';
+        }
+
+        $timestamp = strtotime($dateTime);
+        if (!$timestamp) {
+            return '';
+        }
+
+        $config = Zend_Registry::get('config');
+        $format = $time
+            ? $config->format->datetime
+            : $config->format->date;
+
+        return date($format, $timestamp);
     }
 
     /**

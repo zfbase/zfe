@@ -174,7 +174,8 @@
   color: #cccccc;
 }
 
-.tt-icon-right > i.clear {
+.tt-icon-right > i.clear,
+.tt-icon-right > a.tt-link {
   right: 37px;
   font-size: 80%;
   line-height: 1.2;
@@ -182,8 +183,21 @@
   display: none;
 }
 
+.tt-icon-right > a.tt-link {
+  position: absolute;
+  padding: 10px 12px;
+  z-index: 10;
+  margin-right: 20px;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}
+
 .tt-fill {
-  i.clear {
+  i.clear,
+  &.has-itemform a.tt-link {
     display: inline-block;
   }
 
@@ -256,4 +270,9 @@
     .multiac-linked-wrap {
         margin-left: 205px;
     }
+}
+
+.ac-menu-up .tt-menu {
+  top: initial !important;
+  bottom: 110%;
 }
