@@ -5,19 +5,22 @@
  */
 
 /**
- * Помощник отправки файла средствами php-сервера через авторизацию приложения.
+ * Помощник отправки файла средствами встроенного в PHP веб-сервера через авторизацию приложения.
  *
  * @see https://habr.com/post/151795/
  */
-class ZFE_Controller_Action_Helper_DownloadPhp extends Zend_Controller_Action_Helper_Abstract
+class ZFE_Controller_Action_Helper_DownloadPhp extends ZFE_Controller_Action_Helper_Download
 {
     /**
-     * Отправить файл средствами php-сервера через авторизацию приложения.
+     * Отправить файл средствами встроенного в PHP через авторизацию приложения.
      *
      * @param string $path путь до файла в файловой системе
+     * @param string $url  защищенный виртуальный URL
      * @param string $name новое имя файла
+     *
+     * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $name)
+    public function direct($path, $url, $name)
     {
         if (file_exists($path)) {
             // если этого не сделать файл будет читаться в память полностью!
@@ -25,27 +28,13 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends Zend_Controller_Action_He
                 ob_end_clean();
             }
 
-            // заставляем браузер показать окно сохранения файла
-            header('Content-Description: File Transfer');
+            $response = $this->factoryResponse($path, $name);
+            $response->sendResponse();
 
-            $mime = mime_content_type($path);
-            if (false === $mime) {
-                $mime = 'application/octet-stream';
-            }
-            header('Content-Type: ' . $mime);
-
-            header('Content-Disposition: attachment; filename=' . $name);
-            header('Content-Transfer-Encoding: binary');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($path));
-
-            // читаем файл и отправляем его пользователю
             readfile($path);
             exit;
         }
 
-        throw new Zend_Controller_Action_Exception('Файл не найден:' . $path, 404);
+        throw new Zend_Controller_Action_Exception('Файл не найден', 404);
     }
 }

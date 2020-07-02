@@ -27,18 +27,44 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
             throw new Zend_Controller_Action_Exception('В конфигурации не указан используемый веб-сервер (параметр webserver)');
         }
 
-        switch ($config->webserver) {
-            case 'nginx':
-                Zend_Controller_Action_HelperBroker::getStaticHelper('DownloadNginx')->direct($path, $url, $name);
-                break;
-            case 'apache':
-                Zend_Controller_Action_HelperBroker::getStaticHelper('DownloadApache')->direct($path, $name);
-                break;
-            case 'php':
-                Zend_Controller_Action_HelperBroker::getStaticHelper('DownloadPhp')->direct($path, $name);
-                break;
-            default:
-                throw new Zend_Controller_Action_Exception('В конфигурации не указан не поддерживаемый веб-сервер', 500);
+        $helpersMap = [
+            'nginx' => 'DownloadNginx',
+            'apache' => 'DownloadApache',
+            'php' => 'DownloadPhp',
+        ];
+        if (array_key_exists($config->webserver, $helpersMap)) {
+            Zend_Controller_Action_HelperBroker::getStaticHelper($helpersMap[$config->webserver])
+                ->direct($path, $url, $name);
+        } else {
+            throw new Zend_Controller_Action_Exception('В конфигурации не указан не поддерживаемый веб-сервер', 500);
         }
+    }
+
+    /**
+     * Сформировать заголовки ответа для отправки файла с принудительным скачиванием.
+     *
+     * @param string $path
+     * @param string $name
+     *
+     * @return Zend_Controller_Response_Abstract
+     */
+    protected function factoryResponse($path, $name)
+    {
+        $response = $this->getResponse();
+        $response
+            ->clearAllHeaders()
+            ->clearBody()
+        ;
+        $response
+            ->setHeader('Content-Description', 'File Transfer')
+            ->setHeader('Content-Type', mime_content_type($path) ?: 'application/octet-stream')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $name . '"')
+            ->setHeader('Content-Transfer-Encoding', 'binary')
+            ->setHeader('Expires', '0')
+            ->setHeader('Cache-Control', 'must-revalidate')
+            ->setHeader('Pragma', 'public')
+            ->setHeader('Content-Length', filesize($path))
+        ;
+        return $response;
     }
 }
