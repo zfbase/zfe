@@ -9,7 +9,7 @@ import '../lib/jquery.tmpl';
 import '../components/audio';
 import '../components/autocomplete/autocomplete';
 import '../components/autocomplete/multiautocomplete';
-import initCheckUnsavedFormData from '../components/checkUnsavedFormData';
+import '../components/checkUnsavedFormData';
 import '../components/consoleManager';
 import debug from '../components/debug';
 import '../components/duplicates';
@@ -126,7 +126,9 @@ const ZFE = {
   },
 
   /** Запретить переход со страницы при не сохраненных изменениях */
-  initCheckUnsavedFormData,
+  initCheckUnsavedFormData: (container) => {
+    $('.form-edit', container).checkUnsavedFormData();
+  },
 
   /** Настроить автоматическую высоту многострочных текстовых полей */
   initConfirm: (container) => {
