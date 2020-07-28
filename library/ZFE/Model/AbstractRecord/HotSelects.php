@@ -109,7 +109,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      * @param string $value         искомое значение
      * @param int    $hydrationMode формат результата: Doctrine_Core::HYDRATE_ARRAY или Doctrine_Core::HYDRATE_RECORD
      *
-     * @return Doctrine_Collection|static[]
+     * @return Doctrine_Record
      */
     public static function findOneBy($fieldName, $value, $hydrationMode = null)
     {
