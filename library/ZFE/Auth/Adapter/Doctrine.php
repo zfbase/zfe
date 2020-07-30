@@ -432,7 +432,9 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
      */
     protected function _authenticateValidateResult($resultIdentity)
     {
-        if ('1' !== $resultIdentity['zend_auth_credential_match']) {
+        // There is the string value for MySQL in 'zend_auth_credential_match' ('1' or '0')
+        // and boolean value for PSQL (true or false), respectively.
+        if (!boolval($resultIdentity['zend_auth_credential_match'])) {
             $this->_authenticateResultInfo['code'] = Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID;
             $this->_authenticateResultInfo['messages'][] = 'Supplied credential is invalid.';
             return $this->_authenticateCreateAuthResult();
