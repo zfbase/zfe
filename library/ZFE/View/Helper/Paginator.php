@@ -105,7 +105,7 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
         $layout->setSeparatorTemplate($this->_separatorTemplate);
         $layout->setTemplate($this->_template);
 
-        if (1 === $pager->getLastPage()) {
+        if (1 == $pager->getLastPage()) {
             return '';
         }
 

@@ -245,7 +245,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         $title = trim($title);
 
         if ( ! empty($id)) {
-            if ($this->{$alias}->exists() && $this->{$alias}->id === $id) {
+            if ($this->{$alias}->exists() && $this->{$alias}->id == $id) {
                 return;
             }
             $this->link($alias, $id);

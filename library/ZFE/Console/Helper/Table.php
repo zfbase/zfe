@@ -245,7 +245,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
      */
     public function renderRowSeparator()
     {
-        if (0 === $this->_numberOfColumns) {
+        if (0 == $this->_numberOfColumns) {
             return null;
         }
 
@@ -264,7 +264,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
      */
     public function renderRow(array $data)
     {
-        if (0 === $this->_numberOfColumns) {
+        if (0 == $this->_numberOfColumns) {
             return null;
         }
 

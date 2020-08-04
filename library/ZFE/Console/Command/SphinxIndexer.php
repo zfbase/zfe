@@ -188,7 +188,7 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
                 ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionCommit();
             }
             ZFE_Sphinx::query()->transactionCommit();
-        } while ($prevId !== $id);
+        } while ($prevId != $id);
 
         if ($this->_showProgress) {
             $progressBar->finish(false);

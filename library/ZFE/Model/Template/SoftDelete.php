@@ -71,7 +71,7 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
         if ($this->_table->hasColumn('deleted')) {
             $invoker = $this->_invoker;
 
-            if ('0' === $invoker->deleted) {
+            if (0 == $invoker->deleted) {
                 throw new ZFE_Model_Exception('Запись не может быть восстановлена, т.к. не удалена.');
             }
 

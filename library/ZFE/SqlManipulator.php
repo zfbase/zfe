@@ -53,7 +53,7 @@ class ZFE_SqlManipulator
         $parser = new PHPSQLParser\PHPSQLParser();
         $orderByMap = $parser->parse('ORDER BY ' . $orderBy)['ORDER'];
 
-        if (!isset($this->_map['ORDER']) || 0 === count($this->_map['ORDER'])) {
+        if (!isset($this->_map['ORDER']) || 0 == count($this->_map['ORDER'])) {
             $this->_map['ORDER'] = [];
         }
 

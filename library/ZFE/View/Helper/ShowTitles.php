@@ -44,7 +44,7 @@ class ZFE_View_Helper_ShowTitles
                 $arr[] = $title;
             }
 
-            if ($maxElements > 0 && ++$i === $maxElements) {
+            if ($maxElements > 0 && ++$i == $maxElements) {
                 $arr[] = '...';
 
                 break;
