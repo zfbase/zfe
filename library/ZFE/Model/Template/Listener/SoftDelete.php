@@ -62,15 +62,56 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     {
         if ($this->_allowSoftDelete) {
             $params = $event->getParams();
+
+            /** @var ZFE_Model_Table $table */
             $table = $params['component']['table'];
-            $field = $params['alias'] . '.deleted';
+
+            /** @var ZFE_Query $query */
             $query = $event->getQuery();
 
-            if ($table->hasField('deleted') && !$query->isHard()) {
-                if (empty($params['component']['ref'])) {
-                    $query->addWhere($field . ' IS NULL OR ' . $field . ' = 0');
-                }
+            if ($query->isHard() || !$table->hasField('deleted') || !empty($params['component']['ref'])) {
+                return;
             }
+
+            $outFrom = [];
+            $inFrom = $query->getDqlPart('from');
+            $where = $query->getDqlPart('where');
+            foreach ($inFrom as $inFromRow) {
+                $outParts = [];
+                $inParts = explode(',', $inFromRow);
+                foreach ($inParts as $inPart) {
+                    $part = trim($inPart);
+
+                    preg_match('/^(?:[a-zA-Z]+\.)?([A-Z][a-zA-Z]+)(?: +([a-zA-Z]+))?/', $part, $matches);
+                    $alias = (count($matches) > 2 && $matches[2] !== 'WITH')
+                        ? $matches[2]
+                        : $matches[1];
+
+                    if ($alias == $params['alias']) {
+                        $field = $params['alias'] . '.deleted';
+                        $exc = '(' . $field . ' IS NULL OR ' . $field . ' = 0)';
+
+                        $t = explode(' ', $part);
+                        if (count(explode('.', $t[0])) == 2) {
+                            $outParts[] = stripos($part, 'WITH') !== false
+                                ? $part . ' AND ' . $exc
+                                : $part . ' WITH ' . $exc;
+                        } else {
+                            $outParts[] = $part;
+
+                            if (count($where)) {
+                                $where[] = 'AND';
+                            }
+                            $where[] = $exc;
+                        }
+                    } else {
+                        $outParts[] = $part;
+                    }
+                }
+                $outFrom[] = implode(', ', $outParts);
+            }
+            $query->setDqlQueryPart('from', $outFrom);
+            $query->setDqlQueryPart('where', $where);
         }
     }
 

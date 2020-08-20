@@ -74,6 +74,13 @@ class ZFE_Query extends Doctrine_Query
         return $this->orderBy('FIELD(' . $col . ', ' . implode(',', $ids) . ')');
     }
 
+    public function setDqlQueryPart($queryPartName, array $queryPart)
+    {
+        $this->_dqlParts[$queryPartName] = $queryPart;
+        $this->_state = Doctrine_Query::STATE_DIRTY;
+        return $this;
+    }
+
 //    public function delete($from = null)
 //    {
 //        if ($this->isHard()) {
