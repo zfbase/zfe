@@ -29,9 +29,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
         foreach ($pages as $id => $page) {
             if ($page == '') {
                 $page = ['controller' => $id];
-            }
-
-            if (is_string($page)) {
+            } elseif (is_string($page)) {
                 $page = [
                     'controller' => $id,
                     'label' => $page,
@@ -41,6 +39,10 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             $page = is_array($page)
                 ? (object) $page
                 : $page;
+
+            if (empty($page->controller)) {
+                $page->controller = $id;
+            }
 
             if (!$disabledAcl && !$this->_isAllowed($page)) {
                 continue;
@@ -89,7 +91,6 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                     if (isset($page->badge->color)) {
                         $badgeClass .= ' badge-' . $page->badge->color;
                     }
-                    $badge = $page->badge->value;
                 } else {
                     $badgeValue = $page->badge;
                 }
