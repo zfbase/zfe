@@ -95,10 +95,12 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                         } else {
                             $outParts[] = $part;
 
-                            if (count($where)) {
-                                $where[] = 'AND';
+                            if (!$query->isMiddleHard()) {
+                                if (count($where)) {
+                                    $where[] = 'AND';
+                                }
+                                $where[] = $exc;
                             }
-                            $where[] = $exc;
                         }
                     } else {
                         $outParts[] = $part;
