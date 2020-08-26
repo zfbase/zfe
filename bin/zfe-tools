@@ -36,5 +36,5 @@ try {
     exit(0);
 } catch (ZFE_Console_Exception $ex) {
     echo $ex->getMessage() . "\n";
-    exit(1);
+    exit($ex->getCode());
 }
