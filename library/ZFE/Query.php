@@ -22,6 +22,13 @@ class ZFE_Query extends Doctrine_Query
     protected $_hard = false;
 
     /**
+     * Это "жесткий" запрос (без учета истории) только для базовой модели, а для остальных обычный?
+     *
+     * @var bool
+     */
+    protected $_middleHard = false;
+
+    /**
      * Выполнять "жесткий" запрос (без учета истории)?
      *
      * @return bool
@@ -32,18 +39,48 @@ class ZFE_Query extends Doctrine_Query
     }
 
     /**
-     * Нужно выполнять "жесткий" запрос (без учета истории)?
-     *
-     * @param null|bool $hard
+     * Выполнять "жесткий" запрос (без учета истории) только для базовой модели, а для остальных обычный?
      *
      * @return bool
+     */
+    public function isMiddleHard()
+    {
+        return $this->_middleHard;
+    }
+
+    /**
+     * Нужно выполнять "жесткий" запрос (без учета истории)?
+     *
+     * @param bool $hard
+     *
+     * @return ZFE_Query
      */
     public function setHard($hard = null)
     {
         if (is_bool($hard)) {
             $this->_hard = $hard;
         } elseif (null !== $hard) {
-            throw new ZFE_Exception('Не верный аргумент в ZFE_Query::setHard(' . gettype($hard) . ') – допустимо: bool/null');
+            throw new ZFE_Exception('Не верный аргумент в ZFE_Query::setHard(' . gettype($hard) . ') – допустимы true/false');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Выполнить запрос без учета флага удаленности для базовой модели.
+     * 
+     * Проверки на deleted == 0 будут производится только для JOIN таблиц. 
+     *
+     * @param bool $hard
+     *
+     * @return ZFE_Query
+     */
+    public function setMiddleHard($hard)
+    {
+        if (is_bool($hard)) {
+            $this->_middleHard = $hard;
+        } elseif (null !== $hard) {
+            throw new ZFE_Exception('Не верный аргумент в ZFE_Query::setHardOnlyBase(' . gettype($hard) . ') – допустимы true/false');
         }
 
         return $this;
