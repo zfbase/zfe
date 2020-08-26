@@ -77,7 +77,7 @@ trait ZFE_Form_Helpers
 
         $this->addElementPrefixPath(
             $config->appnamespace . '_Validate',
-            $config->appnamespace . '/Validate/',
+            APPLICATION_PATH . '/Validate/',
             'validate'
         );
     }
