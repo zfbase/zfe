@@ -71,42 +71,45 @@ trait ZFE_Controller_AbstractResource_Edit
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
 
-        if ($this->_request->isPost() && !$item->isDeleted() && !static::$_readonly) {
-            $post = $this->_request->getPost();
+        if ($this->_request->isPost() && !static::$_readonly) {
+            if (!$item->isDeleted()) {
+                $post = $this->_request->getPost();
 
-            $this->_beforeValid($item, $form, $post);
+                $this->_beforeValid($item, $form, $post);
 
-            $form->setDisabledToIgnore();
-            if ($form->isValidPartial($post)) {
-                try {
-                    $item->fromArray($form->getValues(), false);
+                $form->setDisabledToIgnore();
+                if ($form->isValidPartial($post)) {
+                    try {
+                        $item->fromArray($form->getValues(), false);
 
-                    $this->_beforeSave($item, $form, $post);
-                    $item->save();
-                    $this->_afterSave($item, $form, $post);
+                        $this->_beforeSave($item, $form, $post);
+                        $item->save();
+                        $this->_afterSave($item, $form, $post);
 
-                    if ($item->exists()) {
-                        $this->success(
-                            $modelName::decline('%s успешно сохранен.', '%s успешно сохранена.', '%s успешно сохранено.'),
-                            false !== $redirectUrl
-                        );
+                        if ($item->exists()) {
+                            $this->success(
+                                $modelName::decline('%s успешно сохранен.', '%s успешно сохранена.', '%s успешно сохранено.'),
+                                false !== $redirectUrl
+                            );
 
-                        if (false !== $redirectUrl) {
-                            if (null === $redirectUrl) {
-                                $redirectUrl = $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
+                            if (false !== $redirectUrl) {
+                                if (null === $redirectUrl) {
+                                    $redirectUrl = $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
+                                }
+                                $this->_redirect($redirectUrl);
+                            } else {
+                                return true;
                             }
-                            $this->_redirect(sprintf($redirectUrl, $item->id));
                         } else {
-                            return true;
+                            $this->abort(500, 'После сохранения в записи отсутствует ID.');
                         }
-                    } else {
-                        $this->abort(500, 'После сохранения в записи отсутствует ID.');
+                    } catch (Throwable $ex) {
+                        $this->error('Сохранить не удалось', $ex);
                     }
-                } catch (Throwable $ex) {
-                    ZFE::popupException($ex);
-
-                    $this->error('Сохранить не удалось', $ex);
                 }
+            } else {
+                $this->error('Редактирование удаленных записей запрещено.');
+                $post = [];
             }
 
             // двойное заполнение необходимо для заполнения disabled-полей
