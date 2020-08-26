@@ -216,6 +216,13 @@
   right: 37px;
 }
 
+.tt-disabled {
+  i.clear,
+  .tt-separator {
+    display: none !important;
+  }
+}
+
 .form-inline .autocomplete-wrap,
 .form-inline .multiac-wrap {
   display: inline-block;
