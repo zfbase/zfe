@@ -169,6 +169,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         if (PHP_SAPI === 'cli') {
             $cliUserId = $config->cli->userId ?? null;
+            $cliUserLogin = $config->cli->userLogin ?? null;
 
             // Специальный режим для работы до создания таблицы editors
             if ($cliUserId == -1) {
@@ -178,13 +179,25 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 ];
             }
 
-            if (!$cliUserId) {
-                die("<error>Не указан пользователь для CLI. Необходимо указать в конфигурации параметр `cli.userId`</error>\n");
-            }
-
-            $user = Editors::find($cliUserId);
-            if (!$user) {
-                die("<error>Пользователь с ID = {$cliUserId} не найден</error>\n");
+            if ($cliUserId) {
+                $user = Editors::find($cliUserId);
+                if (!$user) {
+                    die("<error>Пользователь с ID = {$cliUserId} не найден</error>\n");
+                }
+            } elseif ($cliUserLogin) {
+                $users = Editors::findBy('login', $cliUserLogin);
+                switch ($users->count()) {
+                    case 0:
+                        die("<error>Пользователь с логином «{$cliUserLogin}» не найден</error>\n");
+                    break;
+                    case 1:
+                        $user = $users->getFirst();
+                    break;
+                    default:
+                        die("<error>Найдено более одного пользователя с логином «{$cliUserLogin}»</error>\n");
+                }
+            } else {
+                die("<error>Не указан пользователь для CLI. Необходимо указать в конфигурации параметр `cli.userLogin` или `cli.userId`</error>\n");
             }
 
             $role = $user->role;
