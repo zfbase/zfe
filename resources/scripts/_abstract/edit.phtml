@@ -17,7 +17,9 @@
     <? if (!$this->readonly): ?>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
+                <? if (!$item->isDeleted()) : ?>
                 <input type="submit" id="submit" value="Сохранить" class="btn btn-primary" />
+                <? endif; ?>
                 
                 <? if ($this->canDelete && !$item->isDeleted() && $item->exists()): ?>
                     <a data-confirm="Вы уверены, что хотите удалить <?= $item::$nameSingular ?> «<?= $this->escape($item->getTitle()) ?>»?"
