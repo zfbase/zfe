@@ -7,7 +7,7 @@
 /**
  * Псевдоним для класса Утилиты.
  *
- * @category  ZFE
+ * @deprecated
  */
 class ZFE extends ZFE_Utilities
 {

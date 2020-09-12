@@ -11,6 +11,8 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     /**
      * Загружаем короткий псевдоним для класса утилит
+     *
+     * @deprecated
      */
     protected function _initShortAlias()
     {
