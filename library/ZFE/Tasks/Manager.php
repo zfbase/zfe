@@ -236,8 +236,8 @@ class ZFE_Tasks_Manager
 
             try {
                 $performer = $this->assign($task);
-            } catch (ZFE_Tasks_Exception $e) {
-                ZFE::popupException($e);
+            } catch (Exception $e) {
+                ZFE_Utilities::popupException($e);
                 $this->logHelper($logger, $e->getMessage(), Zend_Log::ERR);
                 continue;
             }
@@ -253,7 +253,7 @@ class ZFE_Tasks_Manager
 
                 $managed++;
             } catch (ZFE_Tasks_Performer_Exception $e) {
-                ZFE::popupException($e);
+                ZFE_Utilities::popupException($e);
 
                 $task->errors = $e->getMessage();
                 $task->save();
