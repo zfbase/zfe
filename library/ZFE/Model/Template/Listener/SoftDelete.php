@@ -76,6 +76,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             $outFrom = [];
             $inFrom = $query->getDqlPart('from');
             $where = $query->getDqlPart('where');
+            $inWhereNumber = count($where);
             foreach ($inFrom as $inFromRow) {
                 $outParts = [];
                 $inParts = explode(',', $inFromRow);
@@ -88,8 +89,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                         : $matches[1];
 
                     if ($alias == $params['alias']) {
-                        $field = $params['alias'] . '.deleted';
-                        $exc = '(' . $field . ' IS NULL OR ' . $field . ' = 0)';
+                        $exc = $params['alias'] . '.deleted = 0';
 
                         $t = explode(' ', $part);
                         if (count(explode('.', $t[0])) == 2) {
@@ -111,6 +111,25 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                     }
                 }
                 $outFrom[] = implode(', ', $outParts);
+            }
+
+            if ($inFrom == $outFrom && $inWhereNumber == count($where)) {
+                $componentName = $table->getComponentName();
+                foreach ($inFrom as $inFromRow) {
+                    $inParts = explode(',', $inFromRow);
+                    foreach ($inParts as $inPart) {
+                        $dotPos = strpos($inPart, '.');
+                        if ($dotPos) {
+                            $alias = substr($inPart, 0, $dotPos);
+                            if ($alias == $componentName) {
+                                if (count($where)) {
+                                    $where[] = 'AND';
+                                }
+                                $where[] = $componentName . '.deleted = 0';
+                            }
+                        }
+                    }
+                }
             }
             $query->setDqlQueryPart('from', $outFrom);
             $query->setDqlQueryPart('where', $where);
