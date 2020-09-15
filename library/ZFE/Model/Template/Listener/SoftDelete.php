@@ -83,7 +83,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                 foreach ($inParts as $inPart) {
                     $part = trim($inPart);
 
-                    preg_match('/^(?:[a-zA-Z]+\.)?([A-Z][a-zA-Z]+)(?: +([a-zA-Z]+))?/', $part, $matches);
+                    preg_match('/^(?:[a-z]+\.)?([a-z]+)(?: +([a-z]+))?/i', $part, $matches);
                     $alias = (count($matches) > 2 && $matches[2] !== 'WITH')
                         ? $matches[2]
                         : $matches[1];
