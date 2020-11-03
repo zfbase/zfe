@@ -46,14 +46,17 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
      */
     public function hardDelete(Doctrine_Connection $conn = null)
     {
+        $lastSoftDelete = null;
+
         if ($this->_listener) {
-            $this->_listener->saveHistory(false);
+            $lastSoftDelete = $this->_listener->allowSoftDelete();
+            $this->_listener->allowSoftDelete(false);
         }
 
         $result = $this->_invoker->delete($conn);
 
         if ($this->_listener) {
-            $this->_listener->saveHistory(true);
+            $this->_listener->allowSoftDelete($lastSoftDelete);
         }
 
         return $result;
