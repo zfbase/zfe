@@ -73,7 +73,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                     $controller = $dispatcher->formatControllerName($page->controller);
                     $dispatcher->loadClass($controller);
                     $modelName = $controller::getModelName();
-                    $label = $modelName::$namePlural;
+                    $label = $modelName::$nameInMenu ?: $modelName::$namePlural;
                 } else {
                     $label = '';
                 }
