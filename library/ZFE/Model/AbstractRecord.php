@@ -62,6 +62,14 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $namePlural = 'Записи';
 
     /**
+     * Название записи в основном меню.
+     * Если название не указано, используется название в множественном числе.
+     *
+     * @var string|null
+     */
+    public static $nameInMenu;
+
+    /**
      * Писать историю.
      *
      * @var bool
