@@ -1,30 +1,14 @@
 <?
+    /** @var ZFE_View $this */
+    /** @var AbstractRecord $item */
+    $item = $this->item;
     $modelName = $this->modelName;
-    $item = $this->item; /** @var AbstractRecord $item */
-    $table = Doctrine_Core::getTable($modelName);
 ?>
 
 <table class="table table-condensed viewTable">
     <tbody>
     <? foreach ($modelName::getViewFields() as $field): ?>
-        <? $options = is_string($field) ? ['field' => $field] : $field; ?>
-        <? if (($table->hasRelation($options['field']) && $item->{$options['field']}->count())
-            || ($table->hasColumn($options['field']) && !empty($item->{$options['field']}))): ?>
-            <tr>
-                <th><?= $options['title'] ?? $modelName::getFieldName($options['field']) ?></th>
-                <td>
-                    <? if (!empty($options['viewHelper'])): ?>
-                        <?= $this->{$options['viewHelper']}($item->{$options['field']}) ?>
-                    <? elseif (!empty($options['viewMethod'])): ?>
-                        <?= ($options['viewMethod'])($item) ?>
-                    <? elseif ($table->hasRelation($options['field'])): ?>
-                        <?= $this->showTitles($item->{$options['field']}) ?>
-                    <? elseif ($table->hasColumn($options['field'])): ?>
-                        <?= ZFE::shortenText($this->autoFormat($item->{$options['field']}, $options['field'], $modelName), 400) ?>
-                    <? endif; ?>
-                </td>
-            </tr>
-        <? endif; ?>
+        <?= $this->viewRow($item, $field) ?>
     <? endforeach; ?>
     </tbody>
 </table>
