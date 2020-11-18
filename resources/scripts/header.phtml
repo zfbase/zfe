@@ -47,7 +47,7 @@
 
                                 $items['rolesHeader']['itemsHeader'] = 'Сменить роль';
 
-                                foreach (Editors::$roles as $name => $label) {
+                                foreach (Editors::getDictionary('role') as $name => $label) {
                                     $items[$name]['label'] = $label;
                                     $items[$name]['uri'] = '/auth/set-role/role/' . $name;
 
@@ -56,7 +56,7 @@
                                     }
                                 }
 
-                                $items['rolesAfterDevider']['divider'] = '';
+                                $items['rolesAfterDivider']['divider'] = '';
 
                                 echo $this->menuItems($items, false, true);
                             }
