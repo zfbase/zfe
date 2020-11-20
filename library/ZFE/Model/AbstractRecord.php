@@ -62,6 +62,14 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $namePlural = 'Записи';
 
     /**
+     * Название записи в основном меню.
+     * Если название не указано, используется название в множественном числе.
+     *
+     * @var string|null
+     */
+    public static $nameInMenu;
+
+    /**
      * Писать историю.
      *
      * @var bool
@@ -377,12 +385,14 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      *
      * Пример возвращаемого массива:
      * [
-     *     'title',                                                - использовать автоформатирование
-     *     ['field' => 'Creator', 'title' => 'Автор'],             - переопределение заголовка
-     *     ['field' => 'timestamp', 'viewHelper' => 'dateTime'],   - использовать помощник представления
-     *     ['field' => 'body', 'viewMethod' => function ($item) {  - использовать для отображения лямбду
-     *         return strip_tags($item->preview);
-     *     ],
+     *     'title' => 'title',                                       - использовать авто форматирование (по умолчанию)
+     *     'Master' => ['field' => 'Editors'],                       - переопределение поля
+     *     'Creator' => ['title' => 'Автор'],                        - переопределение заголовка
+     *     'datetime_reg' => ['viewHelper' => 'dateTime'],           - использовать помощник представления
+     *     'body' => ['viewMethod' => function ($item): string {}],  - использовать для отображения лямбду
+     *     'period' => ['hasValue' => function ($item): bool {}],    - переопределить метод проверки заполненности поля
+     *     'total' => ['prefix' => '€'],                             - добавить префикс
+     *     'circulation' => ['postfix' => 'экз.'],                   - добавить постфикс
      * ]
      */
     public static function getViewFields()
@@ -392,6 +402,6 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         $relations = array_map(function ($options) {
             return $options['relAlias'];
         }, static::$multiAutocompleteCols);
-        return array_merge($columns, $relations);
+        return array_combine($columns, $columns) + array_combine($relations, $relations);
     }
 }
