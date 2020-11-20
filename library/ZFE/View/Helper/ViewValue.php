@@ -11,18 +11,31 @@
  */
 class ZFE_View_Helper_ViewValue extends Zend_View_Helper_Abstract
 {
-    public function viewValue(AbstractRecord $item, string $field)
+    /**
+     * @param string|array<string|callable> $field
+     *
+     * @see ZFE_Model_AbstractRecord::getViewFields()
+     */
+    public function viewValue(AbstractRecord $item, $field)
     {
         $modelName = get_class($item);
-        $viewFields = $modelName::getViewFields();
-        if (!array_key_exists($field, $viewFields)) {
-            return;
+
+        if (is_string($field)) {
+            $viewFields = $modelName::getViewFields();
+            if (!array_key_exists($field, $viewFields)) {
+                return;
+            }
+
+            $options = is_string($viewFields[$field])
+                ? ['field' => $field]
+                : $viewFields[$field];
+        } elseif (is_array($field)) {
+            $options = $field;
+        } else {
+            throw new ZFE_View_Helper_Exception('$field должен быть строкой (названием поля) или массивом настроек');
         }
 
         $table = $item->getTable();
-        $options = is_string($viewFields[$field])
-            ? ['field' => $field]
-            : $viewFields[$field];
 
         if ($table->hasRelation($options['field'])) {
             if (!$item->{$options['field']}->count()) {
