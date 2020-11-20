@@ -216,7 +216,7 @@ class ZFE_Utilities
      */
     public static function plural($n, array $forms)
     {
-        return 1 === $n % 10 && 11 !== $n % 100 ? $forms[0] : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? $forms[1] : $forms[2]);
+        return 1 == $n % 10 && 11 != $n % 100 ? $forms[0] : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? $forms[1] : $forms[2]);
     }
 
     /**

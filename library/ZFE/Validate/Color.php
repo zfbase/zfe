@@ -79,7 +79,7 @@ class ZFE_Validate_Color extends Zend_Validate_Abstract
         $this->_setValue($value);
         if (!in_array(mb_strtolower($value), $this->_colors)) {
             $len = mb_strlen($value);
-            if ('#' !== $value[0] || !(4 === $len || 7 === $len) || !ctype_xdigit(mb_substr($value, 1))) {
+            if ('#' != $value[0] || !(4 == $len || 7 == $len) || !ctype_xdigit(mb_substr($value, 1))) {
                 $this->_error(self::NOT_COLOR);
                 return false;
             }

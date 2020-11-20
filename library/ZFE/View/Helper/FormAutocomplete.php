@@ -8,6 +8,8 @@
  * Элемент формы автокомплита одного значения.
  *
  * Для использование своего JS-обработчика на клиенте, необходимо передать класс custom-engine.
+ *
+ * @property ZFE_View $view
  */
 class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
 {
@@ -50,9 +52,16 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
 
         // Определяем перечень классов
         if (isset($attribs['class'])) {
-            $classes = is_string($attribs['class'])
-                ? explode(' ', $attribs['class'])
-                : is_array($attribs['class']) ? $attribs['class'] : '';
+            switch (gettype($attribs['class'])) {
+                case 'array':
+                    $classes = $attribs['class'];
+                break;
+                case 'string':
+                    $classes = explode(' ', $attribs['class']);
+                break;
+                default:
+                    throw new ZFE_View_Helper_Exception('Параметр `class` должен быть строкой или массивом');
+            }
             if (!in_array('autocomplete', $classes)) {
                 array_unshift($classes, 'autocomplete');
             }

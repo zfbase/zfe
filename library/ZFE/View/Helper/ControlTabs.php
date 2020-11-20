@@ -231,7 +231,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             $isActive = $request->getActionName() === $tab['action'];
             if ($isActive && !empty($tab['params'])) {
                 foreach ($tab['params'] as $param => $value) {
-                    if ($request->getParam($param) !== $value) {
+                    if ($request->getParam($param) != $value) {
                         $isActive = false;
                         break;
                     }

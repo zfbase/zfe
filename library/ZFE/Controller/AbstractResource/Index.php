@@ -87,7 +87,7 @@ trait ZFE_Controller_AbstractResource_Index
                 $q->setHard(true);
             } else {
                 $deleted = $this->getParam('deleted');
-                if ('1' === $deleted) {
+                if (1 == $deleted) {
                     $q->addWhere('x.deleted = 1')->setHard(true);
                 }
                 $this->view->deleted = $deleted;
@@ -167,7 +167,7 @@ trait ZFE_Controller_AbstractResource_Index
 
         if (!empty(static::$_searchFormName)) {
             $searchForm = new static::$_searchFormName();
-            if ('1' === $this->getParam('deleted')) {
+            if (1 == $this->getParam('deleted')) {
                 $searchForm->addElement('hidden', 'deleted', ['value' => 1]);
             }
             $searchForm->populate($this->getAllParams());
