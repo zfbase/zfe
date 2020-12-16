@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import autosize from 'autosize';
-import '@zfbase/typeahead.js/dist/typeahead.jquery';
+import 'zfe-typeahead/dist/typeahead.jquery';
 
 import '../lib/jquery.tmpl';
 import '../components/audio';
