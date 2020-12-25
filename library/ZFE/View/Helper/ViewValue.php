@@ -11,29 +11,58 @@
  */
 class ZFE_View_Helper_ViewValue extends Zend_View_Helper_Abstract
 {
-    public function viewValue(AbstractRecord $item, string $field)
+    /**
+     * @param string|array<string|callable> $field
+     *
+     * @see ZFE_Model_AbstractRecord::getViewFields()
+     */
+    public function viewValue(AbstractRecord $item, $field)
     {
         $modelName = get_class($item);
-        $viewFields = $modelName::getViewFields();
-        if (!array_key_exists($field, $viewFields)) {
-            return;
+
+        switch (gettype($field)) {
+            case 'string':
+                $viewFields = $modelName::getViewFields();
+                if (!array_key_exists($field, $viewFields)) {
+                    return;
+                }
+
+                if (is_string($viewFields[$field])) {
+                    $options = ['field' => $field];
+                } else {
+                    $options = $viewFields[$field];
+                    if (!array_key_exists('field', $options)) {
+                        $options['field'] = $field;
+                    }
+                }
+            break;
+            case 'array':
+                $options = $field;
+            break;
+            default:
+                throw new ZFE_View_Helper_Exception('$field должен быть строкой (названием поля) или массивом настроек');
         }
 
-        $table = $item->getTable();
-        $options = is_string($viewFields[$field])
-            ? ['field' => $field]
-            : $viewFields[$field];
-
-        if ($table->hasRelation($options['field'])) {
-            if (!$item->{$options['field']}->count()) {
+        if (array_key_exists('hasValue', $options)) {
+            if (!($options['hasValue'])($item)) {
                 return;
             }
-        }
+        } elseif (array_key_exists('field', $options)) {
+            $table = $item->getTable();
 
-        if ($table->hasColumn($options['field'])) {
-            if (empty($item->{$options['field']})) {
-                return;
+            if ($table->hasRelation($options['field'])) {
+                if (!$item->{$options['field']}->count()) {
+                    return;
+                }
             }
+
+            if ($table->hasColumn($options['field'])) {
+                if (empty($item->{$options['field']})) {
+                    return;
+                }
+            }
+        } else {
+            throw new ZFE_View_Helper_Exception('Необходимо указать базовое поле (field) или определить функцию проверки заполненности (hasValue)');
         }
 
         $html = '';
