@@ -6,6 +6,8 @@
 
 /**
  * Помощник использования абстрактных вьюшек.
+ *
+ * @property ZFE_View $view
  */
 class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
 {
@@ -30,6 +32,14 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * * ?bool   $onlyRegistered  – только для зарегистрированных (если есть id), по умолчанию false
      * * ?bool   $onlyValid       - только не удаленные (deleted != 0), по умолчанию true
      * * ?int    $order           - порядок отображения
+     * * ?int|array $badge        - бейдж (счетчик)
+     * 
+     * Бейдж может быть числом, либо массивом:
+     * * int     $number    – Число
+     * * ?string $class     – Класс (по умолчанию – `label-default`)
+     * * ?string $baseClass – Базовый класс (по умолчанию – `label`)
+     * * ?string $tag       - HTML тег
+     * * ?array  $attr      – HTML атрибуты
      *
      * @var array
      */
@@ -273,10 +283,37 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
                 $markup .= '<a href="' . $url . '">';
             }
 
-            $markup .= $tab['title'] . '</a></li>';
+            $markup .= $tab['title'];
+
+            if (isset($tab['badge'])) {
+                $markup .= ' ' . $this->renderBadge($tab['badge']);
+            }
+            $markup .= '</a></li>';
         }
 
         return $markup . '</ul>';
+    }
+
+    /**
+     * Сформировать бейдж.
+     *
+     * @param number|array $options
+     * @return void
+     */
+    protected function renderBadge($options)
+    {
+        if (is_string($options) || is_string($options)) {
+            $options = ['number' => $options];
+        } elseif (!is_array($options)) {
+            throw new ZFE_View_Helper_Exception('Не корректный параметр бейджа');
+        }
+
+        $text = $options['number'];
+        $tag = $options['tag'] ?? 'span';
+        $attrs = array_merge([
+            'class' => ($options['baseClass'] ?? 'label') . ' ' . ($options['class'] ?? 'label-default'),
+        ], ($options['attr'] ?? []));
+        return $this->view->tag($tag, $attrs, $text);
     }
 
     /**
