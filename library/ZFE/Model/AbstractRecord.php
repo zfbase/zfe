@@ -23,7 +23,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     use ZFE_Model_AbstractRecord_Duplicates;           // Поиск и объединение дубликатов
     use ZFE_Model_AbstractRecord_Sphinx;               // Функционал для Sphinx
     use ZFE_Model_Decline;                             // Склонения сообщений
-    use ZfeFiles_Model_ArrayConnector;                 // Вспомогательные методы ZFE Files
+    use ZfeFiles_Model_Injection;                      // Вспомогательные методы ZFE Files
 
     // Пол записи (допустимые варианты)
     const SEX_MALE   = '1';
@@ -278,7 +278,9 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         $array = $this->_filesToArray($array);
         $array = $this->_autocompleteToArray($array);
         $array = $this->_multiAutocompleteToArray($array);
-        return $this->_multiCheckOrSelectToArray($array);
+        $array = $this->_multiCheckOrSelectToArray($array);
+
+        return $array;
     }
 
     /**
@@ -311,7 +313,15 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         $array = $this->_autocompleteFromArray($array);
         $array = $this->_multiAutocompleteFromArray($array);
         $array = $this->_multiCheckOrSelectFromArray($array);
+
         parent::fromArray($array, $deep);
+    }
+
+    public function postSave($event)
+    {
+        parent::postSave($event);
+
+        $this->_filesPostSave();
     }
 
     /**
