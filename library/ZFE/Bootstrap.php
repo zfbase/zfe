@@ -96,8 +96,8 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initDoctrine()
     {
         $this->bootstrap('Config');
-
-        $dbConfig = Zend_Registry::get('config')->doctrine;
+        $config = Zend_Registry::get('config');
+        $dbConfig = $config->doctrine;
 
         $host = $dbConfig->host;
         $port = $dbConfig->port;
@@ -129,7 +129,19 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $conn->setAttribute(Doctrine_Core::ATTR_COLLECTION_CLASS, 'ZFE_Model_Collection');
 
         if ('mysql' === $driver) {
-            $conn->exec('SET NAMES utf8;');
+            try {
+                $conn->exec('SET NAMES utf8;');
+            } catch (Doctrine_Connection_Exception $ex) {
+                if ($config->noticeDetails) {
+                    ZFE_Debug::dump([
+                        'host' => $host,
+                        'port' => $port,
+                        'user' => $username,
+                        'schema' => $schema,
+                    ]);
+                }
+                throw $ex;
+            }
 
             // отключить режим ONLY_FULL_GROUP_BY, включенный по-умолчанию в MySQL 5.7.5 и старше
             $conn->exec("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
