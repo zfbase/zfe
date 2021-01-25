@@ -306,4 +306,31 @@ class ZFE_Utilities
             throw $ex;
         }
     }
+
+    /**
+     * Получить первое значение массива без смещения.
+     *
+     * @param array|Iterator|mixed на вход может быть передан объект любого типа
+     *
+     * @return mixed|null значение первого элемента массива, либо null если передан пустой массив или не массив
+     * 
+     * @todo Добавить поддержку IteratorAggregate (в том числе на примере Doctrine_Collection)
+     */
+    public static function getFirst($array)
+    {
+        if ($array instanceof Iterator) {
+            return $array->current();
+        }
+
+        if (!is_array($array)) {
+            return null;
+        }
+
+        if (count($array) === 0) {
+            return null;
+        }
+
+        $keys = array_keys($array);
+        return $array[array_pop($keys)];
+    }
 }
