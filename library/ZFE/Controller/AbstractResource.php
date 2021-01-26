@@ -280,10 +280,11 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
      *
      * @param string $param
      * @param string $modelName
+     * @param bool   $hardFind
      *
      * @return ZFE_Model_AbstractRecord
      */
-    protected function _loadItemOrFall($param = 'id', $modelName = null)
+    protected function _loadItemOrFall($param = 'id', $modelName = null, $hardFind = false)
     {
         if (!$modelName) {
             $modelName = static::$_modelName;
@@ -298,7 +299,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
             $this->abort(400, sprintf('Не указан обязательный параметр <code>%s</code>', $param));
         }
 
-        $item = $modelName::find($key);
+        $item = $modelName::{$hardFind ? 'hardFind' : 'find'}($key);
         if (empty($item)) {
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
