@@ -75,6 +75,13 @@ class ZFE_Form_Edit_AutoGeneration extends ZFE_Form_Horizontal
         if ($table->hasColumn('status') && !in_array('status', $ignoreFields)) {
             $this->addElementStatus();
         }
+
+        if (is_a($modelName, ZfeFiles_Manageable::class, true)) {
+            /** @var ZfeFiles_Schema_Default $schema */
+            foreach ($modelName::getFileSchemas() as $schema) {
+                $this->{$schema->getFormHelper()}($schema->getCode());
+            }
+        }
     }
 
     /**
