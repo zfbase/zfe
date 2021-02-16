@@ -11,13 +11,12 @@ abstract class ZFE_Console_Helper_Abstract
 {
     /**
      * Рендерить.
-     *
-     * @param bool $echo
-     *
-     * @return string
      */
-    abstract public function render(bool $echo = true);
+    abstract public function render(bool $echo = true): string;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString()
     {
         return $this->render(false);

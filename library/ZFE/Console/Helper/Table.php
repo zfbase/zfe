@@ -72,13 +72,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать ширину колонки.
-     *
-     * @param int $columnIndex
-     * @param int $width
-     *
-     * @return ZFE_Console_Helper_Table
      */
-    public function setColumnWidth(int $columnIndex, int $width)
+    public function setColumnWidth(int $columnIndex, int $width): self
     {
         $this->_columnWidths[$columnIndex] = $width;
         return $this;
@@ -87,11 +82,9 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
     /**
      * Указать размеры колонок.
      *
-     * @param array<int>|int $widths
-     *
-     * @return ZFE_Console_Helper_Table
+     * @param int[] $widths
      */
-    public function setColumnWidths(array $widths)
+    public function setColumnWidths(array $widths): self
     {
         $this->_columnWidths = [];
         foreach ($widths as $index => $width) {
@@ -102,13 +95,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать выравнивание колонки.
-     *
-     * @param int $columnIndex
-     * @param int $align
-     *
-     * @return ZFE_Console_Helper_Table
      */
-    public function setColumnAlign(int $columnIndex, $align)
+    public function setColumnAlign(int $columnIndex, int $align): self
     {
         $this->_columnAligns[$columnIndex] = $align;
         return $this;
@@ -116,12 +104,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать выравнивание колонок.
-     *
-     * @param array $aligns
-     *
-     * @return ZFE_Console_Helper_Table
      */
-    public function setColumnAligns(array $aligns)
+    public function setColumnAligns(array $aligns): self
     {
         $this->_columnAligns = [];
         foreach ($aligns as $index => $align) {
@@ -132,12 +116,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать заголовок.
-     *
-     * @param array $headers
-     *
-     * @return ZFE_Console_Helper_Table
      */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): self
     {
         $headers = array_values($headers);
         if (!empty($headers) && !is_array($headers[0])) {
@@ -150,12 +130,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать строки.
-     *
-     * @param array<array>|array[] $rows
-     *
-     * @return ZFE_Console_Helper_Table
      */
-    public function setRows(array $rows)
+    public function setRows(array $rows): self
     {
         $this->rows = [];
         return $this->addRows($rows);
@@ -163,12 +139,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
     /**
      * Добавить строку.
-     *
-     * @param array $row
-     *
-     * @return ZFE_Console_Helper_Table
      */
-    public function addRow(array $row)
+    public function addRow(array $row): self
     {
         $this->_rows[] = array_values($row);
         return $this;
@@ -177,7 +149,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
     /**
      * {@inheritdoc}
      */
-    public function render(bool $echo = true)
+    public function render(bool $echo = true): string
     {
         $this->prepare();
 
@@ -207,7 +179,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
      * (1) определить число колонок,
      * (2) определить ширину колонок.
      */
-    public function prepare()
+    public function prepare(): void
     {
         $numberOfColumns = 0;
         $contentWidths = [];
@@ -243,7 +215,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
     /**
      * Рендерить разделитель строк.
      */
-    public function renderRowSeparator()
+    public function renderRowSeparator(): ?string
     {
         if (0 == $this->_numberOfColumns) {
             return null;
@@ -259,10 +231,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
     /**
      * Рендерить строку с данными.
-     *
-     * @param array $data
      */
-    public function renderRow(array $data)
+    public function renderRow(array $data): ?string
     {
         if (0 == $this->_numberOfColumns) {
             return null;

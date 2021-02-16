@@ -32,6 +32,7 @@ class ZFE_Console_Command_Help extends ZFE_Console_Command_Abstract
                 echo "\n";
             }
         } else {
+            /** @var ZFE_Console_Helper_Table */
             $table = $this->getHelperBroker()->get('Table');
             $table->setHeaders(['Команда', 'Описание']);
             foreach ($broker->getCommands() as $command) {

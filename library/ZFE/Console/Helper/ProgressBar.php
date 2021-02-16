@@ -118,12 +118,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать ширину заполнителя.
-     *
-     * @param int $width
-     *
-     * @return ZFE_Console_Helper_ProgressBar
      */
-    public function setPlaceholderWidth(int $width)
+    public function setPlaceholderWidth(int $width): self
     {
         $this->_placeholderWidth = $width;
         return $this;
@@ -131,12 +127,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать шаблон бара.
-     *
-     * @param string $template
-     *
-     * @return ZFE_Console_Helper_ProgressBar
      */
-    public function setTemplate(string $template)
+    public function setTemplate(string $template): self
     {
         $this->_template = $template;
         return $this;
@@ -144,12 +136,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать шаблон бара после завершения прогресса.
-     *
-     * @param string $template
-     *
-     * @return ZFE_Console_Helper_ProgressBar
      */
-    public function setFinishTemplate(string $template)
+    public function setFinishTemplate(string $template): self
     {
         $this->_finishTemplate = $template;
         return $this;
@@ -157,12 +145,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
 
     /**
      * Указать префикс перед баром.
-     *
-     * @param string $prefix
-     *
-     * @return ZFE_Console_Helper_ProgressBar
      */
-    public function setPrefix(string $prefix)
+    public function setPrefix(string $prefix): self
     {
         $this->_prefix = $prefix;
         return $this;
@@ -174,12 +158,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
      * @param int|float $max
      * @param int|float $min
      * @param int|float $start
-     * @param int       $startTime
-     * @param bool      $echo
-     *
-     * @return string
      */
-    public function start($max = null, $min = null, $start = null, ?int $startTime = null, $echo = true)
+    public function start($max = null, $min = null, $start = null, ?int $startTime = null, bool $echo = true): string
     {
         $this->_prepare($max, $min, $start, $startTime);
 
@@ -195,10 +175,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
      *
      * @param int|float $value
      * @param bool      $echo
-     *
-     * @return string
      */
-    public function setValue($value, bool $echo = true)
+    public function setValue($value, bool $echo = true): string
     {
         $this->_value = $value;
 
@@ -211,12 +189,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
 
     /**
      * Завершить прогресс.
-     *
-     * @param bool $echo
-     *
-     * @return string
      */
-    public function finish(bool $echo = true)
+    public function finish(bool $echo = true): string
     {
         $this->_finishTime = microtime(true);
 
@@ -230,8 +204,6 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
 
     /**
      * Получить текущий процент.
-     *
-     * @param bool $integer
      *
      * @return int|float
      */
@@ -252,10 +224,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
 
     /**
      * Вернуть число секунд исполнения процесса.
-     *
-     * @return float
      */
-    public function getTime()
+    public function getTime(): float
     {
         return round(($this->_finishTime ?? microtime(true)) - $this->_startTime, 3);
     }
@@ -263,7 +233,7 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
     /**
      * {@inheritdoc}
      */
-    public function render(bool $echo = true)
+    public function render(bool $echo = true): string
     {
         if ($this->_finishTime) {
             $template = $this->_finishTemplate;
@@ -294,19 +264,15 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
     /**
      * Распечатать бар поверх текущей строки.
      */
-    public function overwrite()
+    public function overwrite(): void
     {
         echo "\r" . $this->render(false);
     }
 
     /**
      * Рендерить заполнитель.
-     *
-     * @param bool $echo
-     *
-     * @return string
      */
-    protected function renderPlaceholder(bool $echo = true)
+    protected function renderPlaceholder(bool $echo = true): string
     {
         if (null === $this->_maxValue) {
             throw new ZFE_Console_Exception('Не указано обязательное максимальное значение.');
@@ -339,9 +305,8 @@ class ZFE_Console_Helper_ProgressBar extends ZFE_Console_Helper_Abstract
      * @param int|float $max
      * @param int|float $min
      * @param int|float $start
-     * @param int       $startTime
      */
-    protected function _prepare($max = null, $min = null, $start = null, ?int $startTime = null)
+    protected function _prepare($max = null, $min = null, $start = null, ?int $startTime = null): void
     {
         $this->_startTime = $startTime ?? microtime(true);
 
