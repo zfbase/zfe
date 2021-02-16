@@ -147,6 +147,15 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
     }
 
     /**
+     * Указать заголовок таблицы.
+     */
+    public function setTitle(?string $title): self
+    {
+        $this->_title = $title;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render(bool $echo = true): string
@@ -154,6 +163,12 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
         $this->prepare();
 
         $markup = $this->renderRowSeparator();
+
+        if ($this->_title) {
+            $markup .= $this->renderTitle($this->_title);
+            $markup .= $this->renderRowSeparator();
+        }
+
         if (!empty($this->_headers)) {
             foreach ($this->_headers as $header) {
                 $markup .= $this->renderRow($header);
@@ -245,10 +260,25 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
             //value = ZFE::shortenText($value, $len);
 
             $markup .= ' ';
-            $markup .= ZFE::mb_str_pad($value, $len, ' ', $this->_columnAligns[$col] ?? static::ALIGN_LEFT);
+            $markup .= ZFE_Utilities::mb_str_pad($value, $len, ' ', $this->_columnAligns[$col] ?? static::ALIGN_LEFT);
             $markup .= mb_strlen($value) <= $len ? ' ' : '';
             $markup .= static::VERTICAL_BORDER_CHAR;
         }
         return $markup . "\n";
+    }
+
+    /**
+     * Рендерить название таблицы.
+     */
+    public function renderTitle(string $title): ?string
+    {
+        if (0 == $this->_numberOfColumns) {
+            return null;
+        }
+
+        $columns = count($this->_effectiveColumnWidths);
+        $len = array_sum($this->_effectiveColumnWidths) + $columns * 3 - 1;
+        $body = ZFE_Utilities::mb_str_pad(mb_strtoupper($title), $len, ' ', STR_PAD_BOTH);
+        return static::VERTICAL_BORDER_CHAR . $body . static::VERTICAL_BORDER_CHAR . "\n";
     }
 }
