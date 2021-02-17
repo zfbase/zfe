@@ -257,7 +257,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
         for ($col = 0; $col < $this->_numberOfColumns; $col++) {
             $len = $this->_effectiveColumnWidths[$col];
             @$value = $data[$col];
-            //value = ZFE::shortenText($value, $len);
+            //value = ZFE_Utilities::shortenText($value, $len);
 
             $markup .= ' ';
             $markup .= ZFE_Utilities::mb_str_pad($value, $len, ' ', $this->_columnAligns[$col] ?? static::ALIGN_LEFT);

@@ -80,7 +80,7 @@ class ZFE_Controller_Default_History extends Controller_AbstractResource
                 throw new ZFE_Controller_Exception();
             }
         } catch (Throwable $ex) {
-            ZFE::popupException($ex);
+            ZFE_Utilities::popupException($ex);
 
             $this->abort(500, 'Не корректный класс записи');
         }

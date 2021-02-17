@@ -100,7 +100,7 @@ class ZFE_Console_CommandBroker
                 $name = $file->getBasename();
                 $this->loadCommands(
                     $path . DIRECTORY_SEPARATOR . $name,
-                    $prefix . '_' . ZFE::mb_ucfirst($name)
+                    $prefix . '_' . ZFE_Utilities::mb_ucfirst($name)
                 );
             } else {
                 if ($file->getExtension() != 'php') {

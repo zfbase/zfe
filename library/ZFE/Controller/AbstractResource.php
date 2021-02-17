@@ -235,7 +235,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
                 $counter = $this->view->tag(
                     'span',
                     ['class' =>'badge'],
-                    $countUsedFilters . ' ' . ZFE::plural($countUsedFilters, ['фильтр', 'фильтра', 'фильтров'])
+                    $countUsedFilters . ' ' . ZFE_Utilities::plural($countUsedFilters, ['фильтр', 'фильтра', 'фильтров'])
                 );
                 $btn->setLabel($btn->getLabel() . ' ' . $counter);
             }

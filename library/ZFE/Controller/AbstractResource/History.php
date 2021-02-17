@@ -123,7 +123,7 @@ trait ZFE_Controller_AbstractResource_History
 
             $status = true;
         } catch (Throwable $ex) {
-            ZFE::popupException($ex);
+            ZFE_Utilities::popupException($ex);
 
             $this->error('Не удалось откатить ' . mb_strtolower($modelName::$nameSingular) . ' к версии ' . $version, $ex);
 

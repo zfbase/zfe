@@ -60,7 +60,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
-            ZFE::popupException($ex);
+            ZFE_Utilities::popupException($ex);
 
             $this->error('Не удалось удалить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 
@@ -117,7 +117,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 return true;
             }
         } catch (Throwable $ex) {
-            ZFE::popupException($ex);
+            ZFE_Utilities::popupException($ex);
 
             $this->error('Не удалось восстановить ' . mb_strtolower($modelName::$nameSingular), $ex, false !== $redirectUrl);
 

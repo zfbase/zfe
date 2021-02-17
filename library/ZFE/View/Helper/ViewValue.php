@@ -78,7 +78,7 @@ class ZFE_View_Helper_ViewValue extends Zend_View_Helper_Abstract
         } elseif ($table->hasRelation($options['field'])) {
             $html .= $this->view->showTitles($item->{$options['field']});
         } elseif ($table->hasColumn($options['field'])) {
-            $html .= ZFE::shortenText(
+            $html .= ZFE_Utilities::shortenText(
                 $this->view->autoFormat(
                     $item->{$options['field']},
                     $options['field'],

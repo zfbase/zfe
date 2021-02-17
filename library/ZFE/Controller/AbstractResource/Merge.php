@@ -139,7 +139,7 @@ trait ZFE_Controller_AbstractResource_Merge
 
                 ZFE_Notices::ok($msg);
             } catch (Throwable $ex) {
-                ZFE::popupException($ex);
+                ZFE_Utilities::popupException($ex);
 
                 if ($this->_request->isXmlHttpRequest()) {
                     $this->_json(self::STATUS_FAIL, [], $ex->getMessage());
