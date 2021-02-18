@@ -10,6 +10,11 @@
 abstract class ZFE_Tasks_Performer
 {
     /**
+     * Код успешного выполнения задачи.
+     */
+    const RETURN_CODE_SUCCESS = 0;
+
+    /**
      * Создать экземпляр исполнителя.
      */
     public static function factory(): ZFE_Tasks_Performer
