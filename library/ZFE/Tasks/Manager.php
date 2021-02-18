@@ -252,7 +252,7 @@ class ZFE_Tasks_Manager
                 $this->logHelper($logger, "Task #{$task->id} performed successfully");
 
                 $managed++;
-            } catch (ZFE_Tasks_Performer_Exception $e) {
+            } catch (Throwable $e) {
                 // ZFE_Utilities::popupException($e);
 
                 $task->errors = $e->getMessage();
