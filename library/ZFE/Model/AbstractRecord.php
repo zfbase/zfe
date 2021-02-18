@@ -417,4 +417,15 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         }, static::$multiAutocompleteCols);
         return array_combine($columns, $columns) + array_combine($relations, $relations);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __debugInfo()
+    {
+        return [
+            'tableName' => $this->getTableName(),
+            'data' => $this->getData(),
+        ];
+    }
 }
