@@ -253,7 +253,7 @@ class ZFE_Tasks_Manager
 
                 $managed++;
             } catch (ZFE_Tasks_Performer_Exception $e) {
-                ZFE_Utilities::popupException($e);
+                // ZFE_Utilities::popupException($e);
 
                 $task->errors = $e->getMessage();
                 $task->save();
