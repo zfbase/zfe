@@ -115,4 +115,34 @@ class ZFE_Debug extends Zend_Debug
 
         return $output;
     }
+
+    /**
+     * Помощник для лога вызовов.
+     */
+    public static function backtrace($echo = true)
+    {
+        $list = [];
+        $steps = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        foreach ($steps as $step) {
+            $list[] = sprintf('%s:%d', $step['file'], $step['line']);
+        }
+
+        if ('cli' === self::getSapi()) {
+            $output = PHP_EOL;
+            foreach ($steps as $i => $step) {
+                $output .= sprintf('%d. %s:%d', $i, $step['file'], $step['line']) . PHP_EOL;
+            }
+        } else {
+            $output = '<ol>';
+            foreach ($steps as $step) {
+                $output .= sprintf('<li>%s:%d</li>', $step['file'], $step['line']);
+            }
+        }
+
+        if ($echo) {
+            echo $output;
+        }
+
+        return $output;
+    }
 }
