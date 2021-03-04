@@ -79,7 +79,9 @@ class ZFE_Form_Edit_AutoGeneration extends ZFE_Form_Horizontal
         if (is_a($modelName, ZfeFiles_Manageable::class, true)) {
             /** @var ZfeFiles_Schema_Default $schema */
             foreach ($modelName::getFileSchemas() as $schema) {
-                $this->{$schema->getFormHelper()}($schema->getCode());
+                if (!$schema->isHidden()) {
+                    $this->{$schema->getFormHelper()}($schema->getCode());
+                }
             }
         }
     }
