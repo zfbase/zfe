@@ -29,6 +29,13 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
     const ALIGN_RIGHT = STR_PAD_LEFT;
 
     /**
+     * Название таблицы.
+     *
+     * @var array
+     */
+    protected $_title;
+
+    /**
      * Строки заголовков.
      *
      * @var array
@@ -164,8 +171,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
         $markup = $this->renderRowSeparator();
 
-        if ($this->_title) {
-            $markup .= $this->renderTitle($this->_title);
+        if (!empty($this->_title)  ) {
+            $markup .= $this->renderTitle();
             $markup .= $this->renderRowSeparator();
         }
 
@@ -270,15 +277,15 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
     /**
      * Рендерить название таблицы.
      */
-    public function renderTitle(string $title): ?string
+    public function renderTitle(): ?string
     {
-        if (0 == $this->_numberOfColumns) {
+        if (0 == $this->_numberOfColumns || empty($this->_title)) {
             return null;
         }
 
         $columns = count($this->_effectiveColumnWidths);
         $len = array_sum($this->_effectiveColumnWidths) + $columns * 3 - 1;
-        $body = ZFE_Utilities::mb_str_pad(mb_strtoupper($title), $len, ' ', STR_PAD_BOTH);
+        $body = ZFE_Utilities::mb_str_pad(mb_strtoupper($this->_title), $len, ' ', STR_PAD_BOTH);
         return static::VERTICAL_BORDER_CHAR . $body . static::VERTICAL_BORDER_CHAR . "\n";
     }
 }
