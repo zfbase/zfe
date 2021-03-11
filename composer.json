@@ -35,10 +35,10 @@
         }
     },
     "require": {
-        "php": ">=7.1 || >= 8.0",
+        "php": ">=7.4 || >= 8.0",
         "shardj/zf1-future": "^1.14",
         "zfbase/zend1-bootstrap3": "~1",
-        "zfbase/zfe-files": "^1.0.0-rc2",
+        "zfbase/zfe-files": "^1.0.0-rc.5",
         "jdorn/sql-formatter": "~1",
         "judev/php-htmltruncator": "^1.1",
         "greenlion/php-sql-parser": "^4.3",
