@@ -104,6 +104,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $schema = $dbConfig->schema;
         $username = $dbConfig->username;
         $password = $dbConfig->password;
+        $charset = $dbConfig->charset ?? 'utf8';
         $persistent = $dbConfig->persistent ? 'true' : 'false';
         $driver = $dbConfig->driver ?? 'mysql';
 
@@ -130,7 +131,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         if ('mysql' === $driver) {
             try {
-                $conn->exec('SET NAMES utf8;');
+                $conn->exec("SET NAMES {$charset};");
             } catch (Doctrine_Connection_Exception $ex) {
                 if ($config->noticeDetails) {
                     ZFE_Debug::dump([
