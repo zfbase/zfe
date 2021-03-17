@@ -60,7 +60,7 @@
         "fix": "php-cs-fixer fix"
     },
     "bin": [
-        "bin/manage-tasks",
+        "bin/zfe-manage-tasks",
         "bin/zfe-tools"
     ]
 }
