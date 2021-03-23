@@ -263,8 +263,8 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
         $markup = static::VERTICAL_BORDER_CHAR;
         for ($col = 0; $col < $this->_numberOfColumns; $col++) {
             $len = $this->_effectiveColumnWidths[$col];
-            @$value = $data[$col];
-            //value = ZFE_Utilities::shortenText($value, $len);
+            $value = $data[$col] ?? '';
+            // value = ZFE_Utilities::shortenText($value, $len);
 
             $markup .= ' ';
             $markup .= ZFE_Utilities::mb_str_pad($value, $len, ' ', $this->_columnAligns[$col] ?? static::ALIGN_LEFT);
@@ -272,6 +272,24 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
             $markup .= static::VERTICAL_BORDER_CHAR;
         }
         return $markup . "\n";
+    }
+
+    /**
+     * Рендерить заголовок таблицы.
+     */
+    public function renderHeader(): ?string
+    {
+        if (empty($this->_headers)) {
+            return null;
+        }
+
+        $markup = $this->renderRowSeparator();
+        foreach ($this->_headers as $header) {
+            $markup .= $this->renderRow($header);
+            $markup .= $this->renderRowSeparator();
+        }
+
+        return $markup;
     }
 
     /**
