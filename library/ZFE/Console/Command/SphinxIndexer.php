@@ -93,19 +93,15 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
         }
 
         if ($this->_showProgress) {
-            $header = ['Модель', 'Прогресс / Результат', 'Время, сек'];
-
             /** @var ZFE_Console_Helper_Table $table */
             $table = $this->_table = $this->getHelperBroker()->get('Table');
-            $table->setHeaders($header);
+            $table->setHeaders(['Модель', 'Прогресс / Результат', 'Время, сек']);
             $table->setColumnWidth(0, $maxLenModelName);
             $table->setColumnWidth(1, 55);
             $table->setColumnAlign(2, ZFE_Console_Helper_Table::ALIGN_RIGHT);
 
             $table->prepare();
-            echo $table->renderRowSeparator();
-            echo $table->renderRow($header);
-            echo $table->renderRowSeparator();
+            echo $table->renderHeader();
         }
 
         foreach ($models as $model) {
