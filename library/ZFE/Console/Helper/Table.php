@@ -162,6 +162,12 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
         return $this;
     }
 
+    public function addSeparator(): self
+    {
+        $this->_rows[] = null;
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -183,7 +189,9 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
             }
         }
         foreach ($this->_rows as $row) {
-            $markup .= $this->renderRow($row);
+            $markup .= ($row !== null)
+                ? $this->renderRow($row)
+                : $this->renderRowSeparator();
         }
         if (!empty($this->_rows)) {
             $markup .= $this->renderRowSeparator();
@@ -207,6 +215,10 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
         $contentWidths = [];
         $rows = array_merge($this->_headers, $this->_rows);
         foreach ($rows as $row) {
+            if ($row === null) {  // Пропускаем разделители
+                continue;
+            }
+
             // Определяем число столбцов
             $num = count($row);
             if ($numberOfColumns < $num) {
