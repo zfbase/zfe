@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
 if (isset($_SERVER) && key_exists('PWD', $_SERVER)) {
