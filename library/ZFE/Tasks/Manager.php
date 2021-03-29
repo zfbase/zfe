@@ -166,9 +166,9 @@ class ZFE_Tasks_Manager
     /**
      * Найти все задачи для выполнения в порядке убывания приоритета.
      * 
-     * @return Doctrine_Collection_OnDemand<Tasks>
+     * @return Doctrine_Collection<Tasks>
      */
-    public function findAllToDo(int $limit = 100, array $performers = []): Doctrine_Collection_OnDemand
+    public function findAllToDo(int $limit = 100, array $performers = []): Doctrine_Collection
     {
         $q = ZFE_Query::create()
             ->select('x.*')
@@ -181,7 +181,6 @@ class ZFE_Tasks_Manager
             ->orderBy('x.priority ASC')
             ->addOrderBy('x.datetime_created ASC')
             ->limit($limit)
-            ->setHydrationMode(Doctrine_Core::HYDRATE_ON_DEMAND)
         ;
         if ($performers) {
             $q->andWhereIn('x.performer_code', $performers);
@@ -214,16 +213,14 @@ class ZFE_Tasks_Manager
      * 3. передает задачу на исполнение
      * 4. сохраняет результат
      * 
-     * @param array|Tasks[]|Doctrine_Collection<Tasks>|Doctrine_Collection_OnDemand<Tasks> $tasks
+     * @param array|Tasks[]|Doctrine_Collection<Tasks> $tasks
      *
-     * @return Количество успешно выполненных задач.
+     * @return int Количество успешно выполненных задач.
      */
     final public function manage($tasks, Zend_Log $logger = null): int
     {
-        if (!is_array($tasks) && !($tasks instanceof Doctrine_Collection) && !($tasks instanceof Doctrine_Collection_OnDemand)) {
-            throw new ZFE_Tasks_Exception(
-                'Выполнить можно задачи только в коллекции Doctrine_Collection или Doctrine_Collection_OnDemand либо массиве'
-            );
+        if (!is_array($tasks) && !($tasks instanceof Doctrine_Collection)) {
+            throw new ZFE_Tasks_Exception('Выполнить можно задачи только в коллекции Doctrine_Collection либо массиве');
         }
 
         $managed = 0;
