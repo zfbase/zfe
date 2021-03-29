@@ -31,9 +31,10 @@ $writer = new Zend_Log_Writer_Stream('php://stdout');
 $logger = new Zend_Log($writer);
 
 $manager = ZFE_Tasks_Manager::getInstance();
+$partSize = config('tasks.partSize', 50);
 
 while (true) {
-    $tasks = $manager->findAllToDo();
+    $tasks = $manager->findAllToDo($partSize);
     $managed = $manager->manage($tasks, $logger);
     sleep(1);
 }
