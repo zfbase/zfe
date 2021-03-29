@@ -31,11 +31,10 @@ function env(string $name, $default = null)
 function config(string $name, $default = null)
 {
   $parts = explode('.', $name);
-  $config = Zend_Registry::get('config');
+  $config = Zend_Registry::get('config');  /** @var Zend_Config $config */
   foreach ($parts as $part) {
-    if ($config->isRegistered($part)) {
-      $config = $config->$part;
-    } else {
+    $config = $config->get($part);
+    if ($config === null) {
       return $default;
     }
   }
