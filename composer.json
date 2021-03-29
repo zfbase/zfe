@@ -32,7 +32,8 @@
     "autoload": {
         "psr-0": {
             "ZFE_": "library/"
-        }
+        },
+        "files": ["library/global.php"]
     },
     "require": {
         "php": ">=7.4 || >= 8.0",
