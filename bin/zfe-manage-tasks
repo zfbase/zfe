@@ -36,5 +36,8 @@ $partSize = config('tasks.partSize', 50);
 while (true) {
     $tasks = $manager->findAllToDo($partSize);
     $managed = $manager->manage($tasks, $logger);
-    sleep(1);
+
+    if ($tasks->count() < $partSize) {
+        sleep(1);
+    }
 }
