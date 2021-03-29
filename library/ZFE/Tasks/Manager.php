@@ -253,6 +253,8 @@ class ZFE_Tasks_Manager
                 $performer = $this->assign($task);
             } catch (Exception $e) {
                 if ($this->debugMode) {
+                    throw $e;
+                } else {
                     ZFE_Utilities::popupException($e);
                 }
 
@@ -272,6 +274,8 @@ class ZFE_Tasks_Manager
                 $managed++;
             } catch (Throwable $e) {
                 if ($this->debugMode) {
+                    throw $e;
+                } else {
                     ZFE_Utilities::popupException($e);
                 }
 
