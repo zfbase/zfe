@@ -31,10 +31,23 @@ $writer = new Zend_Log_Writer_Stream('php://stdout');
 $logger = new Zend_Log($writer);
 
 $manager = ZFE_Tasks_Manager::getInstance();
-$partSize = config('tasks.partSize', 50);
+
+try {
+    $opts = new Zend_Console_Getopt([
+        'part-size|s-i' => 'Размер партии для обработки',
+        /** @todo Добавить возможность указать конкретный приоритет или диапазон */
+    ]);
+    $opts->parse();
+} catch (Zend_Console_Getopt_Exception $e) {
+    echo $e->getUsageMessage();
+    exit;
+}
+
+$partSize = $opts->getOption('part-size') ?: config('tasks.partSize', 50);
+$performersCode = $opts->getRemainingArgs();
 
 while (true) {
-    $tasks = $manager->findAllToDo($partSize);
+    $tasks = $manager->findAllToDo($partSize, $performersCode);
     $managed = $manager->manage($tasks, $logger);
 
     if ($tasks->count() < $partSize) {

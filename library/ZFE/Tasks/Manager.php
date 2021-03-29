@@ -168,7 +168,7 @@ class ZFE_Tasks_Manager
      * 
      * @return Doctrine_Collection_OnDemand<Tasks>
      */
-    public function findAllToDo(int $limit = 100): Doctrine_Collection_OnDemand
+    public function findAllToDo(int $limit = 100, array $performers = []): Doctrine_Collection_OnDemand
     {
         $q = ZFE_Query::create()
             ->select('x.*')
@@ -183,6 +183,9 @@ class ZFE_Tasks_Manager
             ->limit($limit)
             ->setHydrationMode(Doctrine_Core::HYDRATE_ON_DEMAND)
         ;
+        if ($performers) {
+            $q->andWhereIn('x.performer_code', $performers);
+        }
         return $q->execute();
     }
 
