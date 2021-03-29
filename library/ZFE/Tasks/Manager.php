@@ -15,6 +15,12 @@ class ZFE_Tasks_Manager
     protected static $instance = null;
 
     /**
+     * Режим отладки.
+     * В данном режиме пропускаются на вверх все исключения и ошибки.
+     */
+    protected bool $debugMode = false;
+
+    /**
      * Получить экземпляр менеджера отложенных задач.
      */
     public static function getInstance(): ZFE_Tasks_Manager
@@ -24,6 +30,15 @@ class ZFE_Tasks_Manager
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Установить режим отладки.
+     */
+    public function setDebugMode(bool $mode)
+    {
+        $this->debugMode = $mode;
+        return $this;
     }
 
     /**
@@ -237,7 +252,10 @@ class ZFE_Tasks_Manager
             try {
                 $performer = $this->assign($task);
             } catch (Exception $e) {
-                ZFE_Utilities::popupException($e);
+                if ($this->debugMode) {
+                    ZFE_Utilities::popupException($e);
+                }
+
                 $this->logHelper($logger, $e->getMessage(), Zend_Log::ERR);
                 continue;
             }
@@ -253,7 +271,9 @@ class ZFE_Tasks_Manager
 
                 $managed++;
             } catch (Throwable $e) {
-                // ZFE_Utilities::popupException($e);
+                if ($this->debugMode) {
+                    ZFE_Utilities::popupException($e);
+                }
 
                 $task->errors = $e->getMessage();
                 $task->save();
