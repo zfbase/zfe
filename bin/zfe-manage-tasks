@@ -35,6 +35,7 @@ $manager = ZFE_Tasks_Manager::getInstance();
 try {
     $opts = new Zend_Console_Getopt([
         'part-size|s-i' => 'Размер партии для обработки',
+        'trait|t-s' => 'Номер и общее число трейтов для обработки в несколько потоков через слеш (пример: 1/10)',
         /** @todo Добавить возможность указать конкретный приоритет или диапазон */
     ]);
     $opts->parse();
@@ -46,8 +47,19 @@ try {
 $partSize = $opts->getOption('part-size') ?: config('tasks.partSize', 50);
 $performersCode = $opts->getRemainingArgs();
 
+$traitNo = $traitTotal = null;
+$traitData = [];
+$traitString = $opts->getOption('trait');
+if ($traitString) {
+    if (preg_match('/^([0-9]+)\/([1-9][0-9]*)$/', $traitString, $traitData)) {
+        list(, $traitNo, $traitTotal) = $traitData;
+    } else {
+        die("Некорректный параметр trait\n");
+    }
+}
+
 while (true) {
-    $tasks = $manager->findAllToDo($partSize, $performersCode);
+    $tasks = $manager->findAllToDo($partSize, $performersCode, $traitNo, $traitTotal);
     $managed = $manager->manage($tasks, $logger);
 
     if ($tasks->count() < $partSize) {

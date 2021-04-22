@@ -180,10 +180,23 @@ class ZFE_Tasks_Manager
 
     /**
      * Найти все задачи для выполнения в порядке убывания приоритета.
-     * 
+     *
+     * @param array $performers исчерпывающий перечень обработчиков для выборки
+     * @param int $traitNo номер трейта для обработки в несколько параллельных потоков
+     * @param int $traitTotal общее число трейтов для обработки в несколько параллельных потоков
+     *
+     * Параметры $traitNo и $traitTotal могут использоваться только вместе
+     *
+     * @throws ZFE_Tasks_Exception
+     *
      * @return Doctrine_Collection<Tasks>
      */
-    public function findAllToDo(int $limit = 100, array $performers = []): Doctrine_Collection
+    public function findAllToDo(
+        int $limit = 100,
+        array $performers = [],
+        int $traitNo = null,
+        int $traitTotal = null
+    ): Doctrine_Collection
     {
         $q = ZFE_Query::create()
             ->select('x.*')
@@ -197,9 +210,17 @@ class ZFE_Tasks_Manager
             ->addOrderBy('x.datetime_created ASC')
             ->limit($limit)
         ;
+
         if ($performers) {
             $q->andWhereIn('x.performer_code', $performers);
         }
+
+        if ($traitNo !== null && $traitTotal !== null) {
+            $q->andWhere('x.id % ? = ?', [$traitTotal, $traitNo]);
+        } elseif ($traitNo !== null or $traitTotal !== null) {
+            throw new ZFE_Tasks_Exception('Параметры $traitNo и $traitTotal могут использоваться только вместе');
+        }
+
         return $q->execute();
     }
 
