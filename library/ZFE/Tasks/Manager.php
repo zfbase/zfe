@@ -341,7 +341,7 @@ class ZFE_Tasks_Manager
         }
 
         if ($scheduleDateTime) {
-            $task->datetime_schedule = $scheduleDateTime->format('Y-m-d');
+            $task->datetime_schedule = $scheduleDateTime->format('Y-m-d H:i:s');
         }
 
         $task->save();
