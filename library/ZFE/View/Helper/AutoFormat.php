@@ -96,7 +96,8 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
         }
 
         $config = Zend_Registry::get('config');
-        $columnParams = $table->getColumnDefinition($columnName);
+        $columnParams = $table->getColumnDefinition(strtolower($columnName));
+
         switch ($columnParams['type']) {
             case 'integer':
                 if (null === $value) {
