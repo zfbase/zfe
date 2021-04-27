@@ -324,6 +324,13 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         $this->_filesPostSave();
     }
 
+    public function postInsert($event)
+    {
+        parent::postInsert($event);
+
+        $this->_filesPostInsert();
+    }
+
     /**
      * Записи могут быть удалены в корзину?
      *
