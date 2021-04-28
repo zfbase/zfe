@@ -9,6 +9,9 @@
  */
 abstract class ZFE_Model_Default_Tasks extends BaseTasks
 {
+    /** {@inheritdoc} */
+    public static $saveHistory = true;
+
     /**
      * Сохранить как выполняющуюся.
      */
