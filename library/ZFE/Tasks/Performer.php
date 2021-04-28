@@ -17,7 +17,7 @@ abstract class ZFE_Tasks_Performer
     /**
      * Создать экземпляр исполнителя.
      */
-    public static function factory(): ZFE_Tasks_Performer
+    public static function factory(): self
     {
         return new static;
     }

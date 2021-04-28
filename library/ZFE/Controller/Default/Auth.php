@@ -31,7 +31,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
         if ($auth->hasIdentity()) {
             $module = $this->getRequest()->getModuleName();
             $uri = $module ? '/' . $module . '/' : '/';
-            $this->_redirect($uri);
+            $this->redirect($uri);
         }
 
         if ('show' !== $this->getParam('develtoolbar')) {
@@ -69,7 +69,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                         if (!empty($requestUri) && '/auth/logout' !== $requestUri) {
                             $fpcUrl .= '/redirect/' . urlencode($requestUri);
                         }
-                        $this->_redirect($fpcUrl);
+                        $this->redirect($fpcUrl);
                     }
 
                     if (empty($requestUri) || '/auth/' === mb_substr($requestUri, 0, 6)) {
@@ -79,7 +79,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                         $requestUri = $this->getParam('redirect');
                     }
 
-                    $this->_redirect($requestUri);
+                    $this->redirect($requestUri);
                 }
             } else {
                 // Вполне достаточно сообщения только о первой ошибке
@@ -99,6 +99,8 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
     /**
      * Получить настроенный адаптер авторизации.
+     *
+     * @param array $data
      *
      * @return Zend_Auth_Adapter_Interface
      */
@@ -123,7 +125,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
     {
         Zend_Auth::getInstance()->clearIdentity();
 
-        $this->_redirect('/');
+        $this->redirect('/');
     }
 
     /**
@@ -151,7 +153,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
         if (empty($referer)) {
             $referer = '/';
         }
-        $this->_redirect($referer);
+        $this->redirect($referer);
     }
 
     /**
@@ -190,7 +192,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                     if (empty($redirect) || '/auth/logout' === $redirect) {
                         $redirect = '/';
                     }
-                    $this->_redirect($redirect);
+                    $this->redirect($redirect);
                 } else {
                     $form->getElement('password')->addError('Не верный пароль');
                 }

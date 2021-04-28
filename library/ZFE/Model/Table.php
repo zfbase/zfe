@@ -102,9 +102,7 @@ class ZFE_Model_Table extends Doctrine_Table
             throw new ZFE_Model_Exception('Невозможно получить максимальную длину столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
-        return isset($this->_columns[$columnName]['length'])
-            ? $this->_columns[$columnName]['length']
-            : null;
+        return $this->_columns[$columnName]['length'] ?? null;
     }
 
     /**
@@ -122,9 +120,7 @@ class ZFE_Model_Table extends Doctrine_Table
             throw new ZFE_Model_Exception('Невозможно проверить обязательность столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
-        return isset($this->_columns[$columnName]['notnull'])
-            ? $this->_columns[$columnName]['notnull']
-            : null;
+        return $this->_columns[$columnName]['notnull'] ?? null;
     }
 
     /**
@@ -142,9 +138,7 @@ class ZFE_Model_Table extends Doctrine_Table
             throw new ZFE_Model_Exception('Невозможно проверить беззнаковость столбца: столбец "' . $columnName . '" не определен в модели "' . $this->getClassnameToReturn() . '"');
         }
 
-        return isset($this->_columns[$columnName]['unsigned'])
-            ? $this->_columns[$columnName]['unsigned']
-            : null;
+        return $this->_columns[$columnName]['unsigned'] ?? null;
     }
 
     /**

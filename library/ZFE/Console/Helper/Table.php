@@ -177,7 +177,7 @@ class ZFE_Console_Helper_Table extends ZFE_Console_Helper_Abstract
 
         $markup = $this->renderRowSeparator();
 
-        if (!empty($this->_title)  ) {
+        if (!empty($this->_title)) {
             $markup .= $this->renderTitle();
             $markup .= $this->renderRowSeparator();
         }

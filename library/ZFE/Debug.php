@@ -21,7 +21,7 @@ class ZFE_Debug extends Zend_Debug
     public static function dump($var, $label = null, $echo = true)
     {
         $output = parent::dump($var, $label, false);
-        list($place) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        [$place] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
         if ('cli' !== self::getSapi() && !extension_loaded('xdebug')) {
             $preOpen = '<pre class="zfe-dump" data-place="' . $place['file'] . ':' . $place['line'] . '">';
@@ -53,12 +53,12 @@ class ZFE_Debug extends Zend_Debug
             ob_start();
             var_dump($var);
             $output = ob_get_clean();
-            $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
+            $output = preg_replace("/\]\=\>\n(\s+)/m", '] => ', $output);
         } else {
             $output = '';
         }
 
-        list($place) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        [$place] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
         $callPoint = $place['file'] . ':' . $place['line'] . PHP_EOL;
 
         error_log($callPoint . $label . $output);
@@ -97,7 +97,7 @@ class ZFE_Debug extends Zend_Debug
      */
     public static function trace($echo = true, $exit = false)
     {
-        list($place) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        [$place] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
         if ('cli' === self::getSapi()) {
             $output = PHP_EOL . $place['file'] . ':' . $place['line'] . PHP_EOL;
@@ -118,7 +118,7 @@ class ZFE_Debug extends Zend_Debug
 
     /**
      * Помощник для лога вызовов.
-     * 
+     *
      * @param bool $echo распечатать?
      * @param bool $html Форматировать в HTML?
      *

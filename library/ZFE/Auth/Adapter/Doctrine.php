@@ -460,6 +460,6 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
             $this->_authenticateResultInfo['code'],
             $this->_authenticateResultInfo['identity'],
             $this->_authenticateResultInfo['messages']
-            );
+        );
     }
 }

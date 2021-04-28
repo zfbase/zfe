@@ -134,7 +134,7 @@ trait ZFE_Controller_AbstractResource_History
             if (null === $redirectUrl) {
                 $redirectUrl = $curItem->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
             }
-            $this->_redirect($redirectUrl);
+            $this->redirect($redirectUrl);
         } else {
             return $status;
         }

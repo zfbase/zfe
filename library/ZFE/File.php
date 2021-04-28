@@ -783,7 +783,7 @@ class ZFE_File
             $basePath = realpath($basePath);
         }
 
-        $strParts = str_split($id, self::$div);
+        $strParts = mb_str_split($id, self::$div);
         $fileName = array_pop($strParts);
         $subPath = implode('/', $strParts);
 

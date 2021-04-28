@@ -1,17 +1,23 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 /**
  * Помощник для получения значения параметра окружения.
+ *
+ * @param null|mixed $default
  */
 function env(string $name, $default = null)
 {
-    $value = isset($_ENV[$name]) ? $_ENV[$name] : false;
+    $value = $_ENV[$name] ?? false;
 
     if ($value === false) {
         return $default;
     }
-    
-    switch (strtolower($value)) {
+
+    switch (mb_strtolower($value)) {
         case 'true':
             return true;
         case 'false':
@@ -27,16 +33,18 @@ function env(string $name, $default = null)
 
 /**
  * Помощник для получения значения параметра конфигурации.
+ *
+ * @param null|mixed $default
  */
 function config(string $name, $default = null)
 {
-  $parts = explode('.', $name);
-  $config = Zend_Registry::get('config');  /** @var Zend_Config $config */
-  foreach ($parts as $part) {
-    $config = $config->get($part);
-    if ($config === null) {
-      return $default;
+    $parts = explode('.', $name);
+    $config = Zend_Registry::get('config');  /** @var Zend_Config $config */
+    foreach ($parts as $part) {
+        $config = $config->get($part);
+        if ($config === null) {
+            return $default;
+        }
     }
-  }
-  return $config;
+    return $config;
 }

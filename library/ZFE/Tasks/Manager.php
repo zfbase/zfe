@@ -23,7 +23,7 @@ class ZFE_Tasks_Manager
     /**
      * Получить экземпляр менеджера отложенных задач.
      */
-    public static function getInstance(): ZFE_Tasks_Manager
+    public static function getInstance(): self
     {
         if (static::$instance === null) {
             static::$instance = new static();
@@ -47,7 +47,7 @@ class ZFE_Tasks_Manager
      * Список обработчиков для регистрации задаётся в конфигурации.
      * Пример перечисления обработчиков в application.ini:
      * tasks.performers[] = "Task_Example"
-     *  
+     *
      * @var array|string[]|ZFE_Tasks_Performer[]
      */
     protected $performers = [];
@@ -79,9 +79,9 @@ class ZFE_Tasks_Manager
 
     /**
      * Получить список исполнителей задач.
-     * 
+     *
      * @param $init вернуть инициализированные исполнители?
-     * 
+     *
      * @return array|string[]              массив классов исполнителей
      * @return array|ZFE_Tasks_Performer[] массив инициализированных исполнителей
      */
@@ -90,17 +90,16 @@ class ZFE_Tasks_Manager
         return array_map(function ($performer) use ($init) {
             if ($init) {
                 return is_string($performer) ? $performer::factory() : $performer;
-            } else {
-                return is_string($performer) ? $performer : get_class($performer);
             }
+            return is_string($performer) ? $performer : get_class($performer);
         }, $this->performers);
     }
 
     /**
      * Получить исполнителя задачи по коду.
-     * 
+     *
      * @param $init вернуть инициализированного исполнителя?
-     * 
+     *
      * @return string              класс исполнителя
      * @return ZFE_Tasks_Performer инициализированный исполнитель
      */
@@ -114,9 +113,8 @@ class ZFE_Tasks_Manager
 
         if ($init) {
             return is_string($performer) ? $performer::factory() : $performer;
-        } else {
-            return is_string($performer) ? $performer : get_class($performer);
         }
+        return is_string($performer) ? $performer : get_class($performer);
     }
 
     /**
@@ -139,7 +137,7 @@ class ZFE_Tasks_Manager
 
     /**
      * Для данной записи найди задачу, которая уже запланирована, но еще не выполнена.
-     * 
+     *
      * Важно! Может вернуть задачу, время исполнения которой по расписанию еще не наступило.
      */
     public function findOnePlanned(string $code, int $relatedId): ?Tasks
@@ -182,8 +180,8 @@ class ZFE_Tasks_Manager
      * Найти все задачи для выполнения в порядке убывания приоритета.
      *
      * @param array $performers исчерпывающий перечень обработчиков для выборки
-     * @param int $traitNo номер трейта для обработки в несколько параллельных потоков
-     * @param int $traitTotal общее число трейтов для обработки в несколько параллельных потоков
+     * @param int   $traitNo    номер трейта для обработки в несколько параллельных потоков
+     * @param int   $traitTotal общее число трейтов для обработки в несколько параллельных потоков
      *
      * Параметры $traitNo и $traitTotal могут использоваться только вместе
      *
@@ -196,8 +194,7 @@ class ZFE_Tasks_Manager
         array $performers = [],
         int $traitNo = null,
         int $traitTotal = null
-    ): Doctrine_Collection
-    {
+    ): Doctrine_Collection {
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from('Tasks x')
@@ -217,7 +214,7 @@ class ZFE_Tasks_Manager
 
         if ($traitNo !== null && $traitTotal !== null) {
             $q->andWhere('x.id % ? = ?', [$traitTotal, $traitNo]);
-        } elseif ($traitNo !== null or $traitTotal !== null) {
+        } elseif ($traitNo !== null || $traitTotal !== null) {
             throw new ZFE_Tasks_Exception('Параметры $traitNo и $traitTotal могут использоваться только вместе');
         }
 
@@ -248,10 +245,10 @@ class ZFE_Tasks_Manager
      * 2. определяет исполнителя для каждой
      * 3. передает задачу на исполнение
      * 4. сохраняет результат
-     * 
+     *
      * @param array|Tasks[]|Doctrine_Collection<Tasks> $tasks
      *
-     * @return int Количество успешно выполненных задач.
+     * @return int количество успешно выполненных задач
      */
     final public function manage($tasks, Zend_Log $logger = null): int
     {
@@ -275,9 +272,9 @@ class ZFE_Tasks_Manager
             } catch (Exception $e) {
                 if ($this->debugMode) {
                     throw $e;
-                } else {
-                    ZFE_Utilities::popupException($e);
                 }
+
+                ZFE_Utilities::popupException($e);
 
                 $this->logHelper($logger, $e->getMessage(), Zend_Log::ERR);
                 continue;
@@ -296,9 +293,9 @@ class ZFE_Tasks_Manager
             } catch (Throwable $e) {
                 if ($this->debugMode) {
                     throw $e;
-                } else {
-                    ZFE_Utilities::popupException($e);
                 }
+
+                ZFE_Utilities::popupException($e);
 
                 $task->errors = $e->getMessage();
                 $task->save();
@@ -326,7 +323,7 @@ class ZFE_Tasks_Manager
 
     /**
      * Запланировать задачу.
-     * 
+     *
      * @param $performerCode    код исполнителя
      * @param $related          объект исполнения
      * @param $scheduleDateTime срок начала исполнения (не раньше, но можно позднее)
@@ -337,8 +334,7 @@ class ZFE_Tasks_Manager
         AbstractRecord $related,
         DateTime $scheduleDateTime = null,
         int $priority = 0
-    ): Tasks
-    {
+    ): Tasks {
         if (!array_key_exists($performerCode, $this->performers)) {
             throw new ZFE_Tasks_Exception("Исполнитель с кодом {$performerCode} не зарегистрирован");
         }

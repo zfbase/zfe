@@ -14,9 +14,6 @@ abstract class ZFE_Console_Helper_Abstract
      */
     abstract public function render(bool $echo = true): string;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         return $this->render(false);

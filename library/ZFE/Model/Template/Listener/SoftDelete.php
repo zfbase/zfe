@@ -21,6 +21,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
      * Если указан параметр обновит значение.
      *
      * @param bool $mode
+     *
      * @return bool
      */
     public function allowSoftDelete($mode = null)
@@ -95,7 +96,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
 
                         $t = explode(' ', $part);
                         if (count(explode('.', $t[0])) == 2) {
-                            $outParts[] = stripos($part, 'WITH') !== false
+                            $outParts[] = mb_stripos($part, 'WITH') !== false
                                 ? $part . ' AND ' . $exc
                                 : $part . ' WITH ' . $exc;
                         } else {
@@ -120,9 +121,9 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                 foreach ($inFrom as $inFromRow) {
                     $inParts = explode(',', $inFromRow);
                     foreach ($inParts as $inPart) {
-                        $dotPos = strpos($inPart, '.');
+                        $dotPos = mb_strpos($inPart, '.');
                         if ($dotPos) {
-                            $alias = substr($inPart, 0, $dotPos);
+                            $alias = mb_substr($inPart, 0, $dotPos);
                             if ($alias == $componentName) {
                                 if (count($where)) {
                                     $where[] = 'AND';
@@ -138,7 +139,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
         }
     }
 
-    /** 
+    /**
      * Хук preDqlDelete.
      *
      * @param Doctrine_Event $event

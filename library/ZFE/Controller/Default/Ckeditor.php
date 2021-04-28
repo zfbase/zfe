@@ -21,7 +21,7 @@ class ZFE_Controller_Default_Ckeditor extends Controller_Abstract
         $adapter = new Zend_File_Transfer_Adapter_Http();
 
         $hash = $adapter->getHash();
-        $localDir = implode('/', str_split($hash, 4));
+        $localDir = implode('/', mb_str_split($hash, 4));
         $fullDir = $baseDir . '/' . $localDir;
         ZFE_File::makePath($fullDir);
         ZFE_File::fixPath($baseUrl, $localDir);

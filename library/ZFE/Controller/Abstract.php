@@ -102,8 +102,8 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     /**
      * Отправить сообщение об ошибке.
      *
-     * @param string    $msg
-     * @param Throwable $e
+     * @param string    $message
+     * @param Throwable $ex
      * @param bool      $allowAjax
      */
     public function error($message, Throwable $ex = null, $allowAjax = true)
@@ -127,9 +127,9 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     /**
      * Отправить сообщение об предупреждении.
      *
-     * @param string $message
+     * @param string    $message
      * @param Throwable $ex
-     * @param boolean $allowAjax
+     * @param bool      $allowAjax
      */
     public function warning($message, Throwable $ex = null, $allowAjax = true)
     {
@@ -140,10 +140,10 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     /**
      * Отправить сообщение.
      *
-     * @param string $status
-     * @param string $message
+     * @param string    $status
+     * @param string    $message
      * @param Throwable $ex
-     * @param boolean $allowAjax
+     * @param bool      $allowAjax
      */
     public function notice($status, $message, Throwable $ex = null, $allowAjax = true)
     {

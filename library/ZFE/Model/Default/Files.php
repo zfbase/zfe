@@ -6,75 +6,37 @@
 
 class ZFE_Model_Default_Files extends BaseFiles
 {
-    /**
-     * Половая принадлежность записи.
-     *
-     * @var int
-     */
+    /** {@inheritdoc} */
     public static $sex = self::SEX_FEMALE;
 
-    /**
-     * Название записи в единственном числе.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $nameSingular = 'Файл';
 
-    /**
-     * Название записи во множественном числе.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $namePlural = 'Файлы';
 
-    /**
-     * Поле (выражение) названия записи.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $titleField = 'x.title_original';
 
-    /**
-     * Сортировка записей по умолчанию.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $defaultOrder = 'x.model_name ASC, x.item_id ASC, x.id ASC';
 
-    /**
-     * Ключ сортировки по умолчанию.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $defaultOrderKey = 'title_original_asc';
 
-    /**
-     * Имена полей записи модели.
-     *
-     * @var array
-     */
+    /** {@inheritdoc} */
     public static $nameFields = [
         // 'title' => 'Название',
         'title_original' => 'Название',
     ];
 
-    /**
-     * Имя контроллера управляющего записями модели.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $controller = 'files';
 
-    /**
-     * Записи могут быть объединены стандартным способом?
-     *
-     * @var bool
-     */
+    /** {@inheritdoc} */
     public static $mergeable = false;
 
-    /**
-     * Инициализировать список по умолчанию служебных полей модели.
-     */
+    /** {@inheritdoc} */
     protected static function _initServiceFields()
     {
         static::_setServiceFields([
@@ -87,34 +49,5 @@ class ZFE_Model_Default_Files extends BaseFiles
             'path',
             'type',
         ]);
-    }
-
-    /**
-     * Получить запись, для который был загружен данный файл.
-     *
-     * @return ZFE_File_Manageable|null
-     */
-    public function getManageableItem(): ?ZFE_File_Manageable
-    {
-        $modelName = $this->model_name;
-        $itemId = $this->item_id;
-        $q = ZFE_Query::create()->setHard(true)
-            ->select()
-            ->from($modelName)
-            ->where('id = ?', $itemId)
-        ;
-        return $q->fetchOne() ?: null;
-    }
-
-    /**
-     * Возвращает описание допустимых обработок для файлов.
-     *
-     * @param bool $refresh Загрузить коллекцию по-новой?
-     *
-     * @return ZFE_File_Processor_Mapping|null
-     */
-    public function getProcessings($refresh = false): ZFE_File_Processor_Mapping
-    {
-        return new ZFE_File_Processor_Mapping($this);
     }
 }

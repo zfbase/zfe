@@ -21,6 +21,6 @@ class ZFE_Console_Command_Config extends ZFE_Console_Command_Abstract
             $config->{$params[0]} = $section;
         }
         $writer = new Zend_Config_Writer_Yaml(['config' => $config]);
-        print $writer->render();
+        echo $writer->render();
     }
 }

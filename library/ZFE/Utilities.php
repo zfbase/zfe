@@ -111,7 +111,7 @@ class ZFE_Utilities
      */
     public static function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = 'UTF-8')
     {
-        return str_pad($input, strlen($input) - mb_strlen($input, $encoding) + $pad_length, $pad_string, $pad_type);
+        return str_pad($input, strlen($input) - mb_strlen($input, $encoding) + $pad_length, $pad_string, $pad_type); // phpcs:ignore mb_str_functions
     }
 
     /**
@@ -310,10 +310,10 @@ class ZFE_Utilities
     /**
      * Получить первое значение массива без смещения.
      *
-     * @param array|Iterator|mixed на вход может быть передан объект любого типа
+     * @param array|Iterator|mixed $array на вход может быть передан объект любого типа
      *
      * @return mixed|null значение первого элемента массива, либо null если передан пустой массив или не массив
-     * 
+     *
      * @todo Добавить поддержку IteratorAggregate (в том числе на примере Doctrine_Collection)
      */
     public static function getFirst($array)

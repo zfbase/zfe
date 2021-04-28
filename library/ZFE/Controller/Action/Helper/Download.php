@@ -34,7 +34,8 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
         ];
         if (array_key_exists($config->webserver, $helpersMap)) {
             Zend_Controller_Action_HelperBroker::getStaticHelper($helpersMap[$config->webserver])
-                ->direct($path, $url, $name);
+                ->direct($path, $url, $name)
+            ;
         } else {
             throw new Zend_Controller_Action_Exception('В конфигурации не указан не поддерживаемый веб-сервер', 500);
         }

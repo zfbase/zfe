@@ -135,7 +135,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         if ($term) {
             $safeTerm = addcslashes($term, '%_\'\\');
 
-            $q->addWhere(static::$titleField . " LIKE ? ", '%' . $safeTerm . '%');
+            $q->addWhere(static::$titleField . ' LIKE ? ', '%' . $safeTerm . '%');
             // Кажется, парсер Доктрины неверно обрабатывает параметр со скобкой.
             // Например, LIKE `'(%'` превращается в LIKE `'(%)` – скобка вместо кавычки
             // Пришлось удалить ESCAPE '\\\\' т.к. это в ряде случаев ломает счетчик алиасов при преобразование DQL -> SQL

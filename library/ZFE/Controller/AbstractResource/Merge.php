@@ -148,7 +148,7 @@ trait ZFE_Controller_AbstractResource_Merge
                 ZFE_Notices::ok($msg);
             }
 
-            $this->_redirect($returnTo);
+            $this->redirect($returnTo);
         }
     }
 

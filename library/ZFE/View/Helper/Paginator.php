@@ -63,16 +63,16 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
     /**
      * Собрать пагинатор
      *
-     * @param array $options опции пагинатора:
-     *                       style = 'sliding' (default) | 'jumping' - способ скрытия лишних ссылок на страницы
-     *                       chunk = 10 - сколько одновременно показывать ссылок на страницы
-     *                       template - шаблон страницы (ссылки)
-     *                       selectedTemplate - шаблон выбранной страницы (ссылки)
-     *                       separatorTemplate - разделитель страниц (ссылок)
-     *                       containerPrefix - начало контейнера
-     *                       containerPostfix - окончание контейнера
+     * @param array         $options   опции пагинатора:
+     *                                 style = 'sliding' (default) | 'jumping' - способ скрытия лишних ссылок на страницы
+     *                                 chunk = 10 - сколько одновременно показывать ссылок на страницы
+     *                                 template - шаблон страницы (ссылки)
+     *                                 selectedTemplate - шаблон выбранной страницы (ссылки)
+     *                                 separatorTemplate - разделитель страниц (ссылок)
+     *                                 containerPrefix - начало контейнера
+     *                                 containerPostfix - окончание контейнера
      * @param ZFE_Paginator $paginator Задать экземпляр класса, используемого пагинатора, или будет
-     *                      использован ZFE_Paginator по-умолчанию
+     *                                 использован ZFE_Paginator по-умолчанию
      *
      * @return string
      */
@@ -80,8 +80,8 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
     {
         $pConfig = Zend_Registry::get('config')->view->paginator;
         $default = [
-            'chunk' => isset($pConfig->chunk) ? $pConfig->chunk : 10,
-            'style' => isset($pConfig->style) ? $pConfig->style : 'sliding',
+            'chunk' => $pConfig->chunk ?? 10,
+            'style' => $pConfig->style ?? 'sliding',
         ];
 
         $chunk = $options['chunk'] ?? $default['chunk'];

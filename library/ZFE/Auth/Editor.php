@@ -43,8 +43,9 @@ class ZFE_Auth_Editor
     }
 
     /**
-     * @return string
      * @throws Zend_Auth_Exception
+     *
+     * @return string
      */
     public function getRole()
     {
@@ -65,21 +66,18 @@ class ZFE_Auth_Editor
     }
 
     /**
-     * @param Editors $editor
-     *
      * @throws Zend_Auth_Storage_Exception
      */
     public function set(Editors $editor)
     {
-        $auth = Zend_Auth::getInstance();
         $this->clear();
 
-        $auth->getStorage()->write(['id' => $editor->id]);
+        Zend_Auth::getInstance()
+            ->getStorage()
+            ->write(['id' => $editor->id])
+        ;
     }
 
-    /**
-     *
-     */
     public function clear()
     {
         $auth = Zend_Auth::getInstance();

@@ -77,11 +77,11 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         $fields = ['id', 'title'];
         if (isset($attribs['relModel']) && class_exists($attribs['relModel'])) {
             $fields = array_merge($fields, ($attribs['relModel'])::$autocompleteSelectCols);
-        } else if (isset($attribs['relAlias']) && class_exists($attribs['relAlias'])) {
+        } elseif (isset($attribs['relAlias']) && class_exists($attribs['relAlias'])) {
             $fields = array_merge($fields, ($attribs['relAlias'])::$autocompleteSelectCols);
         }
         foreach ($fields as $field) {
-            $storage[] = $this->_hidden($name . '[' . $field  . ']', $value[$field] ?? null);
+            $storage[] = $this->_hidden($name . '[' . $field . ']', $value[$field] ?? null);
         }
 
         // Очищаем лишнее

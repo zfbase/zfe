@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 class ZFE_Console_Command_TaskRevision extends ZFE_Console_Command_Abstract
 {
     protected static $_description = 'Перезапланировать отложенную задачу';

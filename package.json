@@ -1,6 +1,6 @@
 {
   "name": "zfe",
-  "version": "1.35.0-rc",
+  "version": "1.35.0",
   "description": "ZFE – платформа для построения редакторских интерфейсов",
   "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
@@ -18,7 +18,7 @@
     "html5sortable": "^0.9.3",
     "inputmask": "^4.0.9",
     "plupload": "^2.3.6",
-    "zfe-files": "github:zfbase/zfe-files",
+    "zfe-files": "^1.0.5",
     "zfe-typeahead": "^0.11.1"
   },
   "files": [

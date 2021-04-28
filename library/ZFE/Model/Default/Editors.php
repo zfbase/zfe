@@ -9,54 +9,25 @@
  */
 abstract class ZFE_Model_Default_Editors extends BaseEditors
 {
-    // Переопределяем AbstractRecords
-    /**
-     * Половая принадлежность записи.
-     *
-     * @var int
-     */
+    /** {@inheritdoc} */
     public static $sex = self::SEX_MALE;
 
-    /**
-     * Название записи в единственном числе.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $nameSingular = 'Редактор';
 
-    /**
-     * Название записи во множественном числе.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $namePlural = 'Редакторы';
 
-    /**
-     * Поле (выражение) названия записи.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $titleField = "CONCAT_WS(' ', x.second_name, x.first_name, x.middle_name)";
 
-    /**
-     * Сортировка записей по умолчанию.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $defaultOrder = "CONCAT_WS(' ', x.second_name, x.first_name, x.middle_name) ASC";
 
-    /**
-     * Ключ сортировки по умолчанию.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $defaultOrderKey = 'title_asc';
 
-    /**
-     * Имена полей записи модели.
-     *
-     * @var array
-     */
+    /** {@inheritdoc} */
     public static $nameFields = [
         'title'       => 'Полное имя',
         'second_name' => 'Фамилия',
@@ -72,11 +43,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         'request_password_change' => 'Запросить смену пароля при первом входе',
     ];
 
-    /**
-     * Словарные поля записи.
-     *
-     * @var array
-     */
+    /** {@inheritdoc} */
     protected static $_dictionaryFields = [
         'status' => ['status', 'sex'],
         'role' => ['roles'],
@@ -86,11 +53,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     const STATUS_ENABLE   = '0';
     const STATUS_DISABLED = '1';
 
-    /**
-     * Статусы записей модели в зависимости от половой принадлежности записи.
-     *
-     * @var array
-     */
+    /** {@inheritdoc} */
     public static $status = [
         self::SEX_MALE => [
             self::STATUS_ENABLE   => 'Включен',
@@ -98,21 +61,13 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         ],
     ];
 
-    /**
-     * Цвета статусов.
-     *
-     * @var array
-     */
+    /** {@inheritdoc} */
     public static $statusColor = [
         self::STATUS_ENABLE   => 'green',
         self::STATUS_DISABLED => 'red',
     ];
 
-    /**
-     * Список полей, принимающихся только значения да/нет
-     *
-     * @var array|string[]
-     */
+    /** {@inheritdoc} */
     public static $booleanFields = [
         'request_password_change',
     ];
@@ -131,14 +86,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      */
     public static $credentialTreatment = 'MD5(CONCAT(?, password_salt))';
 
-    /**
-     * Импортировать данные из массива.
-     *
-     * @see http://www.doctrine-project.org/documentation/manual/1_1/en/working-with-models
-     *
-     * @param array $array
-     * @param bool  $deep
-     */
+    /** {@inheritdoc} */
     public function fromArray(array $array, $deep = true)
     {
         if (!empty($array['password'])) {
@@ -149,14 +97,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         parent::fromArray($array, $deep);
     }
 
-    /**
-     * Экспортировать данные в массив.
-     *
-     * @param bool $deep
-     * @param bool $prefixKey
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function toArray($deep = true, $prefixKey = false)
     {
         $array = parent::toArray($deep, $prefixKey);
@@ -164,6 +105,12 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         return $array;
     }
 
+    /**
+     * Установить новый пароль.
+     *
+     * @param string $password Пароль в открытом виде
+     * @param string $salt     Соль (если не указана, будет создана автоматически)
+     */
     public function setPassword($password, $salt = null)
     {
         $salt = $salt ?: $this->password_salt ?: uniqid();
@@ -174,7 +121,6 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         $this->password_salt = $salt;
     }
 
-    // Дополняем AbstractRecords
     use ZFE_Model_Default_PersonTrait;
 
     const ROLE_ADMIN = 'admin';
@@ -227,9 +173,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         return $name;
     }
 
-    /**
-     * Инициализировать список по умолчанию служебных полей модели.
-     */
+    /** {@inheritdoc} */
     protected static function _initServiceFields()
     {
         parent::_initServiceFields();
@@ -238,9 +182,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         ]);
     }
 
-    /**
-     * Инициализировать список по умолчанию полей модели, для которых в истории скрываются значения.
-     */
+    /** {@inheritdoc} */
     protected static function _initHistoryHiddenFields()
     {
         parent::_initHistoryHiddenFields();

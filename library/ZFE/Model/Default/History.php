@@ -9,39 +9,19 @@
  */
 abstract class ZFE_Model_Default_History extends BaseHistory
 {
-    /**
-     * Половая принадлежность записи.
-     *
-     * @var int
-     */
+    /** {@inheritdoc} */
     public static $sex = self::SEX_FEMALE;
 
-    /**
-     * Название записи во множественном числе.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $namePlural = 'История';
 
-    /**
-     * Сортировка записей по умолчанию.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $defaultOrder = 'datetime_action DESC';
 
-    /**
-     * Ключ сортировки по умолчанию.
-     *
-     * @var string
-     */
+    /** {@inheritdoc} */
     public static $defaultOrderKey = 'datetime_action_desc';
 
-    /**
-     * Сохранять историю.
-     *
-     * @var bool
-     */
+    /** {@inheritdoc} */
     public static $saveHistory = false;
 
     // Типы событий истории

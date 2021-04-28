@@ -33,7 +33,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * * ?bool   $onlyValid       - только не удаленные (deleted != 0), по умолчанию true
      * * ?int    $order           - порядок отображения
      * * ?int|array $badge        - бейдж (счетчик)
-     * 
+     *
      * Бейдж может быть числом, либо массивом:
      * * int     $number    – Число
      * * ?string $class     – Класс (по умолчанию – `label-default`)
@@ -298,7 +298,6 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * Сформировать бейдж.
      *
      * @param number|array $options
-     * @return void
      */
     protected function renderBadge($options)
     {

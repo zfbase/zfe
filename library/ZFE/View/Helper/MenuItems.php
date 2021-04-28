@@ -66,7 +66,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             if (isset($page->label) && $page->label instanceof Zend_Config) {
                 $label = '<span class="' . $page->label->ico . ' hidden-xs"></span>'
                        . '<span class="visible-xs-inline">' . $page->label->text . '</span>';
-                $title = isset($page->title) ? $page->title : $page->label->text;
+                $title = $page->title ?? $page->label->text;
             } else {
                 if (!empty($page->label) && is_string($page->label)) {
                     $label = $page->label;
@@ -80,7 +80,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                     $label = '';
                 }
 
-                $title = isset($page->title) ? $page->title : $label;
+                $title = $page->title ?? $label;
             }
 
             if (isset($page->badge)) {

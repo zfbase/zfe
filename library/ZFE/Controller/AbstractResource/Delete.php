@@ -55,7 +55,7 @@ trait ZFE_Controller_AbstractResource_Delete
                         $redirectUrl = $modelName::getIndexUrl();
                     }
                 }
-                $this->_redirect($redirectUrl);
+                $this->redirect($redirectUrl);
             } else {
                 return true;
             }
@@ -68,7 +68,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 if (null === $redirectUrl) {
                     $redirectUrl = $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
                 }
-                $this->_redirect($redirectUrl);
+                $this->redirect($redirectUrl);
             } else {
                 return false;
             }
@@ -112,7 +112,7 @@ trait ZFE_Controller_AbstractResource_Delete
                 if (null === $redirectUrl) {
                     $redirectUrl = $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
                 }
-                $this->_redirect($redirectUrl);
+                $this->redirect($redirectUrl);
             } else {
                 return true;
             }
@@ -129,7 +129,7 @@ trait ZFE_Controller_AbstractResource_Delete
                         $redirectUrl = $modelName::getIndexUrl();
                     }
                 }
-                $this->_redirect($redirectUrl);
+                $this->redirect($redirectUrl);
             } else {
                 return false;
             }

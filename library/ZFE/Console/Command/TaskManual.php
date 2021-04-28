@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * ZFE – платформа для построения редакторских интерфейсов.
+ */
+
 class ZFE_Console_Command_TaskManual extends ZFE_Console_Command_Abstract
 {
     protected static $_description = 'Выполнить отложенную задачу';
@@ -38,7 +42,6 @@ class ZFE_Console_Command_TaskManual extends ZFE_Console_Command_Abstract
                 echo "<error>Задача с ID #{$params[1]} не может быть выполнена – она удалена.</error>\n";
                 return static::ERROR_REMOTE_TASK_ID;
             }
-
         } elseif ($numParams == 4 || $numParams == 5) {
             if ($params[0] == 'performer' && $params[2] == 'rel' && is_numeric($params[3])) {
                 $performerCode = $params[1];

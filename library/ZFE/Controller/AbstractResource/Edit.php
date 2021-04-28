@@ -27,8 +27,8 @@ trait ZFE_Controller_AbstractResource_Edit
      * Редактор записи.
      *
      * @param bool|string $redirectUrl адрес для перенаправления в случае успеха;
-     *      если адрес равен FALSE, то перенаправление не произойдет;
-     *      в адресе можно единоразово использовать %d для вставки id записи
+     *                                 если адрес равен FALSE, то перенаправление не произойдет;
+     *                                 в адресе можно единоразово использовать %d для вставки id записи
      * @param array       $formOptions конфигурация формы редактирования (по умолчанию содержит класс редактируемой записи
      *
      * @return bool|void В случае отсутствия перенаправления и успешного сохранения, возвращает TRUE, в остальных случаях NULL
@@ -40,31 +40,9 @@ trait ZFE_Controller_AbstractResource_Edit
         }
 
         $modelName = static::$_modelName;
+        $form = $this->_initEditForm($formOptions);
+        $item = $this->_initEditItem();
 
-        if (!key_exists('modelName', $formOptions)) {
-            $formOptions['modelName'] = $modelName;
-        }
-
-        $formName = static::$_editFormName;
-        if (!($this->view->form instanceof Zend_Form)) {
-            if (!empty($formName) && is_string($formName)) {
-                $this->view->form = new $formName($formOptions);
-            } else {
-                $this->abort(500, 'Некорректная форма');
-            }
-        }
-        $form = $this->view->form;  /** @var ZFE_Form $form */
-
-        if (!($this->view->item instanceof Doctrine_Record)) {
-            if (!static::$_canCreate && !$this->hasParam('id')) {
-                $this->abort(403, 'Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
-            }
-            $itemId = (int) $this->getParam('id');
-            $this->view->item = $itemId > 0
-                ? $modelName::hardFind($itemId)
-                : new $modelName();
-        }
-        $item = $this->view->item; /** @var AbstractRecord $item */
         if (empty($item)) {
             $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
         }
@@ -98,7 +76,7 @@ trait ZFE_Controller_AbstractResource_Edit
                                 if (null === $redirectUrl) {
                                     $redirectUrl = $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
                                 }
-                                $this->_redirect($redirectUrl);
+                                $this->redirect($redirectUrl);
                             } else {
                                 return true;
                             }
@@ -134,6 +112,51 @@ trait ZFE_Controller_AbstractResource_Edit
         }
 
         $form->removeDecorator('Form');
+    }
+
+    /**
+     * Подготовить форму.
+     *
+     * @return ZFE_Form
+     */
+    protected function _initEditForm(array $options)
+    {
+        if (!key_exists('modelName', $options)) {
+            $options['modelName'] = static::$_modelName;
+        }
+
+        if (!($this->view->form instanceof Zend_Form)) {
+            $formName = static::$_editFormName;
+            if (!empty($formName) && is_string($formName)) {
+                $this->view->form = new $formName($options);
+            } else {
+                $this->abort(500, 'Некорректная форма');
+            }
+        }
+
+        return $this->view->form;
+    }
+
+    /**
+     * Подготовить запись.
+     *
+     * @return AbstractRecord
+     */
+    protected function _initEditItem()
+    {
+        $modelName = static::$_modelName;
+
+        if (!($this->view->item instanceof Doctrine_Record)) {
+            if (!static::$_canCreate && !$this->hasParam('id')) {
+                $this->abort(403, 'Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
+            }
+            $itemId = (int) $this->getParam('id');
+            $this->view->item = $itemId > 0
+                ? $modelName::hardFind($itemId)
+                : new $modelName();
+        }
+
+        return $this->view->item;
     }
 
     /**

@@ -65,11 +65,11 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     public function inTodo(): bool
     {
         $this->refresh();
-        return $this->datetime_canceled === NULL
-            && $this->datetime_started === NULL
-            && $this->datetime_done === NULL
-            && $this->return_code === NULL
-            && $this->errors === NULL;
+        return $this->datetime_canceled === null
+            && $this->datetime_started === null
+            && $this->datetime_done === null
+            && $this->return_code === null
+            && $this->errors === null;
     }
 
     /**
@@ -78,10 +78,10 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     public function isPerformed(): bool
     {
         $this->refresh();
-        return $this->datetime_started !== NULL
-            && $this->datetime_done === NULL
-            && $this->return_code === NULL
-            && $this->errors === NULL;
+        return $this->datetime_started !== null
+            && $this->datetime_done === null
+            && $this->return_code === null
+            && $this->errors === null;
     }
 
     /**
@@ -90,7 +90,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     public function isCanceled(): bool
     {
         $this->refresh();
-        return $this->datetime_canceled !== NULL;
+        return $this->datetime_canceled !== null;
     }
 
     /**
@@ -99,9 +99,9 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     public function isDone(): bool
     {
         $this->refresh();
-        return $this->datetime_done !== NULL
-            || $this->return_code !== NULL
-            || $this->errors !== NULL;
+        return $this->datetime_done !== null
+            || $this->return_code !== null
+            || $this->errors !== null;
     }
 
     /**
@@ -111,7 +111,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     {
         $this->refresh();
         return $this->return_code == 0
-            && $this->errors === NULL;
+            && $this->errors === null;
     }
 
     /**
@@ -121,6 +121,6 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     {
         $this->refresh();
         return $this->return_code > 0
-            || $this->errors !== NULL;
+            || $this->errors !== null;
     }
 }
