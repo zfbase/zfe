@@ -38,6 +38,7 @@
     "require": {
         "php": ">=7.4 || >= 8.0",
         "ext-json": "*",
+        "ext-bcmath": "*",
         "shardj/zf1-future": "^1.14",
         "zfbase/doctrine1": "^1.2",
         "zfbase/zend1-bootstrap3": "~1",
