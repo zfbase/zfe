@@ -119,6 +119,10 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             throw new ZFE_View_Helper_Exception("Вкладка с названием '${name}' уже зарегистрирована.");
         }
 
+        if (!array_key_exists('action', $tab)) {
+            $tab['action'] = $name;
+        }
+
         $this->_tabs[$name] = $tab;
         return $this;
     }
