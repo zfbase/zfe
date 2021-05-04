@@ -96,6 +96,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
                     'action' => 'view',
                     'title' => 'Просмотр',
                     'onlyRegistered' => true,
+                    'onlyValid' => false,
                     'order' => 0,
                 ])
                 ->modifyTab('edit', ['title' => 'Редактирование'])
