@@ -118,6 +118,16 @@ class ZFE_Query extends Doctrine_Query
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @param string|string[] $select
+     */
+    public function select($select = null)
+    {
+        return parent::select(is_array($select) ? implode(', ', $select) : $select);
+    }
+
 //    public function delete($from = null)
 //    {
 //        if ($this->isHard()) {
