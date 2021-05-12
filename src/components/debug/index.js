@@ -36,6 +36,29 @@ const initDebug = () => {
         .addClass('glyphicon-plus-sign');
     }
   });
+
+  $(() => {
+    $('#DevelConfigViewer_Tree ul').each((i, list) => {
+      const $list = $(list).addClass('hide');
+      const $btn = $('<i>', {
+        'data-toggle': 'collapse',
+        class: 'glyphicon glyphicon-chevron-up',
+        role: 'button',
+      }).insertBefore($list);
+
+      $btn.on('click', () => {
+        if ($btn.hasClass('glyphicon-chevron-up')) {
+          $btn.removeClass('glyphicon-chevron-up');
+          $btn.addClass('glyphicon-chevron-down');
+          $list.removeClass('hide');
+        } else {
+          $btn.removeClass('glyphicon-chevron-down');
+          $btn.addClass('glyphicon-chevron-up');
+          $list.addClass('hide');
+        }
+      });
+    });
+  });
 };
 
 export default initDebug;

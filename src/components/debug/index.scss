@@ -3,6 +3,43 @@
   visibility: hidden;
 }
 
+#DevelConfigViewer {
+  margin: -10px 0;
+
+  .modal-body {
+    overflow: auto;
+  }
+}
+
+#DevelConfigViewer_Tree {
+  list-style: none;
+  padding: 0;
+  white-space: nowrap;
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    margin: 10px 0;
+  }
+
+  label::after {
+    content: ':';
+    margin-right: 0.5em;
+  }
+
+  span {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 12px;
+  }
+
+  pre {
+    display: inline;
+    border: none;
+  }
+}
+
 #DevelSqlProfiler {
   pre {
     border: 0 none;

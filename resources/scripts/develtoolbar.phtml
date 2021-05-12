@@ -7,6 +7,22 @@
 <? if ($config->debug->develToolbar && $this->develToolbar): ?>
 <div id="DevelClearFix"></div>
 <div id="DevelToolbar">
+    <? if ($config->debug->configViewer): ?>
+    <div id="DevelConfigViewer" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Конфигурация</h4>
+                </div>
+                <div class="modal-body">
+                    <?= $this->configTreeViewer($config->toArray()); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <? endif; ?>
+
     <? if ($config->doctrine->profile): ?>
     <div id="DevelSqlProfiler" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -103,6 +119,7 @@
         </div>
     </div>
     <? endif; ?>
+
     <div class="navbar navbar-fixed-bottom navbar-default">
         <div class="<?= $this->containerClass ?>">
             <div class="navbar-header">
@@ -119,13 +136,18 @@
                     <li><a title="СУБД: база данных"><span class="fa fa-database"></span> <?= $config->doctrine->schema ?></a></li>
                     <li><a title="СУБД: пользователь"><span class="glyphicon glyphicon-user"></span> <?= $config->doctrine->username ?></a></li>
                 </ul>
-                <? if ($config->doctrine->profile): ?>
                 <ul class="nav navbar-nav navbar-right">
-                    <li title="Открыть модельное окно с SQL-профайлером"><a href="#" data-toggle="modal" data-target="#DevelSqlProfiler">SQL–профайлер (<?= $numEvents ?>)</a></li>
+                    <? if ($config->debug->configViewer): ?>
+                    <li><a title="Показать используемую конфигурацию" href="#" data-toggle="modal" data-target="#DevelConfigViewer">Конфиг</a></li>
+                    <? endif; ?>
+
+                    <? if ($config->doctrine->profile): ?>
+                    <li><a title="Открыть модельное окно с SQL-профайлером" href="#" data-toggle="modal" data-target="#DevelSqlProfiler">SQL–профайлер (<?= $numEvents ?>)</a></li>
+                    <? endif; ?>
                 </ul>
-                <? endif; ?>
             </div>
         </div>
     </div>
+
 </div>
 <? endif; ?>
