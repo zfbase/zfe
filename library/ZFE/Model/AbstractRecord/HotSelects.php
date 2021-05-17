@@ -195,7 +195,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
      * @param string       $valueField     поле для значения
      * @param array|string $where          фильтр: ['status = ? or status = ?', 1, 2];
      * @param string       $order          сортировка
-     * @param string       $groupby        группирует списки по третьему полю (для формирования списка зависимого от другого, напр. список городов с группировкой по регионам)
+     * @param string       $groupBy        группирует списки по третьему полю (для формирования списка зависимого от другого, напр. список городов с группировкой по регионам)
      * @param bool|int     $filterByStatus фильтровать по статусу
      *
      * @return array
@@ -205,10 +205,10 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $valueField = null,
         $where = null,
         $order = 'VAL_FIELD ASC',
-        $groupby = null,
+        $groupBy = null,
         $filterByStatus = null
     ) {
-        $groupby = $groupby ? ", ${groupby} AS GROUP_FIELD" : '';
+        $groupBy = $groupBy ? ", ${groupBy} AS GROUP_FIELD" : '';
         if (null === $filterByStatus) {
             $filterByStatus = static::$_excludeByStatus;
             if (true === $filterByStatus) {
@@ -228,7 +228,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $model = new static();
         $class = $model->getTableName();
 
-        $query = "SELECT ${keyField} AS KEY_FIELD, ${valueField} AS VAL_FIELD" . ($groupby ? ", ${groupby} AS GROUP_FIELD" : '');
+        $query = "SELECT ${keyField} AS KEY_FIELD, ${valueField} AS VAL_FIELD" . ($groupBy ? ", ${groupBy} AS GROUP_FIELD" : '');
         $query .= ZFE_Query::isPgsql() ? " FROM \"${schema}\".\"${class}\" x" : " FROM `${schema}`.`${class}` x";
 
         $conds = [];
@@ -264,7 +264,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
         if ($rows && is_array($rows)) {
             foreach ($rows as $row) {
                 $row = array_change_key_case($row, CASE_UPPER);
-                if ($groupby) {
+                if ($groupBy) {
                     $map[$row['GROUP_FIELD']][$row['KEY_FIELD']] = $row['VAL_FIELD'];
                 } else {
                     $map[$row['KEY_FIELD']] = $row['VAL_FIELD'];
