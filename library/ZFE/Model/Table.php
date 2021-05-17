@@ -32,7 +32,7 @@ class ZFE_Model_Table extends Doctrine_Table
         }
 
         if (!isset($this->_formInfo[$columnName]) || !isset($this->_formInfo[$columnName]['type'])) {
-            $formConfig = Zend_Registry::get('config')->forms;
+            $formConfig = config('forms');
             $modelName = $this->getClassnameToReturn();
 
             if (in_array($columnName, $modelName::$booleanFields)) {
@@ -268,7 +268,7 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function getElementOptionsForColumn($columnName)
     {
-        $formConfig = Zend_Registry::get('config')->forms;
+        $formConfig = config('forms');
         $maxLength = $this->getElementMaxLengthForColumn($columnName);
 
         $options = [];

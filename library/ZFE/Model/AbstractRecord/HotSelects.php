@@ -219,7 +219,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $map = [];
         $params = [];
 
-        $schema = Zend_Registry::get('config')->doctrine->schema;
+        $schema = config('doctrine.schema');
 
         if (null === $valueField) {
             $valueField = static::$titleField;

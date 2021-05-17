@@ -26,14 +26,11 @@ class ZFE_Console_Command_ApplySchema extends ZFE_Console_Command_Abstract
      */
     public function execute(array $params = [])
     {
-        $config = Zend_Registry::get('config')->doctrine;
-        if (null === $config->get('rethrow_exceptions')) {
+        if (null === config('doctrine.rethrow_exceptions')) {
             throw new ZFE_Console_Exception('Параметр rethrow_exceptions не указан в doctrine.ini, запуск без него чреват нарушением порядка действий!');
         }
 
-        $cmd = ZFE_Console_CommandBroker::getInstance()
-            ->getCommand('doctrine')
-        ;
+        $cmd = ZFE_Console_CommandBroker::getInstance()->getCommand('doctrine');
 
         try {
             $cmd->execute(array_merge(['generate-migrations-diff'], $params));

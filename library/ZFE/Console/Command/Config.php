@@ -14,11 +14,12 @@ class ZFE_Console_Command_Config extends ZFE_Console_Command_Abstract
 
     public function execute(array $params = [])
     {
-        $config = Zend_Registry::get('config');
         if (!empty($params[0])) {
-            $section = $config->{$params[0]};
+            $section = config($params[0]);
             $config = new Zend_Config([], true);
             $config->{$params[0]} = $section;
+        } else {
+            $config = config();
         }
         $writer = new Zend_Config_Writer_Yaml(['config' => $config]);
         echo $writer->render();

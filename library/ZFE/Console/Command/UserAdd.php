@@ -28,7 +28,7 @@ class ZFE_Console_Command_UserAdd extends ZFE_Console_Command_Abstract
         }
 
         $login = array_shift($params);
-        $model = Zend_Registry::get('config')->userModel ?? 'Editors';
+        $model = config('userModel', 'Editors');
 
         if ($model::findOneBy('login', $login)) {
             echo "<error>Пользователь с таким логином уже существует.</error>\n";

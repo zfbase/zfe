@@ -95,7 +95,6 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
             return (string) $alias::find($value);
         }
 
-        $config = Zend_Registry::get('config');
         $columnParams = $table->getColumnDefinition(mb_strtolower($columnName));
 
         switch ($columnParams['type']) {
@@ -121,7 +120,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                     return '';
                 }
 
-                return date($config->format->datetime, strtotime($value));
+                return date(config('format.datetime', 'd.m.Y H:i'), strtotime($value));
             case 'time':
                 if (empty($value) || '00:00:00' === $value) {
                     return '';
@@ -133,7 +132,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                     return '';
                 }
 
-                return date($config->format->date, strtotime($value));
+                return date(config('format.date', 'd.m.Y'), strtotime($value));
             case 'string':
             default:
                 return $value;
@@ -150,14 +149,12 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
      */
     public function formatByFieldName($columnName, $value)
     {
-        $config = Zend_Registry::get('config');
-
         if ('date' === $columnName || 'date_' === mb_substr($columnName, 0, 5)) {
             if (empty($value) || '0000-00-00' === $value) {
                 return '';
             }
 
-            return date($config->format->date, strtotime($value));
+            return date(config('format.date', 'd.m.Y'), strtotime($value));
         }
 
         if ('datetime' === $columnName || 'datetime_' === mb_substr($columnName, 0, 9)) {
@@ -165,7 +162,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                 return '';
             }
 
-            return date($config->format->datetime, strtotime($value));
+            return date(config('format.datetime', 'd.m.Y H:i'), strtotime($value));
         }
 
         if ('time' === $columnName || 'time_' === mb_substr($columnName, 0, 5)) {
@@ -179,7 +176,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                 return '';
             }
 
-            return strftime($config->format->month, strtotime($value));
+            return strftime(config('format.month', '%B %Y'), strtotime($value));
         }
 
         return $this->formatByData($value);

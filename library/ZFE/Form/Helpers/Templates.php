@@ -355,9 +355,8 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addUploadElement($id, array $customOptions = [], $elementName = null)
     {
-        $config = Zend_Registry::get('config');
         $userId = Zend_Auth::getInstance()->getIdentity()['id'];
-        $path = realpath($config->forms->upload->tempPath) . '/' . $userId;
+        $path = realpath(config('forms.upload.tempPath')) . '/' . $userId;
         ZFE_File::makePath($path);
 
         $modelName = $this->_modelName;
@@ -405,9 +404,8 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addPictureUploadElement($id, array $customOptions = [], $elementName = null)
     {
-        $config = Zend_Registry::get('config');
         $userId = Zend_Auth::getInstance()->getIdentity()['id'];
-        $path = realpath($config->forms->upload->tempPath) . '/' . $userId;
+        $path = realpath(config('forms.upload.tempPath')) . '/' . $userId;
         ZFE_File::makePath($path);
 
         $modelName = $this->_modelName;
@@ -455,9 +453,8 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addAudioUploadElement($id, array $customOptions = [], $elementName = null)
     {
-        $config = Zend_Registry::get('config');
         $userId = Zend_Auth::getInstance()->getIdentity()['id'];
-        $path = realpath($config->forms->upload->tempPath) . '/' . $userId;
+        $path = realpath(config('forms.upload.tempPath')) . '/' . $userId;
         ZFE_File::makePath($path);
 
         $modelName = $this->_modelName;

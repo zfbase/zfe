@@ -53,12 +53,10 @@ class ZFE_Console_CommandBroker
      */
     protected function __construct()
     {
-        $config = Zend_Registry::get('config');
-
         // Настройка путей автозагрузчика
         $this->addPrefixPath('ZFE_Console', ZFE_PATH . '/Console');
 
-        $appPrefixPath = $config->console->prefixPath ?? ['Console' => APPLICATION_PATH . '/console'];
+        $appPrefixPath = config('console.prefixPath', ['Console' => APPLICATION_PATH . '/console']);
         foreach ($appPrefixPath as $namespace => $path) {
             if (is_readable($path)) {
                 $this->addPrefixPath($namespace, $path);
@@ -71,7 +69,7 @@ class ZFE_Console_CommandBroker
         }
 
         // Собираем команды из конфига
-        foreach ($config->console->commands ?? [] as $name => $command) {
+        foreach (config('console.commands', []) as $name => $command) {
             $this->registerCommand($command, !empty($name) && is_string($name) ? $name : null);
         }
     }

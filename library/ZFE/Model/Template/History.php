@@ -38,17 +38,17 @@ class ZFE_Model_Template_History extends Doctrine_Template
      */
     public function setUp()
     {
-        $config = Zend_Registry::get('config');
+        $userModel = config('userModel', 'Editors');
 
         if ($this->_table->hasColumn('editor_id')) {
-            $this->hasOne($config->userModel . ' as Editor', [
+            $this->hasOne($userModel . ' as Editor', [
                 'local' => 'editor_id',
                 'foreign' => 'id',
             ]);
         }
 
         if ($this->_table->hasColumn('creator_id')) {
-            $this->hasOne($config->userModel . ' as Creator', [
+            $this->hasOne($userModel . ' as Creator', [
                 'local' => 'creator_id',
                 'foreign' => 'id',
             ]);

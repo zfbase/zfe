@@ -36,8 +36,9 @@ class ZFE_View_Helper_Period extends Zend_View_Helper_Abstract
             $endDate = null;
         }
 
-        $config = Zend_Registry::get('config')->format;
-        $format = ($showTime) ? $config->datetime : $config->date;
+        $format = $showTime
+            ? config('format.datetime', 'd.m.Y H:i')
+            : config('format.date', 'd.m.Y');
 
         $result = '';
         if ($start) {

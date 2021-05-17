@@ -22,7 +22,7 @@ class ZFE_Console_Command_Migrate extends ZFE_Console_Command_Abstract
      */
     public function execute(array $params = [])
     {
-        $migration = new Doctrine_Migration(Zend_Registry::get('config')->doctrine->migrations_path);
+        $migration = new Doctrine_Migration(config('doctrine.migrations_path'));
         try {
             $migration->migrate($params[0] ?? null);
         } catch (Doctrine_Exception $e) {

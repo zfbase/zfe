@@ -59,12 +59,12 @@ class ZFE_Tasks_Manager
      */
     protected function __construct()
     {
-        $config = Zend_Registry::get('config');
-        if (empty($config->tasks->performers) || !is_iterable($config->tasks->performers)) {
+        $performers = config('tasks.performers');
+        if (empty($performers) || !is_iterable($performers)) {
             throw new ZFE_Tasks_Exception('В конфигурации не перечислены исполнители задач: tasks.performers');
         }
 
-        foreach ($config->tasks->performers as $performerClassName) {
+        foreach ($performers as $performerClassName) {
             if (is_a($performerClassName, ZFE_Tasks_Performer::class, true)) {
                 $performerCode = $performerClassName::getCode();
                 if (array_key_exists($performerCode, $this->performers)) {

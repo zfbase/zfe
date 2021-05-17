@@ -14,9 +14,8 @@ class ZFE_Controller_Default_Ckeditor extends Controller_Abstract
      */
     public function uploadAction()
     {
-        $config = Zend_Registry::get('config');
-        $baseDir = realpath($config->forms->upload->ckeditor->path);
-        $baseUrl = $config->forms->upload->ckeditor->webPath;
+        $baseDir = realpath(config('forms.upload.ckeditor.path'));
+        $baseUrl = config('forms.upload.ckeditor.webPath');
 
         $adapter = new Zend_File_Transfer_Adapter_Http();
 

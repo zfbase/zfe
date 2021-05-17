@@ -61,22 +61,22 @@ trait ZFE_Form_Helpers
         $this->ZfeFilesInitializePrefixes();
 
 
-        $config = Zend_Registry::get('config');
+        $appNameSpace = config('appnamespace');
 
         $this->addPrefixPath(
-            $config->appnamespace . '_Form_Element',
+            $appNameSpace . '_Form_Element',
             APPLICATION_PATH . '/forms/Element',
             'element'
         );
 
         $this->addElementPrefixPath(
-            $config->appnamespace . '_Form_Decorator',
+            $appNameSpace . '_Form_Decorator',
             APPLICATION_PATH . '/forms/Decorator',
             'decorator'
         );
 
         $this->addElementPrefixPath(
-            $config->appnamespace . '_Validate',
+            $appNameSpace . '_Validate',
             APPLICATION_PATH . '/Validate/',
             'validate'
         );

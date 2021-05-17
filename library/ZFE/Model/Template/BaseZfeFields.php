@@ -112,10 +112,10 @@ class ZFE_Model_Template_BaseZfeFields extends Doctrine_Template
 
     public function setUp()
     {
-        $config = Zend_Registry::get('config');
+        $userModel = config('userModel', 'Editors');
 
         if ($this->_options['creator_id'] && !$this->_options['creator_id']['disabled']) {
-            $this->hasOne($config->userModel . ' as Creator', [
+            $this->hasOne($userModel . ' as Creator', [
                 'local' => $this->_options['creator_id']['name'],
                 'foreign' => 'id',
                 'onUpdate' => 'cascade',
@@ -124,7 +124,7 @@ class ZFE_Model_Template_BaseZfeFields extends Doctrine_Template
         }
 
         if ($this->_options['editor_id'] && !$this->_options['editor_id']['disabled']) {
-            $this->hasOne($config->userModel . ' as Editor', [
+            $this->hasOne($userModel . ' as Editor', [
                 'local' => $this->_options['editor_id']['name'],
                 'foreign' => 'id',
                 'onUpdate' => 'cascade',

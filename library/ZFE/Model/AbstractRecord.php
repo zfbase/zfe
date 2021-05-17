@@ -372,9 +372,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public function canUndeleted()
     {
-        $config = Zend_Registry::get('config');
-
-        return $config->saveHistory && static::$saveHistory &&
+        return config('saveHistory') && static::$saveHistory &&
             $this->_table->hasColumn('deleted');
     }
 

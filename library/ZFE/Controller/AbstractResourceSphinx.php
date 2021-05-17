@@ -93,12 +93,11 @@ abstract class ZFE_Controller_AbstractResourceSphinx extends Controller_Abstract
      */
     protected function _getSearchQuerySphinx()
     {
-        $config = Zend_Registry::get('config');
         $modelName = static::$_modelName;
         $q = ZFE_Sphinx::query()
             ->select(static::$_sphinxSelect)
             ->from($modelName::getSphinxIndexName())
-            ->limit($config->view->perpage)
+            ->limit(config('view.perpage'))
         ;
 
         $allFullTextColsText = $this->getParam('term');

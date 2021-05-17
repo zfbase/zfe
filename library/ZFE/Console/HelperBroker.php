@@ -46,12 +46,10 @@ class ZFE_Console_HelperBroker
      */
     protected function __construct()
     {
-        $config = Zend_Registry::get('config');
-
         // Настройка путей автозагрузчика
         $this->addPrefixPath('ZFE_Console', ZFE_PATH . '/console');
 
-        $appPrefixPath = $config->console->prefixPath ?? ['Application_Console' => APPLICATION_PATH . '/Console'];
+        $appPrefixPath = config('console.prefixPath', ['Application_Console' => APPLICATION_PATH . '/Console']);
         foreach ($appPrefixPath as $namespace => $path) {
             $this->addPrefixPath($namespace, $path);
         }

@@ -33,14 +33,8 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
     {
         parent::preDispatch();
 
-        $config = Zend_Registry::get('config');
-
-        if ($config->debug->develToolbar) {
-            $this->view->develToolbar = $config->debug->develToolbar;
-        }
-
+        $this->view->develToolbar = config('debug.develToolbar');
         $this->view->containerClass = static::$_containerClass;
-
         $this->view->controllerName = $this->_request->getControllerName();
         $this->view->actionName = $this->_request->getActionName();
     }

@@ -20,10 +20,8 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
      */
     public function direct($path, $url, $name)
     {
-        /** @var Zend_Config $config */
-        $config = Zend_Registry::get('config');
-
-        if (!$config->webserver) {
+        $webserver = config('webserver');
+        if (!$webserver) {
             throw new Zend_Controller_Action_Exception('В конфигурации не указан используемый веб-сервер (параметр webserver)');
         }
 
@@ -32,8 +30,8 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
             'apache' => 'DownloadApache',
             'php' => 'DownloadPhp',
         ];
-        if (array_key_exists($config->webserver, $helpersMap)) {
-            Zend_Controller_Action_HelperBroker::getStaticHelper($helpersMap[$config->webserver])
+        if (array_key_exists($webserver, $helpersMap)) {
+            Zend_Controller_Action_HelperBroker::getStaticHelper($helpersMap[$webserver])
                 ->direct($path, $url, $name)
             ;
         } else {
