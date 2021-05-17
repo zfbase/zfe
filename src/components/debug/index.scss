@@ -1,3 +1,12 @@
+.zfe-dump .glyphicon {
+  cursor: pointer;
+  color: #777;
+
+  &:hover {
+    color: #222;
+  }
+}
+
 #DevelClearFix {
   height: 30px;
   visibility: hidden;

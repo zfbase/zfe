@@ -7,12 +7,12 @@ const initDebug = () => {
 
     html = html.replace(/[[{]\n/g, (s) => {
       let str = s;
-      str = str.replace(/^\[\n/, '[ <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;<span class="hide">\n');
-      str = str.replace(/^\{\n/, '{ <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;<span class="hide">\n');
+      str = str.replace(/^\[\n/, '[ <span class="glyphicon glyphicon-plus-sign"></span> <span class="hide">\n');
+      str = str.replace(/^\{\n/, '{ <span class="glyphicon glyphicon-plus-sign"></span> <span class="hide">\n');
       return str;
     });
 
-    html = html.replace(/\n\s*[}]]/g, (s) => {
+    html = html.replace(/\n\s*[}\]]/g, (s) => {
       let str = s;
       str = str.replace(/\]$/, '</span>]');
       str = str.replace(/\}$/, '</span>}');
