@@ -198,10 +198,9 @@ class ZFE_Utilities
             return '';
         }
 
-        $config = Zend_Registry::get('config');
         $format = $time
-            ? $config->format->datetime
-            : $config->format->date;
+            ? config('format.datetime', 'd.m.Y H:i')
+            : config('format.date', 'd.m.Y');
 
         return date($format, $timestamp);
     }
@@ -301,8 +300,7 @@ class ZFE_Utilities
      */
     public static function popupException(Throwable $ex)
     {
-        $config = Zend_Registry::get('config');
-        if ($config->debug->popupExceptions ?? false) {
+        if (config('debug.popupExceptions')) {
             throw $ex;
         }
     }

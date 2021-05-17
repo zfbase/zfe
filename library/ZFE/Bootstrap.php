@@ -84,8 +84,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'namespace' => '',
         ]);
 
-        $config = Zend_Registry::get('config');
-        $loader->addResourceTypes($config->autoloaderResourceTypes->toArray());
+        $loader->addResourceTypes(config('autoloaderResourceTypes')->toArray());
     }
 
     /**
@@ -96,17 +95,16 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initDoctrine()
     {
         $this->bootstrap('Config');
-        $config = Zend_Registry::get('config');
-        $dbConfig = $config->doctrine;
 
-        $host = $dbConfig->host;
-        $port = $dbConfig->port;
-        $schema = $dbConfig->schema;
-        $username = $dbConfig->username;
-        $password = $dbConfig->password;
-        $charset = $dbConfig->charset ?? 'utf8';
-        $persistent = $dbConfig->persistent ? 'true' : 'false';
-        $driver = $dbConfig->driver ?? 'mysql';
+        $host = config('doctrine.host', '127.0.0.1');
+        $port = config('doctrine.port', 3306);
+        $schema = config('doctrine.schema');
+        $username = config('doctrine.username');
+        $password = config('doctrine.password');
+        $charset = config('doctrine.charset', 'utf8');
+        $persistent = config('doctrine.persistent') ? 'true' : 'false';
+        $driver = config('doctrine.driver', 'mysql');
+        $modelsDir = config('doctrine.models_path', APPLICATION_PATH . '/models');
 
         $manager = Doctrine_Manager::getInstance();
         $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
@@ -116,7 +114,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
 
         spl_autoload_register(['Doctrine_Core', 'modelsAutoload']);
-        Doctrine_Core::loadModels($dbConfig->models_path);
+        Doctrine_Core::loadModels($modelsDir);
 
         $dsn = "{$driver}:host={$host};port={$port};dbname={$schema}";
         if ('mysql' === $driver) {
@@ -133,7 +131,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             try {
                 $conn->exec("SET NAMES {$charset};");
             } catch (Doctrine_Connection_Exception $ex) {
-                if ($config->noticeDetails) {
+                if (config('noticeDetails', false)) {
                     ZFE_Debug::dump([
                         'host' => $host,
                         'port' => $port,
@@ -149,7 +147,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
 
-        if ($dbConfig->profile) {
+        if (config('doctrine.profile', false)) {
             $conn->setListener(new Doctrine_Connection_Profiler());
         }
 
@@ -175,7 +173,6 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _makeAuthData()
     {
-        $config = Zend_Registry::get('config');
         $auth = Zend_Auth::getInstance();
 
         $user = null;
@@ -183,8 +180,8 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $canSwitchRoles = false;
 
         if (PHP_SAPI === 'cli') {
-            $cliUserId = $config->cli->userId ?? null;
-            $cliUserLogin = $config->cli->userLogin ?? null;
+            $cliUserId = config('cli.userId');
+            $cliUserLogin = config('cli.userLogin', 'cli');
 
             // Специальный режим для работы до создания таблицы editors
             if ($cliUserId == -1) {
@@ -219,7 +216,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         } elseif ($auth->hasIdentity()) {
             $identity = $auth->getIdentity();
 
-            $userModel = $config->userModel;
+            $userModel = config('userModel', 'Editors');
 
             if ($obj = $userModel::findForAuth($identity['id'])) {
                 $user = $obj;
@@ -238,7 +235,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'isAuthorized' => (bool) $user,
             'displayName' => $user ? $user->getShortName() : 'Гость',
             'canSwitchRoles' => $canSwitchRoles,
-            'noticeDetails' => $config->noticeDetails,
+            'noticeDetails' => config('noticeDetails', false),
         ];
     }
 
@@ -263,8 +260,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('Config');
         $this->bootstrap('FrontController');
 
-        $aclConfig = Zend_Registry::get('config')->acl;
-        $acl = new ZFE_Acl($aclConfig);
+        $acl = new ZFE_Acl(config('acl'));
         $aclPlugin = new ZFE_Plugin_Acl($acl);
         $front = Zend_Controller_Front::getInstance();
         $front->registerPlugin($aclPlugin);
@@ -281,7 +277,6 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $zfeResourcesPath = realpath(ZFE_PATH . '/../../resources');
 
-        $config = Zend_Registry::get('config');
         $layout = Zend_Layout::startMvc();
         $layout->setViewBasePath($zfeResourcesPath . ':/views');
 
@@ -299,10 +294,9 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->addHelperPath(APPLICATION_PATH . '/views/helpers', 'Helper_')
         ;
 
-        $brand = is_string($config->brand) ? $config->brand : $config->brand->short;
-        $titleSeparator = $config->view->titleSeparator ?? '/';
-        $view->headTitle($brand)
-            ->setSeparator($titleSeparator)
+        $brand = config('brand');
+        $view->headTitle(is_string($brand) ? $brand : $brand->short)
+            ->setSeparator(config('view.titleSeparator', '/'))
             ->setDefaultAttachOrder(Zend_View_Helper_Placeholder_Container_Abstract::PREPEND)
         ;
 

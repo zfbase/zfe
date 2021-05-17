@@ -57,7 +57,7 @@ class ZFE_Paginator
     protected function __construct()
     {
         $this->_request = Zend_Controller_Front::getInstance()->getRequest();
-        $this->_itemsPerPage = Zend_Registry::get('config')->view->perpage;
+        $this->_itemsPerPage = config('view.perpage');
     }
 
     /**

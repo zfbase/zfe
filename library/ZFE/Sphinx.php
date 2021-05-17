@@ -12,28 +12,14 @@ use Foolz\SphinxQL\SphinxQL;
 class ZFE_Sphinx
 {
     protected static $_connection = null;
-    protected static $_config = null;
-
-    /**
-     * @return Zend_Config
-     */
-    public static function config()
-    {
-        if (!self::$_config) {
-            self::$_config = Zend_Registry::get('config')->sphinx;
-        }
-        return self::$_config;
-    }
 
     /**
      * @return ConnectionInterface
      */
     public static function newConnection()
     {
-        $config = self::config();
-        $params = $config->conn->toArray();
         $conn = new Connection();
-        $conn->setParams($params);
+        $conn->setParams(config('sphinx.conn')->toArray());
         return $conn;
     }
 
@@ -137,15 +123,14 @@ class ZFE_Sphinx
      */
     public static function getRtIndexSchema($indexName)
     {
-        $config = static::config();
-        $config_path = realpath($config->config);
-        if (is_array($config_path)) {
+        $config = config('sphinx.config');
+        if (is_array($config)) {
             $plain_config = '';
-            foreach ($config_path as $path) {
-                $plain_config .= file_get_contents($config_path);
+            foreach ($config as $path) {
+                $plain_config .= file_get_contents($path);
             }
         } else {
-            $plain_config = file_get_contents($config_path);
+            $plain_config = file_get_contents(realpath($config));
         }
 
         $tokens = \LTDBeget\sphinx\Tokenizer::tokenize($plain_config);
@@ -162,7 +147,7 @@ class ZFE_Sphinx
             }
         }
 
-        throw new ZFE_Exception("Индекс {$indexName} не найден в конфигурации {$config_path}.");
+        throw new ZFE_Exception("Индекс {$indexName} не найден в конфигурации {$config}.");
     }
 
     /**

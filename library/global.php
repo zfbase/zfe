@@ -36,15 +36,22 @@ function env(string $name, $default = null)
  *
  * @param null|mixed $default
  */
-function config(string $name, $default = null)
+function config(string $name = null, $default = null)
 {
+    /** @var Zend_Config $config */
+    $config = Zend_Registry::get('config');
+
+    if ($name === null) {
+        return $config;
+    }
+
     $parts = explode('.', $name);
-    $config = Zend_Registry::get('config');  /** @var Zend_Config $config */
     foreach ($parts as $part) {
         $config = $config->get($part);
         if ($config === null) {
             return $default;
         }
     }
+
     return $config;
 }

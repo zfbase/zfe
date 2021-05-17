@@ -709,7 +709,7 @@ class ZFE_File
      */
     public static function fixPath($basePath, $subPath = null)
     {
-        $uploadConfig = Zend_Registry::get('config')->forms->upload;
+        $uploadConfig = config('forms.upload');
 
         $workPath = $basePath;
         $pathArr = explode('/', $subPath);
