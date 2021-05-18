@@ -111,7 +111,7 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // $manager->setAttribute(Doctrine_Core::ATTR_SEQNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');  // В миграциях нужно что бы не было указано схемы
         // $manager->setAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT, ('pgsql' === $driver) ? '%s' : $schema . '.%s');
         $manager->setAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES, true);
-        $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, 'ZFE_Query');
+        $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CLASS, ZFE_Query::class);
 
         spl_autoload_register(['Doctrine_Core', 'modelsAutoload']);
         Doctrine_Core::loadModels($modelsDir);
@@ -124,8 +124,8 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $conn = $manager->connection([$dsn, $username, $password], 'dbh');
         $conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
         $conn->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
-        $conn->setAttribute(Doctrine_Core::ATTR_TABLE_CLASS, 'ZFE_Model_Table');
-        $conn->setAttribute(Doctrine_Core::ATTR_COLLECTION_CLASS, 'ZFE_Model_Collection');
+        $conn->setAttribute(Doctrine_Core::ATTR_TABLE_CLASS, ZFE_Model_Table::class);
+        $conn->setAttribute(Doctrine_Core::ATTR_COLLECTION_CLASS, ZFE_Model_Collection::class);
 
         if ('mysql' === $driver) {
             try {
