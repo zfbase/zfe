@@ -54,19 +54,21 @@ trait ZFE_Form_Helpers_Generator
 
         if (isset($this->_namesMethodsMap[$columnName])) {
             $method = $this->_namesMethodsMap[$columnName];
-            $this->{$method}($columnName, $customOptions, $elementName);
-        } elseif (isset($this->_typesMethodsMap[$elementType])) {
-            $method = $this->_typesMethodsMap[$elementType];
-            $this->{$method}($columnName, $customOptions, $elementName);
-        } else {
-            return $this->addElement(
-                $table->getElementTypeForColumn($columnName),
-                $elementName ?: $columnName,
-                array_replace_recursive(
-                    $table->getElementOptionsForColumn($columnName),
-                    $customOptions
-                )
-            );
+            return $this->{$method}($columnName, $customOptions, $elementName);
         }
+        
+        if (isset($this->_typesMethodsMap[$elementType])) {
+            $method = $this->_typesMethodsMap[$elementType];
+            return $this->{$method}($columnName, $customOptions, $elementName);
+        }
+
+        return $this->addElement(
+            $table->getElementTypeForColumn($columnName),
+            $elementName ?: $columnName,
+            array_replace_recursive(
+                $table->getElementOptionsForColumn($columnName),
+                $customOptions
+            )
+        );
     }
 }
