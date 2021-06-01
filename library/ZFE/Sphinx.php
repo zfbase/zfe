@@ -14,6 +14,17 @@ class ZFE_Sphinx
     protected static $_connection = null;
 
     /**
+     * @deprecated
+     *
+     * @return Zend_Config
+     */
+    public static function config()
+    {
+        trigger_error('Метод ZFE_Sphinx::config() устарел. Используйте современное решение с config(). ', E_USER_DEPRECATED);
+        return config('sphinx');
+    }
+
+    /**
      * @return ConnectionInterface
      */
     public static function newConnection()
