@@ -180,6 +180,24 @@ class ZFE_Utilities
     }
 
     /**
+     * Форматировать продолжительность в секундах в короткой форме (h:mm:ss).
+     *
+     * @param int $seconds
+     *
+     * @return string
+     */
+    public static function formatShortDuration($number)
+    {
+        $hours = floor($number / 3600);
+        $minutes = floor(($number % 3600) / 60);
+        $seconds = $number % 60;
+
+        return ($hours > 0 ? "{$hours}:" : '')
+            . ($hours > 0 && $minutes < 10 ? '0' : '') . "{$minutes}:"
+            . ($seconds < 10 ? '0' : '') . $seconds;
+    }
+
+    /**
      * Форматировать дату (и время).
      *
      * @param string $dateTime
