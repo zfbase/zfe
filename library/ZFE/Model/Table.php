@@ -330,17 +330,16 @@ class ZFE_Model_Table extends Doctrine_Table
             case 'select':
                 $modelName = $this->getClassnameToReturn();
                 if ($modelName::isDictionaryField($columnName)) {
-                    $list = $modelName::getDictionary($columnName);
+                    $options['multiOptions'] = $modelName::getDictionary($columnName);
                 } elseif ($this->isRelationColumn($columnName)) {
                     $relClass = $this->getModelNameForColumn($columnName);
-                    $list = $relClass::getKeyValueList();
+                    $options['multiOptions'] = $relClass::getKeyValueList();
                 } else {
                     throw new ZFE_Model_Exception('Невозможно получить допустимые значения для столбца "' . $columnName . '" модели "' . $modelName . '"');
                 }
                 if (!$options['required']) {
-                    $list = [null => ''] + $list;
+                    $options['emptyValueLabel'] = '';
                 }
-                $options['multiOptions'] = $list;
                 break;
             case 'autocomplete':
                 $modelName = $this->getClassnameToReturn();
