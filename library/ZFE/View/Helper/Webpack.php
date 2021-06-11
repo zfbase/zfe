@@ -11,13 +11,14 @@ class ZFE_View_Helper_Webpack
     protected static function getManifest()
     {
         if (null === self::$manifest) {
-            $filename = implode(DIRECTORY_SEPARATOR, [
+            $pathParts = array_diff([
                 APPLICATION_PATH,
                 '..',
                 'public',
-                'build',
+                config('manifestDir', 'build'),
                 'manifest.json',
-            ]);
+            ], [null, '']);
+            $filename = implode(DIRECTORY_SEPARATOR, $pathParts);
             $contents = @file_get_contents($filename);
             self::$manifest = json_decode($contents, true) ?: [];
         }
@@ -32,6 +33,7 @@ class ZFE_View_Helper_Webpack
     public function webpack($filename)
     {
         $manifest = self::getManifest();
-        return '/build/' . ($manifest[$filename] ?? $filename);
+        $directory = config('manifestDir', 'build');
+        return '/' . (empty($directory) ? '' : $directory . '/') . ($manifest[$filename] ?? $filename);
     }
 }
