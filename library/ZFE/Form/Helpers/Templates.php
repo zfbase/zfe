@@ -23,6 +23,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addTextElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -43,6 +44,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addTextareaElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $localOptions = [
@@ -86,6 +88,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addPasswordElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $localOptions = [
             'label' => $table->getElementLabelForColumn($id),
@@ -111,6 +114,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addNumberElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -129,6 +133,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addEmailElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $localOptions = [
@@ -152,6 +157,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addUrlElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $localOptions = [
@@ -176,6 +182,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addTelElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -194,6 +201,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addDateTimeElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -212,6 +220,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addDateElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -230,6 +239,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addTimeElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -248,6 +258,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addMonthElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $localOptions = [
@@ -271,6 +282,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addWeekElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $localOptions = [
@@ -294,6 +306,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addColorElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $localOptions = [
@@ -317,6 +330,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addRangeElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -335,6 +349,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addDurationElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -359,10 +374,8 @@ trait ZFE_Form_Helpers_Templates
         $path = realpath(config('forms.upload.tempPath')) . '/' . $userId;
         ZFE_File::makePath($path);
 
-        $modelName = $this->_modelName;
-
         $configOptions = [
-            'label' => $modelName::getFieldName($id, 'Загрузить файл'),
+            'label' => ($this->_modelName)::getFieldName($id, 'Загрузить файл'),
             'destination' => $path,
         ];
         $options = array_replace_recursive($configOptions, $customOptions);
@@ -381,10 +394,8 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addMultiUploadElement($id, array $customOptions = [], $elementName = null)
     {
-        $modelName = $this->_modelName;
-
         $configOptions = [
-            'label' => $modelName::getFieldName($id, 'Загрузить файлы'),
+            'label' => ($this->_modelName)::getFieldName($id, 'Загрузить файлы'),
             'multiple' => 'multiple',
             'isArray' => true,
         ];
@@ -408,10 +419,8 @@ trait ZFE_Form_Helpers_Templates
         $path = realpath(config('forms.upload.tempPath')) . '/' . $userId;
         ZFE_File::makePath($path);
 
-        $modelName = $this->_modelName;
-
         $configOptions = [
-            'label' => $modelName::getFieldName($id, 'Загрузить изображение'),
+            'label' => ($this->_modelName)::getFieldName($id, 'Загрузить изображение'),
             'destination' => $path,
         ];
         $options = array_replace_recursive($configOptions, $customOptions);
@@ -430,10 +439,8 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addMultiPictureUploadElement($id, array $customOptions = [], $elementName = null)
     {
-        $modelName = $this->_modelName;
-
         $configOptions = [
-            'label' => $modelName::getFieldName($id, 'Загрузить изображения'),
+            'label' => ($this->_modelName)::getFieldName($id, 'Загрузить изображения'),
             'multiple' => 'multiple',
             'isArray' => true,
         ];
@@ -457,10 +464,8 @@ trait ZFE_Form_Helpers_Templates
         $path = realpath(config('forms.upload.tempPath')) . '/' . $userId;
         ZFE_File::makePath($path);
 
-        $modelName = $this->_modelName;
-
         $configOptions = [
-            'label' => $modelName::getFieldName($id, 'Загрузить аудио файл'),
+            'label' => ($this->_modelName)::getFieldName($id, 'Загрузить аудио файл'),
             'destination' => $path,
         ];
         $options = array_replace_recursive($configOptions, $customOptions);
@@ -479,10 +484,8 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addMultiAudioUploadElement($id, array $customOptions = [], $elementName = null)
     {
-        $modelName = $this->_modelName;
-
         $configOptions = [
-            'label' => $modelName::getFieldName($id, 'Загрузить аудио файлы'),
+            'label' => ($this->_modelName)::getFieldName($id, 'Загрузить аудио файлы'),
             'multiple' => 'multiple',
             'isArray' => true,
         ];
@@ -502,6 +505,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addSelectElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -531,6 +535,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addRadioElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -549,9 +554,8 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addCheckboxElement($id, array $customOptions = [], $elementName = null)
     {
-        $modelName = $this->_modelName;
         $localOptions = [
-            'label' => $modelName::getFieldName($id),
+            'label' => ($this->_modelName)::getFieldName($id),
         ];
         $options = array_replace_recursive($localOptions, $customOptions);
 
@@ -569,8 +573,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addAutocompleteElement($id, array $customOptions = [], $elementName = null)
     {
-        $modelName = $this->_modelName;
-        $acOptions = $modelName::getAutocompleteOptions($id);
+        $acOptions = ($this->_modelName)::getAutocompleteOptions($id);
         $options = array_replace_recursive($acOptions, $customOptions);
 
         return $this->addElement('autocomplete', $elementName ?: $id, $options);
@@ -587,8 +590,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addMultiAutocompleteElement($id, array $customOptions = [], $elementName = null)
     {
-        $modelName = $this->_modelName;
-        $acOptions = $modelName::getMultiAutocompleteOptions($id);
+        $acOptions = ($this->_modelName)::getMultiAutocompleteOptions($id);
         $options = array_replace_recursive($acOptions, $customOptions);
 
         return $this->addElement('multiAutocomplete', $elementName ?: $id, $options);
@@ -605,6 +607,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addStaticElement($id, array $customOptions = [], $elementName = null)
     {
+        /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
@@ -623,8 +626,7 @@ trait ZFE_Form_Helpers_Templates
      */
     public function addMultiCheckboxElement($id, array $customOptions = [], $elementName = null)
     {
-        $modelName = $this->_modelName;
-        $mcsOptions = $modelName::getMultiCheckOrSelectOptions($id);
+        $mcsOptions = ($this->_modelName)::getMultiCheckOrSelectOptions($id);
         $options = array_replace_recursive($mcsOptions, $customOptions);
 
         return $this->addElement('multiCheckbox', $elementName ?: $id, $options);
