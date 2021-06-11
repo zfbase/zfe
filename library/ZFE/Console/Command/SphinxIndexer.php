@@ -120,7 +120,7 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
      */
     protected function _getAllModels()
     {
-        $indexes = array_keys(ZFE_Sphinx::config()->index->toArray());
+        $indexes = array_keys(config('sphinx.index', [])->toArray());
         return array_diff($indexes, ['Common']); // Исключаем объединенный индекс
     }
 
