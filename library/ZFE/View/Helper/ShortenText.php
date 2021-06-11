@@ -13,7 +13,7 @@ class ZFE_View_Helper_ShortenText extends Zend_View_Helper_Abstract
      * Укоротить текст до определенного размера.
      *
      * @param string $text    исходный текст
-     * @param string $max_len максимальная длина
+     * @param int    $max_len максимальная длина
      *
      * @return string сокращенный текст
      */

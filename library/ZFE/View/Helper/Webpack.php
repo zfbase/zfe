@@ -24,6 +24,11 @@ class ZFE_View_Helper_Webpack
         return self::$manifest;
     }
 
+    /**
+     * Получить путь до манифеста.
+     *
+     * @param string $filename
+     */
     public function webpack($filename)
     {
         $manifest = self::getManifest();

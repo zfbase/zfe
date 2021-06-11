@@ -6,13 +6,15 @@
 
 /**
  * Задать заголовок страницы.
+ * 
+ * @property ZFE_View $view
  */
 class ZFE_View_Helper_Title extends Zend_View_Helper_Abstract
 {
     /**
      * Задать заголовок страницы.
      *
-     * @param mixed $title
+     * @param string $title
      *
      * @return string
      */

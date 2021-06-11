@@ -855,6 +855,14 @@ class ZFE_File
         return $matrix[$ext] ?? 'fa fa-file-o';
     }
 
+    /**
+     * Привести чисто байт к удобно читаемому размеру (в КБ/МБ/...).
+     *
+     * @param integer $bytes
+     * @param integer $precision
+     *
+     * @return string
+     */
     public static function humanFileSize($bytes, $precision = 2)
     {
         $base = log($bytes, 1024);
