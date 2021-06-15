@@ -51,17 +51,7 @@ class ZFE_Searcher_Sphinx extends ZFE_Searcher_Abstract
                 $sphinxQuery->offset($resultNumber - 1);
                 $sphinxQuery->limit(1);
                 $item = ZFE_Sphinx::fetchOne($sphinxQuery, $this->_modelName);
-
-                switch ($targetAction) {
-                    case 'edit':
-                        $baseUrl = $item->getEditUrl();
-                    break;
-                    case 'view':
-                        $baseUrl = $item->getViewUrl();
-                    break;
-                    default:
-                        $baseUrl = $item->getUrl();
-                }
+                $baseUrl = $this->getBaseUrl($item, $targetAction);
                 $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
                 $redirector->setGotoUrl($baseUrl . '?h=' . $revertHash . '&rn=' . $resultNumber);
             }

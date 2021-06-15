@@ -66,18 +66,7 @@ class ZFE_Searcher_Doctrine extends ZFE_Searcher_Abstract
         if (!empty($resultNumber) && !empty($revertHash)) {
             $query->offset($resultNumber - 1);
             $query->limit(1);
-            $item = $query->fetchOne();
-
-            switch ($targetAction) {
-                case 'edit':
-                    $baseUrl = $item->getEditUrl();
-                break;
-                case 'view':
-                    $baseUrl = $item->getViewUrl();
-                break;
-                default:
-                    $baseUrl = $item->getUrl();
-            }
+            $baseUrl = $this->getBaseUrl($query->fetchOne(), $targetAction);
             $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
             $redirector->setGotoUrl($baseUrl . '?h=' . $revertHash . '&rn=' . $resultNumber);
         }

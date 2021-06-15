@@ -104,6 +104,23 @@ abstract class ZFE_Searcher_Abstract implements ZFE_Searcher_Interface
     }
 
     /**
+     * Получить базовый путь для перехода к соседним результатам поиска.
+     *
+     * @param ZFE_Model_AbstractRecord $item
+     * @param string                   $action
+     *
+     * @return string
+     */
+    protected function getBaseUrl($item, $action = null)
+    {
+        if (is_string($action)) {
+            $controller = ($this->_modelName)::getControllerName();
+            return "/{$controller}/{$action}/id/{$item->id}";
+        }
+        return $item->getUrl();
+    }
+
+    /**
      * Вернуть число примененных фильтров.
      *
      * @return int
