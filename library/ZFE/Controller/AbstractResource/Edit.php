@@ -73,10 +73,9 @@ trait ZFE_Controller_AbstractResource_Edit
                             );
 
                             if (false !== $redirectUrl) {
-                                if (null === $redirectUrl) {
-                                    $redirectUrl = $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?');
-                                }
-                                $this->redirect($redirectUrl);
+                                $this->redirect((null === $redirectUrl)
+                                    ? $item->getEditUrl() . $this->view->hopsHistory()->getSideHash('?')
+                                    : sprintf($redirectUrl, $item->id));
                             } else {
                                 return true;
                             }
