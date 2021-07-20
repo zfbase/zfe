@@ -38,6 +38,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      * * int     $number    – Число
      * * ?string $class     – Класс (по умолчанию – `label-default`)
      * * ?string $baseClass – Базовый класс (по умолчанию – `label`)
+     * * ?string $id        – HTML id
      * * ?string $tag       - HTML тег
      * * ?array  $attr      – HTML атрибуты
      *
@@ -316,6 +317,9 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         $attrs = array_merge([
             'class' => ($options['baseClass'] ?? 'label') . ' ' . ($options['class'] ?? 'label-default'),
         ], ($options['attr'] ?? []));
+        if (!empty($options['id'])) {
+            $attrs['id'] = $options['id'];
+        }
         return $this->view->tag($tag, $attrs, $text);
     }
 
