@@ -4,7 +4,7 @@
  * ZFE – платформа для построения редакторских интерфейсов.
  */
 
-use Foolz\SphinxQL\Connection;
+use Foolz\SphinxQL\Drivers\Pdo\Connection;
 use Foolz\SphinxQL\Drivers\ConnectionInterface;
 use Foolz\SphinxQL\Drivers\ResultSetInterface;
 use Foolz\SphinxQL\SphinxQL;
@@ -52,7 +52,7 @@ class ZFE_Sphinx
      */
     public static function query(ConnectionInterface $connection = null)
     {
-        return SphinxQL::create($connection ?: self::connection());
+        return new SphinxQL($connection ?: self::connection());
     }
 
     /**
