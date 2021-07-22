@@ -59,7 +59,14 @@ if ($traitString) {
 }
 
 while (true) {
-    $tasks = $manager->findAllToDo($partSize, $performersCode, $traitNo, $traitTotal);
+    try {
+        $tasks = $manager->findAllToDo($partSize, $performersCode, $traitNo, $traitTotal);
+    } catch(Doctrine_Connection_Exception $e) {
+        $logger->log($e->getMessage(), Zend_Log::ERR);
+        sleep(30);
+        continue;
+    }
+
     $managed = $manager->manage($tasks, $logger);
 
     if ($tasks->count() < $partSize) {
