@@ -186,38 +186,17 @@ class ZFE_Model_Table extends Doctrine_Table
                 case 'number':
                     if ('integer' === $this->_columns[$columnName]['type']) {
                         $validators[] = ['Digits'];
-
-                        // К сожалению, Doctrine не хранит настоящую длину для целых чисел
-                        if ($this->isElementPositiveForColumn($columnName)) {
-                            $validators[] = ['GreaterThan', false, [
-                                'min' => 0,
-                                'inclusive' => true,
-                            ]];
-                        }
                     } else {
                         // Стандартный хак: используем фиксированную локаль для взаимодействия
                         // с HTML5 элементом number, передающем значения в фиксированном формате
                         $validators[] = ['Float', false, ['locale' => 'en_US']];
-
-                        if (isset($this->_columns[$columnName]['scale'])) {
-                            $max = str_repeat('9', $maxLength - $this->_columns[$columnName]['scale']) .
-                                '.' . str_repeat('9', $this->_columns[$columnName]['scale']);
-                        } elseif (!$maxLength) {
-                            break;
-                        } else {
-                            $max = str_repeat('9', $maxLength);
-                        }
-
-                        $min = $this->isElementPositiveForColumn($columnName)
-                            ? 0
-                            : -$max;
-
-                        $validators[] = ['Between', false, [
-                            'min' => $min,
-                            'max' => $max,
-                            'inclusive' => true,
-                        ]];
                     }
+
+                    $validators[] = ['Between', false, [
+                        'min' => $this->getMinimalValue($columnName),
+                        'max' => $this->getMaximalValue($columnName),
+                        'inclusive' => true,
+                    ]];
                     break;
                 case 'text':
                 case 'textarea':
@@ -302,18 +281,11 @@ class ZFE_Model_Table extends Doctrine_Table
                 }
                 break;
             case 'number':
-                if (isset($this->_columns[$columnName]['scale'])) {
-                    $options['max'] = str_repeat('9', $maxLength - $this->_columns[$columnName]['scale']) .
-                        '.' . str_repeat('9', $this->_columns[$columnName]['scale']);
-                    $options['step'] = 1 / (10 ** $this->_columns[$columnName]['scale']);
-                    $options['min'] = $this->isElementPositiveForColumn($columnName)
-                        ? 0
-                        : -$options['max'];
-                } else {
-                    // для поля integer длина всегда в модели оказывается равной 4 в независимости
-                    // от длины integer в БД, по этому просто не накладываем никаких ограничений
-                    $options['step'] = 1;
-                }
+                $options['min'] = $this->getMinimalValue($columnName);
+                $options['max'] = $this->getMaximalValue($columnName);
+                $options['step'] = isset($this->_columns[$columnName]['scale'])
+                    ? (1 / (10 ** $this->_columns[$columnName]['scale']))
+                    : 1;
                 break;
             case 'datetime':
                 $options['filters'][] = ['PregReplace', [
@@ -413,8 +385,8 @@ class ZFE_Model_Table extends Doctrine_Table
     public function hardFind()
     {
         if ($this->hasTemplate('ZFE_Model_Template_SoftDelete')) {
-            $template = $this->getTemplate('ZFE_Model_Template_SoftDelete');
-
+            /** @var ZFE_Model_Template_SoftDelete $template */
+            $template = $this->getTemplate(ZFE_Model_Template_SoftDelete::class);
             $allowSoftDelete = $template->allowSoftDelete();
             $template->allowSoftDelete(false);
             $result = call_user_func_array([$this, 'find'], func_get_args());
@@ -425,6 +397,42 @@ class ZFE_Model_Table extends Doctrine_Table
 
         return $result;
     }
+
+    /**
+     * Получить максимальное значение.
+     *
+     * @param string $columnName
+     *
+     * @return integer|float
+     */
+    public function getMaximalValue($columnName)
+    {
+        $isUnsigned = $this->isElementPositiveForColumn($columnName);
+        $length = $this->getElementMaxLengthForColumn($columnName);
+        $scale = $this->_columns[$columnName]['scale'] ?? 1;
+        if ('integer' === $this->_columns[$columnName]['type']) {
+            return (256 ** $length / ($isUnsigned ? 1 : 2)) - 1;
+        } else {
+            $whole = str_repeat('9', $length - $scale);
+            $fractional = str_repeat('9', $scale);
+            return $whole . '.' . $fractional;
+        }
+    }
+
+    /**
+     * Получить минимальное значение.
+     *
+     * @param string $columnName
+     *
+     * @return integer|float
+     */
+    public function getMinimalValue($columnName)
+    {
+        $isUnsigned = $this->isElementPositiveForColumn($columnName);
+        $max = $this->getMaximalValue($columnName);
+        return $isUnsigned ? 0 : -($max - 1);
+    }
+
 
     //
     // Реестр служебных полей
