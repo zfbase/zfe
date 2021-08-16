@@ -51,24 +51,25 @@ trait ZFE_Form_Helpers_Generator
         /** @var ZFE_Model_Table $table */
         $table = Doctrine_Core::getTable($this->_modelName);
         $elementType = $table->getElementTypeForColumn($columnName);
+        $options = array_replace_recursive(
+            $table->getElementOptionsForColumn($columnName),
+            $customOptions
+        );
 
         if (isset($this->_namesMethodsMap[$columnName])) {
             $method = $this->_namesMethodsMap[$columnName];
-            return $this->{$method}($columnName, $customOptions, $elementName);
+            return $this->{$method}($columnName, $options, $elementName);
         }
         
         if (isset($this->_typesMethodsMap[$elementType])) {
             $method = $this->_typesMethodsMap[$elementType];
-            return $this->{$method}($columnName, $customOptions, $elementName);
+            return $this->{$method}($columnName, $options, $elementName);
         }
 
         return $this->addElement(
             $table->getElementTypeForColumn($columnName),
             $elementName ?: $columnName,
-            array_replace_recursive(
-                $table->getElementOptionsForColumn($columnName),
-                $customOptions
-            )
+            $options
         );
     }
 }
