@@ -56,7 +56,7 @@ class ZFE_Searcher_Doctrine extends ZFE_Searcher_Abstract
         if (null === $params) {
             $params = $this->getParamsFromRequest();
         }
-        $params = $this->filterIdsParam($params);
+        $this->filterIdsParam($params);
 
         $query = $this->getQueryBuilder()->getQuery($params);
 
