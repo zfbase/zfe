@@ -65,7 +65,7 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
             $childrenBtns[] = $this->view->tag(
                 'li',
                 ['class' => $button['class'] ?? null],
-                $this->one($button, '')
+                $this->one($button, 'btn btn-link')
             );
         }
 
@@ -83,25 +83,45 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
      *
      * @param array  $button
      * @param string $button[label] название ссылки
-     * @param string $button[url]   адрес ссылки
+     * @param string $button[url]   адрес ссылки (если пропущено, будет кнопка)
      * @param string $button[ico]   класс иконки (если не указан иконки не будет добавлено)
+     * @param string $button[...]   дополнительные параметры будут вставлены как атрибуты ссылки/кнопки
      * @param string $class
-     *
+     * 
      * @return string
      */
     public function one(array $button, $class = 'btn btn-default')
     {
-        $label = $button['label'];
+        $label = $this->pick($button, 'label');
+        $url = $this->pick($button, 'url');
 
-        if (!empty($button['ico'])) {
-            $ico = $this->view->tag('span', ['class' => $button['ico']]);
+        $iconClass = $this->pick($button, 'ico');
+        $ico = $iconClass ? $this->view->tag('span', ['class' => $iconClass]) : '';
+
+        $props = array_merge(['class' => $class], $button);
+
+        if ($url) {
+            $props['href'] = $url;
+            $tag = 'a';
         } else {
-            $ico = '';
+            $props['type'] = 'button';
+            $tag = 'button';
         }
 
-        return $this->view->tag('a', [
-            'href' => $button['url'],
-            'class' => $class,
-        ], $ico . ' ' . $label);
+        return $this->view->tag($tag, $props, $ico . ' ' . $label);
+    }
+
+    /**
+     * Извлечь значение по ключу и удалить его из массива.
+     */
+    private function pick(array &$array, string $key)
+    {
+        if (!array_key_exists($key, $array)) {
+            return null;
+        }
+
+        $value = $array[$key];
+        unset($array[$key]);
+        return $value;
     }
 }
