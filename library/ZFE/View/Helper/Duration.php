@@ -9,8 +9,11 @@
  */
 class ZFE_View_Helper_Duration extends Zend_View_Helper_Abstract
 {
-    public function duration(int $seconds, bool $short = true)
+    public function duration(?int $seconds, bool $short = true)
     {
+        if ($seconds === null) {
+            return '';
+        }
         return $short
             ? ZFE_Utilities::formatShortDuration($seconds)
             : ZFE_Utilities::formatDuration($seconds);
