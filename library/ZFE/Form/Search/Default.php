@@ -9,6 +9,8 @@
  */
 class ZFE_Form_Search_Default extends ZFE_Form_Search_AbstractInline
 {
+    use ZFE_Form_Search_Helpers;
+
     /**
      * Инициализировать форму.
      */

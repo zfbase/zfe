@@ -9,5 +9,5 @@
  */
 abstract class ZFE_Form_Search_AbstractInline extends ZFE_Form_Inline
 {
-    use ZFE_Form_Search_PostPopulateHelper;
+    use ZFE_Form_Search_Helpers;
 }

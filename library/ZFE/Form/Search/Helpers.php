@@ -5,18 +5,27 @@
  */
 
 /**
- * Помощник для работы с автокомпликтными элементами в поиске.
- * 
- * @deprecated 1.35.23
+ * Помощник для поисковых форм.
  */
-trait ZFE_Form_Search_PostPopulateHelper
+trait ZFE_Form_Search_Helpers
 {
     public function populate(array $values)
     {
-        trigger_error(
-            'Трейт ZFE_Form_Search_PostPopulateHelper устарел. Используйте современный трейт ZFE_Form_Search_Helpers.',
-            E_USER_DEPRECATED);
+        $values = $this->postPopulateHelper($values);
+        $values = $this->deletedHelper($values);
 
+        return parent::populate($values);
+    }
+
+    /**
+     * Помощник для работы с автокомпликтными элементами в поиске.
+     *
+     * @param array $values
+     *
+     * @return array
+     */
+    public function postPopulateHelper(array $values)
+    {
         foreach ($this->getElements() as $name => $element) {
             if ($element instanceof ZFE_Form_Element_Autocomplete) {
                 foreach ($values as $key => $value) {
@@ -39,6 +48,23 @@ trait ZFE_Form_Search_PostPopulateHelper
             }
         }
 
-        return parent::populate($values);
+        return $values;
+    }
+
+    /**
+     * Помощник для поддержки поиска по корзине.
+     *
+     * @param array $values
+     *
+     * @return array
+     */
+    public function deletedHelper(array $values)
+    {
+        if ($this->getElement('deleted') === null) {
+            $this->addElement('hidden', 'deleted');
+        }
+        $this->getElement('deleted')->setValue($values['deleted'] ?? false);
+        unset($values['deleted']);
+        return $values;
     }
 }

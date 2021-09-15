@@ -9,6 +9,8 @@
  */
 class ZFE_Form_Search_OneString extends ZFE_Form_Inline
 {
+    use ZFE_Form_Search_Helpers;
+
     public function init()
     {
         $this
