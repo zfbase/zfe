@@ -64,7 +64,11 @@ trait ZFE_Form_Search_Helpers
             $this->addElement('hidden', 'deleted');
         }
         $this->getElement('deleted')->setValue($values['deleted'] ?? false);
-        unset($values['deleted']);
+
+        // Если понадобится вернуть – обрати внимание, что ломается дефолтный поиск
+        // (без настройки формы и поискового движка)
+        // unset($values['deleted']);
+
         return $values;
     }
 }
