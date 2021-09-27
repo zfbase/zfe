@@ -41,7 +41,7 @@ try {
     $opts->parse();
 } catch (Zend_Console_Getopt_Exception $e) {
     echo $e->getUsageMessage();
-    exit;
+    die(1);
 }
 
 $partSize = $opts->getOption('part-size') ?: config('tasks.partSize', 50);
@@ -54,17 +54,26 @@ if ($traitString) {
     if (preg_match('/^([0-9]+)\/([1-9][0-9]*)$/', $traitString, $traitData)) {
         list(, $traitNo, $traitTotal) = $traitData;
     } else {
-        die("Некорректный параметр trait\n");
+        echo "Некорректный параметр trait\n";
+        die(2);
     }
 }
 
+$connectionError = null;
 while (true) {
     try {
         $tasks = $manager->findAllToDo($partSize, $performersCode, $traitNo, $traitTotal);
+        $connectionError = null;
     } catch(Doctrine_Connection_Exception $e) {
         $logger->log($e->getMessage(), Zend_Log::ERR);
-        sleep(30);
-        continue;
+
+        if ($connectionError !== $e->getCode()) {
+            sleep(30);
+            continue;
+        } else {
+            echo $e->getMessage() . "\n";
+            die(3);
+        }
     }
 
     $managed = $manager->manage($tasks, $logger);
