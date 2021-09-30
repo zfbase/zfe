@@ -1,20 +1,23 @@
 import $ from 'jquery';
 
-export const makeModal = ({ title, body }) => {
-  const modal = $('<div class="modal fade" tabindex="-1" role="dialog">'
-    + '<div class="modal-dialog modal-lg" role="document">'
-    + '<div class="modal-content">'
-      + '<div class="modal-header">'
-      + '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>'
-      + '<h4 class="modal-title"></h4>'
+export const makeModal = ({ title, body, size = 'lg' }) => {
+  const sizeClass = ['lg', 'sm', 'max'].includes(size) ? `modal-${size}` : size;
+  const modal = $(
+    '<div class="modal fade" tabindex="-1" role="dialog">'
+      + `<div class="modal-dialog ${sizeClass}" role="document">`
+      + '<div class="modal-content">'
+        + '<div class="modal-header">'
+        + '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>'
+        + '<h4 class="modal-title"></h4>'
+        + '</div>'
+        + '<div class="modal-body clearfix"></div>'
+        + '<div class="modal-footer">'
+        + '<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>'
+        + '</div>'
       + '</div>'
-      + '<div class="modal-body clearfix"></div>'
-      + '<div class="modal-footer">'
-      + '<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>'
       + '</div>'
-    + '</div>'
-    + '</div>'
-  + '</div>');
+    + '</div>',
+  );
   modal.find('.modal-body').html(body);
   modal.find('.modal-title').text(title);
   return modal;
