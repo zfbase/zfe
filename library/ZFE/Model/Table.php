@@ -32,7 +32,6 @@ class ZFE_Model_Table extends Doctrine_Table
         }
 
         if (!isset($this->_formInfo[$columnName]) || !isset($this->_formInfo[$columnName]['type'])) {
-            $formConfig = config('forms');
             $modelName = $this->getClassnameToReturn();
 
             if (in_array($columnName, $modelName::$booleanFields)) {
@@ -63,7 +62,7 @@ class ZFE_Model_Table extends Doctrine_Table
                     case 'string':
                         // Длина поля может быть не указана, например если тип MEDIUMTEXT
                         $length = $this->getElementMaxLengthForColumn($columnName);
-                        $form = $length && $length < $formConfig->textarea->minLength
+                        $form = $length && $length < config('forms.textarea.minLength', 256)
                             ? 'text'
                             : 'textarea';
                         break;
@@ -247,7 +246,6 @@ class ZFE_Model_Table extends Doctrine_Table
      */
     public function getElementOptionsForColumn($columnName)
     {
-        $formConfig = config('forms');
         $maxLength = $this->getElementMaxLengthForColumn($columnName);
 
         $options = [];
@@ -262,12 +260,14 @@ class ZFE_Model_Table extends Doctrine_Table
 
         switch ($this->getElementTypeForColumn($columnName)) {
             case 'textarea':
-                if (isset($formConfig->textarea->rows->default) && $formConfig->textarea->rows->default > 0) {
-                    $rows = $formConfig->textarea->rows->default;
+                $rowDefault = config('forms.textarea.rows.default', 4);
+                if ($rowDefault > 0) {
+                    $rows = $rowDefault;
                 } elseif ($maxLength > 0) {
-                    $rows = round($maxLength / $formConfig->textarea->cols->max);
-                    if ($rows > $formConfig->textarea->rows->max) {
-                        $rows = $formConfig->textarea->rows->max;
+                    $rowMax = config('forms.textarea.rows.max', 10);
+                    $rows = round($maxLength / config('forms.textarea.cols.max'));
+                    if ($rows > $rowMax) {
+                        $rows = $rowMax;
                     }
                 }
                 if ($rows > 0) {
