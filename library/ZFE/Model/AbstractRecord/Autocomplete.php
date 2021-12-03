@@ -114,8 +114,9 @@ trait ZFE_Model_AbstractRecord_Autocomplete
         $table = Doctrine_Core::getTable(static::class);
         $relAlias = $table->getModelNameForColumn($field);
         $relModel = !empty($custom['relModel']) ? $custom['relModel'] : $relAlias;
+        $fieldLabel = static::getFieldName($field);
         $default = [
-            'label' => static::getFieldName($field),
+            'label' => $fieldLabel != $field ? $fieldLabel : $relModel::$nameSingular,
             'source' => $relModel::getAutocompleteUrl(),
             'canCreate' => false,
             'required' => $table->isElementRequiredForColumn($field),
@@ -158,8 +159,9 @@ trait ZFE_Model_AbstractRecord_Autocomplete
             throw new ZFE_Model_Exception('Связь "' . $relAlias . '" не обнаружена в модели "' . static::class . '" при определении свойств автодополнения нескольких значений.');
         }
 
+        $fieldLabel = static::getFieldName($field);
         $default = [
-            'label' => static::getFieldName($field),
+            'label' => $fieldLabel != $field ? $fieldLabel : $relModel::$namePlural,
             'source' => $relModel::getAutocompleteUrl(),
             'editUrl' => $relModel::getEditModalUrl(),
             'canCreate' => false,
