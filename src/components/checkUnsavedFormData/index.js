@@ -13,8 +13,10 @@ class CheckUnsavedFormData {
     this.$form = $(form);
     this.freeSnapshot = [];
 
-    this.setFree();
-    this.initHandlers();
+    setTimeout(() => {
+      this.setFree();
+      this.initHandlers();
+    });
   }
 
   initHandlers() {
