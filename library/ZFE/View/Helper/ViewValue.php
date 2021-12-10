@@ -19,6 +19,7 @@ class ZFE_View_Helper_ViewValue extends Zend_View_Helper_Abstract
     public function viewValue(AbstractRecord $item, $field)
     {
         $modelName = get_class($item);
+        $table = $item->getTable();
 
         switch (gettype($field)) {
             case 'string':
@@ -48,8 +49,6 @@ class ZFE_View_Helper_ViewValue extends Zend_View_Helper_Abstract
                 return;
             }
         } elseif (array_key_exists('field', $options)) {
-            $table = $item->getTable();
-
             if ($table->hasRelation($options['field'])) {
                 if (!$item->{$options['field']}->count()) {
                     return;
