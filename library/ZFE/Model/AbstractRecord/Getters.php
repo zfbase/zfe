@@ -177,6 +177,6 @@ trait ZFE_Model_AbstractRecord_Getters
     public static function getDictionaryField($field, $value)
     {
         $dictionary = static::getDictionary($field);
-        return $dictionary[$value];
+        return $dictionary[$value] ?? '';
     }
 }
