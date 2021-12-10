@@ -123,6 +123,19 @@ trait ZFE_Model_AbstractRecord_Getters
             return $definition['comment'];
         }
 
+        if (Doctrine_Core::getTable(static::class)->hasRelation($field)) {
+            foreach (static::$autocompleteCols as $code => $options) {
+                if ($options['relAlias'] == $field) {
+                    return static::getAutocompleteOptions($code)['label'];
+                }
+            }
+            foreach (static::$multiAutocompleteCols as $code => $options) {
+                if ($options['relAlias'] == $field) {
+                    return static::getMultiAutocompleteOptions($code)['label'];
+                }
+            }
+        }
+
         if (null !== $default) {
             return $default;
         }
