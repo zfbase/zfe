@@ -102,12 +102,12 @@ trait ZFE_Model_AbstractRecord_Autocomplete
      */
     public static function getAutocompleteOptions($field)
     {
-        $custom = static::$autocompleteCols[$field];
-
         // Проверяем, является ли поле автокомплитом
         if (!key_exists($field, static::$autocompleteCols)) {
             return false;
         }
+
+        $custom = static::$autocompleteCols[$field];
 
         // Автоматически определяем значения по умолчанию
         /** @var ZFE_Model_Table $table */
