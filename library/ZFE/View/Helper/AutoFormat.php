@@ -32,14 +32,9 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
         }
 
         if ($modelName && $columnName) {
-            $manager = Doctrine_Manager::getInstance();
-            $hasModel = $manager->hasConnectionForComponent($modelName)
-                     && $manager->getConnectionForComponent($modelName)->hasTable($modelName);
-            if ($hasModel) {
-                $table = Doctrine_Core::getTable($modelName);
-                if ($table->hasColumn($columnName)) {
-                    return $this->formatByTable($table, $columnName, $value);
-                }
+            $table = Doctrine_Core::getTable($modelName);
+            if ($table && $table->hasColumn($columnName)) {
+                return $this->formatByTable($table, $columnName, $value);
             }
         }
 
