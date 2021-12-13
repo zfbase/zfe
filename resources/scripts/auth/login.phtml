@@ -1,13 +1,13 @@
 <?
     /** @var ZFE_View $this */
-
+    /** @var Zend_Config $config */
     $config = Zend_Registry::get('config');
 ?>
 
 <form class="form-signin" action="/auth/login" method="POST">
-    <h2 class="form-signin-heading">
+    <a class="h2 form-signin-heading" href="/">
         <?= is_string($config->brand) ? $config->brand : $config->brand->full ?>
-    </h2>
+    </a>
     <?= $this->form->login ?>
     <?= $this->form->password ?>
     <?= $this->form->submit ?>
