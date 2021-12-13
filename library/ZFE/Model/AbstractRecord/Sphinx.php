@@ -63,9 +63,11 @@ trait ZFE_Model_AbstractRecord_Sphinx
     {
         $sqlPath = static::getSphinxIndexSqlPath();
         $sql = file_get_contents($sqlPath);
+        $model = static::class;
+        $alias = config("sphinx.alias.{$model}", 'x');
 
         $query = ZFE_SqlManipulator::parseSql($sql);
-        $query->andWhere('x.id = ?');
+        $query->andWhere("{$alias}.id = ?");
 
         $conn = Doctrine_Manager::connection()->getDbh();
         $q = $conn->prepare($query->getSql());

@@ -131,11 +131,12 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
     {
         $indexName = $model::getSphinxIndexName();
         $sqlPath = $model::getSphinxIndexSqlPath();
+        $alias = config("sphinx.alias.{$model}", 'x');
         $sql = file_get_contents($sqlPath);
 
         $query = ZFE_SqlManipulator::parseSql($sql);
-        $query->andWhere('x.id > ?');
-        $query->orderBy('x.id');
+        $query->andWhere("{$alias}.id > ?");
+        $query->orderBy("{$alias}.id");
         $query->limit(1000);
 
         $conn = Doctrine_Manager::connection()->getDbh();
