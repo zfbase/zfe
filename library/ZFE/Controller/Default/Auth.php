@@ -198,8 +198,6 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                 }
             }
         }
-
-        $this->_helper->layout()->setLayout('layout_guest');
     }
 
     /**
@@ -216,5 +214,12 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
 
     protected function onAuthSuccess($resultRow)
     {
+    }
+
+    public function init()
+    {
+        parent::init();
+
+        $this->_helper->layout()->setLayout('layout_auth');
     }
 }

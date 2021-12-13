@@ -280,10 +280,6 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $layout = Zend_Layout::startMvc();
         $layout->setViewBasePath($zfeResourcesPath . ':/views');
 
-        if (PHP_SAPI != 'cli' && !Zend_Auth::getInstance()->hasIdentity()) {
-            $layout->setLayout('layout_guest');
-        }
-
         /** @var ZFE_View $view */
         $view = $layout->getView();
         $view->addBasePath($zfeResourcesPath);
