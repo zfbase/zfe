@@ -20,7 +20,11 @@ class ZFE_View_Helper_Tag extends Zend_View_Helper_HtmlElement
      */
     public function tag($name, $attribs = [], $content = '')
     {
-        $openTag = '<' . $name . $this->_htmlAttribs($attribs) . '>';
+        $cleanedAttribs = array_filter(
+            $attribs,
+            fn ($val) => !in_array($val, [null, false], true),
+        );
+        $openTag = '<' . $name . $this->_htmlAttribs($cleanedAttribs) . '>';
         $closeTag = '</' . $name . '>';
         return $openTag . $content . $closeTag;
     }
