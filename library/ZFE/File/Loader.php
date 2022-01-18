@@ -265,15 +265,18 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
 
         $resultPath = $this->getResultPath();
 
+        $res = true;
         if ($this->method == 'copy') {
-            copy($fromPath, $resultPath);
+            $res = copy($fromPath, $resultPath);
         } else {
-            rename($fromPath, $resultPath);
+            $res = rename($fromPath, $resultPath);
         }
-        if (!file_exists($resultPath)) {
-            throw new ZFE_File_Exception(
-                sprintf('Не удалось переместить файл из %s в %s', $fromPath, $resultPath)
-            );
+
+        if (!$res) {
+            $err = error_get_last();
+            if ($err) {
+                throw $err;
+            }
         }
 
         // set result path to record
@@ -297,5 +300,13 @@ final class ZFE_File_Loader extends ZFE_File_LoadableAccess
         } catch (ZFE_File_Exception $e) {
             return true;
         }
+    }
+
+    /**
+     * @param int
+     */
+    public function setDiv($div)
+    {
+        $this->div = $div;
     }
 }
