@@ -98,25 +98,41 @@ const ZFE = {
 
   /** Флаг для выставления статуса всех дочерних флажков */
   initCheckAll: (container) => {
-    $(container).on('click', '[data-action="check-all"]', (event) => {
-      const $this = $(event.currentTarget);
-      const $checkboxes = $($this.data('target'));
-      $checkboxes.prop('checked', $this.prop('checked'));
-      $checkboxes.trigger('change');
-    });
+    let tables = [];
 
     $('[data-action="check-all"]', container).each((i, checkAll) => {
-      const $checkAll = $(checkAll);
-      const target = $checkAll.data('target');
+      const table = $(checkAll).closest('table').get(0);
+      if (table) {
+        tables.push(table);
+      }
+    });
 
-      $(document).on('click', target, () => {
-        if ($(`${target}:checked`).length === 0) {
-          $checkAll.prop('indeterminate', false).prop('checked', false);
-        } else if ($(`${target}:not(:checked)`).length === 0) {
-          $checkAll.prop('indeterminate', false).prop('checked', true);
-        } else {
-          $checkAll.prop('indeterminate', true);
-        }
+    tables = $.uniqueSort(tables);
+
+    setTimeout(() => {
+      tables.forEach((table) => {
+        const $table = $(table);
+        const $checkAll = $table.find('[data-action="check-all"]');
+        const target = $checkAll.eq(0).data('target');
+
+        $table.on('click', '[data-action="check-all"]', (event) => {
+          const $this = $(event.currentTarget);
+          const $checkboxes = $($this.data('target'));
+          const checked= $this.prop('checked');
+          $checkboxes.prop('checked', checked);
+          $checkAll.prop('checked', checked).prop('indeterminate', false);
+          $checkboxes.trigger('change');
+        });
+    
+        $(document).on('click', target, () => {
+          if ($(`${target}:checked`).length === 0) {
+            $checkAll.prop('indeterminate', false).prop('checked', false);
+          } else if ($(`${target}:not(:checked)`).length === 0) {
+            $checkAll.prop('indeterminate', false).prop('checked', true);
+          } else {
+            $checkAll.prop('indeterminate', true);
+          }
+        });
       });
     });
   },
