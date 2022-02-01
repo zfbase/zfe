@@ -113,14 +113,14 @@ trait ZFE_Model_AbstractRecord_Getters
             return static::$nameFields[$field];
         }
 
-        if (!empty(static::$_nameBaseFields[$field])) {
-            return static::$_nameBaseFields[$field];
-        }
-
         $table = Doctrine_Core::getTable(static::class);
         $definition = $table->getColumnDefinition($field);
         if (!empty($definition['comment'])) {
             return $definition['comment'];
+        }
+
+        if (!empty(static::$_nameBaseFields[$field])) {
+            return static::$_nameBaseFields[$field];
         }
 
         if (Doctrine_Core::getTable(static::class)->hasRelation($field)) {
