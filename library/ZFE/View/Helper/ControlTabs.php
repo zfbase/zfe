@@ -53,7 +53,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         'edit' => [
             'action' => 'edit',
             'title' => 'Карточка',
-            'onlyValid' => true,
+            'onlyValid' => false,
             'order' => 1,
         ],
         'history' => [
@@ -61,7 +61,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             'title' => 'История',
             'class' => 'pull-right',
             'onlyRegistered' => true,
-            'onlyValid' => true,
+            'onlyValid' => false,
             'order' => 100,
         ],
     ];
