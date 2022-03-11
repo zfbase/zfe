@@ -20,6 +20,8 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
             $disabled = ' disabled="disabled"';
         }
 
+        $readonly = !empty($attribs['readonly']);
+
         // Определяем перечень классов
         if (isset($attribs['class'])) {
             $classes = explode(' ', $attribs['class']);
@@ -40,9 +42,9 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
                 }
 
                 $date = strtotime($item);
-                $hidden = $this->_hidden($name . '[]', $item);
+                $hidden = $disable || $readonly ? '' : $this->_hidden($name . '[]', $item);
                 $label = '<div class="title">' . ($date ? date('d.m.Y', $date) : $item) . '</div>';
-                $removeBtn = $disable ? '' : '<div class="btn btn-remove"><span class="glyphicon glyphicon-remove"></span></div>';
+                $removeBtn = $disable || $readonly ? '' : '<div class="btn btn-remove"><span class="glyphicon glyphicon-remove"></span></div>';
                 $curValues .= '<div class="linked-entity">' . $hidden . $label . $removeBtn . '</div>';
             }
         }
@@ -60,9 +62,9 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
                 . '</span>';
 
         return '<div class="datelist">'
-             . '<input type="hidden" name="' . $name . '[]" />'  // Псевдо значение для передачи данных о наличии элемента в форме
+             . ($disable || $readonly ? '' : '<input type="hidden" name="' . $name . '[]" />')  // Псевдо значение для передачи данных о наличии элемента в форме
              . '<div class="datelist-entities">' . $curValues . '</div>'
-             . '<div class="input-group">' . $input . $btnSet . '</div>'
+             . ($disable || $readonly ? '' : '<div class="input-group">' . $input . $btnSet . '</div>')
              . '</div>';
     }
 }
