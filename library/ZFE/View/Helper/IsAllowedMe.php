@@ -19,6 +19,8 @@ class ZFE_View_Helper_IsAllowedMe extends Zend_View_Helper_Abstract
      */
     public function isAllowedMe($resource = null, $privilege = null)
     {
-        return Zend_Registry::get('acl')->isAllowedMe($resource, $privilege);
+        /** @var ZFE_Acl */
+        $acl = Zend_Registry::get('acl');
+        return $acl->isAllowedMe($resource, $privilege);
     }
 }
