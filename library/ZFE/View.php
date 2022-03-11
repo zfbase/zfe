@@ -18,6 +18,7 @@
  * @method string action($action, $controller, $module = null, array $params = array())                                                                                                  Retrieve rendered contents of a controller action.
  * @method string alerts()                                                                                                                                                               Вывести нотификации.
  * @method string autoFormat($value, string $columnName = null, string $modelName = null)                                                                                                Автоматически отформатировать значение по ключевым префиксам названия.
+ * @method string backToSearchHash(string $label = 'К результатам поиска')                                                                                                               Помощник для сокращения стандартного геттера хеша для возврата к результатам поиска.
  * @method string configTreeViewer(array $tree)                                                                                                                                          Отобразить дерево со сворачивающимися уровнями.
  * @method ZFE_View_Helper_ControlTabs controlTabs(?ZFE_Model_AbstractRecord $item = null)                                                                                               Помощник использования абстрактных вьюшек.
  * @method string crazyButtons(array $buttons, string $class = 'btn btn-default')                                                                                                        Вывести кнопки.
@@ -52,6 +53,10 @@
  * @method string|void viewRow(?AbstractRecord $item, string|array<string|callable> $field, string $class = null)                                                                        Собрать строку отображения поля для страницы просмотра записи.
  * @method string|void viewValue(AbstractRecord $item, string|array<string|callable> $field)                                                                                             Получить значение поля для страницы просмотра записи.
  * @method string webpack(string $filename)                                                                                                                                              Webpack.
+ *
+ * @property-read string $containerClass  Класс контроллера
+ * @property-read string $controllerName  Имя контроллера
+ * @property-read string $actionName      Имя действия
  */
 class ZFE_View extends Zend_View
 {
