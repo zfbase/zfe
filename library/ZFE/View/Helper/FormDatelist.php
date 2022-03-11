@@ -49,6 +49,15 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
             }
         }
 
+        // Псевдо значение для передачи данных о наличии элемента в форме
+        $emptyFiller = $disable || $readonly ? '' : $this->_hidden($name . '[]');
+
+        if (($disable || $readonly) && $curValues === '') {
+            return $this->view->tag('div', ['class' => 'form-control-static empty'], 'Значения не указаны.');
+        }
+
+        $valueDisplay = $this->view->tag('div', ['class' => 'datelist-entities'], $curValues);
+
         $input = '<input type="date"'
                . ' id="' . $this->view->escape($id) . '"'
                . $disabled
@@ -61,10 +70,8 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
                 . '</button>'
                 . '</span>';
 
-        return '<div class="datelist">'
-             . ($disable || $readonly ? '' : '<input type="hidden" name="' . $name . '[]" />')  // Псевдо значение для передачи данных о наличии элемента в форме
-             . '<div class="datelist-entities">' . $curValues . '</div>'
-             . ($disable || $readonly ? '' : '<div class="input-group">' . $input . $btnSet . '</div>')
-             . '</div>';
+        $inputGroup = $disable || $readonly ? '' : $this->view->tag('div', ['class' => 'input-group'], $input . $btnSet);
+
+        return $this->view->tag('div', ['class' => 'datelist'], $emptyFiller . $valueDisplay . $inputGroup);
     }
 }
