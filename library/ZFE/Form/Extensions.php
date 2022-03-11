@@ -129,7 +129,7 @@ trait ZFE_Form_Extensions
     public function setDisabledToIgnore()
     {
         foreach ($this->getElements() as $key => $element) {
-            if ($this->{$key}->disabled) {
+            if ($this->{$key}->disabled || $this->{$key}->readonly) {
                 $this->{$key}->setIgnore(true);
             }
         }
