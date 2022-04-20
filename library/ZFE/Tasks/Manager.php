@@ -269,6 +269,7 @@ class ZFE_Tasks_Manager
 
             try {
                 $performer = $this->assign($task);
+                $performer->setLogger($logger);
             } catch (Exception $e) {
                 if ($this->debugMode) {
                     throw $e;

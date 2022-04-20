@@ -15,11 +15,26 @@ abstract class ZFE_Tasks_Performer
     const RETURN_CODE_SUCCESS = 0;
 
     /**
+     * Логгер.
+     *
+     * @var Zend_Log|null
+     */
+    protected $logger;
+
+    /**
      * Создать экземпляр исполнителя.
      */
     public static function factory(): self
     {
         return new static;
+    }
+
+    /**
+     * Указать логгер.
+     */
+    public function setLogger(?Zend_Log $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
