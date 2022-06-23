@@ -1,6 +1,13 @@
 form.indexSearch {
   margin: 15px 0;
-  float: left;
+
+  @media (min-width: 768px) {
+    float: left;
+
+    &.oneStringSearch #term {
+      width: 350px;
+    }
+  }
 }
 
 .form-inline-plus {

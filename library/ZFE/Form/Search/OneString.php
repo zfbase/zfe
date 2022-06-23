@@ -16,9 +16,8 @@ class ZFE_Form_Search_OneString extends ZFE_Form_Inline
         $this
             ->setMethod('POST')
             ->setAttrib('role', 'form')
-            ->setAttrib('class', 'indexSearch')
+            ->setAttrib('class', 'indexSearch oneStringSearch')
         ;
-
 
         $this->addElement('text', 'term', [
             'filters' => [
@@ -26,7 +25,6 @@ class ZFE_Form_Search_OneString extends ZFE_Form_Inline
             ],
             'autofocus' => 'autofocus',
             'order' => 1,
-            'style' => 'width: 350px;',
         ]);
 
         $this->addElement('submit', 'submit', [
