@@ -78,24 +78,8 @@ trait ZFE_Controller_AbstractResource_Merge
             $q->addFrom('x.Creator c')->addSelect('c.*');
         }
 
-        // Подсчет веса
-        $weights = [];
-        $relations = $tableInstance->getRelations();
-        foreach ($relations as $relation) {
-            if ($relation instanceof Doctrine_Relation_ForeignKey) {
-                $col = $relation->getForeignColumnName();
-                $table = $relation->getTable()->getTableName();
-                $weights[] = '(select count(*) from ' . $table . ' where ' . $col . ' = x.id)';
-            }
-        }
-
-        if (!empty($weights)) {
-            $q->addSelect((new Doctrine_Expression('(' . implode(' + ', $weights) . ')')) . ' AS weight');
-        } else {
-            $q->addSelect('0 weight');
-        }
-
-        $this->view->items = $items = $q->execute();
+        /** @var Doctrine_collection<static|AbstractRecord>|Array<static|AbstractRecord> */
+        $items = $this->view->items = $modelName::calcWeightsEnrichQuery($q)->execute();
 
         $diff = [];
         $map = [];
@@ -175,13 +159,14 @@ trait ZFE_Controller_AbstractResource_Merge
      */
     protected function _getMergeSearchQuery()
     {
-        $tableInstance = Doctrine_Core::getTable(static::$_modelName);
+        $modelName = static::$_modelName;
+        $tableInstance = Doctrine_Core::getTable($modelName);
 
         /** @var ZFE_Query $q */
         $q = ZFE_Query::create()
             ->select('x.*')
-            ->from(static::$_modelName . ' x')
-            ->orderBy((static::$_modelName)::$titleField)
+            ->from($modelName . ' x')
+            ->orderBy($modelName::$titleField)
         ;
 
         if ($tableInstance->hasRelation('Editor')) {
@@ -192,23 +177,6 @@ trait ZFE_Controller_AbstractResource_Merge
             $q->addFrom('x.Creator c')->addSelect('c.*');
         }
 
-        // Подсчет веса
-        $weights = [];
-        $relations = $tableInstance->getRelations();
-        foreach ($relations as $relation) {
-            if ($relation instanceof Doctrine_Relation_ForeignKey) {
-                $col = $relation->getForeignColumnName();
-                $table = $relation->getTable()->getTableName();
-                $weights[] = '(select count(*) from ' . $table . ' where ' . $col . ' = x.id)';
-            }
-        }
-
-        if (!empty($weights)) {
-            $q->addSelect((new Doctrine_Expression('(' . implode(' + ', $weights) . ')')) . ' AS weight');
-        } else {
-            $q->addSelect('0 weight');
-        }
-
         // Фильтры
         $exclude = $this->getParam('exclude', []);
         if (!empty($exclude) && is_array($exclude)) {
@@ -217,7 +185,7 @@ trait ZFE_Controller_AbstractResource_Merge
 
         $term = $this->getParam('term');
         if (!empty($term)) {
-            $q->addWhere('LOWER(' . (static::$_modelName)::$titleField . ') LIKE LOWER(?)', '%' . $term . '%');
+            $q->addWhere('LOWER(' . $modelName::$titleField . ') LIKE LOWER(?)', '%' . $term . '%');
         }
 
         $ignoreMerged = $this->getParam('ignore_merged');
@@ -225,6 +193,6 @@ trait ZFE_Controller_AbstractResource_Merge
             $q->addWhere('x.merged = 0');
         }
 
-        return $q;
+        return $modelName::calcWeightsEnrichQuery($q);
     }
 }

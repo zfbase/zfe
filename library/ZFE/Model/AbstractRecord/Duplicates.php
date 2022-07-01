@@ -55,9 +55,16 @@ trait ZFE_Model_AbstractRecord_Duplicates
             $q->addFrom('x.Creator c')->addSelect('c.*');
         }
 
-        // Подсчет веса
+        return static::calcWeightsEnrichQuery($q)->execute();
+    }
+
+    /**
+     * Подсчитать число связей у результатов выборки.
+     */
+    public static function calcWeightsEnrichQuery(ZFE_Query $q)
+    {
         $weights = [];
-        $relations = $tableInstance->getRelations();
+        $relations = Doctrine_Core::getTable(static::class)->getRelations();
         foreach ($relations as $relation) {
             if ($relation instanceof Doctrine_Relation_ForeignKey) {
                 $col = $relation->getForeignColumnName();
@@ -72,7 +79,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
             $q->addSelect('0 weight');
         }
 
-        return $q->execute();
+        return $q;
     }
 
     public static function advancedMerge(Doctrine_Collection $slaves, array $map = [])
