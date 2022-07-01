@@ -143,4 +143,11 @@ tr[role="button"] {
     margin: -9.5px;
     margin-top: 9.5px;
     border-top: 1px solid #ccc;
-  }
+}
+
+@media (min-width: 768px) {
+    .modal-fluid {
+        width: fit-content;
+        max-width: 90%;
+    }
+}

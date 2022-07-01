@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 export const makeModal = ({ title, body, size = 'lg' }) => {
-  const sizeClass = ['lg', 'sm', 'max'].includes(size) ? `modal-${size}` : size;
+  const sizeClass = ['lg', 'sm', 'max', 'fluid'].includes(size) ? `modal-${size}` : size;
   const modal = $(
     '<div class="modal fade" tabindex="-1" role="dialog">'
       + `<div class="modal-dialog ${sizeClass}" role="document">`
