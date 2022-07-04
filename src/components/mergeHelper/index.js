@@ -26,11 +26,12 @@ class ZFEMergeHelper {
       const $btn = $(event.currentTarget);
       const $cell = $btn.closest('td');
       const index = $cell.closest('tr').children().index($cell) + 1;
-      const itemId = $btn.data('id');
+      const itemId = Number($btn.data('id'));
       this.$container.find(`tr > *:nth-child(${index})`).remove();
 
       const slaveIds = this.$slaveIds.val()
         .split(',')
+        .map(Number)
         .filter(id => (id !== itemId))
         .join(',');
       this.$slaveIds.val(slaveIds);
