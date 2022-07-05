@@ -8,17 +8,19 @@ class ZFEMergeHelper {
     $('.btn-show-equal', this.$container).on('click', this.showEqual.bind(this));
     $('.btn-hide-equal', this.$container).on('click', this.hideEqual.bind(this));
 
-    this.$container.on('click', 'tbody td', (event) => {
+    this.$container.on('click', 'tbody td', (event, mode) => {
       const $td = $(event.currentTarget);
       $td.find('input').prop('checked', true);
-      $td.closest('tr').find('td').removeClass('bg-success');
+      const $tr = $td.closest('tr');
+      $tr.removeClass('equal-rows');
+      $tr.find('td').removeClass('bg-success user-select');
       $td.addClass('bg-success');
+      if (mode !== 'auto') {
+        $td.addClass('user-select');
+      }
     });
 
-    this.$container.find('tbody tr:has(td:not(.null-value))').each((index, tr) => {
-      $(tr).find('td:not(.null-value)').first().trigger('click');
-    });
-
+    this.autoSelect();
     this.markEqual();
     this.hideEqual();
 
@@ -35,21 +37,37 @@ class ZFEMergeHelper {
         .filter(id => (id !== itemId))
         .join(',');
       this.$slaveIds.val(slaveIds);
+
+      this.autoSelect();
+      this.markEqual();
+      this.hideEqual();
+    });
+  }
+
+  autoSelect() {
+    this.$container.find('tbody tr:not(:has(td.user-select))').each((_, tr) => {
+      $(tr).find('td:not(.null-value)').first().trigger('click', 'auto');
     });
   }
 
   markEqual() {
-    this.$container.find('tbody tr').each((iTr, tr) => {
+    this.$container.find('tbody tr').each((_, tr) => {
       const $tr = $(tr);
+      if ($tr.find('td.user-select').length) {
+        return;
+      }
+
       const values = [];
-      $tr.find('td').each((iTd, td) => {
+      const $cells = $tr.find('td');
+      $cells.each((_, td) => {
         const text = $.trim($(td).text());
         if (text !== '') {
           values.push(text);
         }
       });
       const unique = values.filter((value, iValue, self) => self.indexOf(value) === iValue);
-      if (unique.length < 2) {
+      // Если все пустые или все заполнены одним и тем же – .equal-rows
+      if ([0, $cells.length].includes(values.length) && unique.length < 2) {
         $tr.addClass('equal-rows');
       }
     });
@@ -65,7 +83,7 @@ class ZFEMergeHelper {
 }
 
 $.fn.zfeMergeHelper = function zfeMergeHelper() {
-  return this.each((i, el) => {
+  return this.each((_, el) => {
     if (!$.data(el, 'plugin_zfeMergeHelper')) {
       $.data(el, 'plugin_zfeMergeHelper', new ZFEMergeHelper(el));
     }
