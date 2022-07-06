@@ -301,6 +301,13 @@ class ZFE_Tasks_Manager
                 $task->errors = $e->getMessage();
                 $task->save();
 
+                if ($task->revision < 8) {
+                    $scheduleDateTime = new DateTime();
+                    $second = pow(4, $task->revision + 1);
+                    $scheduleDateTime->modify("+{$second} second");
+                    $this->revision($task, $scheduleDateTime);
+                }
+
                 $this->logHelper($logger, "Task #{$task->id} performed with error: {$e->getMessage()}");
             }
         }
@@ -371,7 +378,7 @@ class ZFE_Tasks_Manager
      *
      * @throws ZFE_Tasks_Exception
      */
-    public function revision(Tasks $task): Tasks
+    public function revision(Tasks $task, DateTime $scheduleDateTime = null): Tasks
     {
         if ($task->isPerformed()) {
             throw new ZFE_Tasks_Exception('Невозможно перезапустить задачу во время её выполнения.');
@@ -390,6 +397,11 @@ class ZFE_Tasks_Manager
         $taskRevision->related_id = $task->related_id;
         $taskRevision->parent_id = $task->parent_id ?: $task->id;
         $taskRevision->revision = $task->revision + 1;
+
+        if ($scheduleDateTime) {
+            $task->datetime_schedule = $scheduleDateTime->format('Y-m-d H:i:s');
+        }
+
         $taskRevision->save();
         return $taskRevision;
     }
