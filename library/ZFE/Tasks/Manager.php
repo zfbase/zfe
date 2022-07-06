@@ -300,6 +300,7 @@ class ZFE_Tasks_Manager
 
                 $task->errors = $e->getMessage();
                 $task->save();
+
                 if ($task->revision < 8) {
                     $scheduleDateTime = new DateTime();
                     $second = pow(4, $task->revision + 1);
