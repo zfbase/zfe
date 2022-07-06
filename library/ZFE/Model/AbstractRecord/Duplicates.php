@@ -158,9 +158,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
                         /** @var ZfeFiles_Agent_Interface[] */
                         $slaveAgents = $slave->getAgents($schema);
                         foreach ($slaveAgents as $slaveAgent) {
-                            $agent = $manager->getAgentByFile($slaveAgent->getFile());
-                            $agent->linkManageableItem($schemaCode, $master, $slaveAgent->getData());
-                            $agent->save();
+                            $agent = $slaveAgent->cloneToManageableItem($master);
                             $master->addAgent($schemaCode, $agent);
                         }
                     }
