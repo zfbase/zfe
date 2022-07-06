@@ -82,6 +82,9 @@ trait ZFE_Model_AbstractRecord_Duplicates
         return $q;
     }
 
+    /**
+     * @param Doctrine_Collection<static|AbstractRecord> $slaves
+     */
     public static function advancedMerge(Doctrine_Collection $slaves, array $map = [])
     {
         $tableInstance = Doctrine_Core::getTable(static::class);
@@ -121,7 +124,9 @@ trait ZFE_Model_AbstractRecord_Duplicates
         // Создаем новую запись
         $master = new static();
         foreach ($map as $columnName => $slaveId) {
-            $master->{$columnName} = $slavesIbi[$slaveId]->{$columnName};
+            if ($tableInstance->hasField($columnName)) {
+                $master->{$columnName} = $slavesIbi[$slaveId]->{$columnName};
+            }
         }
         $master->saveHistory(false, true);
         $master->save();
@@ -138,6 +143,30 @@ trait ZFE_Model_AbstractRecord_Duplicates
         $history->datetime_action = new Doctrine_Expression('NOW()');
         $history->content_version = 1;
         $history->save();
+
+        // Перепривязываем связанные файлы
+        if ($master instanceof ZfeFiles_Manageable) {
+            $schemas = $master->getFileSchemas();
+            foreach ($schemas as $schema) {
+                /** @var ZfeFiles_Manager_Interface */
+                $manager = ($schema->getModel())::getManager();
+                $schemaCode = $schema->getCode();
+                $isMultiple = $schema->getMultiple();
+                $selected = array_key_exists($schemaCode, $map) ? $map[$schemaCode] : null;
+                foreach ($slaves as $slave) {
+                    if ($isMultiple || $selected == $slave->id) {
+                        /** @var ZfeFiles_Agent_Interface[] */
+                        $slaveAgents = $slave->getAgents($schema);
+                        foreach ($slaveAgents as $slaveAgent) {
+                            $agent = $manager->getAgentByFile($slaveAgent->getFile());
+                            $agent->linkManageableItem($schemaCode, $master, $slaveAgent->getData());
+                            $agent->save();
+                            $master->addAgent($schemaCode, $agent);
+                        }
+                    }
+                }
+            }
+        }
 
         // Перепривязываем связанные записи
         $relations = $master->getTable()->getRelations();

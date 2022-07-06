@@ -1,6 +1,7 @@
 <?
     /** @var ZFE_View $this */
-
+    /** @var Doctrine_collection<AbstractRecord> */
+    $items = $this->items;
     $modelName = $this->modelName;
     $tableInstance = Doctrine_Core::getTable($modelName);
     $allColumns = $tableInstance->getColumnNames();
@@ -35,19 +36,17 @@
     </div>
     <table class="table table-bordered">
         <thead>
-            
             <? if ($tableInstance->hasColumn('editor_id') || $tableInstance->hasColumn('datetime_edited')): ?>
             <tr>
                 <th>Последнее изменение</th>
-                <? foreach ($this->items as $item): ?>
+                <? foreach ($items as $item): ?>
                 <?= $this->lastEditedCell($item) ?>
                 <? endforeach; ?>
             </tr>
             <? endif; ?>
-            
             <tr>
                 <th>Вес</th>
-                <? foreach ($this->items as $item): ?>
+                <? foreach ($items as $item): ?>
                 <td class="text-center <?= $item->weight ?: 'empty' ?>">
                     <?= $item->weight ?>
                 </td>
@@ -58,7 +57,7 @@
             <? foreach ($columns as $columnName): ?>
             <tr>
                 <th><?= $modelName::getFieldName($columnName) ?></th>
-                <? foreach ($this->items as $item): ?>
+                <? foreach ($items as $item): ?>
                 <td class="<?= null === $item->{$columnName} ? 'null-value' : '' ?>">
                     <input type="radio" name="field[<?= $columnName ?>]" value="<?= $item->id ?>" />
                     <?= $this->autoFormat($item->{$columnName}, $columnName, $modelName) ?>
@@ -66,11 +65,28 @@
                 <? endforeach; ?>
             </tr>
             <? endforeach; ?>
+
+            <? if (is_a($modelName, ZfeFiles_Manageable::class, true)): ?>
+                <? /** @var ZfeFiles_Schema_Default $schema */ ?>
+                <? foreach ($modelName::getFileSchemas() as $schema): ?>
+                <? if ($schema->getMultiple()) continue; ?>
+                <tr>
+                    <th><?= $schema->getTitle() ?></th>
+                    <? foreach ($items as $item): ?>
+                    <? $agent = current($item->getAgents($schema)); ?>
+                    <td class="<?= $agent ? '' : 'null-value' ?>">
+                        <input type="radio" name="field[<?= $schema->getCode() ?>]" value="<?= $item->id ?>" />
+                        <?= $agent ? $this->abstractPartial('_merge_file_viewer.phtml', ['agent' => $agent]) : null ?>
+                    </td>
+                    <? endforeach; ?>
+                </tr>
+                <? endforeach; ?>
+            <? endif; ?>
         </tbody>
         <tfoot>
             <tr>
                 <th></th>
-                <? foreach ($this->items as $item): ?>
+                <? foreach ($items as $item): ?>
                 <td class="text-center">
                     <a class="btn btn-xs btn-default btn-remove" data-id="<?= $item->id ?>">
                         <i class="glyphicon glyphicon-remove"></i>

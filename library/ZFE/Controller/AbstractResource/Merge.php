@@ -41,6 +41,7 @@ trait ZFE_Controller_AbstractResource_Merge
         }
 
         $this->view->groups = (static::$_modelName)::getDuplicatesGroups();
+        $this->view->title('Поиск и объединение дубликатов');
     }
 
     public function mergeHelperAction()
@@ -101,10 +102,25 @@ trait ZFE_Controller_AbstractResource_Merge
             }
         }
         foreach ($map as $field => $data) {
-            $data = array_diff($data, ['']);
+            // Тушение предупреждений плохо, но тут действительно вполне может быть и строка и массив
+            // и это норма, а не исключение, и собачка лучше чем раздувать код
+            $data = @array_diff($data, ['']);
             $map[$field] = array_unique($data, SORT_REGULAR);
             if (1 < count($map[$field])) {
                 $diff[$field] = $map[$field];
+            }
+        }
+
+        $first = $items->getFirst();
+        if ($first && $first instanceof ZfeFiles_Manageable) {
+            $schemas = $first->getFileSchemas();
+            foreach ($schemas as $schema) {
+                if ($schema->isHidden() || !$schema->getMultiple()) {
+                    continue;
+                }
+                foreach ($items as $item) {
+                    $map[$schema->getCode()][$item['id']] = $item->getAgents($schema);
+                }
             }
         }
 

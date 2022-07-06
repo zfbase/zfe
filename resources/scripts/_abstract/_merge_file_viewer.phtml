@@ -1,0 +1,13 @@
+<?
+    /** @var ZfeFiles_Agent_Interface $agent */
+    $agent = $this->agent;
+    $file = $agent->getFile();
+?>
+
+<span class="label label-default"><?= $file->id ?></span>
+
+<span><?= $agent->getFilename() ?></span>
+
+<a href="<?= $file->getWebPathHelper()->getPath() ?>" class="btn btn-xs btn-default inline-block">
+    <span class="glyphicon glyphicon-save"></span>
+</a>

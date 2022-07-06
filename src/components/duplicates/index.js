@@ -14,6 +14,7 @@ class MergeHelperModal {
 
     this.$modal = makeModal({
       title: 'Объединение записей',
+      size: 'fluid',
     });
 
     const $modalBodyDefault = $('.modal-body', this.$modal);
