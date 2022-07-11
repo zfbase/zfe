@@ -399,7 +399,7 @@ class ZFE_Tasks_Manager
         $taskRevision->revision = $task->revision + 1;
 
         if ($scheduleDateTime) {
-            $task->datetime_schedule = $scheduleDateTime->format('Y-m-d H:i:s');
+            $taskRevision->datetime_schedule = $scheduleDateTime->format('Y-m-d H:i:s');
         }
 
         $taskRevision->save();
