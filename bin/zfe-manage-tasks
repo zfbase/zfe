@@ -59,6 +59,17 @@ if ($traitString) {
     }
 }
 
+$postIterationHandler = config('tasks.handlers.postIteration');
+if ($postIterationHandler) {
+    if (!is_a($postIterationHandler, ZFE_Tasks_Handler_PostIterationInterface::class, true)) {
+        $logger->log(
+            "{$postIterationHandler} not implement ZFE_Tasks_Handler_PostIterationInterface",
+            Zend_Log::ERR,
+        );
+        die(4);
+    }
+}
+
 while (true) {
     try {
         $tasks = $manager->findAllToDo($partSize, $performersCode, $traitNo, $traitTotal);
@@ -68,6 +79,10 @@ while (true) {
         sleep(30);
         echo $e->getMessage() . "\n";
         die(3);
+    }
+
+    if ($postIterationHandler) {
+        $postIterationHandler::execute($performersCode);
     }
 
     if ($tasks->count() < $partSize) {
