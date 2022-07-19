@@ -152,6 +152,10 @@ class ZFE_Utilities
      */
     public static function formatDuration($seconds, $precision = 0)
     {
+        if ($seconds < 0) {
+            return '-' . static::formatDuration(-$seconds, $precision);
+        }
+
         $duration = '';
 
         $days = floor($seconds / 86400);
@@ -188,6 +192,10 @@ class ZFE_Utilities
      */
     public static function formatShortDuration($number)
     {
+        if ($number < 0) {
+            return '-' . static::formatShortDuration(-$number);
+        }
+
         $hours = floor($number / 3600);
         $minutes = floor(($number % 3600) / 60);
         $seconds = $number % 60;
