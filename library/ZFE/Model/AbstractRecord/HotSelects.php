@@ -137,15 +137,23 @@ trait ZFE_Model_AbstractRecord_HotSelects
      * @param array $filters       массив параметров
      * @param int   $hydrationMode формат результата: Doctrine_Core::HYDRATE_ARRAY или Doctrine_Core::HYDRATE_RECORD
      * @param bool  $returnOne     вернуть только одну запись
+     * @param bool  $hard          включая удаленные
      *
      * @return Doctrine_Collection|static|static[]
      */
-    public static function findBySeveralParams(array $filters = [], $hydrationMode = null, $returnOne = false)
-    {
+    public static function findBySeveralParams(
+        array $filters = [],
+        $hydrationMode = null,
+        $returnOne = false,
+        $hard = false
+    ) {
         $query = ZFE_Query::create()
             ->select('x.*')
             ->from(static::class . ' x')
         ;
+
+        /** @var ZFE_Query $query */
+        $query->setHard($hard);
 
         foreach ($filters as $param => $value) {
             if (is_array($value)) {
@@ -169,12 +177,13 @@ trait ZFE_Model_AbstractRecord_HotSelects
      *
      * @param array $filters       массив параметров
      * @param int   $hydrationMode формат результата: Doctrine_Core::HYDRATE_ARRAY или Doctrine_Core::HYDRATE_RECORD
+     * @param bool  $hard          включая удаленные
      *
      * @return static
      */
-    public static function findOneBySeveralParams(array $filters = [], $hydrationMode = null)
+    public static function findOneBySeveralParams(array $filters = [], $hydrationMode = null, $hard = false)
     {
-        return static::findBySeveralParams($filters, $hydrationMode, true);
+        return static::findBySeveralParams($filters, $hydrationMode, true, $hard);
     }
 
     /**
