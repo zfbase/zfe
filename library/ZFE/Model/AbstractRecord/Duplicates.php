@@ -21,18 +21,31 @@ trait ZFE_Model_AbstractRecord_Duplicates
         return $groups;
     }
 
-    protected static function _getDuplicates()
+    protected static function _getDuplicatesQuery()
     {
-        $q = ZFE_Query::create()
+        return ZFE_Query::create()
             ->select(('x.title' === static::$titleField) ? 'x.title' : (static::$titleField . ' AS title'))
             ->from(static::class . ' x')
             ->addSelect('COUNT(*) cnt')
             ->groupBy('title')
             ->having('cnt > 1')
             ->orderBy('cnt DESC')
-            ->limit(10)
-            ;
+        ;
+    }
+
+    public static function _getDuplicates()
+    {
+        $q = self::_getDuplicatesQuery();
+        $q->limit(10);
+
         return $q->execute();
+    }
+
+    public static function getCountDuplicates()
+    {
+        $q = self::_getDuplicatesQuery();
+
+        return $q->count();
     }
 
     protected static function _getGroupsByDuplicate($duplicate)
