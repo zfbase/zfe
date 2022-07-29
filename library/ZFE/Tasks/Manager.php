@@ -384,7 +384,7 @@ class ZFE_Tasks_Manager
             throw new ZFE_Tasks_Exception('Невозможно перезапустить задачу во время её выполнения.');
         }
 
-        if (!$task->isDone()) {
+        if (!$task->isDone() && !$task->isCanceled()) {
             throw new ZFE_Tasks_Exception('Задача еще не выполнена, перезапуск не возможен.');
         }
 
