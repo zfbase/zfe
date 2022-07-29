@@ -141,6 +141,8 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      */
     public function notice($status, $message, Throwable $ex = null, $allowAjax = true)
     {
+        $isAjax = $this->_request->isXmlHttpRequest() && $allowAjax;
+
         if ($ex) {
             if ($log = Zend_Registry::get('log')) {
                 $log->log(
@@ -155,14 +157,14 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
                 );
             }
 
-            if (Zend_Registry::get('user')->noticeDetails) {
+            if (Zend_Registry::get('user')->noticeDetails && !$isAjax) {
                 $message = '<strong>' . $message . '</strong><br>'
                     . $ex->getMessage()
                     . '<pre>' . $ex->getTraceAsString() . '</pre>';
             }
         }
 
-        if ($this->_request->isXmlHttpRequest() && $allowAjax) {
+        if ($isAjax) {
             $this->_json($status, [], $message);
         }
     }
