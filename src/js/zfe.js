@@ -19,6 +19,7 @@ import '../components/mergeHelper';
 import '../components/modals';
 import '../components/tableStickyHeader';
 import '../components/uploadAjax';
+import '../components/onePress';
 import initPlaceholders from '../components/placeholders';
 
 // eslint-disable-next-line import/order
