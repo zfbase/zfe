@@ -25,14 +25,14 @@
 
     <? if ($config->doctrine->profile): ?>
     <div id="DevelSqlProfiler" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-fluid">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title">SQL–профайлер</h4>
                 </div>
                 <div class="modal-body table-responsive">
-                    <table class="table">
+                    <table class="table DevelSqlProfiler-table">
                         <thead>
                             <tr>
                                 <th>Тип</th>
@@ -45,7 +45,7 @@
                             <? $sumTime = 0; ?>
                             <? $numEvents = 0; ?>
                             <? foreach (Doctrine_Manager::connection()->getListener() as $key => $event) : /** @var Doctrine_Event $event */ ?>
-                                <? if (!in_array($event->getName(), ['fetch', 'prepare'])): ?>
+                                <? if (!in_array($event->getName(), ['fetch', 'fetch all', 'prepare'])): ?>
                                     <? $sumTime += $time = $event->getElapsedSecs(); ?>
                                     <? if (++$numEvents <= $config->debug->limitShowQueries): ?>
                                         <?
@@ -56,7 +56,7 @@
                                                 $params = '';
                                             }
                                         ?>
-                                        <tr style="vertical-align: top;">
+                                        <tr>
                                             <td><?= $event->getName() ?></td>
                                             <td><?= round($time * 1000, 2) ?></td>
                                             <td>
