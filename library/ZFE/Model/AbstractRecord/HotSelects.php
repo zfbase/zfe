@@ -198,6 +198,26 @@ trait ZFE_Model_AbstractRecord_HotSelects
     }
 
     /**
+     * Кеширование простых запросов getKeyValueList
+     */
+    private static $keyValueListCache = [];
+
+    /**
+     * Очистить кеш простых запросов getKeyValueList
+     * 
+     * @param bool $all очистить весь кеш или только для текущей модели?
+     *                  (по умолчанию только для текущей)
+     */
+    public static function clearKeyValueListCache($all = false)
+    {
+        if ($all) {
+            static::$keyValueListCache = [];
+        } else {
+            unset(static::$keyValueListCache[static::class]);
+        }
+    }
+
+    /**
      * Получить массив с заданными ключами и значениями из текущей таблицы.
      *
      * @param string       $keyField       поле для ключа
@@ -217,6 +237,18 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $groupBy = null,
         $filterByStatus = null
     ) {
+        if ( // Все параметры по умолчанию и есть в кеше
+            $keyField == 'x.id'
+            && $valueField == null
+            && $where == null
+            && $order == 'VAL_FIELD ASC'
+            && $groupBy == null
+            && $filterByStatus == null
+            && array_key_exists(static::class, static::$keyValueListCache)
+        ) {
+            return static::$keyValueListCache[static::class];
+        }
+
         $groupBy = $groupBy ? ", ${groupBy} AS GROUP_FIELD" : '';
         if (null === $filterByStatus) {
             $filterByStatus = static::$_excludeByStatus;
@@ -280,6 +312,8 @@ trait ZFE_Model_AbstractRecord_HotSelects
                 }
             }
         }
+
+        static::$keyValueListCache[static::class] = $map;
 
         return $map;
     }
