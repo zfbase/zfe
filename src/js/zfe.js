@@ -21,6 +21,7 @@ import '../components/tableStickyHeader';
 import '../components/uploadAjax';
 import '../components/onePress';
 import initPlaceholders from '../components/placeholders';
+import initTasksIndex from '../components/tasks';
 
 // eslint-disable-next-line import/order
 import { createFileAjax } from 'zfe-files';
@@ -243,6 +244,8 @@ const ZFE = {
     }
   },
 };
+
+ZFE.controllerActionScriptHelper('tasks', 'index', initTasksIndex);
 
 window.ZFE = ZFE;
 

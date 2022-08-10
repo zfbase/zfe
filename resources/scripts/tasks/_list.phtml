@@ -1,0 +1,114 @@
+<? /** @var ZFE_View $this */ ?>
+<? if (count($this->items)): ?>
+    <?= $this->paginator() ?>
+    <div class="clearfix"></div>
+    <div class="table-responsive">
+        <table class="table table-hover table-sticky-header">
+            <thead>
+                <tr>
+                    <?= $this->sortableHeadCell('id', null, 'text-right') ?>
+                    <?= $this->sortableHeadCell('datetime_created', 'Создана') ?>
+                    <?= $this->sortableHeadCell('revision', 'Версия', 'text-right') ?>
+                    <?= $this->sortableHeadCell('worked', 'В работе', 'text-right text-nowrap') ?>
+                    <th>Задача</th>
+                    <th style="width: 85%;">Подробности</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <? foreach ($this->items as $item): /** @var Tasks $item */?>
+                <tr>
+                    <td class="text-right">
+                        <div data-copy-to-clipboard="<?= $item->id ?>">
+                            <?= $this->number($item->id) ?>
+                        </div>
+                    </td>
+                    <td class="text-nowrap">
+                        <?= $this->dateTime($item->datetime_created) ?>
+                        <? if ($item->datetime_schedule): ?>
+                            <div
+                                data-toggle="tooltip"
+                                title="Отсрочка исполнения"
+                                class="schedule"
+                            >
+                                <?= $this->dateTime($item->datetime_schedule) ?>
+                            </div>
+                        <? endif; ?>
+                    </td>
+                    <td class="text-right"><?= $item->revision ?></td>
+                    <td class="text-right text-nowrap">
+                        <span
+                            data-toggle="tooltip"
+                            data-html="html"
+                            title="
+                                Начало: <?= $this->dateTime($item->datetime_started) ?><br>
+                                Окончание: <?= $this->dateTime($item->datetime_done) ?>"
+                        >
+                            <?= $this->timeDiff(
+                                $item->datetime_schedule ?: $item->datetime_created,
+                                $item->datetime_done
+                            ) ?>
+                        </span>
+                    </td>
+                    <td>
+                        <?= $item->performer_code ?><br />
+                        <span data-copy-to-clipboard="<?= $item->related_id ?>">
+                            <?= $this->number($item->related_id) ?>
+                        </span>
+                    </td>
+                    <td>
+                        <? if ($item->errors): ?>
+                            <div class="text-danger">
+                                <strong>Ошибка:</strong>
+                                <?= nl2br($this->escape($item->errors)) ?>
+                            </div>
+                        <? endif; ?>
+
+                        <? if ($item->datetime_canceled): ?>
+                            <div class="text-warning">
+                                <strong>Отменена</strong>
+                                <?= date('d.m.Y в H:i', strtotime($item->datetime_canceled)) ?>
+                            </div>
+                        <? endif; ?>
+
+                        <? if ($item->datetime_schedule && $item->inTodo()): ?>
+                            <div>
+                                <a
+                                    class="btn btn-default btn-sm btn-clear-schedule"
+                                    data-id="<?= $item->id ?>"
+                                    href="/tasks/clear-schedule/id/<?= $item->id ?>"
+                                >
+                                    Убрать отсрочку исполнения
+                                </a>
+                            </div>
+                        <? endif; ?>
+                    </td>
+                    <td>
+                        <? $child = $item->getChild(); ?>
+                        <? if ($child): ?>
+                            <a
+                                href="/tasks/index/search/all/id/<?= $child->id ?>"
+                                class="label label-info"
+                                title="ID перезапуска задачи"
+                            >
+                                <?= $child->id ?>
+                            </a>
+                        <? elseif ($item->errors || $item->datetime_canceled): ?>
+                            <button
+                                type="button"
+                                class="btn btn-xs btn-default btn-restart"
+                                data-id="<?= $item->id ?>"
+                            >
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        <? endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?= $this->paginator() ?>
+<? else: ?>
+    <p class="empty" style="clear: both;"><?= $this->listName ?> не найдены</p>
+<? endif; ?>

@@ -9,7 +9,14 @@
  */
 abstract class ZFE_Model_Default_Tasks extends BaseTasks
 {
-    /** {@inheritdoc} */
+    public static $defaultOrder = 'x.datetime_created DESC';
+    public static $defaultOrderKey = 'datetime_created_desc';
+    public static $nameSingular = 'Отложенная задача';
+    public static $namePlural = 'Отложенные задачи';
+    public static $nameFields = [
+        'related_id' => 'Субъект',
+        'performer_code' => 'Исполнитель',
+    ];
     public static $saveHistory = true;
 
     /**
@@ -125,5 +132,20 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
         $this->refresh();
         return $this->return_code > 0
             || $this->errors !== null;
+    }
+
+    /**
+     * Получить последнего потомка (крайний перезапуск).
+     */
+    public function getChild()
+    {
+        $q = Doctrine_Query::create()
+            ->from(Tasks::class)
+            ->whereIn('parent_id', [$this->id, $this->parent_id])
+            ->andWhere('datetime_created > ?', $this->datetime_created)
+            ->orderBy('datetime_created DESC')
+            ->limit(1)
+        ;
+        return $q->fetchOne();
     }
 }
