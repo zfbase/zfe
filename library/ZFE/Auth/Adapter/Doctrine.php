@@ -391,7 +391,7 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
                 $msg .= ': ' . $e->getMessage();
             }
 
-            throw new Zend_Auth_Adapter_Exception($msg);
+            throw new Zend_Auth_Adapter_Exception($msg, $e->getCode(), $e);
         }
         return $resultIdentities;
     }

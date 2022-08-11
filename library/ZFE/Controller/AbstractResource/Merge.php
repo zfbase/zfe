@@ -140,12 +140,7 @@ trait ZFE_Controller_AbstractResource_Merge
                 ZFE_Notices::ok($msg);
             } catch (Throwable $ex) {
                 ZFE_Utilities::popupException($ex);
-
-                if ($this->_request->isXmlHttpRequest()) {
-                    $this->_json(self::STATUS_FAIL, [], $ex->getMessage());
-                }
-
-                ZFE_Notices::ok($msg);
+                $this->error('Объединить не удалось', $ex);
             }
 
             $this->redirect($returnTo);

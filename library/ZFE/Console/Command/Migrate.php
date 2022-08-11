@@ -31,7 +31,7 @@ class ZFE_Console_Command_Migrate extends ZFE_Console_Command_Abstract
                 echo $message;
                 return;
             }
-            throw new ZFE_Console_Exception($message);
+            throw new ZFE_Console_Exception($message, $e->getCode(), $e);
         }
     }
 }
