@@ -332,6 +332,25 @@ class ZFE_Utilities
     }
 
     /**
+     * Отправить исключение в логи.
+     */
+    public static function logException(Throwable $ex, $level = Zend_Log::ERR)
+    {
+        if ($log = Zend_Registry::get('log')) {
+            $log->log(
+                $ex->getMessage(),
+                $level,
+                [
+                    'errno' => $ex->getCode(),
+                    'file' => $ex->getFile(),
+                    'line' => $ex->getLine(),
+                    'context' => $ex->getTraceAsString(),
+                ]
+            );
+        }
+    }
+
+    /**
      * Получить первое значение массива без смещения.
      *
      * @param array|Iterator|mixed $array на вход может быть передан объект любого типа

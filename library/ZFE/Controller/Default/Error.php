@@ -47,18 +47,7 @@ class ZFE_Controller_Default_Error extends Controller_Abstract
                 break;
         }
 
-        if ($log = Zend_Registry::get('log')) {
-            $log->log(
-                $errors->exception->getMessage(),
-                $priority,
-                [
-                    'errno' => $errors->exception->getCode(),
-                    'file' => $errors->exception->getFile(),
-                    'line' => $errors->exception->getLine(),
-                    'context' => $errors->exception->getTraceAsString(),
-                ]
-            );
-        }
+        ZFE_Utilities::logException($errors->exception, $priority);
 
         $this->view->displayException = $this->getInvokeArg('displayExceptions');
         $this->view->exception = $errors->exception;

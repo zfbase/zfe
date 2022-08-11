@@ -144,18 +144,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
         $isAjax = $this->_request->isXmlHttpRequest() && $allowAjax;
 
         if ($ex) {
-            if ($log = Zend_Registry::get('log')) {
-                $log->log(
-                    $ex->getMessage(),
-                    Zend_Log::ERR,
-                    [
-                        'errno' => $ex->getCode(),
-                        'file' => $ex->getFile(),
-                        'line' => $ex->getLine(),
-                        'context' => $ex->getTraceAsString(),
-                    ]
-                );
-            }
+            ZFE_Utilities::logException($ex);
 
             if (Zend_Registry::get('user')->noticeDetails && !$isAjax) {
                 $message = '<strong>' . $message . '</strong><br>'
