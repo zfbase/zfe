@@ -33,6 +33,7 @@ class ZFE_Form_Default_Search_Tasks extends ZFE_Form_Search_AbstractInline
                 'waiting' => 'в очереди',
                 'failed' => 'завершились с ошибкой',
                 'canceled' => 'отмененные',
+                'success' => 'завершились успешно',
                 'all' => 'все',
             ],
             'addon_prepend' => 'Фильтр',

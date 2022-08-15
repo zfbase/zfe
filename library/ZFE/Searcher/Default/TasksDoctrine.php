@@ -49,6 +49,11 @@ class ZFE_Searcher_Default_TasksDoctrine extends ZFE_Searcher_QueryBuilder_Doctr
                     AND x3.datetime_created > t.datetime_created
                 )');
                 break;
+            case 'success':
+                $this->_query->andWhere('x.datetime_done IS NOT NULL');
+                $this->_query->andWhere('x.return_code IS NOT NULL');
+                $this->_query->andWhere('x.errors IS NULL');
+                break;
             case 'canceled':
                 $this->_query->andWhere('x.datetime_canceled IS NOT NULL');
                 $this->_query->andWhere('NOT EXISTS(
