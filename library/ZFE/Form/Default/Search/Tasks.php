@@ -46,7 +46,7 @@ class ZFE_Form_Default_Search_Tasks extends ZFE_Form_Search_AbstractInline
             $performerCodes);
         $this->addElement('select', 'performer', [
             'label' => Tasks::getFieldName('performer_code'),
-            'multiOptions' => [null => 'все'] + $performerOptions,
+            'multiOptions' => [null => 'все исполнители'] + $performerOptions,
         ]);
 
         $this->addNumberElement('related_id');
