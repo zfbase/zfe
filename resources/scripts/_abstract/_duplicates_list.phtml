@@ -11,9 +11,12 @@
     <?= $modelName::getCountDuplicates() ?>
 </h4>
 
+<? if (count($this->groups)): ?>
+<?= $this->paginator() ?>
+<div class="clearfix"></div>
+
 <form>
-<? foreach ($this->groups as $group): /** @var Doctrine_Collection $group */ ?>
-    <? $gid = uniqid(); ?>
+<? foreach ($this->groups as $gid => $group): /** @var Doctrine_Collection<ZFE_Model_AbstractRecord> $group */ ?>
     <fieldset class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title"><?= $group->getFirst() ?></h3>
@@ -52,7 +55,7 @@
                             </div>
                         </td>
                         <td>
-                            <a href="<?= $item->getEditUrl() ?>" target="_blank">
+                            <a href="<?= $item->getUrl() ?>" target="_blank">
                                 <?= $item ?>
                             </a>
                         </td>
@@ -69,18 +72,16 @@
                    data-group="<?= $gid ?>"
                    type="button"
                    value="Объединить">
-            <input class="btn btn-default btn-sm btn-hide"
-                   type="button"
-                   value="Скрыть">
 
-            <span class="alert alert-info message-loading">Выполняется объединение</span>
+            <span class="alert alert-info message-loading">Выполняется объединение…</span>
             <span class="alert alert-error message-error hide">Ошибка!</span>
         </div>
     </fieldset>
 <? endforeach; ?>
 </form>
 
-<a href="<?= $modelName::getSearchDuplicatesUrl() ?>" class="btn btn-primary btn-more">Найти еще дубликаты</a>
+<?= $this->paginator() ?>
+<? endif; ?>
 
 <script class="zfe-duplications-alert" type="text/x-jquery-tmpl">
     <div class="alert alert-${type} alert-dismissible fade in" role="alert">
