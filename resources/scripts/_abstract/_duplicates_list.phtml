@@ -6,6 +6,11 @@
     $hasEdited = $tableInstance->hasColumn('datetime_edited');
 ?>
 
+<h4>
+    Всего групп дубликатов:
+    <?= $modelName::getCountDuplicates() ?>
+</h4>
+
 <form>
 <? foreach ($this->groups as $group): /** @var Doctrine_Collection $group */ ?>
     <? $gid = uniqid(); ?>
