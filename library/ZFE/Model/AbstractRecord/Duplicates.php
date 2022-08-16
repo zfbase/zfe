@@ -38,7 +38,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
         $q = self::_getDuplicatesQuery();
         $q->limit(10);
 
-        return $q->execute();
+        return ZFE_Paginator::execute($q);
     }
 
     public static function getCountDuplicates()
