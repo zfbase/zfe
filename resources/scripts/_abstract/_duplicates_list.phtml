@@ -6,13 +6,13 @@
     $hasEdited = $tableInstance->hasColumn('datetime_edited');
 ?>
 
-<h4>
+<h4 class="pull-left">
     Всего групп дубликатов:
     <?= $modelName::getCountDuplicates() ?>
 </h4>
 
 <? if (count($this->groups)): ?>
-<?= $this->paginator() ?>
+<?= $this->paginator(['containerPrefix' => '<ul class="pull-right pagination" style="margin-top:0">']) ?>
 <div class="clearfix"></div>
 
 <form>
