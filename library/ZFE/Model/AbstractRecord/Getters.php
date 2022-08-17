@@ -6,6 +6,16 @@
 
 /**
  * Геттеры данных модели и записи.
+ *
+ * @property array    $_dictionaryFields
+ * @property string[] $_nameBaseFields
+ * @property string[] $_newTitle
+ * @property array    $autocompleteCols
+ * @property string   $controller
+ * @property array    $multiAutocompleteCols
+ * @property string[] $nameFields
+ * @property int      $sex
+ * @property string[] $statusColor
  */
 trait ZFE_Model_AbstractRecord_Getters
 {
@@ -125,12 +135,12 @@ trait ZFE_Model_AbstractRecord_Getters
 
         if (Doctrine_Core::getTable(static::class)->hasRelation($field)) {
             foreach (static::$autocompleteCols as $code => $options) {
-                if ($options['relAlias'] == $field) {
+                if (isset($options['relAlias']) && $options['relAlias'] == $field) {
                     return static::getAutocompleteOptions($code)['label'];
                 }
             }
             foreach (static::$multiAutocompleteCols as $code => $options) {
-                if ($options['relAlias'] == $field) {
+                if (isset($options['relAlias']) && $options['relAlias'] == $field) {
                     return static::getMultiAutocompleteOptions($code)['label'];
                 }
             }
