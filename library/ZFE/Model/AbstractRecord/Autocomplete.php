@@ -418,10 +418,6 @@ trait ZFE_Model_AbstractRecord_Autocomplete
      */
     protected function _getLinkedIds($alias)
     {
-        $ids = [];
-        foreach ($this->{$alias} as $item) {
-            $ids[] = $item->id;
-        }
-        return $ids;
+        return $this->{$alias}->getFieldValues();
     }
 }

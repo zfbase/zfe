@@ -43,4 +43,25 @@ class ZFE_Model_Collection extends Doctrine_Collection
 
         return $this;
     }
+
+    /**
+     * Получить значения поля для элементов коллекции.
+     *
+     * @param string $field возвращаемое поле
+     * @param string $key   ключ (при необходимости)
+     *
+     * @return array
+     */
+    public function getFieldValues($field = 'id', $key = null)
+    {
+        $values = [];
+        foreach ($this as $item) {
+            if ($key) {
+                $values[$item->$key] = $item->$field;
+            } else {
+                $values[] = $item->$field;
+            }
+        }
+        return $values;
+    }
 }
