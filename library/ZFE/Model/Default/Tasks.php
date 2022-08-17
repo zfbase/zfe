@@ -148,4 +148,52 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
         ;
         return $q->fetchOne();
     }
+
+    /**
+     * @param ZFE_Model_Collection<Tasks> $tasks
+     */
+    public static function getChildrenMap($tasks)
+    {
+        if (count($tasks) < 1) {
+            return [];
+        }
+
+        $idMap = [];
+        foreach ($tasks as $task) {
+            $idMap[$task->id] = $task->parent_id ?: $task->id;
+        }
+
+        $idList = implode(',', array_values($idMap));
+
+        $conn = Doctrine_Manager::connection()->getDbh();
+        $q = $conn->prepare("
+            SELECT
+                MAX(tasks.id) AS child_id,
+                tasks.parent_id
+            FROM tasks,
+                (
+                    SELECT
+                        MAX(datetime_created) AS max_datetime_created,
+                        parent_id
+                    FROM tasks
+                    WHERE parent_id IN($idList)
+                    GROUP BY parent_id
+                ) lasters
+            WHERE
+                tasks.datetime_created = lasters.max_datetime_created
+                AND tasks.parent_id = lasters.parent_id
+            GROUP BY tasks.parent_id
+        ");
+        $q->execute();
+        $parentMap = array_fill_keys(array_values($idMap), null);
+        while ($row = $q->fetch(PDO::FETCH_ASSOC)) {
+            $parentMap[$row['parent_id']] = $row['child_id'];
+        }
+
+        $childrenMap = [];
+        foreach ($idMap as $taskId => $parentId) {
+            $childrenMap[$taskId] = $taskId != $parentMap[$parentId] ? $parentMap[$parentId] : null;
+        }
+        return $childrenMap;
+    }
 }

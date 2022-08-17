@@ -1,4 +1,7 @@
-<? /** @var ZFE_View $this */ ?>
+<?
+    /** @var ZFE_View $this */
+    $childrenMap = Tasks::getChildrenMap($this->items);
+?>
 <? if (count($this->items)): ?>
     <?= $this->paginator() ?>
     <div class="clearfix"></div>
@@ -84,14 +87,13 @@
                         <? endif; ?>
                     </td>
                     <td>
-                        <? $child = $item->getChild(); ?>
-                        <? if ($child): ?>
+                        <? if ($childrenMap[$item->id]): ?>
                             <a
-                                href="/tasks/index/search/all/id/<?= $child->id ?>"
+                                href="/tasks/index/search/all/id/<?= $childrenMap[$item->id] ?>"
                                 class="label label-info"
                                 title="ID перезапуска задачи"
                             >
-                                <?= $child->id ?>
+                                <?= $childrenMap[$item->id] ?>
                             </a>
                         <? elseif ($item->errors || $item->datetime_canceled): ?>
                             <button
