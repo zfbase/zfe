@@ -179,7 +179,7 @@ class ZFEMultiAutocomplete {
           if (query.length >= minLength) {
             url += `/?term=${encodeURIComponent(query)}`;
           } else if (query.length > 0) {
-            return false;
+            return;
           }
 
           const ids = [];
@@ -224,7 +224,9 @@ class ZFEMultiAutocomplete {
       });
     }
     this.$input.typeahead({
-      minLength: 0, // проверка переезжает в Bloodhound
+      // Если убрать проверку минимальной длинны в Bloodhound, то return false|null|undefined
+      // не отменяет запрос, а делает некорректный запрос к /false
+      minLength: this.settings.minLength,
       highlight: true,
     }, datasetSettings);
     // this.$input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
