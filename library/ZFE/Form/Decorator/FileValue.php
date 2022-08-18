@@ -83,7 +83,7 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
             $class .= ' image-uploaded';
         } else {
             if ($file->canDownload()) {
-                $value = '<a href="' . $file->getDownloadUrl() . '">' . $value . '</a>';
+                $value = '<a href="' . $file->getDownloadUrl() . '" target="_blank">' . $value . '</a>';
             }
 
             if ($file->hasIcon()) {

@@ -37,9 +37,9 @@ class ZFE_View_Helper_ShowTitles
             }
 
             if (is_string($linkMethod)) {
-                $arr[] = sprintf('<a href="%s">%s</a>', $item->{$linkMethod}(), $title);
+                $arr[] = sprintf('<a target="_blank" href="%s">%s</a>', $item->{$linkMethod}(), $title);
             } elseif (is_callable($linkMethod)) {
-                $arr[] = sprintf('<a href="%s">%s</a>', $linkMethod($item), $title);
+                $arr[] = sprintf('<a target="_blank" href="%s">%s</a>', $linkMethod($item), $title);
             } else {
                 $arr[] = $title;
             }
