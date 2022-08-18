@@ -12,6 +12,9 @@ class ZFE_Controller_Default_Tasks extends Controller_AbstractResource
     protected static $_modelName = Tasks::class;
     protected static $_searchFormName = ZFE_Form_Default_Search_Tasks::class;
     protected static $_canCreate = false;
+    protected static $_canDelete = false;
+    protected static $_canRestore = false;
+    protected static $_enableActions = ['index'];
 
     /**
      * Построитель Doctrine DQL-запроса.
