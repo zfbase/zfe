@@ -218,7 +218,7 @@ const ZFE = {
   },
 
   initFileAjax: (container) => {
-    $('.zfe-files-ajax', container).each((i, el) => createFileAjax(el));
+    $('.zfe-files-ajax:not(.custom-engine)', container).each((i, el) => createFileAjax(el));
   },
 
   initPlaceholders: container => initPlaceholders(container),
