@@ -249,7 +249,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
             return static::$keyValueListCache[static::class];
         }
 
-        $groupBy = $groupBy ? ", ${groupBy} AS GROUP_FIELD" : '';
+        $groupBy = $groupBy ? ", {$groupBy} AS GROUP_FIELD" : '';
         if (null === $filterByStatus) {
             $filterByStatus = static::$_excludeByStatus;
             if (true === $filterByStatus) {
@@ -269,8 +269,8 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $model = new static();
         $class = $model->getTableName();
 
-        $query = "SELECT ${keyField} AS KEY_FIELD, ${valueField} AS VAL_FIELD" . ($groupBy ? ", ${groupBy} AS GROUP_FIELD" : '');
-        $query .= ZFE_Query::isPgsql() ? " FROM \"${schema}\".\"${class}\" x" : " FROM `${schema}`.`${class}` x";
+        $query = "SELECT {$keyField} AS KEY_FIELD, {$valueField} AS VAL_FIELD" . ($groupBy ? ", {$groupBy} AS GROUP_FIELD" : '');
+        $query .= ZFE_Query::isPgsql() ? " FROM \"{$schema}\".\"{$class}\" x" : " FROM `{$schema}`.`{$class}` x";
 
         $conds = [];
 

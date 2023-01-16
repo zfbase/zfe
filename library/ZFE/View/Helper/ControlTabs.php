@@ -117,7 +117,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
     public function addTab(string $name, array $tab, bool $replace = false)
     {
         if (!$replace && key_exists($name, $this->_tabs)) {
-            throw new ZFE_View_Helper_Exception("Вкладка с названием '${name}' уже зарегистрирована.");
+            throw new ZFE_View_Helper_Exception("Вкладка с названием '{$name}' уже зарегистрирована.");
         }
 
         if (!array_key_exists('action', $tab)) {
@@ -146,7 +146,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             if ($skipMissing) {
                 return $this;
             }
-            throw new ZFE_View_Helper_Exception("Вкладка с названием '${name}' не зарегистрирована.");
+            throw new ZFE_View_Helper_Exception("Вкладка с названием '{$name}' не зарегистрирована.");
         }
 
         $this->_tabs[$name] = array_merge($this->_tabs[$name], $settings);

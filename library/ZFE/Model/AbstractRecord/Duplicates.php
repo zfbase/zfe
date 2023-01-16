@@ -193,7 +193,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
                 $q1 = <<<SQL
 UPDATE IGNORE {$tableName}
 SET {$foreign} = {$master->id}
-WHERE {$foreign} IN (${slavesStr})
+WHERE {$foreign} IN ({$slavesStr})
 SQL;
                 $stmt = $conn->prepare($q1);
                 $stmt->execute([]);
