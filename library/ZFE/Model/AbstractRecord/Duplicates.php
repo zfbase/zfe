@@ -65,8 +65,8 @@ trait ZFE_Model_AbstractRecord_Duplicates
                 $q->leftJoin('x.' . $class . ' rel_' . $class);
 
                 $pk = $relation->getTable()->getIdentifier();
-                $uniq = "rel_${class}." . (is_array($pk) ? implode(", rel_${class}.", $pk) : $pk);
-                $weights[] = "COUNT(DISTINCT ${uniq})";
+                $uniq = "rel_{$class}." . (is_array($pk) ? implode(", rel_{$class}.", $pk) : $pk);
+                $weights[] = "COUNT(DISTINCT {$uniq})";
             }
         }
 
@@ -148,7 +148,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
                 $q1 = <<<SQL
 UPDATE IGNORE {$tableName}
 SET {$foreign} = {$master->id}
-WHERE {$foreign} IN (${slavesStr})
+WHERE {$foreign} IN ({$slavesStr})
 SQL;
                 $stmt = $conn->prepare($q1);
                 $stmt->execute([]);

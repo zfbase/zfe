@@ -147,7 +147,7 @@ class ZFE_Console_CommandBroker
                 $prevCommand = get_class($prevCommand);
             }
 
-            throw new ZFE_Console_Exception("Ключ '${$name}' уже использован для команды '${prevCommand}'.");
+            throw new ZFE_Console_Exception("Ключ '{$name}' уже использован для команды '{$prevCommand}'.");
         }
 
         $this->_commands[$name] = is_string($command) ? $class : $command;
@@ -240,7 +240,7 @@ class ZFE_Console_CommandBroker
     public function getCommand(string $name)
     {
         if (!key_exists($name, $this->_commands)) {
-            throw new ZFE_Console_Exception("Команда '${name}' не зарегистрирована.");
+            throw new ZFE_Console_Exception("Команда '{$name}' не зарегистрирована.");
         }
 
         $command = $this->_commands[$name];
@@ -301,6 +301,6 @@ class ZFE_Console_CommandBroker
             }
         }
 
-        throw new ZFE_Console_Exception("Команда '${name}' не найдена.");
+        throw new ZFE_Console_Exception("Команда '{$name}' не найдена.");
     }
 }

@@ -81,7 +81,7 @@ class ZFE_Utilites
             $pattern_middle = $right_pattern;
         }
 
-        return preg_replace("/${pattern_middle}/usSD", '', $string);
+        return preg_replace("/{$pattern_middle}/usSD", '', $string);
     }
 
     /**

@@ -88,8 +88,8 @@ trait ZFE_Controller_AbstractResource_Merge
                 $q->leftJoin('x.' . $class . ' rel_' . $class);
 
                 $pk = $relation->getTable()->getIdentifier();
-                $uniq = "rel_${class}." . (is_array($pk) ? implode(", rel_${class}.", $pk) : $pk);
-                $weights[] = "COUNT(DISTINCT ${uniq})";
+                $uniq = "rel_{$class}." . (is_array($pk) ? implode(", rel_{$class}.", $pk) : $pk);
+                $weights[] = "COUNT(DISTINCT {$uniq})";
             }
         }
         if (!empty($weights)) {
@@ -198,8 +198,8 @@ trait ZFE_Controller_AbstractResource_Merge
                     $q->leftJoin('x.' . $class . ' rel_' . $class);
 
                     $pk = $relation->getTable()->getIdentifier();
-                    $uniq = "rel_${class}." . (is_array($pk) ? implode(", rel_${class}.", $pk) : $pk);
-                    $weights[] = "COUNT(DISTINCT ${uniq})";
+                    $uniq = "rel_{$class}." . (is_array($pk) ? implode(", rel_{$class}.", $pk) : $pk);
+                    $weights[] = "COUNT(DISTINCT {$uniq})";
                 }
             }
 

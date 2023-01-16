@@ -208,7 +208,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $groupby = null,
         $filterByStatus = null
     ) {
-        $groupby = $groupby ? ", ${groupby} AS GROUP_FIELD" : '';
+        $groupby = $groupby ? ", {$groupby} AS GROUP_FIELD" : '';
         if (null === $filterByStatus) {
             $filterByStatus = static::$_excludeByStatus;
             if (true === $filterByStatus) {
@@ -228,8 +228,8 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $model = new static();
         $class = $model->getTableName();
 
-        $query = "SELECT ${keyField} AS KEY_FIELD, ${valueField} AS VAL_FIELD" . ($groupby ? ", ${groupby} AS GROUP_FIELD" : '');
-        $query .= ZFE_Query::isPgsql() ? " FROM \"${schema}\".\"${class}\" x" : " FROM `${schema}`.`${class}` x";
+        $query = "SELECT {$keyField} AS KEY_FIELD, {$valueField} AS VAL_FIELD" . ($groupby ? ", {$groupby} AS GROUP_FIELD" : '');
+        $query .= ZFE_Query::isPgsql() ? " FROM \"{$schema}\".\"{$class}\" x" : " FROM `{$schema}`.`{$class}` x";
 
         $conds = [];
 

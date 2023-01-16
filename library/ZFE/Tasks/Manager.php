@@ -61,7 +61,7 @@ class ZFE_Tasks_Manager
             if ($performer instanceof ZFE_Tasks_Performer) {
                 $this->performers[$performer->getCode()] = $performer;
             } else {
-                throw new ZFE_Tasks_Exception("Класс ${performerClassName} не является классом-исполнителем");
+                throw new ZFE_Tasks_Exception("Класс {$performerClassName} не является классом-исполнителем");
             }
         }
     }

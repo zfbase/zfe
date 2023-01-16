@@ -121,6 +121,6 @@ class ZFE_Console_HelperBroker
             }
         }
 
-        throw new ZFE_Console_Exception("Помощник '${name}' не найден.");
+        throw new ZFE_Console_Exception("Помощник '{$name}' не найден.");
     }
 }

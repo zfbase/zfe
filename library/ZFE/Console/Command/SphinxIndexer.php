@@ -129,7 +129,7 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
         echo trim($this->_table->renderRow([$model, '', '0.000']));
 
         $startTime = microtime(true);
-        $total = (int) $conn->query("SELECT COUNT(*) FROM (${sql}) _base_query")->fetch()[0];
+        $total = (int) $conn->query("SELECT COUNT(*) FROM ({$sql}) _base_query")->fetch()[0];
         $progressBar->start($total, null, null, $startTime, false);
         $this->_updateRow($model, $progressBar);
 
