@@ -118,14 +118,17 @@ trait ZFE_Controller_AbstractResource_Edit
      *
      * @return ZFE_Form
      */
-    protected function _initEditForm(array $options)
+    protected function _initEditForm(array $options, $formName = null)
     {
         if (!key_exists('modelName', $options)) {
             $options['modelName'] = static::$_modelName;
         }
 
         if (!($this->view->form instanceof Zend_Form)) {
-            $formName = static::$_editFormName;
+            if ($formName === null) {
+                $formName = static::$_editFormName;
+            }
+
             if (!empty($formName) && is_string($formName)) {
                 $this->view->form = new $formName($options);
             } else {
@@ -138,15 +141,19 @@ trait ZFE_Controller_AbstractResource_Edit
 
     /**
      * Подготовить запись.
+     * 
+     * @param string $options['modelName']
+     * @param string $options['canCreate']
      *
      * @return AbstractRecord
      */
-    protected function _initEditItem()
+    protected function _initEditItem(array $options = [])
     {
-        $modelName = static::$_modelName;
+        $modelName = key_exists('modelName', $options) ? $options['modelName'] : static::$_modelName;
+        $canCreate = key_exists('canCreate', $options) ? $options['canCreate'] : static::$_canCreate;
 
         if (!($this->view->item instanceof Doctrine_Record)) {
-            if (!static::$_canCreate && !$this->hasParam('id')) {
+            if (!$canCreate && !$this->hasParam('id')) {
                 $this->abort(403, 'Невозможно создать ' . mb_strtolower($modelName::$nameSingular) . ': доступ запрещен');
             }
             $itemId = (int) $this->getParam('id');
