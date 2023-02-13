@@ -431,6 +431,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
         return [
             'tableName' => $this->getTableName(),
             'data' => $this->getData(),
+            'fileAgents' => $this->_filesToArray([]),
         ];
     }
 }
