@@ -19,13 +19,14 @@ class ZFE_Controller_Action_Helper_DownloadNginx extends ZFE_Controller_Action_H
      * @param string $path путь до файла в файловой системе
      * @param string $url  защищенный виртуальный URL
      * @param string $name новое имя файла
+     * @param bool $download Отключение принудительной загрузки
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $url, $name)
+    public function direct($path, $url, $name, $download = true)
     {
         if (file_exists($path)) {
-            $response = $this->factoryResponse($path, $name);
+            $response = $this->factoryResponse($path, $name, $download);
             $response->setHeader('X-Accel-Redirect', $url);
             $response->sendResponse();
             exit;

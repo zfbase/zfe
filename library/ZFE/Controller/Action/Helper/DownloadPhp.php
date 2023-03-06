@@ -17,10 +17,11 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends ZFE_Controller_Action_Hel
      * @param string $path путь до файла в файловой системе
      * @param string $url  защищенный виртуальный URL
      * @param string $name новое имя файла
+     * @param bool $download Отключение принудительной загрузки
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $url, $name)
+    public function direct($path, $url, $name, $download = true)
     {
         if (file_exists($path)) {
             // если этого не сделать файл будет читаться в память полностью!
@@ -28,7 +29,7 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends ZFE_Controller_Action_Hel
                 ob_end_clean();
             }
 
-            $response = $this->factoryResponse($path, $name);
+            $response = $this->factoryResponse($path, $name, $download);
             $response->sendResponse();
 
             readfile($path);
