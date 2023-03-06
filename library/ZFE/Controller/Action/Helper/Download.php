@@ -19,7 +19,7 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $url, $name, $download)
+    public function direct($path, $url, $name, $download = true)
     {
         $webserver = config('webserver');
         if (!$webserver) {
