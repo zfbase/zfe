@@ -49,7 +49,7 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
      *
      * @return Zend_Controller_Response_Abstract
      */
-    protected function factoryResponse($path, $name, $download)
+    protected function factoryResponse($path, $name, $download = true)
     {
         $response = $this->getResponse();
         $response

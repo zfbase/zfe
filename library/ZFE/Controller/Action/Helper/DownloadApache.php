@@ -21,7 +21,7 @@ class ZFE_Controller_Action_Helper_DownloadApache extends ZFE_Controller_Action_
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $url, $name, $download)
+    public function direct($path, $url, $name, $download = true)
     {
         if (file_exists($path)) {
             // сбрасываем буфер вывода PHP, чтобы избежать переполнения памяти выделенной под скрипт

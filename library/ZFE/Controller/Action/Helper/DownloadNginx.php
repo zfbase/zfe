@@ -23,7 +23,7 @@ class ZFE_Controller_Action_Helper_DownloadNginx extends ZFE_Controller_Action_H
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $url, $name, $download)
+    public function direct($path, $url, $name, $download = true)
     {
         if (file_exists($path)) {
             $response = $this->factoryResponse($path, $name, $download);

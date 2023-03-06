@@ -21,7 +21,7 @@ class ZFE_Controller_Action_Helper_DownloadPhp extends ZFE_Controller_Action_Hel
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $url, $name, $download)
+    public function direct($path, $url, $name, $download = true)
     {
         if (file_exists($path)) {
             // если этого не сделать файл будет читаться в память полностью!
