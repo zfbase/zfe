@@ -597,6 +597,28 @@ trait ZFE_Form_Helpers_Templates
     }
 
     /**
+     * Добавить стандартное поле автокомплита по настройкам автокомплита нескольких значений.
+     *
+     * @param string      $id
+     * @param string      $multiacId
+     * @param array       $customOptions
+     * @param null|string $elementName
+     *
+     * @return Zend_Form
+     */
+    public function addAutocompleteElementByMulti(string $id, string $multiacId, array $customOptions = [], $elementName = null)
+    {
+        $modelName = $this->_modelName;
+        $acOptions = $modelName::getMultiAutocompleteOptions($multiacId);
+        $localOptions = [
+            'label' => ($acOptions['relModel'])::$nameSingular,
+        ];
+        $options = array_replace_recursive($acOptions, $localOptions, $customOptions);
+
+        return $this->addElement('autocomplete', $elementName ?: $id, $options);
+    }
+
+    /**
      * Добавить стандартное статическое поле.
      *
      * @param string      $id
