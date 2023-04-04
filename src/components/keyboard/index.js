@@ -35,7 +35,7 @@ $(document).on('keyup', (e) => {
       $cursor = $active.next();
     }
 
-    if ($cursor.length) {
+    if ($cursor && $cursor.length) {
       const url = $cursor.find('a').attr('href');
       if (url) {
         window.location = url;
