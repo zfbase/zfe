@@ -123,6 +123,22 @@ class ZFE_Model_Table extends Doctrine_Table
     }
 
     /**
+     * Поле может принимать значение NULL?
+     *
+     * @param string $columnName
+     *
+     * @return boolean|null
+     */
+    public function isColumnNullable($columnName)
+    {
+        if (!isset($this->_columns[$columnName])) {
+            return null;
+        }
+
+        return !$this->_columns[$columnName]['notnull'];
+    }
+
+    /**
      * Проверить факт допустимости только положительных значений элемента формы, соответствующего столбцу модели.
      *
      * @param string $columnName

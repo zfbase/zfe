@@ -303,7 +303,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
                 continue;
             }
 
-            if ('' === $value) {
+            if ('' === $value && $this->getTable()->isColumnNullable($key)) {
                 $array[$key] = null;
                 continue;
             }
