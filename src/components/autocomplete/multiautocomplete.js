@@ -321,6 +321,10 @@ class ZFEMultiAutocomplete {
   onChange() {
     this.$input.trigger('zfe.ac.change', [this.currentValue()]);
   }
+
+  setOption(key, value) {
+    this.settings[key] = value;
+  }
 }
 
 $.fn[pluginName] = function zfeMultiAutocomplete(options, ...args) {

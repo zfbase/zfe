@@ -241,6 +241,10 @@ class ZFEAutocomplete {
   setValueData(data) {
     this.valueData = data;
   }
+
+  setOption(key, value) {
+    this.settings[key] = value;
+  }
 }
 
 $.fn[pluginName] = function zfeAutocomplete(options, ...args) {
