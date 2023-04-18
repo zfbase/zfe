@@ -325,6 +325,11 @@ class ZFEMultiAutocomplete {
   setOption(key, value) {
     this.settings[key] = value;
   }
+
+  setUrl(url) {
+    this.settings.url = url;
+    this.engine.remote.url = url;
+  }
 }
 
 $.fn[pluginName] = function zfeMultiAutocomplete(options, ...args) {

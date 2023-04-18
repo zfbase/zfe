@@ -245,6 +245,11 @@ class ZFEAutocomplete {
   setOption(key, value) {
     this.settings[key] = value;
   }
+
+  setUrl(url) {
+    this.settings.url = url;
+    this.engine.remote.url = url;
+  }
 }
 
 $.fn[pluginName] = function zfeAutocomplete(options, ...args) {
