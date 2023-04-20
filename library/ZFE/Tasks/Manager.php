@@ -201,6 +201,7 @@ class ZFE_Tasks_Manager
             ->where('x.datetime_started IS NULL')
             ->addWhere('x.datetime_done IS NULL')
             ->addWhere('x.return_code IS NULL')
+            ->addWhere('x.errors IS NULL')
             ->addWhere('x.datetime_canceled IS NULL')
             ->addWhere('x.datetime_schedule IS NULL OR (x.datetime_schedule IS NOT NULL AND x.datetime_schedule < NOW())')
             ->orderBy('x.priority ASC')
