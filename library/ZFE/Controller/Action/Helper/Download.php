@@ -15,10 +15,11 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
      * @param string $path путь до файла в файловой системе
      * @param string $url  защищенный виртуальный URL
      * @param string $name новое имя файла
+     * @param bool $download отключение принудительной загрузки
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($path, $url, $name)
+    public function direct($path, $url, $name, $download = true)
     {
         /** @var Zend_Config $config */
         $config = Zend_Registry::get('config');
@@ -34,7 +35,7 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
         ];
         if (array_key_exists($config->webserver, $helpersMap)) {
             Zend_Controller_Action_HelperBroker::getStaticHelper($helpersMap[$config->webserver])
-                ->direct($path, $url, $name);
+                ->direct($path, $url, $name, $download);
         } else {
             throw new Zend_Controller_Action_Exception('В конфигурации не указан не поддерживаемый веб-сервер', 500);
         }
@@ -43,12 +44,13 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
     /**
      * Сформировать заголовки ответа для отправки файла с принудительным скачиванием.
      *
-     * @param string $path
-     * @param string $name
+     * @param string $path   путь до файла в файловой системе
+     * @param string $name   новое имя файла
+     * @param bool $download отключение принудительной загрузки
      *
      * @return Zend_Controller_Response_Abstract
      */
-    protected function factoryResponse($path, $name)
+    protected function factoryResponse($path, $name, $download = true)
     {
         $response = $this->getResponse();
         $response
@@ -58,13 +60,15 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
         $response
             ->setHeader('Content-Description', 'File Transfer')
             ->setHeader('Content-Type', mime_content_type($path) ?: 'application/octet-stream')
-            ->setHeader('Content-Disposition', 'attachment; filename="' . $name . '"')
             ->setHeader('Content-Transfer-Encoding', 'binary')
             ->setHeader('Expires', '0')
             ->setHeader('Cache-Control', 'must-revalidate')
             ->setHeader('Pragma', 'public')
             ->setHeader('Content-Length', filesize($path))
         ;
+        if ($download) {
+            $response->setHeader('Content-Disposition', 'attachment; filename="' . $name . '"');
+        }
         return $response;
     }
 }
