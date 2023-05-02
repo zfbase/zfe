@@ -17,11 +17,18 @@ class ZFE_View_Helper_ShowTitles
      * @param string                                $separator   разделитель
      * @param int                                   $maxElements максимальное число выводимых элементов
      * @param callback|string                       $linkMethod  генератор адреса ссылки
+     * @param bool                                  $newTab      ссылки в новой вкладке
      *
      * @return string
      */
-    public function showTitles($items, $field = null, $separator = ', ', $maxElements = 0, $linkMethod = null)
-    {
+    public function showTitles(
+        $items,
+        $field = null,
+        $separator = ', ',
+        $maxElements = 0,
+        $linkMethod = null,
+        $newTab = false
+    ) {
         $i = 0;
         $arr = [];
         foreach ($items as $item) { /** @var Doctrine_Record $item */
@@ -36,10 +43,11 @@ class ZFE_View_Helper_ShowTitles
                 $title = $item->getTitle();
             }
 
+            $anchorTemplate = $newTab ? '<a href="%s" target-"_blank">%s</a>' : '<a href="%s">%s</a>';
             if (is_string($linkMethod)) {
-                $arr[] = sprintf('<a href="%s">%s</a>', $item->{$linkMethod}(), $title);
+                $arr[] = sprintf($anchorTemplate, $item->{$linkMethod}(), $title);
             } elseif (is_callable($linkMethod)) {
-                $arr[] = sprintf('<a href="%s">%s</a>', $linkMethod($item), $title);
+                $arr[] = sprintf($anchorTemplate, $linkMethod($item), $title);
             } else {
                 $arr[] = $title;
             }
