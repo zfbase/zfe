@@ -36,7 +36,7 @@
  * @method string                                 period($start, $end, $showTime = false)                                                         Форматировать период.
  * @method ZFE_View_Helper_SearchPages            searchPages()                                                                                   Кнопки для перехода к предыдущему и следующему результату поиска.
  * @method string                                 shortenText($text, $max_len = 100)                                                              Укоротить текст до определенного размера.
- * @method string                                 showTitles($items, $field = null, $separator = ', ', $maxElements = 0, $linkMethod = null)      Вывести список значений поля коллекции записей.
+ * @method string                                 showTitles($items, $field = null, $separator = ', ', $maxElements = 0, $linkMethod = null, $newTab = false) Вывести список значений поля коллекции записей.
  * @method string                                 sortableHeadCell($field, $title = null, $cellClass = '')                                        Получить ячейку заголовка сортируемого поля таблицы.
  * @method string                                 tag($name, $attribs = [], $content = '')                                                        Генератор HTML-тегов.
  * @method string                                 title($title)                                                                                   Задать заголовок страницы.

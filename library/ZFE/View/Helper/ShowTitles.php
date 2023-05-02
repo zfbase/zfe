@@ -43,7 +43,7 @@ class ZFE_View_Helper_ShowTitles
                 $title = $item->getTitle();
             }
 
-            $anchorTemplate = $newTab ? '<a href="%s" target-"_blank">%s</a>' : '<a href="%s">%s</a>';
+            $anchorTemplate = $newTab ? '<a href="%s" target="_blank">%s</a>' : '<a href="%s">%s</a>';
             if (is_string($linkMethod)) {
                 $arr[] = sprintf($anchorTemplate, $item->{$linkMethod}(), $title);
             } elseif (is_callable($linkMethod)) {
