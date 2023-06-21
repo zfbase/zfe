@@ -15,9 +15,11 @@ class ZFEMultiAutocomplete {
   constructor(element, options) {
     this.$input = $(element);
     this.$group = this.$input.closest('.multiac-wrap');
+    this.$iconRight = this.$group.find('.tt-icon-right');
     this.$wrap = this.$group.find('.multiac-linked-wrap');
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
+    this.$hint = this.$group.find('.tt-hint');
   }
 
   dataAttrOptions() {
@@ -293,6 +295,21 @@ class ZFEMultiAutocomplete {
         },
       });
     });
+  }
+
+  disable(disable) {
+    if (disable) {
+      this.$input.addClass('disabled');
+      this.$iconRight.addClass('tt-disabled');
+      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)');
+    } else {
+      this.$input.removeClass('disabled');
+      this.$iconRight.removeClass('tt-disabled');
+      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)');
+    }
+
+    this.$input.attr('disabled', disable);
+    this.$hint.attr('disabled', disable);
   }
 
   addValue(id, title, data = {}) {
