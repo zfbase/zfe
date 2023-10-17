@@ -299,7 +299,7 @@ class ZFE_Tasks_Manager
 
                 ZFE_Utilities::popupException($e);
 
-                $task->errors = $e->getMessage();
+                $task->errors = mb_substr($e->getMessage(), 0, 20000);
                 $task->save();
 
                 if ($task->revision < 8) {
