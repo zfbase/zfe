@@ -76,6 +76,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
             }
         }
 
+        ob_clean(); // to prevent warning breaking json
         $this->_helper->json($json);
     }
 
