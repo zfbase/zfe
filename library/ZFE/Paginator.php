@@ -75,6 +75,19 @@ class ZFE_Paginator
     }
 
     /**
+     * Установить экземпляр запроса
+     *
+     * @param Zend_Controller_Request_Abstract $request
+     *
+     * @return ZFE_Paginator
+     */
+    public function setRequest(Zend_Controller_Request_Abstract $request)
+    {
+        $this->_request = $request;
+        return self::$_instance;
+    }
+
+    /**
      * Установить число записей на странице.
      *
      * @param int $number
