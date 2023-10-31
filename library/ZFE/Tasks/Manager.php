@@ -268,9 +268,18 @@ class ZFE_Tasks_Manager
                 continue;
             }
 
+            $progressQuery = Doctrine_Manager::connection()
+                ->getDbh()
+                ->prepare("UPDATE tasks SET progress = :progress WHERE id = {$task->id}");
+
+            $onProgress = function ($progress) use ($progressQuery) {
+                $progressQuery->execute([':progress' => $progress]);
+            };
+
             try {
                 $performer = $this->assign($task);
                 $performer->setLogger($logger);
+                $performer->setOnProgress($onProgress);
             } catch (Exception $e) {
                 if ($this->debugMode) {
                     throw $e;

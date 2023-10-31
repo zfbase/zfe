@@ -22,6 +22,13 @@ abstract class ZFE_Tasks_Performer
     protected $logger;
 
     /**
+     * Обработчик прогресса.
+     *
+     * @var callable|null
+     */
+    protected $onProgress;
+
+    /**
      * Создать экземпляр исполнителя.
      */
     public static function factory(): self
@@ -35,6 +42,14 @@ abstract class ZFE_Tasks_Performer
     public function setLogger(?Zend_Log $logger)
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * Указать обработчик прогресса.
+     */
+    public function setOnProgress(callable $onProgress)
+    {
+        $this->onProgress = $onProgress;
     }
 
     /**
