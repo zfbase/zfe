@@ -126,9 +126,7 @@ class ZFEMultiAutocomplete {
       if (m) {
         index = parseInt(m[1]) + 1;
       }
-      console.log({ name, m, index });
     });
-    console.log({ index });
     return index;
   }
 
@@ -138,8 +136,6 @@ class ZFEMultiAutocomplete {
         `.linked-entity:has([name*="\[id\]"][value=${id}])`
       );
     }
-
-    console.log(this.$wrap.children().get());
 
     const priority = this.getNewElementIndex();
 
@@ -157,9 +153,6 @@ class ZFEMultiAutocomplete {
     $(`<input type="hidden" name="${name}[${priority}][title]"/>`)
       .attr('value', title)
       .appendTo($inputs);
-
-    console.log(`<input type="hidden" name="${name}[${priority}][priority]"/>`);
-
     $(`<input type="hidden" name="${name}[${priority}][priority]"/>`)
       .attr('value', priority)
       .appendTo($inputs);
