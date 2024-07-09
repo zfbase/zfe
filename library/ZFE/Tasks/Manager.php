@@ -311,7 +311,7 @@ class ZFE_Tasks_Manager
                 $task->errors = mb_substr($e->getMessage(), 0, 20000);
                 $task->save();
 
-                if ($task->revision < 8) {
+                if ($task->revision < 8 && !($e instanceof ZFE_Tasks_Performer_Exception_Permanent)) {
                     $scheduleDateTime = new DateTime();
                     $second = pow(4, $task->revision + 1);
                     $scheduleDateTime->modify("+{$second} second");
