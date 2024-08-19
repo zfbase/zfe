@@ -205,7 +205,10 @@ trait ZFE_Form_Helpers_Templates
         $table = Doctrine_Core::getTable($this->_modelName);
         $columnOptions = $table->getElementOptionsForColumn($id);
         $options = array_replace_recursive($columnOptions, $customOptions);
-
+        $options['attribs'] = array_merge(
+            isset($options['attribs']) ? $options['attribs'] : [],
+            ['step' => 'any']
+        );
         return $this->addElement('dateTimeLocal', $elementName ?: $id, $options);
     }
 
