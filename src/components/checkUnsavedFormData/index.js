@@ -16,7 +16,7 @@ class CheckUnsavedFormData {
     setTimeout(() => {
       this.setFree();
       this.initHandlers();
-    });
+    }, 100);
   }
 
   initHandlers() {
