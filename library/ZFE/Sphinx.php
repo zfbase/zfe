@@ -12,6 +12,13 @@ use Foolz\SphinxQL\SphinxQL;
 class ZFE_Sphinx
 {
     protected static $_connection = null;
+    protected static $_connectionLastUsedAt = 0;
+    protected static $_connectionMaxAge = 5;
+
+    public static function setConnectionMaxAge(int $seconds)
+    {
+        self::$_connectionMaxAge = $seconds;
+    }
 
     /**
      * @deprecated
@@ -39,9 +46,10 @@ class ZFE_Sphinx
      */
     public static function connection()
     {
-        if (null === self::$_connection) {
+        if (!self::$_connection || ((time() - self::$_connectionLastUsedAt) > self::$_connectionMaxAge)) {
             self::$_connection = self::newConnection();
         }
+        self::$_connectionLastUsedAt = time();
         return self::$_connection;
     }
 
@@ -176,18 +184,18 @@ class ZFE_Sphinx
                 case 'rt_attr_multi':
                 case 'rt_attr_multi_64':
                     $data[$key] = empty($data[$key]) ? [] : array_map('intval', explode(',', $data[$key]));
-                break;
+                    break;
                 case 'rt_attr_uint':
                 case 'rt_attr_bigint':
                 case 'rt_attr_float':
                 case 'rt_attr_bool':
                     $data[$key] = (null === $data[$key]) ? 0 : (int) $value;
-                break;
+                    break;
                 case 'rt_field':
                 case 'rt_attr_string':
                 case 'rt_attr_timestamp':
                     $data[$key] = (null === $data[$key]) ? '' : $value;
-                break;
+                    break;
                 case 'rt_attr_json':
             }
         }
