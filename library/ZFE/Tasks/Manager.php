@@ -302,11 +302,6 @@ class ZFE_Tasks_Manager
 
                 $managed++;
             } catch (Throwable $e) {
-                if (mb_strpos($e->getMessage(),'General error: 2006 MySQL server has gone away') !== false) {
-                    error_log("Problems with MySQL connection, exiting: " . $e->getMessage());
-                    exit(1);
-                }
-
                 if ($this->debugMode) {
                     throw $e;
                 }
@@ -324,6 +319,11 @@ class ZFE_Tasks_Manager
                 }
 
                 $this->logHelper($logger, "Task #{$task->id} performed with error: {$e->getMessage()}");
+
+                if (mb_strpos($e->getMessage(), 'General error: 2006 MySQL server has gone away') !== false) {
+                    error_log("Problems with MySQL connection, exiting: " . $e->getMessage());
+                    exit(1);
+                }
             }
         }
 
