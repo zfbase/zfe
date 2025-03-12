@@ -1,11 +1,10 @@
-import $ from 'jquery';
 import autosize from 'autosize';
-import 'zfe-typeahead/dist/typeahead.jquery';
 import 'inputmask/dist/inputmask/jquery.inputmask';
+import $ from 'jquery';
+import 'zfe-typeahead/dist/typeahead.jquery';
 
 import '../components/keyboard';
 
-import '../lib/jquery.tmpl';
 import '../components/audio';
 import '../components/autocomplete/autocomplete';
 import '../components/autocomplete/multiautocomplete';
@@ -17,14 +16,13 @@ import historyDiff from '../components/historyDiff';
 import '../components/merge';
 import '../components/mergeHelper';
 import '../components/modals';
-import '../components/tableStickyHeader';
-import '../components/uploadAjax';
 import '../components/onePress';
 import initPlaceholders from '../components/placeholders';
+import '../components/tableStickyHeader';
 import initTasksIndex from '../components/tasks';
-
-// eslint-disable-next-line import/order
-import { createFileAjax } from 'zfe-files';
+import '../components/uploadAjax';
+import '../lib/jquery.tmpl';
+import { initZfeFileElement } from './initZfeFileElement';
 
 const { confirm } = window;
 
@@ -79,8 +77,8 @@ const ZFE = {
     $('audio.zfe-audio', container).zfeAudio();
   },
 
-  getAutocompleteTemplates: templateSet => (ZFE.autocompleteTemplates
-    && ZFE.autocompleteTemplates[templateSet]) || {},
+  getAutocompleteTemplates: (templateSet) =>
+    (ZFE.autocompleteTemplates && ZFE.autocompleteTemplates[templateSet]) || {},
 
   /** Настроить автодополнение одного значения */
   initAutocompletes: (container) => {
@@ -135,7 +133,9 @@ const ZFE = {
   /** Настроить автоматическую высоту многострочных текстовых полей */
   initConfirm: (container) => {
     if (confirm) {
-      $(container).on('click', '[data-confirm]', event => confirm($(event.currentTarget).data('confirm')));
+      $(container).on('click', '[data-confirm]', (event) =>
+        confirm($(event.currentTarget).data('confirm'))
+      );
     }
   },
 
@@ -172,7 +172,10 @@ const ZFE = {
   initItemDetailsPopover: (container) => {
     $('.item-details-icon', container).popover({
       content: function getBody() {
-        return $(this).closest('.item-details').find('.item-details-body').html();
+        return $(this)
+          .closest('.item-details')
+          .find('.item-details-body')
+          .html();
       },
     });
   },
@@ -189,10 +192,12 @@ const ZFE = {
 
   /** Элемент формы интервал */
   initRangeInputs: () => {
-    $('input[type=range]').on('input', (event) => {
-      const $input = $(event.currentTarget);
-      $input.attr('data-value', $input.val());
-    }).trigger('input');
+    $('input[type=range]')
+      .on('input', (event) => {
+        const $input = $(event.currentTarget);
+        $input.attr('data-value', $input.val());
+      })
+      .trigger('input');
   },
 
   /** Помощник для наделения строк функционалом ссылок */
@@ -218,12 +223,15 @@ const ZFE = {
   },
 
   initFileAjax: (container) => {
-    $('.zfe-files-ajax:not(.custom-engine)', container).each((i, el) => createFileAjax(el));
+    $('.zfe-files-ajax:not(.custom-engine)', container).each((_, el) =>
+      initZfeFileElement(el)
+    );
   },
 
-  initPlaceholders: container => initPlaceholders(container),
+  initPlaceholders: (container) => initPlaceholders(container),
 
-  initContainer: container => $.each(ZFE.initialMethods, (i, method) => ZFE[method](container)),
+  initContainer: (container) =>
+    $.each(ZFE.initialMethods, (i, method) => ZFE[method](container)),
 
   /** Инициализация приложения */
   init: (app) => {
@@ -236,10 +244,16 @@ const ZFE = {
   /** Помощник для инициализации скриптов только для текущего контроллера и экшена */
   controllerActionScriptHelper: (controller, action, callback) => {
     const classes = Array.from(document.body.classList);
-    const controllerName = (classes.find(c => c.indexOf('controller-') === 0) || '').substr(11);
-    const actionName = (classes.find(c => c.indexOf('action-') === 0) || '').substr(7);
-    if (matchControllerAction(controller, controllerName)
-      && matchControllerAction(action, actionName)) {
+    const controllerName = (
+      classes.find((c) => c.indexOf('controller-') === 0) || ''
+    ).substr(11);
+    const actionName = (
+      classes.find((c) => c.indexOf('action-') === 0) || ''
+    ).substr(7);
+    if (
+      matchControllerAction(controller, controllerName) &&
+      matchControllerAction(action, actionName)
+    ) {
       callback();
     }
   },

@@ -1,10 +1,9 @@
 import $ from 'jquery';
 
 $.fn.tableStickyHeader = function tableStickyHeader() {
-  const $tables = this;
   const $win = $(window);
 
-  $tables.each((i, el) => {
+  this.each((_, el) => {
     const $table = $(el);
     const $head = $('thead', $table);
 
@@ -12,8 +11,8 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
     $head.addClass('header-original');
   });
 
-  function setPositionValues() {
-    $tables.each((i, el) => {
+  const setPositionValues = () => {
+    this.each((i, el) => {
       // таблица с приклеивающимся заголовком
       const $table = $(el);
       // верхняя навигационная панель (navbar)
@@ -31,8 +30,8 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
       // разница между нижней границей (navbar) и величиной прокрутки по вертикали
       let topOffset = $navBar.offset().top + navBarHeight - scrollTop;
       // нижняя граница фиксированного заголовка
-      const headBottom = (topOffset < 0 ? 0 : navBarHeight)
-          + headHeight + scrollTop;
+      const headBottom =
+        (topOffset < 0 ? 0 : navBarHeight) + headHeight + scrollTop;
       // учитываем в отступе фиксированного заголовка снятиес фиксирования navbar
       // на малых высотах
       topOffset = topOffset < 0 ? 0 : topOffset;
@@ -58,20 +57,23 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
         $headFixed.addClass('hide');
       }
     });
-  }
+  };
 
-  function setWidthValues() {
-    $tables.each((i, el) => {
+  const setWidthValues = () => {
+    this.each((i, el) => {
       const $table = $(el);
       const $headFixed = $('.header-fixed td, .header-fixed th', $table);
-      const $headOriginal = $('.header-original td, .header-original th', $table);
+      const $headOriginal = $(
+        '.header-original td, .header-original th',
+        $table
+      );
 
       $headOriginal.each((tdi, td) => {
         $headFixed.eq(tdi).width($(td).width());
       });
     });
     setPositionValues();
-  }
+  };
 
   setWidthValues();
 

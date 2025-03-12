@@ -2,9 +2,11 @@ import $ from 'jquery';
 
 const comparer = (otherArray) => {
   return (current) => {
-    return otherArray.filter((other) => {
-      return other.name === current.name && other.value === current.value;
-    }).length === 0;
+    return (
+      otherArray.filter((other) => {
+        return other.name === current.name && other.value === current.value;
+      }).length === 0
+    );
   };
 };
 
@@ -20,21 +22,21 @@ class CheckUnsavedFormData {
   }
 
   initHandlers() {
-    const component = this;
-    component.$form.on('submit', () => component.setFree());
+    this.$form.on('submit', () => this.setFree());
 
     window.addEventListener('beforeunload', (e) => {
-      if (!component.isFree()) {
+      if (!this.isFree()) {
         e.preventDefault();
-        e.returnValue = true;
       }
     });
   }
 
   isFree() {
     const snapshot = this.$form.serializeArray();
-    return (this.freeSnapshot.filter(comparer(snapshot)).length === 0)
-      && (snapshot.filter(comparer(this.freeSnapshot)).length === 0);
+    return (
+      this.freeSnapshot.filter(comparer(snapshot)).length === 0 &&
+      snapshot.filter(comparer(this.freeSnapshot)).length === 0
+    );
   }
 
   setFree() {
@@ -56,9 +58,15 @@ class CheckUnsavedFormData {
       return;
     }
 
-    const newValue = (typeof value === 'undefined')
-      ? this.$form.serializeArray().reduce((result, field) => (field.name === key ? field.value : result), null)
-      : value;
+    const newValue =
+      typeof value === 'undefined'
+        ? this.$form
+            .serializeArray()
+            .reduce(
+              (result, field) => (field.name === key ? field.value : result),
+              null
+            )
+        : value;
 
     if (index !== null) {
       this.freeSnapshot[index].value = newValue;
@@ -72,7 +80,10 @@ class CheckUnsavedFormData {
   }
 }
 
-$.fn.checkUnsavedFormData = function checkUnsavedFormData(command = '', ...args) {
+$.fn.checkUnsavedFormData = function checkUnsavedFormData(
+  command = '',
+  ...args
+) {
   const results = [];
   const $elements = this.each((i, el) => {
     const $this = $(this);
@@ -83,7 +94,10 @@ $.fn.checkUnsavedFormData = function checkUnsavedFormData(command = '', ...args)
         $element = new CheckUnsavedFormData($this);
         $this.data('plugin_checkUnsavedFormData', $element);
       } else {
-        window.console.warn(el, '- is incorrect tag for $.fn.checkUnsavedFormData');
+        window.console.warn(
+          el,
+          '- is incorrect tag for $.fn.checkUnsavedFormData'
+        );
       }
     }
 

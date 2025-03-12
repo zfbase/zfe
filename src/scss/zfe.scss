@@ -14,7 +14,7 @@
 @import '../components/tableStickyHeader/index';
 @import '../components/uploadAjax/index';
 @import '../components/tasks/index';
-@import 'zfe-files/src/index.scss';
+@import 'zfe-files/dist/index.css';
 
 body {
     padding-top: 70px;
@@ -32,6 +32,7 @@ body {
 $navbar-min-shortcut: $grid-float-breakpoint !default;
 $navbar-max-shortcut: $screen-desktop !default;
 @media (min-width: $navbar-min-shortcut) and (max-width: $navbar-max-shortcut) {
+
     .brand-title,
     .navbar-user-name {
         display: none;
@@ -97,7 +98,7 @@ tr[role="button"] {
     cursor: pointer;
 }
 
-.popover-content > table:last-child {
+.popover-content>table:last-child {
     margin-bottom: 0;
 }
 
@@ -105,6 +106,7 @@ tr[role="button"] {
     width: fit-content;
     max-width: 60%;
 }
+
 .item-details-body {
     display: none;
 }
@@ -113,7 +115,7 @@ tr[role="button"] {
     z-index: 1100;
     padding: 5px;
     margin: -2px;
-  }
+}
 
 @media (max-height: 500px) {
     .navbar-fixed-top {
@@ -129,11 +131,25 @@ tr[role="button"] {
     }
 }
 
-.badge-primary { background-color: $brand-primary; }
-.badge-success { background-color: $brand-success; }
-.badge-info { background-color: $brand-info; }
-.badge-warning { background-color: $brand-warning; }
-.badge-danger { background-color: $brand-danger; }
+.badge-primary {
+    background-color: $brand-primary;
+}
+
+.badge-success {
+    background-color: $brand-success;
+}
+
+.badge-info {
+    background-color: $brand-info;
+}
+
+.badge-warning {
+    background-color: $brand-warning;
+}
+
+.badge-danger {
+    background-color: $brand-danger;
+}
 
 .small-header {
     display: block;

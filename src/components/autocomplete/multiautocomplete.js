@@ -115,7 +115,7 @@ class ZFEMultiAutocomplete {
     return result;
   }
 
-  getNewElementIndex(container) {
+  getNewElementIndex() {
     let index = 1;
     this.$wrap.children().each((i, el) => {
       const name = $(el).find('input').first().attr('name');
@@ -132,9 +132,7 @@ class ZFEMultiAutocomplete {
 
   addElement(title, id, data = {}, replace = null, silent = false) {
     if (this.hasElement(id)) {
-      return this.$wrap.find(
-        `.linked-entity:has([name*="\[id\]"][value=${id}])`
-      );
+      return this.$wrap.find(`.linked-entity:has([name*="[id]"][value=${id}])`);
     }
 
     const priority = this.getNewElementIndex();
@@ -363,7 +361,7 @@ class ZFEMultiAutocomplete {
   currentValue() {
     const values = {};
     this.$wrap.find('input').each((i, el) => {
-      const [, n, key] = el.name.split(/[\[\]]+/);
+      const [, n, key] = el.name.split(/[[\]]+/);
       if (!values[n]) {
         values[n] = {};
       }
