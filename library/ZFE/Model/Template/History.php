@@ -67,7 +67,7 @@ class ZFE_Model_Template_History extends Doctrine_Template
             $this->_listener->saveHistory($mode);
         } elseif (!$noWarning) {
             trigger_error('Не возможно установить флаг записи и учета истории '
-                        . 'при отключенном обработчике истории.', E_USER_WARNING);
+                . 'при отключенном обработчике истории.', E_USER_WARNING);
         }
     }
 
@@ -76,7 +76,7 @@ class ZFE_Model_Template_History extends Doctrine_Template
      *
      * @param Doctrine_Connection $conn
      */
-    public function hardSave(Doctrine_Connection $conn = null)
+    public function hardSave(?Doctrine_Connection $conn = null)
     {
         if ($this->_listener) {
             $saveHistory = $this->_listener->saveHistory();
@@ -116,10 +116,10 @@ class ZFE_Model_Template_History extends Doctrine_Template
             ->addWhere('x.content_id = ?', $this->_invoker->id)
             ->andWhere('x.content_version > ?', $version)
             ->orderBy('x.content_version DESC')
-            ->execute()
-        ;
+            ->execute();
 
-        foreach ($history as $action) { /** @var History $action */
+        foreach ($history as $action) {
+            /** @var History $action */
             if (!empty($action->column_name) && $state->contains($action->column_name)) {
                 $state->{$action->column_name} = $action->content_old;
                 $state->version = $action->content_version;

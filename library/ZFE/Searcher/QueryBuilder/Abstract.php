@@ -93,7 +93,7 @@ abstract class ZFE_Searcher_QueryBuilder_Abstract implements ZFE_Searcher_QueryB
     /**
      * {@inheritdoc}
      */
-    public function getQuery(array $params = null)
+    public function getQuery(?array $params = null)
     {
         if (null !== $params) {
             $this->setParams($params);

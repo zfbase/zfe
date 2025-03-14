@@ -101,7 +101,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      * @param Throwable $ex
      * @param bool      $allowAjax
      */
-    public function error($message, Throwable $ex = null, $allowAjax = true)
+    public function error($message, ?Throwable $ex = null, $allowAjax = true)
     {
         $this->notice(self::STATUS_FAIL, $message, $ex, $allowAjax);
         ZFE_Notices::err($message);
@@ -126,7 +126,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      * @param Throwable $ex
      * @param bool      $allowAjax
      */
-    public function warning($message, Throwable $ex = null, $allowAjax = true)
+    public function warning($message, ?Throwable $ex = null, $allowAjax = true)
     {
         $this->notice(self::STATUS_WARNING, $message, $ex, $allowAjax);
         ZFE_Notices::msg($message);
@@ -140,7 +140,7 @@ abstract class ZFE_Controller_Abstract extends Zend_Controller_Action
      * @param Throwable $ex
      * @param bool      $allowAjax
      */
-    public function notice($status, $message, Throwable $ex = null, $allowAjax = true)
+    public function notice($status, $message, ?Throwable $ex = null, $allowAjax = true)
     {
         $isAjax = $this->_request->isXmlHttpRequest() && $allowAjax;
 

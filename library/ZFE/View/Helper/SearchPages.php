@@ -76,23 +76,23 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
         if (1 != $currentRowNumber) {
             $prevUrl = $this->getPrevUrl();
             $prevBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-prev" href="' . $prevUrl . '">'
-                     . '<span class="glyphicon glyphicon-arrow-left"></span>'
-                     . '</a>';
+                . '<span class="glyphicon glyphicon-arrow-left"></span>'
+                . '</a>';
         } else {
             $prevBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-prev disabled" href="#">'
-                     . '<span class="glyphicon glyphicon-arrow-left"></span>'
-                     . '</a>';
+                . '<span class="glyphicon glyphicon-arrow-left"></span>'
+                . '</a>';
         }
 
         if ($currentRowNumber < $hops->{$hash}['params']['totalResults']) {
             $nextUrl = $this->getNextUrl();
             $nextBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-next" href="' . $nextUrl . '">'
-                     . '<span class="glyphicon glyphicon-arrow-right"></span>'
-                     . '</a>';
+                . '<span class="glyphicon glyphicon-arrow-right"></span>'
+                . '</a>';
         } else {
             $nextBtn = '<a role="button" class="' . $btnBaseClass . ' btn-steps-next disabled" href="#">'
-                     . '<span class="glyphicon glyphicon-arrow-right"></span>'
-                     . '</a>';
+                . '<span class="glyphicon glyphicon-arrow-right"></span>'
+                . '</a>';
         }
 
         if ($prevBtn || $nextBtn) {

@@ -59,16 +59,16 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
         $valueDisplay = $this->view->tag('div', ['class' => 'datelist-entities'], $curValues);
 
         $input = '<input type="date"'
-               . ' id="' . $this->view->escape($id) . '"'
-               . $disabled
-               . $this->_htmlAttribs($attribs)
-               . $this->getClosingBracket();
+            . ' id="' . $this->view->escape($id) . '"'
+            . $disabled
+            . $this->_htmlAttribs($attribs)
+            . $this->getClosingBracket();
 
         $btnSet = '<span class="input-group-btn">'
-                . '<button class="btn btn-default btn-data-add" type="button">'
-                . '<span class="glyphicon glyphicon-plus"></span>'
-                . '</button>'
-                . '</span>';
+            . '<button class="btn btn-default btn-data-add" type="button">'
+            . '<span class="glyphicon glyphicon-plus"></span>'
+            . '</button>'
+            . '</span>';
 
         $inputGroup = $disable || $readonly ? '' : $this->view->tag('div', ['class' => 'input-group'], $input . $btnSet);
 

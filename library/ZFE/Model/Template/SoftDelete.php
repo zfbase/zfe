@@ -44,7 +44,7 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
      *
      * @return bool true если успешно
      */
-    public function hardDelete(Doctrine_Connection $conn = null)
+    public function hardDelete(?Doctrine_Connection $conn = null)
     {
         $lastSoftDelete = null;
 
@@ -69,7 +69,7 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
      *
      * @throws ZFE_Model_Exception
      */
-    public function undelete(Doctrine_Connection $conn = null)
+    public function undelete(?Doctrine_Connection $conn = null)
     {
         if ($this->_table->hasColumn('deleted')) {
             $invoker = $this->_invoker;

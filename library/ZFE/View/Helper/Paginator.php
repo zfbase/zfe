@@ -76,7 +76,7 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
      *
      * @return string
      */
-    public function paginator(array $options = [], ZFE_Paginator $paginator = null)
+    public function paginator(array $options = [], ?ZFE_Paginator $paginator = null)
     {
         $default = [
             'chunk' => config('view.paginator.chunk', 10),

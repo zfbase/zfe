@@ -22,7 +22,7 @@ class ZFE_Form_Inline extends Twitter_Bootstrap3_Form_Inline
      *
      * @return string
      */
-    public function render(Zend_View_Interface $view = null)
+    public function render(?Zend_View_Interface $view = null)
     {
         $this->prepare();
 

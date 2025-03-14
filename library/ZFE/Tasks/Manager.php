@@ -129,8 +129,7 @@ class ZFE_Tasks_Manager
             ->from('Tasks x')
             ->where('x.parent_id = ?', $task->parent_id ?: $task->id)
             ->andWhere('x.revision > ?', $task->revision)
-            ->orderBy('x.datetime_created DESC')
-        ;
+            ->orderBy('x.datetime_created DESC');
         $tasks = $q->execute();
         return $tasks->count() ? $tasks : null;
     }
@@ -153,8 +152,7 @@ class ZFE_Tasks_Manager
             ->addWhere('x.datetime_canceled IS NULL')
             ->orderBy('x.priority ASC')
             ->addOrderBy('x.datetime_created ASC')
-            ->limit(1)
-        ;
+            ->limit(1);
         return $q->fetchOne() ?: null;
     }
 
@@ -171,8 +169,7 @@ class ZFE_Tasks_Manager
             ->where('x.related_id = ?', $relatedId)
             ->addWhere('x.performer_code = ?', $code)
             ->orderBy('x.datetime_created ASC')
-            ->limit(1)
-        ;
+            ->limit(1);
         return $q->fetchOne() ?: null;
     }
 
@@ -192,8 +189,8 @@ class ZFE_Tasks_Manager
     public function findAllToDo(
         int $limit = 100,
         array $performers = [],
-        int $traitNo = null,
-        int $traitTotal = null
+        ?int $traitNo = null,
+        ?int $traitTotal = null
     ): Doctrine_Collection {
         $q = ZFE_Query::create()
             ->select('x.*')
@@ -206,8 +203,7 @@ class ZFE_Tasks_Manager
             ->addWhere('x.datetime_schedule IS NULL OR (x.datetime_schedule IS NOT NULL AND x.datetime_schedule < NOW())')
             ->orderBy('x.priority ASC')
             ->addOrderBy('x.datetime_created ASC')
-            ->limit($limit)
-        ;
+            ->limit($limit);
 
         if ($performers) {
             $q->andWhereIn('x.performer_code', $performers);
@@ -251,7 +247,7 @@ class ZFE_Tasks_Manager
      *
      * @return int количество успешно выполненных задач
      */
-    final public function manage($tasks, Zend_Log $logger = null): int
+    final public function manage($tasks, ?Zend_Log $logger = null): int
     {
         if (!is_array($tasks) && !($tasks instanceof Doctrine_Collection)) {
             throw new ZFE_Tasks_Exception('Выполнить можно задачи только в коллекции Doctrine_Collection либо массиве');
@@ -259,7 +255,8 @@ class ZFE_Tasks_Manager
 
         $managed = 0;
 
-        foreach ($tasks as $task) {  /** @var Tasks $task */
+        foreach ($tasks as $task) {
+            /** @var Tasks $task */
             if (!($task instanceof ZFE_Model_Default_Tasks)) {
                 throw new ZFE_Tasks_Exception('Выполняемые задачи должны быть наследниками ZFE_Model_Default_Tasks');
             }
@@ -355,7 +352,7 @@ class ZFE_Tasks_Manager
     public function plan(
         string $performerCode,
         AbstractRecord $related,
-        DateTime $scheduleDateTime = null,
+        ?DateTime $scheduleDateTime = null,
         int $priority = 0
     ): Tasks {
         if (!array_key_exists($performerCode, $this->performers)) {
@@ -393,7 +390,7 @@ class ZFE_Tasks_Manager
      *
      * @throws ZFE_Tasks_Exception
      */
-    public function revision(Tasks $task, DateTime $scheduleDateTime = null): Tasks
+    public function revision(Tasks $task, ?DateTime $scheduleDateTime = null): Tasks
     {
         if ($task->isPerformed()) {
             throw new ZFE_Tasks_Exception('Невозможно перезапустить задачу во время её выполнения.');

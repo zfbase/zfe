@@ -59,6 +59,4 @@
  * @property-read string $controllerName  Имя контроллера
  * @property-read string $actionName      Имя действия
  */
-class ZFE_View extends Zend_View
-{
-}
+class ZFE_View extends Zend_View {}
