@@ -44,7 +44,6 @@
         "php": ">=7.4 || >= 8.0",
         "ext-json": "*",
         "ext-bcmath": "*",
-        "shardj/zf1-future": "^1.14",
         "zfbase/doctrine1": "^1.2",
         "zfbase/zend1-bootstrap3": "~1",
         "zfbase/zfe-files": "^1.2.19",
@@ -52,7 +51,8 @@
         "judev/php-htmltruncator": "^1.1",
         "greenlion/php-sql-parser": "^4.3",
         "ltd-beget/sphinx-configuration-tokenizer": "~1.0.5",
-        "foolz/sphinxql-query-builder": "^3.0"
+        "foolz/sphinxql-query-builder": "^3.0",
+        "zfbase/zf1-future": "^1.24"
     },
     "suggest": {
         "phpoffice/phpspreadsheet": "PhpOffice\\PhpSpreadsheet for SendExcel2007 action helper",
