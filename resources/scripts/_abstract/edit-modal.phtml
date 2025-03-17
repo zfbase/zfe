@@ -1,12 +1,14 @@
-<? /** @var ZFE_View $this */ ?>
+<?php
 
-<? if ($this->item->exists()): ?>
+/** @var ZFE_View $this */ ?>
+
+<?php if ($this->item->exists()): ?>
     <div class="pull-right" style="margin-bottom: 10px;">
         <a href="<?= $this->item->getEditUrl() ?>" target="_blank">
             <span class="glyphicon glyphicon-share-alt"></span>
         </a>
     </div>
-<? endif; ?>
+<?php endif; ?>
 
 <div class="clearfix"></div>
 <?= $this->alerts(); ?>

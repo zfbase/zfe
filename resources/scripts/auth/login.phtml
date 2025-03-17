@@ -1,7 +1,8 @@
-<?
-    /** @var ZFE_View $this */
-    /** @var Zend_Config $config */
-    $config = Zend_Registry::get('config');
+<?php
+
+/** @var ZFE_View $this */
+/** @var Zend_Config $config */
+$config = Zend_Registry::get('config');
 ?>
 
 <form class="form-signin" action="/auth/login" method="POST">
@@ -15,7 +16,7 @@
     <div class="checkbox">
         <label><?= $this->form->remember ?> Оставаться в системе</label>
     </div>
-    <? if (isset($this->error)): ?>
+    <?php if (isset($this->error)): ?>
         <div class="alert alert-danger"><?= $this->error ?></div>
-    <? endif; ?>
+    <?php endif; ?>
 </form>

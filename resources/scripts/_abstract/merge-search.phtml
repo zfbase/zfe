@@ -1,34 +1,35 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $modelName = $this->modelName;
-    $tableInstance = Doctrine_Core::getTable($modelName);
-    $hasEdited = $tableInstance->hasColumn('datetime_edited');
-    $cntItems = count($this->items);
+/** @var ZFE_View $this */
+
+$modelName = $this->modelName;
+$tableInstance = Doctrine_Core::getTable($modelName);
+$hasEdited = $tableInstance->hasColumn('datetime_edited');
+$cntItems = count($this->items);
 ?>
 
-<? if ($cntItems): ?>
+<?php if ($cntItems): ?>
     <div class="table-responsive">
         <table class="table table-hover">
             <thead>
                 <th style="width: 100%;"><?= $modelName::getFieldName('title') ?></th>
                 <th class="text-right"><abbr title="Число ссылок на <?= $this->itemName ?>">Вес</abbr></th>
-                <? if ($hasEdited): ?>
+                <?php if ($hasEdited): ?>
                     <th class="text-nowrap">Последняя правка</th>
-                <? endif; ?>
+                <?php endif; ?>
             </thead>
             <tbody>
-            <? foreach ($this->items as $item): ?>
-                <tr class="result"
-                    data-id="<?= $item->id ?>"
-                    data-title="<?= $this->escape($item->getTitle()) ?>"
-                    data-weight="<?= $item->weight ?>">
-                    <td><?= $item ?></td>
-                    <td class="text-right"><?= $item->weight ?></td>
-                    <?= $hasEdited ? $this->lastEditedCell($item, 'text-nowrap') : '' ?>
-                </tr>
-            <? endforeach; ?>
-            </tbody>        
+                <?php foreach ($this->items as $item): ?>
+                    <tr class="result"
+                        data-id="<?= $item->id ?>"
+                        data-title="<?= $this->escape($item->getTitle()) ?>"
+                        data-weight="<?= $item->weight ?>">
+                        <td><?= $item ?></td>
+                        <td class="text-right"><?= $item->weight ?></td>
+                        <?= $hasEdited ? $this->lastEditedCell($item, 'text-nowrap') : '' ?>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
 
@@ -36,6 +37,6 @@
         'selectedTemplate' => '<li class="active"><a href="#" data-page-num="{%page}">{%page}</a></li>',
         'template' => '<li><a href="#" data-page-num="{%page_number}">{%page}</a></li>',
     ]) ?>
-<? endif; ?>
+<?php endif; ?>
 
 <p class="empty <?= $cntItems ? 'hide' : '' ?>"><?= $this->listName ?> не найдены.</p>

@@ -1,19 +1,20 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $item = $this->item = $this->curItem;
+/** @var ZFE_View $this */
 
-    $this->ControlTabs()->addTab('diff', [
-        'action' => 'diff',
-        'title' => 'Сравнение версий',
-        'class' => 'pull-right',
-    ]);
+$item = $this->item = $this->curItem;
+
+$this->ControlTabs()->addTab('diff', [
+    'action' => 'diff',
+    'title' => 'Сравнение версий',
+    'class' => 'pull-right',
+]);
 ?>
 
 <?= $this->abstractRender('_header.phtml') ?>
 
-<? if (file_exists(APPLICATION_PATH . '/views/scripts/' . $this->resource . '/_diff.phtml')): ?>
+<?php if (file_exists(APPLICATION_PATH . '/views/scripts/' . $this->resource . '/_diff.phtml')): ?>
     <?= $this->render($this->resource . '/_diff.phtml') ?>
-<? else: ?>
+<?php else: ?>
     <?= $this->render('_abstract/_diff.phtml') ?>
-<? endif; ?>
+<?php endif; ?>

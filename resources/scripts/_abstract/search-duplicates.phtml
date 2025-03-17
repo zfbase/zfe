@@ -1,4 +1,6 @@
-<? /** @var ZFE_View $this */ ?>
+<?php
+
+/** @var ZFE_View $this */ ?>
 
 <div>
     <?= $this->hopsHistory()->getUpBtn() ?>
@@ -9,8 +11,8 @@
     <small>(поиск и объединение дубликатов)</small>
 </h2>
 
-<? if (count($this->groups)): ?>
+<?php if (count($this->groups)): ?>
     <div class="zfe-duplications"><?= $this->abstractRender('_duplicates_list.phtml') ?></div>
-<? else: ?>
+<?php else: ?>
     <div class="alert alert-info" role="alert">Дубликаты не найдены.</div>
-<? endif; ?>
+<?php endif; ?>

@@ -1,18 +1,19 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $modelName = $this->modelName;
-    $serviceFields = $modelName::getServiceFields();
-    $hiddenColumns = $modelName::getHistoryHiddenFields();
-    $sideHash = $this->hopsHistory()->getSideHash('?');
+/** @var ZFE_View $this */
 
-    $versions = [];
-    foreach ($this->milestones as $version) {
-        $versions[$version['version']] =
-            'Версия № ' . $version['version'] . ': ' .
-            History::$actionTypes[$version['action']] .
-            ' в ' . $this->DateTime($version['datetime']);
-    }
+$modelName = $this->modelName;
+$serviceFields = $modelName::getServiceFields();
+$hiddenColumns = $modelName::getHistoryHiddenFields();
+$sideHash = $this->hopsHistory()->getSideHash('?');
+
+$versions = [];
+foreach ($this->milestones as $version) {
+    $versions[$version['version']] =
+        'Версия № ' . $version['version'] . ': ' .
+        History::$actionTypes[$version['action']] .
+        ' в ' . $this->DateTime($version['datetime']);
+}
 ?>
 
 <div class="info">
@@ -20,9 +21,9 @@
     <?= $this->historyMeta($this->curItem) ?>
 </div>
 <form id="diff" method="post" action="/<?= $this->controllerName ?>/<?= $this->actionName . $sideHash ?>" class="table-responsive">
-    <? if ($this->resource): ?>
-    <input type="hidden" name="resource" value="<?= $this->resource ?>" />
-    <? endif; ?>
+    <?php if ($this->resource): ?>
+        <input type="hidden" name="resource" value="<?= $this->resource ?>" />
+    <?php endif; ?>
     <input type="hidden" name="id" value="<?= $this->curItem->id ?>" />
     <table class="table table-hover">
         <thead>
@@ -30,28 +31,28 @@
                 <th colspan="2" class="diff-left">
                     <?= $this->formSelect('left', $this->leftVersion, ['class' => 'form-control'], $versions) ?>
                     <div>
-                        <? if (empty($this->leftEditor)): ?>
+                        <?php if (empty($this->leftEditor)): ?>
                             Редактор не известен
-                        <? else: ?>
+                        <?php else: ?>
                             Редактор: <?= $this->leftEditor->getNameWithContactInfo() ?>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </div>
                 </th>
                 <th colspan="2" class="diff-right">
                     <?= $this->formSelect('right', $this->rightVersion, ['class' => 'form-control'], $versions) ?>
                     <div>
-                        <? if (empty($this->rightEditor)): ?>
+                        <?php if (empty($this->rightEditor)): ?>
                             Редактор не известен
-                        <? else: ?>
+                        <?php else: ?>
                             Редактор: <?= $this->rightEditor->getNameWithContactInfo() ?>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </div>
                 </th>
             </tr>
         </thead>
         <tbody>
-        <? foreach ($this->curItem->getData() as $column => $value): ?>
-            <?
+            <?php foreach ($this->curItem->getData() as $column => $value): ?>
+                <?php
                 // Служебные поля пропускаем
                 if (in_array($column, $serviceFields, true)) {
                     continue;
@@ -59,38 +60,38 @@
 
                 $leftValue = $this->leftItem->{$column};
                 $rightValue = $this->rightItem->{$column};
-            ?>
-            <tr<?= $leftValue !== $rightValue ? ' class="danger"' : '' ?>>
-                <th class="diff-left"><?= $modelName::getFieldName($column) ?></th>
-                <? if (in_array($column, $hiddenColumns, true)): ?>
-                <td colspan="2" class="text-center"><em class="empty">значение скрыто</em></td>
-                <? else: ?>
-                <td class="diff-left"><?= $this->autoFormat($leftValue, $column, $modelName) ?></td>
-                <td class="diff-right"><?= $this->autoFormat($rightValue, $column, $modelName) ?></td>
-                <? endif; ?>
-                <th class="diff-right"><?= $modelName::getFieldName($column) ?></th>
-            </tr>
-        <? endforeach; ?>
+                ?>
+                <tr<?= $leftValue !== $rightValue ? ' class="danger"' : '' ?>>
+                    <th class="diff-left"><?= $modelName::getFieldName($column) ?></th>
+                    <?php if (in_array($column, $hiddenColumns, true)): ?>
+                        <td colspan="2" class="text-center"><em class="empty">значение скрыто</em></td>
+                    <?php else: ?>
+                        <td class="diff-left"><?= $this->autoFormat($leftValue, $column, $modelName) ?></td>
+                        <td class="diff-right"><?= $this->autoFormat($rightValue, $column, $modelName) ?></td>
+                    <?php endif; ?>
+                    <th class="diff-right"><?= $modelName::getFieldName($column) ?></th>
+                    </tr>
+                <?php endforeach; ?>
         </tbody>
-        <? if (!$this->readonly): ?>
+        <?php if (!$this->readonly): ?>
             <tfoot>
                 <tr>
                     <td colspan="2" class="text-center">
-                        <? if ($this->leftVersion !== $this->curItem->version): ?>
+                        <?php if ($this->leftVersion !== $this->curItem->version): ?>
                             <a href="<?= $this->curItem->getRestoreToVersion($this->leftVersion) . $sideHash ?>" class="btn btn-danger" data-confirm="Вы уверены, что хотите откатиться к версии <?= $this->leftVersion ?>?">
                                 Откатить к версии <?= $this->leftVersion ?>
                             </a>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </td>
                     <td colspan="2" class="text-center">
-                        <? if ($this->rightVersion !== $this->curItem->version): ?>
+                        <?php if ($this->rightVersion !== $this->curItem->version): ?>
                             <a href="<?= $this->curItem->getRestoreToVersion($this->rightVersion) . $sideHash ?>" class="btn btn-danger" data-confirm="Вы уверены, что хотите откатиться к версии <?= $this->rightVersion ?>?">
                                 Откатить к версии <?= $this->rightVersion ?>
                             </a>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
             </tfoot>
-        <? endif; ?>
+        <?php endif; ?>
     </table>
 </form>

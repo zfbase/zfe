@@ -1,8 +1,10 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $item = $this->item; /** @var ZFE_Model_AbstractRecord $item */
-    $sideHash = $this->hopsHistory()->getSideHash('?');
+/** @var ZFE_View $this */
+
+$item = $this->item;
+/** @var ZFE_Model_AbstractRecord $item */
+$sideHash = $this->hopsHistory()->getSideHash('?');
 ?>
 
 <?= $this->abstractRender('_header.phtml') ?>
@@ -14,30 +16,30 @@
         </div>
     </div>
     <?= $this->abstractRender('_edit_form.phtml') ?>
-    <? if (!$this->readonly): ?>
+    <?php if (!$this->readonly): ?>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <? if (!$item->isDeleted()) : ?>
-                <input type="submit" id="submit" value="Сохранить" class="btn btn-primary" />
-                <? endif; ?>
-                
-                <? if ($this->canDelete && !$item->isDeleted() && $item->exists()): ?>
+                <?php if (!$item->isDeleted()) : ?>
+                    <input type="submit" id="submit" value="Сохранить" class="btn btn-primary" />
+                <?php endif; ?>
+
+                <?php if ($this->canDelete && !$item->isDeleted() && $item->exists()): ?>
                     <a data-confirm="Вы уверены, что хотите удалить <?= $item::$nameSingular ?> «<?= $this->escape($item->getTitle()) ?>»?"
-                       href="<?= $item->getDeleteUrl() . $sideHash ?>"
-                       class="btn btn-link">Удалить</a>
-                <? endif; ?>
-                
-                <? if ($this->canRestore && $item->isDeleted()): ?>
-                <a class="btn btn-default" href="<?= $item->getUndeleteUrl() . $sideHash ?>">Восстановить</a>
-                <? endif; ?>
+                        href="<?= $item->getDeleteUrl() . $sideHash ?>"
+                        class="btn btn-link">Удалить</a>
+                <?php endif; ?>
+
+                <?php if ($this->canRestore && $item->isDeleted()): ?>
+                    <a class="btn btn-default" href="<?= $item->getUndeleteUrl() . $sideHash ?>">Восстановить</a>
+                <?php endif; ?>
             </div>
         </div>
-    <? endif; ?>
+    <?php endif; ?>
 </form>
 
-<? if ($item->exists() && $item instanceof ZFE_File_Manageable): ?>
+<?php if ($item->exists() && $item instanceof ZFE_File_Manageable): ?>
     <?= $this->action('control', 'files', null, [
         'm' => get_class($item),
         'id' => $item->id,
     ]) ?>
-<? endif; ?>
+<?php endif; ?>

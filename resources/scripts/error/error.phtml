@@ -1,18 +1,20 @@
-<? /** @var ZFE_View $this */ ?>
+<?php
+
+/** @var ZFE_View $this */ ?>
 
 <div class="alert alert-danger">
-    <? if ($this->displayExceptionMessage): ?>
+    <?php if ($this->displayExceptionMessage): ?>
         <div><?= $this->escape($this->message) ?></div>
         <h4 style="margin: 4px 0 0;"><?= $this->escape($this->exception->getMessage()) ?></h4>
-    <? else: ?>
+    <?php else: ?>
         <h4 style="margin: 0;"><?= $this->escape($this->message) ?></h4>
-    <? endif; ?>
+    <?php endif; ?>
 </div>
 
-<? if ($this->displayException): ?>
+<?php if ($this->displayException): ?>
     <h3>Стек вызовов</h3>
     <pre><?= $this->exception->getTraceAsString() ?></pre>
-    
+
     <h3>Параметры запроса</h3>
     <pre><?= $this->escape(var_export($this->request->getParams(), true)) ?></pre>
-<? endif; ?>
+<?php endif; ?>

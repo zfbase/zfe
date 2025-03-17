@@ -1,14 +1,15 @@
-<?
-    /** @var ZFE_View $this */
-    /** @var AbstractRecord $item */
-    $item = $this->item;
-    $modelName = $this->modelName;
+<?php
+
+/** @var ZFE_View $this */
+/** @var AbstractRecord $item */
+$item = $this->item;
+$modelName = $this->modelName;
 ?>
 
 <table class="table table-condensed viewTable">
     <tbody>
-    <? foreach ($modelName::getViewFields() as $field): ?>
-        <?= $this->viewRow($item, $field) ?>
-    <? endforeach; ?>
+        <?php foreach ($modelName::getViewFields() as $field): ?>
+            <?= $this->viewRow($item, $field) ?>
+        <?php endforeach; ?>
     </tbody>
 </table>

@@ -1,13 +1,14 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $tableInstance = Doctrine_Core::getTable($this->modelName);
-    $hasStatus = $tableInstance->hasColumn('status');
-    $hasEdited = $tableInstance->hasColumn('datetime_edited');
-    $downHash = $this->hopsHistory()->getDownHash('К результатам поиска', '?', ['totalResults' => ZFE_Paginator::getInstance()->getNumResults()]);
+/** @var ZFE_View $this */
+
+$tableInstance = Doctrine_Core::getTable($this->modelName);
+$hasStatus = $tableInstance->hasColumn('status');
+$hasEdited = $tableInstance->hasColumn('datetime_edited');
+$downHash = $this->hopsHistory()->getDownHash('К результатам поиска', '?', ['totalResults' => ZFE_Paginator::getInstance()->getNumResults()]);
 ?>
 
-<? if (count($this->items)): ?>
+<?php if (count($this->items)): ?>
     <?= $this->paginator() ?>
     <div class="clearfix"></div>
     <div class="table-responsive">
@@ -22,7 +23,9 @@
                 </tr>
             </thead>
             <tbody>
-                <? $rowIndex = 0; foreach ($this->items as $item): ++$rowIndex; /** @var ZFE_Model_AbstractRecord $item */ ?>
+                <?php $rowIndex = 0;
+                foreach ($this->items as $item): ++$rowIndex;
+                    /** @var ZFE_Model_AbstractRecord $item */ ?>
                     <tr>
                         <td><?= $item->id ?></td>
                         <td>
@@ -30,35 +33,35 @@
                                 <?= $item->getTitle() ?>
                             </a>
                         </td>
-                        <? if ($hasStatus): ?>
+                        <?php if ($hasStatus): ?>
                             <td><?= $item->getStatus() ?></td>
-                        <? endif; ?>
+                        <?php endif; ?>
                         <?= $hasEdited ? $this->lastEditedCell($item) : '' ?>
                         <td class="text-right">
-                            
-                            <? if ($this->canDelete && !$item->isDeleted()): ?>
+
+                            <?php if ($this->canDelete && !$item->isDeleted()): ?>
                                 <a data-confirm="Вы уверены, что хотите удалить <?= $item::$nameSingular ?> «<?= $this->escape($item->getTitle()) ?>»?"
-                                   href="<?= $item->getDeleteUrl() . $downHash ?>"
-                                   class="btn btn-link btn-xs">
+                                    href="<?= $item->getDeleteUrl() . $downHash ?>"
+                                    class="btn btn-link btn-xs">
                                     <i class="glyphicon glyphicon-remove"></i>
                                     Удалить
                                 </a>
-                            <? endif; ?>
-                            
-                            <? if ($this->canRestore && $item->isDeleted()): ?>
+                            <?php endif; ?>
+
+                            <?php if ($this->canRestore && $item->isDeleted()): ?>
                                 <a href="<?= $item->getUndeleteUrl() . $downHash ?>" class="btn btn-link btn-xs">
                                     <i class="glyphicon glyphicon-repeat"></i>
                                     Восстановить
                                 </a>
-                            <? endif; ?>
-                            
+                            <?php endif; ?>
+
                         </td>
                     </tr>
-                <? endforeach; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
     <?= $this->paginator() ?>
-<? else: ?>
+<?php else: ?>
     <p class="empty" style="clear: both;"><?= $this->listName ?> не найдены.</p>
-<? endif; ?>
+<?php endif; ?>

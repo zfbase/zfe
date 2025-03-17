@@ -1,9 +1,10 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $modelName = $this->modelName;
-    $tableInstance = Doctrine_Core::getTable($modelName);
-    $hasEdited = $tableInstance->hasColumn('datetime_edited');
+/** @var ZFE_View $this */
+
+$modelName = $this->modelName;
+$tableInstance = Doctrine_Core::getTable($modelName);
+$hasEdited = $tableInstance->hasColumn('datetime_edited');
 ?>
 
 <div class="table-responsive">
@@ -13,9 +14,9 @@
                 <th></th>
                 <th style="width: 99%;"><?= $modelName::getFieldName('title') ?></th>
                 <th>Вес</th>
-                <? if ($hasEdited): ?>
+                <?php if ($hasEdited): ?>
                     <th class="text-nowrap">Последняя правка</th>
-                <? endif; ?>
+                <?php endif; ?>
                 <th class="text-center">Отказаться</th>
             </tr>
         </thead>
@@ -38,9 +39,9 @@
         </td>
         <td>${title}</td>
         <td class="text-right">${weight}</td>
-        <? if ($hasEdited): ?>
+        <?php if ($hasEdited): ?>
             <td class="last-edited text-nowrap">{%html lastEdited %}</td>
-        <? endif; ?>
+        <?php endif; ?>
         <td class="text-center">
             <input type="hidden" name="ids[]" value="${id}"/>
             <a href="#" class="btn btn-xs btn-link">
