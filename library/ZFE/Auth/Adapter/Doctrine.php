@@ -86,7 +86,7 @@ class ZFE_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
      * @param string                     $credentialTreatment
      */
     public function __construct(
-        Doctrine_Connection_Common $conn = null,
+        ?Doctrine_Connection_Common $conn = null,
         $tableName = null,
         $identityColumn = null,
         $credentialColumn = null,

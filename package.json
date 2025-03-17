@@ -1,6 +1,6 @@
 {
   "name": "zfe",
-  "version": "1.36.11",
+  "version": "1.36.12",
   "description": "ZFE – платформа для построения редакторских интерфейсов",
   "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
@@ -19,7 +19,7 @@
     "bloodhound-js": "^1.2.2",
     "html5sortable": "^0.9.3",
     "inputmask": "^4.0.9",
-    "zfe-files": "^1.3.2",
+    "zfe-files": "^1.3.4",
     "zfe-typeahead": "^0.11.1"
   },
   "files": [
