@@ -26,9 +26,9 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     use ZfeFiles_Model_Injection;                      // Вспомогательные методы ZFE Files
 
     // Пол записи (допустимые варианты)
-    const SEX_MALE   = '1';
-    const SEX_FEMALE = '2';
-    const SEX_NEUTER = '3';
+    const SEX_MALE   = 1;
+    const SEX_FEMALE = 2;
+    const SEX_NEUTER = 3;
 
     /**
      * Названия новой записи в зависимости от половой принадлежности записи.
@@ -122,10 +122,10 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $mergeable = false;
 
     // Статусы записей модели
-    const STATUS_PUBLISHED        = '0';
-    const STATUS_NOT_PUBLISHED    = '1';
-    const STATUS_READY_TO_PUBLISH = '2';
-    const STATUS_UNPUBLISHED      = '3';
+    const STATUS_PUBLISHED        = 0;
+    const STATUS_NOT_PUBLISHED    = 1;
+    const STATUS_READY_TO_PUBLISH = 2;
+    const STATUS_UNPUBLISHED      = 3;
 
     /**
      * Список полей, принимающихся только значения да/нет

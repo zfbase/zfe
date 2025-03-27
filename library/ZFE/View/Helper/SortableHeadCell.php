@@ -50,19 +50,25 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
         }
 
         switch ($cur_order) {
-            case 'asc': $caret = '<i class="order dropup"><i class="caret"></i></i>'; break;
-            case 'desc': $caret = '<i class="order"><i class="caret"></i></i>'; break;
-            default: $caret = ''; break;
+            case 'asc':
+                $caret = '<i class="order dropup"><i class="caret"></i></i>';
+                break;
+            case 'desc':
+                $caret = '<i class="order"><i class="caret"></i></i>';
+                break;
+            default:
+                $caret = '';
+                break;
         }
 
         $url = $this->_getBaseUrl() . '/order/' . $field . '_' . $order;
 
         return
             '<th class="sortable ' . $cellClass . '">' .
-                '<a href="' . $url . '">' .
-                    '<span>' . $title . '</span>' .
-                    $caret .
-                '</a>' .
+            '<a href="' . $url . '">' .
+            '<span>' . $title . '</span>' .
+            $caret .
+            '</a>' .
             '</th>';
     }
 
@@ -80,7 +86,8 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
 
         $ignore = [
             'module',                // модули мы не используем
-            'controller', 'action',  // контроллер и экшен подставим позже
+            'controller',
+            'action',  // контроллер и экшен подставим позже
             'page',                  // после сортировки имеет смысл отображать первую страницу
             'order',                  // сортировку будем менять
         ];
@@ -97,7 +104,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
             if (false !== mb_strpos($value, '/')) {
                 $get[] = $param . '=' . urlencode($value);
             } else {
-                if ($value || '0' === $value) {
+                if ($value === '0') {
                     $ret[] = urlencode($param);
                     $ret[] = urlencode($value);
                 }

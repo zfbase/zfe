@@ -50,8 +50,8 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     ];
 
     // Статусы
-    const STATUS_ENABLE   = '0';
-    const STATUS_DISABLED = '1';
+    const STATUS_ENABLE   = 0;
+    const STATUS_DISABLED = 1;
 
     /** {@inheritdoc} */
     public static $status = [
@@ -152,7 +152,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
             ->addWhere('e.deleted = 0')
             ->addWhere('e.status = 0')
             ->fetchOne()
-       ;
+        ;
     }
 
     /**

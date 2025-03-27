@@ -25,14 +25,14 @@ abstract class ZFE_Model_Default_History extends BaseHistory
     public static $saveHistory = false;
 
     // Типы событий истории
-    const ACTION_TYPE_INSERT   = '0';
-    const ACTION_TYPE_UPDATE   = '1';
-    const ACTION_TYPE_LINK     = '2';
-    const ACTION_TYPE_DELETE   = '3';
-    const ACTION_TYPE_UNLINK   = '4';
-    const ACTION_TYPE_UNDELETE = '5';
-    const ACTION_TYPE_RESTORE  = '6';
-    const ACTION_TYPE_MERGE    = '7';
+    const ACTION_TYPE_INSERT   = 0;
+    const ACTION_TYPE_UPDATE   = 1;
+    const ACTION_TYPE_LINK     = 2;
+    const ACTION_TYPE_DELETE   = 3;
+    const ACTION_TYPE_UNLINK   = 4;
+    const ACTION_TYPE_UNDELETE = 5;
+    const ACTION_TYPE_RESTORE  = 6;
+    const ACTION_TYPE_MERGE    = 7;
 
     /**
      * Типы событий истории.
@@ -77,8 +77,7 @@ abstract class ZFE_Model_Default_History extends BaseHistory
             ->addWhere('x.table_name = ?', $item->getTableName())
             ->addWhere('x.content_id = ?', $item->id)
             ->groupBy('x.user_id, x.content_version, x.action_type')
-            ->orderBy('x.datetime_action ASC, x.content_version ASC')
-        ;
+            ->orderBy('x.datetime_action ASC, x.content_version ASC');
         $milestones = [];
         $rows = $q->execute();
         foreach ($rows as $row) {

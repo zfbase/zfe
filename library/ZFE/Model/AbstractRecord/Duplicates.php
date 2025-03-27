@@ -57,8 +57,7 @@ trait ZFE_Model_AbstractRecord_Duplicates
             ->select('x.*')
             ->from(static::class . ' x')
             ->where(static::$titleField . ' = ?', $duplicate['title'])
-            ->orderBy('weight DESC')
-            ;
+            ->orderBy('weight DESC');
 
         if ($tableInstance->hasRelation('Editor')) {
             $q->addFrom('x.Editor e')->addSelect('e.*');
@@ -202,10 +201,9 @@ SQL;
                 // К сожалению, на уровне запроса определить поддержку мягкого удаления не возможно
                 $q2 = ZFE_Query::create($conn)
                     ->from($relation->getClass())
-                    ->whereIn($foreign, $slaveIds)
-                ;
+                    ->whereIn($foreign, $slaveIds);
                 if ($table->hasColumn('deleted')) {
-                    $q2->update()->set('deleted', '1');
+                    $q2->update()->set('deleted', 1);
                 } else {
                     $q2->setHard(true)->delete();
                 }
@@ -227,7 +225,5 @@ SQL;
      *
      * @param Doctrine_Record $master
      */
-    protected static function _afterMerge(Doctrine_Record $master)
-    {
-    }
+    protected static function _afterMerge(Doctrine_Record $master) {}
 }
