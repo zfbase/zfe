@@ -3,7 +3,6 @@
   "description": "ZFE – платформа для построения редакторских интерфейсов",
   "type": "library",
   "license": "MIT",
-  "version": "1.36.16",
   "authors": [
     {
       "name": "Ilya Serdyuk",
