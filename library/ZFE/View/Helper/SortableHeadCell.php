@@ -18,7 +18,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
      *
      * @return string
      */
-    public function sortableHeadCell($field, $title = null, $cellClass = '')
+    public function sortableHeadCell($field, $title = null, $cellClass = '', $defaultDesc = false)
     {
         $modelName = $this->view->modelName;
 
@@ -42,11 +42,11 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
                     : 'asc';
             } else {
                 $cur_order = '';
-                $order = 'asc';
+                $order = $defaultDesc ? 'desc' : 'asc';
             }
         } else {
             $cur_order = '';
-            $order = 'asc';
+            $order = $defaultDesc ? 'desc' : 'asc';
         }
 
         switch ($cur_order) {
