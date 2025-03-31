@@ -58,7 +58,7 @@ class ZFE_Sphinx
      *
      * @return SphinxQL
      */
-    public static function query(ConnectionInterface $connection = null)
+    public static function query(?ConnectionInterface $connection = null)
     {
         return new SphinxQL($connection ?: self::connection());
     }
@@ -210,7 +210,7 @@ class ZFE_Sphinx
      *
      * @return ResultSetInterface
      */
-    public static function replaceIndexData($indexName, $data, ConnectionInterface $conn = null)
+    public static function replaceIndexData($indexName, $data, ?ConnectionInterface $conn = null)
     {
         return static::query($conn)
             ->replace()

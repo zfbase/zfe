@@ -92,8 +92,7 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
     {
         $this->_query = ZFE_Sphinx::query()
             ->select($this->_select)
-            ->from($this->getIndexName())
-        ;
+            ->from($this->getIndexName());
 
         $page = $this->getParam('page');
         if ($page) {
@@ -169,7 +168,7 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
                     }
                     break;
                 case 'rt_attr_timestamp':
-                    $value = strtotime($this->getParam($fieldName));
+                    $value = strtotime($this->getParam($fieldName) ?? '');
                     if ($value) {
                         $this->_query->where($field, $value);
                         $this->_countUsedFilters++;
@@ -224,11 +223,7 @@ class ZFE_Searcher_QueryBuilder_Sphinx extends ZFE_Searcher_QueryBuilder_Abstrac
     /**
      * {@inheritdoc}
      */
-    protected function _setDefaultOrder()
-    {
-    }
+    protected function _setDefaultOrder() {}
 
-    protected function _setEmptyFiltersOrder()
-    {
-    }
+    protected function _setEmptyFiltersOrder() {}
 }

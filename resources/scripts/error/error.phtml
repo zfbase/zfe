@@ -1,11 +1,16 @@
 <?php
 
-/** @var ZFE_View $this */ ?>
+/** @var Exception */
+$e = $this->exception;
+
+?>
 
 <div class="alert alert-danger">
     <?php if ($this->displayExceptionMessage): ?>
         <div><?= $this->escape($this->message) ?></div>
-        <h4 style="margin: 4px 0 0;"><?= $this->escape($this->exception->getMessage()) ?></h4>
+        <h4 style="margin: 4px 0 0;"><?= $this->escape($e->getMessage()) ?></h4>
+        <br />
+        <p><?= $this->escape($e->getFile()) ?>(<?= $e->getLine() ?>)</p>
     <?php else: ?>
         <h4 style="margin: 0;"><?= $this->escape($this->message) ?></h4>
     <?php endif; ?>
@@ -13,7 +18,7 @@
 
 <?php if ($this->displayException): ?>
     <h3>Стек вызовов</h3>
-    <pre><?= $this->exception->getTraceAsString() ?></pre>
+    <pre><?= $e->getTraceAsString() ?></pre>
 
     <h3>Параметры запроса</h3>
     <pre><?= $this->escape(var_export($this->request->getParams(), true)) ?></pre>

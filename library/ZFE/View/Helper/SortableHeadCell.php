@@ -101,13 +101,11 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
                 continue;
             }
 
-            if (false !== mb_strpos($value, '/')) {
+            if (mb_strpos($value, '/') !== false) {
                 $get[] = $param . '=' . urlencode($value);
-            } else {
-                if ($value === '0') {
-                    $ret[] = urlencode($param);
-                    $ret[] = urlencode($value);
-                }
+            } else if ($value || $value === '0') {
+                $ret[] = urlencode($param);
+                $ret[] = urlencode($value);
             }
         }
 
