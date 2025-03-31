@@ -18,7 +18,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
      *
      * @return string
      */
-    public function sortableHeadCell($field, $title = null, $cellClass = '', $defaultDesc = false)
+    public function sortableHeadCell($field, $title = null, $cellClass = '', ?bool $defaultDesc = null)
     {
         $modelName = $this->view->modelName;
 
@@ -31,6 +31,8 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $raw_order = $request->getParam('order', $modelName::$defaultOrderKey);
 
+        $defaultOrder = ($defaultDesc ?: str_starts_with($field, 'date')) ? 'desc' : 'asc';
+
         $pos = mb_strrpos($raw_order, '_');
         if ($pos > 1) {
             $cur_field = mb_substr($raw_order, 0, $pos);
@@ -42,11 +44,11 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
                     : 'asc';
             } else {
                 $cur_order = '';
-                $order = $defaultDesc ? 'desc' : 'asc';
+                $order = $defaultOrder;
             }
         } else {
             $cur_order = '';
-            $order = $defaultDesc ? 'desc' : 'asc';
+            $order = $defaultOrder;
         }
 
         switch ($cur_order) {
