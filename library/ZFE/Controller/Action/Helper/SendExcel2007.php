@@ -19,18 +19,21 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($excel, $fileName)
+    public function direct($excel, ?string $fileName = null)
     {
         if ($excel instanceof PHPSpreadsheet) {
+            if ($fileName === null) {
+                $fileName = $excel->getProperties()->getTitle() . '.xlsx';
+            }
             $this->sendPhpSpreadsheet($excel, $fileName);
         } elseif ($excel instanceof PHPExcel) {
-            $this->sendPhpExcel($excel, $fileName);
+            $this->sendPhpExcel($excel, $fileName ?? 'Spreadsheet');
         } else {
             throw new Zend_Controller_Action_Exception('Неподдерживаемый тип документа Excel', 500);
         }
     }
 
-    public function sendPhpExcel(PHPExcel $excel, $fileName)
+    public function sendPhpExcel(PHPExcel $excel, string $fileName)
     {
         if ($err = error_get_last()) {
             Zend_Debug::dump($err);
@@ -52,15 +55,11 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
         exit();
     }
 
-    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, ?string $fileName = null)
+    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, string $fileName)
     {
         if ($err = error_get_last()) {
             Zend_Debug::dump($err);
             exit();
-        }
-
-        if ($fileName === null) {
-            $fileName = $spreadsheet->getProperties()->getTitle() . '.xlsx';
         }
 
         $response = $this->getResponse();
