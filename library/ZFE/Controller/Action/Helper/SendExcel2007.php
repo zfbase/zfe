@@ -34,7 +34,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
     {
         if ($err = error_get_last()) {
             Zend_Debug::dump($err);
-            die;
+            exit();
         }
 
         $response = $this->getResponse();
@@ -49,14 +49,18 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
         PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save('php://output');
 
         $response->sendResponse();
-        exit;
+        exit();
     }
 
-    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, $fileName)
+    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, ?string $fileName)
     {
         if ($err = error_get_last()) {
             Zend_Debug::dump($err);
-            die;
+            exit();
+        }
+
+        if ($fileName === null) {
+            $fileName = $spreadsheet->getProperties()->getTitle() . '.xlsx';
         }
 
         $response = $this->getResponse();
@@ -73,6 +77,6 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
         $writer->save('php://output');
 
         $response->sendResponse();
-        exit;
+        exit();
     }
 }

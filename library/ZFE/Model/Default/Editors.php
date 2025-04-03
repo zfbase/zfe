@@ -190,4 +190,36 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
             'password',
         ]);
     }
+
+    /**
+     * Получить текущего пользователя
+     */
+    public static function currentUser(): self
+    {
+        return Zend_Registry::get('user')->data;
+    }
+
+    /**
+     * Получить ID текущего пользователя
+     */
+    public static function currentUserId(): int
+    {
+        return self::currentUser()->id;
+    }
+
+    /**
+     * Получить роль текущего пользователя
+     */
+    public static function currentUserRole(): string
+    {
+        return self::currentUser()->role;
+    }
+
+    /**
+     * Проверить, имеет ли текущий пользователь доступ к ресурсу/привилегии
+     */
+    public static function isAllowedMe(string $resource, ?string $privilege = null): bool
+    {
+        return Zend_Registry::get('acl')->isAllowedMe($resource, $privilege);
+    }
 }
