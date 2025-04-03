@@ -26,7 +26,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
         } elseif ($excel instanceof PHPExcel) {
             $this->sendPhpExcel($excel, $fileName);
         } else {
-            throw new Zend_Controller_Action_Exception('Не поддерживаемый тип документа Excel', 500);
+            throw new Zend_Controller_Action_Exception('Неподдерживаемый тип документа Excel', 500);
         }
     }
 
@@ -52,7 +52,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
         exit();
     }
 
-    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, ?string $fileName)
+    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, ?string $fileName = null)
     {
         if ($err = error_get_last()) {
             Zend_Debug::dump($err);
