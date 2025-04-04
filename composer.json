@@ -53,7 +53,7 @@
     "judev/php-htmltruncator": "^1.1",
     "greenlion/php-sql-parser": "^4.3",
     "ltd-beget/sphinx-configuration-tokenizer": "~1.0.5",
-    "foolz/sphinxql-query-builder": "^3.0",
+    "zfbase/sphinxql-query-builder": "^3.0",
     "zfbase/zf1-future": "^1.24"
   },
   "suggest": {
