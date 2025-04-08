@@ -7,44 +7,44 @@ $config = Zend_Registry::get('config');
 // @todo нужно переделать склонение по нормальному
 $actionLabel = [
     History::ACTION_TYPE_INSERT => [
-        AbstractRecord::SEX_MALE => 'добавлен',
-        AbstractRecord::SEX_FEMALE => 'добавлена',
-        AbstractRecord::SEX_NEUTER => 'добавлено',
+        AbstractRecord::GENDER_MASCULINE => 'добавлен',
+        AbstractRecord::GENDER_FEMININE => 'добавлена',
+        AbstractRecord::GENDER_NEUTER => 'добавлено',
     ],
     History::ACTION_TYPE_UPDATE => [
-        AbstractRecord::SEX_MALE => 'отредактирован',
-        AbstractRecord::SEX_FEMALE => 'отредактирована',
-        AbstractRecord::SEX_NEUTER => 'отредактировано',
+        AbstractRecord::GENDER_MASCULINE => 'отредактирован',
+        AbstractRecord::GENDER_FEMININE => 'отредактирована',
+        AbstractRecord::GENDER_NEUTER => 'отредактировано',
     ],
     History::ACTION_TYPE_LINK => [
-        AbstractRecord::SEX_MALE => 'привязан',
-        AbstractRecord::SEX_FEMALE => 'привязана',
-        AbstractRecord::SEX_NEUTER => 'привязано',
+        AbstractRecord::GENDER_MASCULINE => 'привязан',
+        AbstractRecord::GENDER_FEMININE => 'привязана',
+        AbstractRecord::GENDER_NEUTER => 'привязано',
     ],
     History::ACTION_TYPE_DELETE => [
-        AbstractRecord::SEX_MALE => 'удален',
-        AbstractRecord::SEX_FEMALE => 'удалена',
-        AbstractRecord::SEX_NEUTER => 'удалено',
+        AbstractRecord::GENDER_MASCULINE => 'удален',
+        AbstractRecord::GENDER_FEMININE => 'удалена',
+        AbstractRecord::GENDER_NEUTER => 'удалено',
     ],
     History::ACTION_TYPE_UNLINK => [
-        AbstractRecord::SEX_MALE => 'отвязан',
-        AbstractRecord::SEX_FEMALE => 'отвязана',
-        AbstractRecord::SEX_NEUTER => 'отвязано',
+        AbstractRecord::GENDER_MASCULINE => 'отвязан',
+        AbstractRecord::GENDER_FEMININE => 'отвязана',
+        AbstractRecord::GENDER_NEUTER => 'отвязано',
     ],
     History::ACTION_TYPE_UNDELETE => [
-        AbstractRecord::SEX_MALE => 'восстановлен',
-        AbstractRecord::SEX_FEMALE => 'восстановлена',
-        AbstractRecord::SEX_NEUTER => 'восстановлено',
+        AbstractRecord::GENDER_MASCULINE => 'восстановлен',
+        AbstractRecord::GENDER_FEMININE => 'восстановлена',
+        AbstractRecord::GENDER_NEUTER => 'восстановлено',
     ],
     History::ACTION_TYPE_RESTORE => [
-        AbstractRecord::SEX_MALE => 'откатан к предыдущей версии',
-        AbstractRecord::SEX_FEMALE => 'откатана к предыдущей версии',
-        AbstractRecord::SEX_NEUTER => 'откатано к предыдущей версии',
+        AbstractRecord::GENDER_MASCULINE => 'откатан к предыдущей версии',
+        AbstractRecord::GENDER_FEMININE => 'откатана к предыдущей версии',
+        AbstractRecord::GENDER_NEUTER => 'откатано к предыдущей версии',
     ],
     History::ACTION_TYPE_MERGE => [
-        AbstractRecord::SEX_MALE => 'объединен',
-        AbstractRecord::SEX_FEMALE => 'объединена',
-        AbstractRecord::SEX_NEUTER => 'объединено',
+        AbstractRecord::GENDER_MASCULINE => 'объединен',
+        AbstractRecord::GENDER_FEMININE => 'объединена',
+        AbstractRecord::GENDER_NEUTER => 'объединено',
     ],
 ];
 ?>
@@ -64,7 +64,7 @@ $actionLabel = [
 
                         echo '<dt>';
                         echo $this->DateTime($event->datetime_action);
-                        echo ' ' . $actionLabel[$event->action_type][$modelName::$sex] . ' ';
+                        echo ' ' . $actionLabel[$event->action_type][$modelName::$gender] . ' ';
                         echo mb_strtolower($modelName::$nameSingular);
                         echo ':</dt>';
 
@@ -83,7 +83,7 @@ $actionLabel = [
                             } else {
                                 echo '<dt>';
                                 echo $this->DateTime($event->datetime_action);
-                                echo ' ' . $actionLabel[$event->action_type][AbstractRecord::SEX_MALE] . ' неизвестный объект</dt>';
+                                echo ' ' . $actionLabel[$event->action_type][AbstractRecord::GENDER_MASCULINE] . ' неизвестный объект</dt>';
                                 echo '<dd>Класс объекта: «' . $modelName . '»</dd>';
                             }
                         }
@@ -104,7 +104,7 @@ $actionLabel = [
 
                         echo '<dt>';
                         echo $this->DateTime($event->datetime_action);
-                        echo ' ' . $actionLabel[$event->action_type][$modelName::$sex] . ' ';
+                        echo ' ' . $actionLabel[$event->action_type][$modelName::$gender] . ' ';
                         echo mb_strtolower($modelName::$nameSingular);
                         echo ' (' . $event->Editors->getShortName() . ')';
                         echo ':</dt>';
@@ -124,7 +124,7 @@ $actionLabel = [
                             } else {
                                 echo '<dt>';
                                 echo $this->DateTime($event->datetime_action);
-                                echo ' ' . $actionLabel[$event->action_type][AbstractRecord::SEX_MALE] . ' неизвестный объект</dt>';
+                                echo ' ' . $actionLabel[$event->action_type][AbstractRecord::GENDER_MASCULINE] . ' неизвестный объект</dt>';
                                 echo '<dd>Класс объекта: «' . $modelName . '»</dd>';
                             }
                         }

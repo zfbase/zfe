@@ -25,20 +25,20 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     use ZFE_Model_Decline;                             // Склонения сообщений
     use ZfeFiles_Model_Injection;                      // Вспомогательные методы ZFE Files
 
-    // Пол записи (допустимые варианты)
-    const SEX_MALE   = 1;
-    const SEX_FEMALE = 2;
-    const SEX_NEUTER = 3;
+    // Род записи (допустимые варианты)
+    const GENDER_MASCULINE = 1;
+    const GENDER_FEMININE = 2;
+    const GENDER_NEUTER = 3;
 
     /**
-     * Названия новой записи в зависимости от половой принадлежности записи.
+     * Названия новой записи в зависимости от родовой принадлежности записи.
      *
      * @var array
      */
     protected static $_newTitle = [
-        self::SEX_MALE =>   'Новый',
-        self::SEX_FEMALE => 'Новая',
-        self::SEX_NEUTER => 'Новое',
+        self::GENDER_MASCULINE => 'Новый',
+        self::GENDER_FEMININE => 'Новая',
+        self::GENDER_NEUTER => 'Новое',
     ];
 
     /**
@@ -46,7 +46,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      *
      * @var int
      */
-    public static $sex = self::SEX_MALE;
+    public static $gender = self::GENDER_MASCULINE;
 
     /**
      * Название записи в единственном числе.
@@ -84,7 +84,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      *
      * @var array
      */
-    public static $nameFields = [];
+    public static $fieldNames = [];
 
     /**
      * Поле (выражение) названия записи.
@@ -140,19 +140,19 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      * @var array
      */
     public static $status = [
-        self::SEX_MALE => [
+        self::GENDER_MASCULINE => [
             self::STATUS_PUBLISHED        => 'Опубликован',
             self::STATUS_NOT_PUBLISHED    => 'Не опубликован',
             self::STATUS_READY_TO_PUBLISH => 'Готов к публикации',
             self::STATUS_UNPUBLISHED      => 'Снят с публикации',
         ],
-        self::SEX_FEMALE => [
+        self::GENDER_FEMININE => [
             self::STATUS_PUBLISHED        => 'Опубликована',
             self::STATUS_NOT_PUBLISHED    => 'Не опубликована',
             self::STATUS_READY_TO_PUBLISH => 'Готова к публикации',
             self::STATUS_UNPUBLISHED      => 'Снята с публикации',
         ],
-        self::SEX_NEUTER => [
+        self::GENDER_NEUTER => [
             self::STATUS_PUBLISHED        => 'Опубликовано',
             self::STATUS_NOT_PUBLISHED    => 'Не опубликовано',
             self::STATUS_READY_TO_PUBLISH => 'Готово к публикации',

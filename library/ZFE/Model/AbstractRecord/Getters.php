@@ -13,8 +13,8 @@
  * @property array    $autocompleteCols
  * @property string   $controller
  * @property array    $multiAutocompleteCols
- * @property string[] $nameFields
- * @property int      $sex
+ * @property string[] $fieldNames
+ * @property int      $gender
  * @property string[] $statusColor
  */
 trait ZFE_Model_AbstractRecord_Getters
@@ -55,7 +55,7 @@ trait ZFE_Model_AbstractRecord_Getters
      */
     public static function getNewTitle()
     {
-        return static::$_newTitle[static::$sex];
+        return static::$_newTitle[static::$gender];
     }
 
     /**
@@ -119,8 +119,8 @@ trait ZFE_Model_AbstractRecord_Getters
      */
     public static function getFieldName($field, $default = null)
     {
-        if (!empty(static::$nameFields[$field])) {
-            return static::$nameFields[$field];
+        if (!empty(static::$fieldNames[$field])) {
+            return static::$fieldNames[$field];
         }
 
         $table = Doctrine_Core::getTable(static::class);

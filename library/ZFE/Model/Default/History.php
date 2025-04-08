@@ -10,7 +10,7 @@
 abstract class ZFE_Model_Default_History extends BaseHistory
 {
     /** {@inheritdoc} */
-    public static $sex = self::SEX_FEMALE;
+    public static $gender = self::GENDER_FEMININE;
 
     /** {@inheritdoc} */
     public static $namePlural = 'История';

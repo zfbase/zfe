@@ -7,7 +7,7 @@
 class ZFE_Model_Default_Files extends BaseFiles
 {
     /** {@inheritdoc} */
-    public static $sex = self::SEX_FEMALE;
+    public static $gender = self::GENDER_FEMININE;
 
     /** {@inheritdoc} */
     public static $nameSingular = 'Файл';
@@ -25,7 +25,7 @@ class ZFE_Model_Default_Files extends BaseFiles
     public static $defaultOrderKey = 'title_original_asc';
 
     /** {@inheritdoc} */
-    public static $nameFields = [
+    public static $fieldNames = [
         // 'title' => 'Название',
         'title_original' => 'Название',
     ];

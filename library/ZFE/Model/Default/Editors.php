@@ -10,7 +10,7 @@
 abstract class ZFE_Model_Default_Editors extends BaseEditors
 {
     /** {@inheritdoc} */
-    public static $sex = self::SEX_MALE;
+    public static $gender = self::GENDER_MASCULINE;
 
     /** {@inheritdoc} */
     public static $nameSingular = 'Редактор';
@@ -28,7 +28,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     public static $defaultOrderKey = 'title_asc';
 
     /** {@inheritdoc} */
-    public static $nameFields = [
+    public static $fieldNames = [
         'title'       => 'Полное имя',
         'second_name' => 'Фамилия',
         'first_name'  => 'Имя',
@@ -55,7 +55,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
 
     /** {@inheritdoc} */
     public static $status = [
-        self::SEX_MALE => [
+        self::GENDER_MASCULINE => [
             self::STATUS_ENABLE   => 'Включен',
             self::STATUS_DISABLED => 'Отключен',
         ],
