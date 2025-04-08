@@ -45,7 +45,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
 
     /** {@inheritdoc} */
     protected static $_dictionaryFields = [
-        'status' => ['status', 'sex'],
+        'status' => ['status', 'gender'],
         'role' => ['roles'],
     ];
 

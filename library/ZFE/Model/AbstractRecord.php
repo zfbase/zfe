@@ -184,7 +184,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      * @var array
      */
     protected static $_dictionaryFields = [
-        'status' => ['status', 'sex'],
+        'status' => ['status', 'gender'],
     ];
 
     /**
