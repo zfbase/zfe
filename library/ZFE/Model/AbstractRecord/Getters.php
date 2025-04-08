@@ -8,7 +8,7 @@
  * Геттеры данных модели и записи.
  *
  * @property array    $_dictionaryFields
- * @property string[] $_nameBaseFields
+ * @property string[] $_baseFieldNames
  * @property string[] $_newTitle
  * @property array    $autocompleteCols
  * @property string   $controller
@@ -129,8 +129,8 @@ trait ZFE_Model_AbstractRecord_Getters
             return $definition['comment'];
         }
 
-        if (!empty(static::$_nameBaseFields[$field])) {
-            return static::$_nameBaseFields[$field];
+        if (!empty(static::$_baseFieldNames[$field])) {
+            return static::$_baseFieldNames[$field];
         }
 
         if (Doctrine_Core::getTable(static::class)->hasRelation($field)) {

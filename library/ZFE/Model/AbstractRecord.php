@@ -80,7 +80,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     /**
      * Имена полей записи модели.
      *
-     * Дополняет self::$_nameBaseFields.
+     * Дополняет self::$_baseFieldNames.
      *
      * @var array
      */
@@ -192,7 +192,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      *
      * @var array
      */
-    protected static $_nameBaseFields = [
+    protected static $_baseFieldNames = [
         'id'           => 'ID',
         'title'        => 'Название',
         'status'       => 'Статус',
