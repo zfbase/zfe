@@ -9,8 +9,10 @@ $e = $this->exception;
     <?php if ($this->displayExceptionMessage): ?>
         <div><?= $this->escape($this->message) ?></div>
         <h4 style="margin: 4px 0 0;"><?= $this->escape($e->getMessage()) ?></h4>
-        <br />
-        <p><?= $this->escape($e->getFile()) ?>(<?= $e->getLine() ?>)</p>
+        <?php if ($this->displayException): ?>
+            <br />
+            <p><?= $this->escape($e->getFile()) ?>(<?= $e->getLine() ?>)</p>
+        <?php endif; ?>
     <?php else: ?>
         <h4 style="margin: 0;"><?= $this->escape($this->message) ?></h4>
     <?php endif; ?>
