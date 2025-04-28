@@ -65,7 +65,7 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
             $childrenBtns[] = $this->view->tag(
                 'li',
                 ['class' => $button['class'] ?? null],
-                $this->one($button, 'btn btn-link')
+                $this->one($button, '')
             );
         }
 
