@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 const { alert } = window;
 
-const twodigit = num => `0${num}`.slice(-2);
+const twodigit = (num) => `0${num}`.slice(-2);
 
 const secToTime = (sec) => {
   if (Number.isNaN(sec)) {
@@ -10,8 +10,8 @@ const secToTime = (sec) => {
   }
 
   const hours = Math.floor(sec / 3600);
-  const minutes = Math.floor(sec / 60) - (hours * 60);
-  const seconds = Math.floor(sec) - (hours * 3600) - (minutes * 60);
+  const minutes = Math.floor(sec / 60) - hours * 60;
+  const seconds = Math.floor(sec) - hours * 3600 - minutes * 60;
 
   let timeStr = `${twodigit(minutes)}:${twodigit(seconds)}`;
   if (hours > 0) {
@@ -20,7 +20,6 @@ const secToTime = (sec) => {
 
   return timeStr;
 };
-
 
 class ZFEAudio {
   constructor(_audio) {
@@ -71,8 +70,9 @@ class ZFEAudio {
       .insertBefore(this.audio)
       .append(this.audio);
 
-    const btnGroup = $('<div>', { class: 'btn-group btn-group-sm' })
-      .appendTo(this.container);
+    const btnGroup = $('<div>', { class: 'btn-group btn-group-sm' }).appendTo(
+      this.container
+    );
 
     this.playPauseBtn = $('<button>', {
       class: 'btn btn-default zfe-audio-play-pause-btn',
@@ -90,17 +90,22 @@ class ZFEAudio {
       value: 0,
       class: 'zfe-audio-track',
     })
-      .on('mousedown', () => { this.allowUpdateTime = false; })
+      .on('mousedown', () => {
+        this.allowUpdateTime = false;
+      })
       .on('change', this._onChangeTrack.bind(this));
 
-    $('<div>', { class: 'btn btn-default btn-static hidden-xs zfe-audio-track-container' })
+    $('<div>', {
+      class: 'btn btn-default btn-static hidden-xs zfe-audio-track-container',
+    })
       .append(this.track)
       .appendTo(btnGroup);
 
     this.time = $('<span>00:00</span>', { class: 'zfe-audio-time' });
 
-    this.duration = $('<span>', { class: 'zfe-audio-duration' })
-      .append($('<span>', { class: 'glyphicon glyphicon-refresh spin' }));
+    this.duration = $('<span>', { class: 'zfe-audio-duration' }).append(
+      $('<span>', { class: 'glyphicon glyphicon-refresh spin' })
+    );
 
     $('<div>', { class: 'btn btn-default btn-static' })
       .append(this.time)
@@ -117,7 +122,9 @@ class ZFEAudio {
       .appendTo(btnGroup)
       .on('click', this.toggleMute.bind(this));
 
-    const moreContainer = $('<ul>', { class: 'dropdown-menu dropdown-menu-right' });
+    const moreContainer = $('<ul>', {
+      class: 'dropdown-menu dropdown-menu-right',
+    });
 
     this.audio.find('a.zfe-audio-link').each((i, link) => {
       $('<li>').append($(link)).appendTo(moreContainer);
@@ -161,6 +168,7 @@ class ZFEAudio {
 
   _loadAudio() {
     let timeout = 0;
+    let try_count = 5;
     const check = setInterval(() => {
       if (!this._audio.paused) {
         this.pause();
@@ -183,16 +191,21 @@ class ZFEAudio {
         return true;
       }
 
-      if (this._audio.networkState === 3 || timeout === 100) {
+      if (this._audio.networkState === 3 || timeout === 20) {
+        try_count--;
         // 3 = NETWORK_NO_SOURCE - no audio/video source found
-        this._error('Не удалось загрузить аудиофайл');
-        clearInterval(check);
+        if (try_count <= 0) {
+          this._error('Не удалось загрузить аудиофайл');
+          clearInterval(check);
+        } else {
+          this._audio.load();
+        }
         return false;
       }
 
       timeout += 1;
       return null;
-    }, 100);
+    }, 500);
 
     this.audio.on('error', () => {
       this._error('Ошибка при воспроизведении');
@@ -218,9 +231,7 @@ class ZFEAudio {
 
   _setDuration(sec) {
     this.duration.text(secToTime(sec));
-    this.track
-      .attr('max', sec)
-      .attr('step', sec / 1000);
+    this.track.attr('max', sec).attr('step', sec / 1000);
   }
 
   _setTime(sec) {
@@ -252,7 +263,6 @@ class ZFEAudio {
     this.muteBtn.addClass('disabled');
   }
 }
-
 
 $.fn.zfeAudio = function zfeAudio() {
   return this.each((i, el) => {
