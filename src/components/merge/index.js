@@ -3,21 +3,6 @@
 
 import $ from 'jquery';
 
-/**
- * @param {function} callback
- * @param {number} wait
- * @returns
- */
-function debounce(callback, wait) {
-  let timeoutId = null;
-  return (...args) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      callback(...args);
-    }, wait);
-  };
-}
-
 $.fn.zfeMerge = function zfeMerge() {
   const MergeEngine = {};
   MergeEngine.$input = $('.zfe-merge-search', this); // Поисковое поле
@@ -43,24 +28,38 @@ $.fn.zfeMerge = function zfeMerge() {
     MergeEngine.suggest(term, 1);
   };
 
+  let ac;
   // Поиск
-  MergeEngine.suggest = (term, page) => {
-    MergeEngine.$searchResults.load(
-      MergeEngine.searchUrl,
-      {
-        term,
-        page,
-        exclude: MergeEngine.getSelectedIds(),
-      },
-      () => {
-        window.ZFE.initItemDetailsPopover(MergeEngine.$searchResults);
-        if (MergeEngine.$searchResults.find('tr.result').length > 1) {
-          MergeEngine.$selectAll.removeClass('hide');
-        } else {
-          MergeEngine.$selectAll.addClass('hide');
-        }
+  MergeEngine.suggest = async (term, page) => {
+    if (ac) {
+      ac.abort();
+    }
+    let reqAc = new AbortController();
+    ac = reqAc;
+    const params = new URLSearchParams({
+      term,
+      page,
+      exclude: MergeEngine.getSelectedIds(),
+    });
+    try {
+      const res = await fetch(`${MergeEngine.searchUrl}?${params.toString()}`, {
+        signal: reqAc.signal,
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
       }
-    );
+      MergeEngine.$searchResults.html(await res.text());
+      window.ZFE.initItemDetailsPopover(MergeEngine.$searchResults);
+      if (MergeEngine.$searchResults.find('tr.result').length > 1) {
+        MergeEngine.$selectAll.removeClass('hide');
+      } else {
+        MergeEngine.$selectAll.addClass('hide');
+      }
+    } catch (err) {
+      if (!reqAc.signal.aborted) {
+        console.error('MergeEngine.suggest failed:', err);
+      }
+    }
   };
 
   // Получить список идентификаторов выбранных для объединения строк
@@ -154,7 +153,7 @@ $.fn.zfeMerge = function zfeMerge() {
     return true;
   };
 
-  MergeEngine.$input.on('input', debounce(MergeEngine.search, 400));
+  MergeEngine.$input.on('input', MergeEngine.search);
   MergeEngine.$searchResults.on('click', 'tr.result', MergeEngine.onSelected);
   MergeEngine.$searchResults.on('click', '.pagination a', MergeEngine.goToPage);
   MergeEngine.$mergeItems.on('click', 'a', MergeEngine.offSelected);

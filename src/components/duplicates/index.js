@@ -19,16 +19,13 @@ class MergeHelperModal {
 
     const $modalBodyDefault = $('.modal-body', this.$modal);
 
-    $form
-      .insertBefore($modalBodyDefault)
-      .addClass('modal-body');
+    $form.insertBefore($modalBodyDefault).addClass('modal-body');
 
     $modalBodyDefault.remove();
     $('.table', $form).css('margin-bottom', 0);
 
     window.ZFE.initMergeHelper(this.$modal);
     $('.form-group', this.$modal).hide();
-
 
     this.submitBtn = $('<a>', { class: 'btn btn-primary' })
       .append('Объединить')
@@ -49,8 +46,9 @@ class MergeHelperModal {
       .append(this.showEqualBtn)
       .append(this.hideEqualBtn);
 
-    $('[data-dismiss="modal"]', this.$modal)
-      .on('click', () => { this.onCancel($panel); });
+    $('[data-dismiss="modal"]', this.$modal).on('click', () => {
+      this.onCancel($panel);
+    });
 
     this.$modal.appendTo(document.body);
     this.$modal.modal('show');
@@ -86,39 +84,39 @@ class MergeHelperModal {
 }
 
 $.fn.zfeDuplicates = function zfeDuplicates() {
-  const makeAlert = (type, title) => $(`<div class="alert alert-${type} alert-dismissible fade in" role="alert">
+  const makeAlert = (type, title) =>
+    $(`<div class="alert alert-${type} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>`).append(title);
 
   const onCancel = ($panel) => {
-    $panel
-      .removeClass('panel-loading')
-      .attr('disabled', false);
+    $panel.removeClass('panel-loading').attr('disabled', false);
     $('.btn', $panel).show();
   };
 
   const onSuccess = ($panel, message) => {
-    makeAlert('success', message || 'Объединение завершено успешно.')
-      .insertAfter($panel);
+    makeAlert(
+      'success',
+      message || 'Объединение завершено успешно.'
+    ).insertAfter($panel);
     $panel.slideUp(400, () => {
       $panel.remove();
     });
   };
 
   const onError = ($panel, message) => {
-    makeAlert('danger', message || 'Объединение не удалось.')
-      .insertAfter($panel);
+    makeAlert('danger', message || 'Объединение не удалось.').insertAfter(
+      $panel
+    );
   };
 
   this.on('click', '.btn-merge', (event) => {
     const $btn = $(event.currentTarget);
     const $panel = $btn.closest('.panel');
 
-    $panel
-      .addClass('panel-loading')
-      .attr('disabled', true);
+    $panel.addClass('panel-loading').attr('disabled', true);
     $('.btn', $panel).hide();
 
     const $checkboxes = $panel.find('tbody input[type="checkbox"]:checked');
@@ -135,14 +133,25 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
         ids,
       },
       success: (data) => {
+        // console.log(typeof data);
+        // console.log(data);
         if (typeof data === 'string') {
           new MergeHelperModal(
             $(data).find('.zfe-merge-helper'),
             $panel,
             onCancel,
             onSuccess,
-            onError,
+            onError
           );
+        } else if (
+          typeof data === 'object' &&
+          typeof data.message === 'string'
+        ) {
+          if (data.status === '0') {
+            onSuccess($panel, data.message);
+          } else {
+            onError($panel, data.message);
+          }
         }
       },
       error: () => {
