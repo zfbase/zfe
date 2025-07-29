@@ -28,7 +28,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
      */
     public function saveHistory($mode = null)
     {
-        if (null === $mode) {
+        if ($mode === null) {
             return $this->_saveHistory;
         }
 
@@ -118,61 +118,6 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
     }
 
     /**
-     * Хук postInsert.
-     *
-     * @param Doctrine_Event $event
-     */
-    public function postInsert(Doctrine_Event $event)
-    {
-        if (!$this->_historyEnabled()) {
-            return;
-        }
-
-        /** @var ZFE_Model_AbstractRecord $invoker */
-        $invoker = $event->getInvoker();
-
-        $userId = $this->_getCurrentUserId();
-        $id = static::_getRecordSingleColumnId($invoker);
-        if ($id === null) {
-            return;
-        }
-
-        $historyRows = [
-            [
-                'table_name' => $invoker->getTableName(),
-                'content_id' => $invoker->id,
-                'action_type' => History::ACTION_TYPE_INSERT,
-                'user_id' => $userId,
-                'content_version' => 1,
-            ],
-        ];
-
-        $relations = $invoker->getTable()->getRelations();
-        foreach ($relations as $rel) {
-            if (!$rel instanceof Doctrine_Relation_LocalKey) {
-                continue;
-            }
-            $relAlias = $rel->getAlias();
-            $relObj = $invoker->get($relAlias);
-            $relId = static::_getRecordSingleColumnId($relObj);
-            if ($relId === null) {
-                continue;
-            }
-            $historyRows[] = [
-                'table_name' => $relObj->getTableName(),
-                'content_id' => $relObj->id,
-                'column_name' => $relAlias,
-                'content_old' => null,
-                'content_new' => $invoker->id,
-                'action_type' => History::ACTION_TYPE_LINK,
-                'user_id' => $userId,
-                'content_version' => null,
-            ];
-        }
-        $this->writeHistoryRows($historyRows);
-    }
-
-    /**
      * Хук preUpdate.
      *
      * @param Doctrine_Event $event
@@ -239,6 +184,14 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
             $ignoreColumns = $invokerModelName::getServiceFields();
             $hiddenColumns = $invokerModelName::getHistoryHiddenFields();
 
+            $relations = $invoker->getTable()->getRelations();
+            $associations = [];
+            foreach ($relations as $rel) {
+                if ($rel instanceof Doctrine_Relation_Association) {
+                    $associations[] = $rel->getAlias();
+                }
+            }
+
             foreach ($newData as $column => $newValue) {
                 if (in_array($column, $ignoreColumns)) {
                     continue;
@@ -264,6 +217,9 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
 
             // Unlinks
             foreach ($invoker->getPendingUnlinks() as $relAlias => $relIdsData) {
+                if (!in_array($relAlias, $associations)) {
+                    continue;
+                }
                 $relIds = array_keys($relIdsData);
                 foreach ($relIds as $relId) {
                     $historyRows[] = [
@@ -281,6 +237,9 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
 
             // Links
             foreach ($invoker->getPendingLinks() as $relAlias => $relIdsData) {
+                if (!in_array($relAlias, $associations)) {
+                    continue;
+                }
                 $relIds = array_keys($relIdsData);
                 foreach ($relIds as $relId) {
                     $historyRows[] = [
@@ -327,7 +286,7 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
         $this->writeHistoryRows([$historyRow]);
     }
 
-    public function writeHistoryRows($rows, $event= '', $record = null)
+    public function writeHistoryRows($rows, $event = '', $record = null)
     {
         $conn = Doctrine_Manager::connection();
         $conn->beginTransaction();
