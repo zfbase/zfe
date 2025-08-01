@@ -1,5 +1,5 @@
-import $ from 'jquery';
 import Bloodhound from 'bloodhound-js';
+import $ from 'jquery';
 
 import { keyCode } from '../../js/constants';
 
@@ -41,7 +41,9 @@ class ZFEAutocomplete {
 
   init() {
     if (!this.settings.sourceUrl) {
-      throw new Error(`No sourceUrl specified for zfeAutocomplete name=${this.settings.name}`);
+      throw new Error(
+        `No sourceUrl specified for zfeAutocomplete name=${this.settings.name}`
+      );
     }
     this.initPreHandlers();
     this.initBloodhound();
@@ -67,7 +69,7 @@ class ZFEAutocomplete {
           }
 
           if (exclude) {
-            url += (query.length >= minLength) ? '&' : '?';
+            url += query.length >= minLength ? '&' : '?';
             if (typeof exclude === 'function') {
               url += `exclude=${exclude().join(',')}`;
             } else {
@@ -104,10 +106,13 @@ class ZFEAutocomplete {
         },
       });
     }
-    this.$input.typeahead({
-      minLength: 0, // проверка переезжает в Bloodhound
-      highlight: true,
-    }, datasetSettings);
+    this.$input.typeahead(
+      {
+        minLength: 0, // проверка переезжает в Bloodhound
+        highlight: true,
+      },
+      datasetSettings
+    );
     // this.input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
 
     if (this.$input.typeahead('val')) {
@@ -121,9 +126,7 @@ class ZFEAutocomplete {
     $input.on('keydown', (e) => {
       if (e.keyCode === keyCode.ESCAPE) {
         e.stopImmediatePropagation();
-        $input
-          .typeahead('val', this.getTitle())
-          .typeahead('close');
+        $input.typeahead('val', this.getTitle()).typeahead('close');
       }
     });
   }
@@ -178,11 +181,17 @@ class ZFEAutocomplete {
     if (disable) {
       this.$input.addClass('disabled');
       this.$iconRight.addClass('tt-disabled');
-      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)');
+      this.$hint.css(
+        'background',
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)'
+      );
     } else {
       this.$input.removeClass('disabled');
       this.$iconRight.removeClass('tt-disabled');
-      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)');
+      this.$hint.css(
+        'background',
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)'
+      );
     }
 
     this.$input.attr('disabled', disable);
@@ -219,7 +228,9 @@ class ZFEAutocomplete {
     const isEmpty = !hasId && !hasTitle;
 
     if (isNew && !canCreate) {
-      throw new Error('Cannot set a value without id for autocomplete with canCreate === false');
+      throw new Error(
+        'Cannot set a value without id for autocomplete with canCreate === false'
+      );
     }
 
     if ($idInput.val() === id && $titleInput.val() === title) {
@@ -261,8 +272,11 @@ $.fn[pluginName] = function zfeAutocomplete(options, ...args) {
   });
 
   switch (results.length) {
-    case 0: return $elements;
-    case 1: return results.pop();
-    default: return results;
+    case 0:
+      return $elements;
+    case 1:
+      return results.pop();
+    default:
+      return results;
   }
 };
