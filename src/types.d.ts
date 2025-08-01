@@ -1,6 +1,6 @@
 interface ZfeAutocompleteValue {
   id: number | null;
-  value: string;
+  title: string;
 }
 
 interface JQuery {
@@ -8,7 +8,7 @@ interface JQuery {
     (method: 'clear'): void;
     (method: 'getId'): number | null;
     (method: 'getTitle'): string;
-    (method: 'getValue'): ZfeAutocompleteValue;
+    (method: 'getValue'): ZfeAutocompleteValue | null;
     (method: 'setValue', value: ZfeAutocompleteValue | null): void;
     (method: 'getValueData'): unknown;
     (method: 'setValueData', value: unknown): void;
