@@ -188,14 +188,16 @@ trait ZFE_Model_AbstractRecord_Duplicates
                 $tableName = $table->getTableName();
                 $foreign = $relation->getForeign();
 
-                // Изменяем связи со слейв-тегом объекта на связь с мастер-тегом
-                $q1 = <<<SQL
+                if ($slavesStr) {
+                    // Изменяем связи со слейв-тегом объекта на связь с мастер-тегом
+                    $q1 = <<<SQL
 UPDATE IGNORE {$tableName}
 SET {$foreign} = {$master->id}
 WHERE {$foreign} IN ({$slavesStr})
 SQL;
-                $stmt = $conn->prepare($q1);
-                $stmt->execute([]);
+                    $stmt = $conn->prepare($q1);
+                    $stmt->execute([]);
+                }
 
                 // Удаляем оставшиеся связи со слейв-тегом объекта
                 // К сожалению, на уровне запроса определить поддержку мягкого удаления не возможно
