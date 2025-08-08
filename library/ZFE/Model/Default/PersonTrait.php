@@ -68,4 +68,9 @@ trait ZFE_Model_Default_PersonTrait
     {
         return parent::getKeyValueList($keyField, $valueField, $where, $order, $groupby);
     }
+
+    public function isFemale(): bool
+    {
+        return $this->middle_name && str_ends_with(trim($this->middle_name), 'вна') ? true : false;
+    }
 }

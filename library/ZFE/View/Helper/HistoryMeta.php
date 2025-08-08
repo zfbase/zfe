@@ -28,7 +28,7 @@ class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
             $creator = $item->Creator;
             $fullName = '<span>' . $creator->getNameWithContactInfo() . '</span>';
             $datetime = '<span>' . $this->view->dateTime($item->datetime_created) . '</span>';
-            $caption = '<span class="caption">Создал:</span>';
+            $caption = '<span class="caption">Создал' . ($creator->isFemale() ? 'а' : '') . ':</span>';
             $creation = '<div class="editedBy">' . $caption . ' ' . $fullName . ' ' . $datetime . '</div>';
         }
 
@@ -40,7 +40,7 @@ class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
             $editor = $item->Editor;
             $fullName = '<span>' . $editor->getNameWithContactInfo() . '</span>';
             $datetime = '<span>' . $this->view->dateTime($item->datetime_edited) . '</span>';
-            $caption = '<span class="caption">Исправил:</span>';
+            $caption = '<span class="caption">Изменил' . ($editor->isFemale() ? 'а' : '') . ':</span>';
             $editing = '<div class="editedBy">' . $caption . ' ' . $fullName . ' ' . $datetime . '</div>';
         }
 
