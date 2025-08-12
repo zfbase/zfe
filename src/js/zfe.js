@@ -214,7 +214,9 @@ const ZFE = {
 
   /** Настроить автоматическую высоту многострочных текстовых полей */
   initTextareaAutosize: (container) => {
-    autosize($('textarea.autosize', container));
+    setTimeout(() => {
+      autosize($('textarea.autosize', container));
+    });
   },
 
   /** AJAX загрузчик файлов */
