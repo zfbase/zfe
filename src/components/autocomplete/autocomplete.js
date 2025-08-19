@@ -27,10 +27,21 @@ class ZFEAutocomplete {
     const data = $input.data();
     const name = $input.attr('name');
     $input.removeAttr('name');
+
+    const $inputs = $group.find(`[name^=${name}]`);
+    const otherInputs = $inputs
+      .get()
+      .map((i) => {
+        const name = i.name.match(/\[(.+)\]/);
+        return { element: i, name: name ? name[1] : '' };
+      })
+      .filter((i) => i.name && i.name !== 'id' && i.name !== 'title');
+
     return {
       name,
       $idInput: $group.find(`[name="${name}[id]"]`),
       $titleInput: $group.find(`[name="${name}[title]"]`),
+      otherInputs,
       sourceUrl: data.source,
       canCreate: data.create === 'allow',
       itemForm: data.itemForm || data.itemform, // атрибут data-item-form
@@ -170,7 +181,8 @@ class ZFEAutocomplete {
     // Выбор значения из списка
     $input.on('typeahead:select', (e, selected) => {
       this.setValueData(selected);
-      this.setValue({ id: selected.key, title: selected.value });
+      const { key, value, ...rest } = selected;
+      this.setValue({ id: key, title: value, ...rest });
     });
 
     // Очистка элемента
@@ -219,9 +231,10 @@ class ZFEAutocomplete {
     };
   }
 
-  setValue({ id = '', title = '' } = {}) {
+  setValue({ id = '', title = '', ...rest } = {}) {
     const { $input, $group, $iconRight, $inlineLink } = this;
-    const { $idInput, $titleInput, canCreate, itemForm } = this.settings;
+    const { $idInput, $titleInput, canCreate, itemForm, otherInputs } =
+      this.settings;
     const hasId = !!id;
     const hasTitle = !!title;
     const isNew = !hasId && hasTitle;
@@ -240,6 +253,9 @@ class ZFEAutocomplete {
     $input.typeahead('val', title);
     $idInput.val(id);
     $titleInput.val(title);
+    otherInputs.forEach((i) => {
+      i.element.value = rest[i.name] ?? '';
+    });
     $iconRight.toggleClass('tt-fill', !isEmpty);
     $group.toggleClass('has-warning', isNew);
 
@@ -248,6 +264,7 @@ class ZFEAutocomplete {
     }
 
     this.$input.trigger('zfe.ac.change');
+    this.$input.get('0').dispatchEvent(new Event('zfe.ac.change'));
   }
 
   getValueData() {
