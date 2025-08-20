@@ -372,6 +372,7 @@ class ZFEMultiAutocomplete {
 
   onChange() {
     this.$input.trigger('zfe.ac.change', [this.currentValue()]);
+    this.$input.get(0).dispatchEvent(new Event('zfe.ac.change'));
   }
 }
 

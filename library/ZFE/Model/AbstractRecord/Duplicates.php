@@ -128,6 +128,9 @@ trait ZFE_Model_AbstractRecord_Duplicates
             $slavesIbi[$slave->id] = $slave;
             $slaveIds[] = $slave->id;
         }
+        if (count($slaveIds) === 0) {
+            throw new ZFE_Model_Exception('Невозможно объединить: отсутствуют исходные записи');
+        }
         $slavesStr = implode(',', $slaveIds);
 
         $conn = Doctrine_Manager::connection();
@@ -201,15 +204,19 @@ SQL;
 
                 // Удаляем оставшиеся связи со слейв-тегом объекта
                 // К сожалению, на уровне запроса определить поддержку мягкого удаления не возможно
-                $q2 = ZFE_Query::create($conn)
-                    ->from($relation->getClass())
-                    ->whereIn($foreign, $slaveIds);
-                if ($table->hasColumn('deleted')) {
-                    $q2->update()->set('deleted', 1);
-                } else {
-                    $q2->setHard(true)->delete();
-                }
-                $q2->execute();
+                //
+                // ddemin: выключили 20.08.2025 после случайного удаления множества связанных сущностей в одном проекте.
+                // к тому же непонятно, зачем здесь удаление, если выше уже и так всё обновили
+                //
+                // $q2 = ZFE_Query::create($conn)
+                //     ->from($relation->getClass())
+                //     ->whereIn($foreign, $slaveIds);
+                // if ($table->hasColumn('deleted')) {
+                //     $q2->update()->set('deleted', 1);
+                // } else {
+                //     $q2->setHard(true)->delete();
+                // }
+                // $q2->execute();
             }
         }
 
