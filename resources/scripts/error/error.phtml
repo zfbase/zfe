@@ -3,6 +3,10 @@
 /** @var Exception */
 $e = $this->exception;
 
+if ($this->externalExceptionHandler) {
+    throw $e;
+}
+
 ?>
 
 <div class="alert alert-danger">
