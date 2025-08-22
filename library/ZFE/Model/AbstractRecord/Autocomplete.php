@@ -159,11 +159,16 @@ trait ZFE_Model_AbstractRecord_Autocomplete
             throw new ZFE_Model_Exception('Связь "' . $relAlias . '" не обнаружена в модели "' . static::class . '" при определении свойств автодополнения нескольких значений.');
         }
 
+        $editUrl = $relModel::getEditModalUrl();
+        if (!Editors::isAllowedMe($relModel::getControllerName(), 'edit-modal')) {
+            $editUrl = '';
+        }
+
         $fieldLabel = static::getFieldName($field);
         $default = [
             'label' => $fieldLabel != $field ? $fieldLabel : $relModel::$namePlural,
             'source' => $relModel::getAutocompleteUrl(),
-            'editUrl' => $relModel::getEditModalUrl(),
+            'editUrl' => $editUrl,
             'canCreate' => false,
             'min' => 0,
             'max' => null,
@@ -297,8 +302,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                             ->from($modelClassName . ' x')
                             ->where($localFieldName . ' = ?', $this->id)
                             ->andWhere($foreignFieldName . ' = ?', $item->id)
-                            ->execute([], Doctrine_Core::HYDRATE_SINGLE_SCALAR)
-                        ;
+                            ->execute([], Doctrine_Core::HYDRATE_SINGLE_SCALAR);
                     } elseif ($rel instanceof Doctrine_Relation_ForeignKey) {
                         $row['priority'] = $item->{$options['sortable']};
                     }
