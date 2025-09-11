@@ -22,24 +22,34 @@ class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
     public function historyMeta(AbstractRecord $item, $showCreator = true, $showEditor = true, $showVersion = true)
     {
         $creation = '';
+
+        $created = $item->contains('datetime_created') ? $item->datetime_created : null;
+        if (!$created && $item->contains('created_at')) {
+            $created = $item->created_at;
+        }
+
+        $updated = $item->contains('datetime_created') ? $item->datetime_created : null;
+        if (!$updated && $item->contains('updated_at')) {
+            $updated = $item->updated_at;
+        }
+
         $showCreator = $showCreator && $item->contains('creator_id') && !empty($item->creator_id);
-        $showCreator = $showCreator && $item->contains('datetime_created') && !empty($item->datetime_created);
+        $showCreator = $showCreator && $created;
         if ($showCreator) {
             $creator = $item->Creator;
             $fullName = '<span>' . $creator->getNameWithContactInfo() . '</span>';
-            $datetime = '<span>' . $this->view->dateTime($item->datetime_created) . '</span>';
+            $datetime = '<span>' . $this->view->dateTime($created) . '</span>';
             $caption = '<span class="caption">Создал' . ($creator->isFemale() ? 'а' : '') . ':</span>';
             $creation = '<div class="editedBy">' . $caption . ' ' . $fullName . ' ' . $datetime . '</div>';
         }
 
         $editing = '';
         $showEditor = $showEditor && $item->contains('editor_id') && !empty($item->editor_id);
-        $showEditor = $showEditor && $item->contains('datetime_edited') && !empty($item->datetime_edited);
-        $showEditor = $showEditor && $item->datetime_edited !== $item->datetime_created;
+        $showEditor = $showEditor && $updated && $updated !== $created;
         if ($showEditor) {
             $editor = $item->Editor;
             $fullName = '<span>' . $editor->getNameWithContactInfo() . '</span>';
-            $datetime = '<span>' . $this->view->dateTime($item->datetime_edited) . '</span>';
+            $datetime = '<span>' . $this->view->dateTime($updated) . '</span>';
             $caption = '<span class="caption">Изменил' . ($editor->isFemale() ? 'а' : '') . ':</span>';
             $editing = '<div class="editedBy">' . $caption . ' ' . $fullName . ' ' . $datetime . '</div>';
         }

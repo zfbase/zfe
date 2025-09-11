@@ -23,9 +23,12 @@ class ZFE_View_Helper_LastEditedCell extends Zend_View_Helper_Abstract
             ? '<div class="editor nowrap">' . $item->Editor->getShortName() . '</div>'
             : '';
 
-        $datetime = $item->contains('datetime_edited') && !empty($item->datetime_edited)
-            ? $this->view->dateTimeCompact($item->datetime_edited)
-            : '';
+        $updated = $item->contains('datetime_edited') ? $item->datetime_edited : null;
+        if (!$updated && $item->contains('updated_at')) {
+            $updated = $item->updated_at;
+        }
+
+        $datetime = $updated ? $this->view->dateTimeCompact($updated) : '';
 
         return $editor || $datetime
             ? '<td class="last-edited ' . $class . '">' . $datetime . $editor . '</td>'

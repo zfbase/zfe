@@ -4,7 +4,10 @@
 
 $tableInstance = Doctrine_Core::getTable($this->modelName);
 $hasStatus = $tableInstance->hasColumn('status');
-$hasEdited = $tableInstance->hasColumn('datetime_edited');
+$editedField = $tableInstance->hasColumn('datetime_edited') ? 'datetime_edited' : null;;
+if (!$editedField && $tableInstance->hasColumn('updated_at')) {
+    $editedField = 'updated_at';
+}
 $downHash = $this->hopsHistory()->getDownHash('К результатам поиска', '?', ['totalResults' => ZFE_Paginator::getInstance()->getNumResults()]);
 ?>
 
@@ -18,7 +21,7 @@ $downHash = $this->hopsHistory()->getDownHash('К результатам пои�
                     <?= $this->sortableHeadCell('id') ?>
                     <?= $this->sortableHeadCell('title') ?>
                     <?= $hasStatus ? $this->sortableHeadCell('status') : '' ?>
-                    <?= $hasEdited ? $this->sortableHeadCell('datetime_edited', 'Последнее изменение') : '' ?>
+                    <?= $editedField ? $this->sortableHeadCell($editedField, 'Последнее изменение') : '' ?>
                     <th class="text-right">Действия</th>
                 </tr>
             </thead>
@@ -36,7 +39,7 @@ $downHash = $this->hopsHistory()->getDownHash('К результатам пои�
                         <?php if ($hasStatus): ?>
                             <td><?= $item->getStatus() ?></td>
                         <?php endif; ?>
-                        <?= $hasEdited ? $this->lastEditedCell($item) : '' ?>
+                        <?= $editedField ? $this->lastEditedCell($item) : '' ?>
                         <td class="text-right">
 
                             <?php if ($this->canDelete && !$item->isDeleted()): ?>
