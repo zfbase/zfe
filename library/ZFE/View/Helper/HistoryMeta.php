@@ -28,7 +28,7 @@ class ZFE_View_Helper_HistoryMeta extends Zend_View_Helper_Abstract
             $created = $item->created_at;
         }
 
-        $updated = $item->contains('datetime_created') ? $item->datetime_created : null;
+        $updated = $item->contains('datetime_edited') ? $item->datetime_edited : null;
         if (!$updated && $item->contains('updated_at')) {
             $updated = $item->updated_at;
         }
