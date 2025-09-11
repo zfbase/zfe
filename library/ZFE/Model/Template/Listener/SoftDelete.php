@@ -52,7 +52,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                     $invoker->deleted = true;
                 }
                 if ($invoker->contains('deleted_at')) {
-                    $invoker->deleted = date('Y-m-d H:i:s');
+                    $invoker->deleted_at = date('Y-m-d H:i:s');
                 }
                 $invoker->hardSave();
 
