@@ -104,12 +104,20 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
             $invoker->datetime_created = $datetime;
         }
 
+        if ($invoker->contains('created_at')) {
+            $invoker->created_at = $datetime;
+        }
+
         if ($invoker->contains('editor_id')) {
             $invoker->editor_id = $userId;
         }
 
         if ($invoker->contains('datetime_edited')) {
             $invoker->datetime_edited = $datetime;
+        }
+
+        if ($invoker->contains('updated_at')) {
+            $invoker->updated_at = $datetime;
         }
 
         if ($invoker->contains('version')) {
@@ -127,12 +135,18 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
         /** @var ZFE_Model_AbstractRecord $invoker */
         $invoker = $event->getInvoker();
 
+        $datetime = new Doctrine_Expression('NOW()');
+
         if ($invoker->contains('editor_id')) {
             $invoker->editor_id = $this->_getCurrentUserId();
         }
 
         if ($invoker->contains('datetime_edited')) {
-            $invoker->datetime_edited = new Doctrine_Expression('NOW()');
+            $invoker->datetime_edited = $datetime;
+        }
+
+        if ($invoker->contains('updated_at')) {
+            $invoker->updated_at = $datetime;
         }
 
         if ($invoker->contains('version')) {

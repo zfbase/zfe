@@ -44,11 +44,16 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             /** @var ZFE_Model_AbstractRecord $invoker */
             $invoker = $event->getInvoker();
 
-            if ($invoker->contains('deleted')) {
+            if ($invoker->contains('deleted') || $invoker->contains('deleted_at')) {
                 if ($invoker->contains('version')) {
                     ++$invoker->version;
                 }
-                $invoker->deleted = true;
+                if ($invoker->contains('deleted')) {
+                    $invoker->deleted = true;
+                }
+                if ($invoker->contains('deleted_at')) {
+                    $invoker->deleted = date('Y-m-d H:i:s');
+                }
                 $invoker->hardSave();
 
                 $event->skipOperation();
