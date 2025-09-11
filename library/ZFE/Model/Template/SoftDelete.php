@@ -82,6 +82,9 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
             if ($invoker->contains('version')) {
                 ++$invoker->version;
             }
+            if ($invoker->contains('deleted_at')) {
+                $invoker->deleted_at = null;
+            }
 
             $invoker->preUndelete();
             $invoker->hardSave($conn);
@@ -105,14 +108,10 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
     /**
      * Хук, выполняющийся перед восстановлением.
      */
-    public function preUndelete()
-    {
-    }
+    public function preUndelete() {}
 
     /**
      * Хук, выполняющийся после восстановления.
      */
-    public function postUndelete()
-    {
-    }
+    public function postUndelete() {}
 }
