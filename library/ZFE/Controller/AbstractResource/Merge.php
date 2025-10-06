@@ -68,8 +68,7 @@ trait ZFE_Controller_AbstractResource_Merge
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from($modelName . ' x INDEXBY x.id')
-            ->whereIn('x.id', $ids)
-        ;
+            ->whereIn('x.id', $ids);
 
         if ($tableInstance->hasRelation('Editor')) {
             $q->addFrom('x.Editor e')->addSelect('e.*');
@@ -125,13 +124,13 @@ trait ZFE_Controller_AbstractResource_Merge
         }
 
         $fieldsMap = $this->getParam('field', []);
-        $inaccurate = array_diff(array_keys($diff), array_keys($fieldsMap));
+        $inaccurate = array_diff(array_keys($diff), array_keys($fieldsMap), ['Editor', 'Creator']);
         if (empty($inaccurate)) {
             try {
                 $master = $modelName::advancedMerge($items, $fieldsMap);
 
                 $msg = $modelName::decline('%s успешно объединен.', '%s успешно объединена.', '%s успешно объединено.')
-                     . ' <a href="' . $master->getEditUrl() . '">Показать</a>';
+                    . ' <a href="' . $master->getEditUrl() . '">Показать</a>';
 
                 if ($this->_request->isXmlHttpRequest()) {
                     $this->_json(self::STATUS_SUCCESS, [], $msg);
@@ -177,8 +176,7 @@ trait ZFE_Controller_AbstractResource_Merge
         $q = ZFE_Query::create()
             ->select('x.*')
             ->from($modelName . ' x')
-            ->orderBy($modelName::$titleField)
-        ;
+            ->orderBy($modelName::$titleField);
 
         if ($tableInstance->hasRelation('Editor')) {
             $q->addFrom('x.Editor e')->addSelect('e.*');
