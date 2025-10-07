@@ -31,7 +31,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $raw_order = $request->getParam('order', $modelName::$defaultOrderKey);
 
-        $defaultOrder = ($defaultDesc ?: str_starts_with($field, 'date')) ? 'desc' : 'asc';
+        $defaultOrder = ($defaultDesc ?: str_starts_with($field, 'date') || str_ends_with($field, '_at')) ? 'desc' : 'asc';
 
         $pos = mb_strrpos($raw_order, '_');
         if ($pos > 1) {

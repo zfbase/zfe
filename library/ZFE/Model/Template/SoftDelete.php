@@ -71,19 +71,23 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
      */
     public function undelete(?Doctrine_Connection $conn = null)
     {
-        if ($this->_table->hasColumn('deleted')) {
+        if ($this->_table->hasColumn('deleted') || $this->_table->hasColumn('deleted_at')) {
             $invoker = $this->_invoker;
 
-            if (0 == $invoker->deleted) {
-                throw new ZFE_Model_Exception('Запись не может быть восстановлена, т.к. не удалена.');
+            if ($invoker->contains('deleted')) {
+                if ($invoker->deleted === 0) {
+                    throw new ZFE_Model_Exception('Запись не может быть восстановлена, т.к. не удалена.');
+                }
+                $invoker->deleted = 0;
+            } else {
+                if ($invoker->deleted_at === null) {
+                    throw new ZFE_Model_Exception('Запись не может быть восстановлена, т.к. не удалена.');
+                }
+                $invoker->deleted_at = null;
             }
 
-            $invoker->deleted = 0;
             if ($invoker->contains('version')) {
                 ++$invoker->version;
-            }
-            if ($invoker->contains('deleted_at')) {
-                $invoker->deleted_at = null;
             }
 
             $invoker->preUndelete();

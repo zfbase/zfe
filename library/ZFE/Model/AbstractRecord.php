@@ -338,7 +338,8 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public static function isRemovable()
     {
-        return Doctrine_Core::getTable(static::class)->hasField('deleted');
+        $table = Doctrine_Core::getTable(static::class);
+        return $table->hasField('deleted') || $table->hasField('deleted_at');
     }
 
     /**
@@ -358,11 +359,15 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public function isDeleted()
     {
-        if (!$this->contains('deleted')) {
-            return false;
+        if ($this->contains('deleted')) {
+            return $this->deleted !== 0;
         }
 
-        return 0 != $this->deleted;
+        if ($this->contains('deleted_at')) {
+            return $this->deleted_at !== null;
+        }
+
+        return false;
     }
 
     /**

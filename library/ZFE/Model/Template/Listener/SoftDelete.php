@@ -77,9 +77,10 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             /** @var ZFE_Query $query */
             $query = $event->getQuery();
 
-            if ($query->isHard() || !$table->hasField('deleted') || !empty($params['component']['ref'])) {
+            if ($query->isHard() || (!$table->hasField('deleted') && !$table->hasField('deleted_at')) || !empty($params['component']['ref'])) {
                 return;
             }
+            $deletedAt = !$table->hasField('deleted');
 
             $outFrom = [];
             $inFrom = $query->getDqlPart('from');
@@ -97,7 +98,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                         : $matches[1];
 
                     if ($alias == $params['alias']) {
-                        $exc = $params['alias'] . '.deleted = 0';
+                        $exc = $deletedAt ? $params['alias'] . '.deleted_at IS NULL' : $params['alias'] . '.deleted = 0';
 
                         $t = explode(' ', $part);
                         if (count(explode('.', $t[0])) == 2) {
@@ -133,7 +134,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                                 if (count($where)) {
                                     $where[] = 'AND';
                                 }
-                                $where[] = $componentName . '.deleted = 0';
+                                $where[] = $deletedAt ? $componentName . '.deleted_at IS NULL' : $componentName . '.deleted = 0';
                             }
                         }
                     }
@@ -153,8 +154,12 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     {
         $query = $event->getQuery();
         $invoker = $event->getInvoker();
-        if ($this->_allowSoftDelete && $invoker->contains('deleted') && !$query->isHard()) {
-            $query->update()->set('deleted', '?', 1);
+        if ($this->_allowSoftDelete && ($invoker->contains('deleted') || $invoker->contains('deleted_at')) && !$query->isHard()) {
+            if ($invoker->contains('deleted')) {
+                $query->update()->set('deleted', '?', 1);
+            } else {
+                $query->update()->set('deleted_at', new Doctrine_Expression('NOW()'));
+            }
         }
     }
 }

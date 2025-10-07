@@ -18,8 +18,7 @@ class ZFE_Searcher_QueryBuilder_Doctrine extends ZFE_Searcher_QueryBuilder_Abstr
     {
         $this->_query = ZFE_Query::create()
             ->select('x.*')
-            ->from($this->_modelName . ' x')
-        ;
+            ->from($this->_modelName . ' x');
 
         if ($this->_tableInstance->hasRelation('Editor')) {
             $this->_query->addFrom('x.Editor e')->addSelect('e.*');
@@ -62,7 +61,11 @@ class ZFE_Searcher_QueryBuilder_Doctrine extends ZFE_Searcher_QueryBuilder_Abstr
     {
         if (($this->_modelName)::isRemovable() && ($this->_modelName)::$saveHistory) {
             if ($this->getParam('deleted')) {
-                $this->_query->addWhere('x.deleted = 1');
+                if (Doctrine_Core::getTable($this->_modelName)->hasColumn('deleted')) {
+                    $this->_query->addWhere('x.deleted = 1');
+                } else {
+                    $this->_query->addWhere('x.deleted_at IS NOT NULL');
+                }
                 $this->_query->setMiddleHard(true);
             } elseif ($this->hasParam('ids')) {
                 $this->_query->setMiddleHard(true);

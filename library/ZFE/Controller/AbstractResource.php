@@ -127,23 +127,23 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $this->view->readonly = static::$_readonly;
 
         $this->view->canMerge = static::$_canMerge
-                             && $modelName::isMergeable()
-                             && $acl->isAllowedMe($resource, 'merge')
-                             && !static::$_readonly;
+            && $modelName::isMergeable()
+            && $acl->isAllowedMe($resource, 'merge')
+            && !static::$_readonly;
 
         $this->view->canCreate = static::$_canCreate
-                              && $acl->isAllowedMe($resource, 'edit')
-                              && !static::$_readonly;
+            && $acl->isAllowedMe($resource, 'edit')
+            && !static::$_readonly;
 
         $this->view->canDelete = static::$_canDelete
-                              && $modelName::isRemovable()
-                              && $acl->isAllowedMe($resource, 'delete')
-                              && !static::$_readonly;
+            && $modelName::isRemovable()
+            && $acl->isAllowedMe($resource, 'delete')
+            && !static::$_readonly;
 
         $this->view->canRestore = static::$_canRestore
-                               && $modelName::isRemovable()
-                               && $acl->isAllowedMe($resource, 'restore')
-                               && !static::$_readonly;
+            && $modelName::isRemovable()
+            && $acl->isAllowedMe($resource, 'restore')
+            && !static::$_readonly;
     }
 
     /**
@@ -180,8 +180,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
         $this->_helper->postToGet();
 
         $params = $rowParams = $this->getAllParams();
-        $this->view->deleted = $deleted = $this->getParam('deleted', 0);
-
+        $this->view->deleted = $deleted = $this->getParam('deleted') === '1' ? 1 : 0;
 
         // Настройка основной формы
         $searchFormName = static::$_searchFormName;
@@ -235,7 +234,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
                 $btn->setAttrib('escape', false);
                 $counter = $this->view->tag(
                     'span',
-                    ['class' =>'badge'],
+                    ['class' => 'badge'],
                     $countUsedFilters . ' ' . ZFE_Utilities::plural($countUsedFilters, ['фильтр', 'фильтра', 'фильтров'])
                 );
                 $btn->setLabel($btn->getLabel() . ' ' . $counter);
