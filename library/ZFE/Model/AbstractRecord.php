@@ -245,7 +245,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
                     continue;
                 }
 
-                if ('datetime' === $key || 'datetime_' === mb_substr($key, 0, 9)) {
+                if (str_starts_with($key, 'datetime') || str_ends_with($key, '_at')) {
                     if (empty($value) || '0000-00-00 00:00:00' === $value) {
                         $array[$key] = '';
                     }

@@ -153,7 +153,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
             return date(config('format.date', 'd.m.Y'), strtotime($value));
         }
 
-        if ('datetime' === $columnName || 'datetime_' === mb_substr($columnName, 0, 9)) {
+        if (str_starts_with($columnName, 'datetime') || str_ends_with($columnName, '_at')) {
             if (empty($value) || '0000-00-00 00:00:00' === $value) {
                 return '';
             }
