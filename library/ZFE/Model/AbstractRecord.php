@@ -360,7 +360,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public function isDeleted()
     {
         if ($this->contains('deleted')) {
-            return $this->deleted !== 0;
+            return $this->deleted === 1;
         }
 
         if ($this->contains('deleted_at')) {
