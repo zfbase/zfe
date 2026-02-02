@@ -1,9 +1,9 @@
-import Bloodhound from 'bloodhound-js';
 import sortable from 'html5sortable/dist/html5sortable.es';
 import $ from 'jquery';
 
 import { keyCode } from '../../js/constants';
 import { showEditModal } from '../modals';
+import { getAcEngine } from './acEngine';
 
 const pluginName = 'zfeMultiAutocomplete';
 const defaults = {
@@ -41,7 +41,7 @@ class ZFEMultiAutocomplete {
   init() {
     if (!this.settings.sourceUrl) {
       throw new Error(
-        `No sourceUrl specified for zfeMultiAutocomplete name=${this.settings.name}`
+        `No sourceUrl specified for zfeMultiAutocomplete name=${this.settings.name}`,
       );
     }
 
@@ -52,7 +52,7 @@ class ZFEMultiAutocomplete {
     }
 
     this.startSortable();
-    this.initBloodhound();
+    this.initSource();
     this.initTypeahead();
     this.initHandlers();
     this.renderItems();
@@ -83,7 +83,7 @@ class ZFEMultiAutocomplete {
       })
       .on('sortupdate', (e) => {
         $('.linked-entity input[name$="\\[priority\\]"]', $(e.target)).each(
-          (priority, $input) => $($input).val(priority + 1)
+          (priority, $input) => $($input).val(priority + 1),
         );
       })
       .trigger('sortupdate');
@@ -189,45 +189,26 @@ class ZFEMultiAutocomplete {
     return $linkedEntity;
   }
 
-  initBloodhound() {
-    const { minLength, sourceUrl } = this.settings;
+  initSource() {
     const { $wrap } = this;
-    this.engine = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      limit: 1000, // более точнее ограничение производится на сервере
-      remote: {
-        url: sourceUrl,
-        replace: (initialUrl, query) => {
-          let url = initialUrl;
-          if (query.length >= minLength) {
-            url += `/?term=${encodeURIComponent(query)}`;
-          } else if (query.length > 0) {
-            return;
-          }
 
-          const ids = [];
-          $("input[name$='[id]']", $wrap).each((i, el) => {
-            const val = $(el).val();
-            if (val) {
-              ids.push(val);
-            }
-          });
-          if (ids.length) {
-            url += query.length >= minLength ? '&' : '?';
-            url += `exclude=${ids.join(',')}`;
-          }
+    const exclude = () => {
+      const ids = [];
+      $("input[name$='[id]']", $wrap).each((i, el) => {
+        const val = $(el).val();
+        if (val) {
+          ids.push(val);
+        }
+      });
+      return ids;
+    };
 
-          return url;
-        },
-      },
-    });
-    this.engine.initialize();
+    this.engine = getAcEngine({ ...this.settings, exclude });
   }
 
   initTypeahead() {
     const datasetSettings = {
-      source: this.engine.ttAdapter(),
+      source: this.engine.bind(this),
       templates: this.settings.templates,
       display: 'value',
       limit: this.settings.limit,
@@ -249,14 +230,18 @@ class ZFEMultiAutocomplete {
     }
     this.$input.typeahead(
       {
-        // Если убрать проверку минимальной длинны в Bloodhound, то return false|null|undefined
-        // не отменяет запрос, а делает некорректный запрос к /false
-        minLength: this.settings.minLength,
+        minLength: 0,
         highlight: true,
       },
-      datasetSettings
+      datasetSettings,
     );
     // this.$input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
+  }
+
+  updateExcluded() {
+    const v = this.$input.typeahead('val');
+    this.$input.typeahead('val', '.');
+    this.$input.typeahead('val', v);
   }
 
   initHandlers() {
@@ -295,13 +280,14 @@ class ZFEMultiAutocomplete {
     $input.on('typeahead:selected', (e, selected) => {
       const { key, value, ...rest } = selected;
       this.addElement(value, key, rest);
-      $input.typeahead('val', '');
+      this.updateExcluded();
       e.preventDefault();
     });
 
     // Навешиваем на все существующие и будущие кнопки удаления соответствующий метод
     $wrap.on('click', '.btn-remove', (e) => {
       $(e.currentTarget).closest('.linked-entity').remove();
+      this.updateExcluded();
       e.preventDefault();
       this.onChange();
     });
@@ -328,14 +314,14 @@ class ZFEMultiAutocomplete {
       this.$iconRight.addClass('tt-disabled');
       this.$hint.css(
         'background',
-        'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)'
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)',
       );
     } else {
       this.$input.removeClass('disabled');
       this.$iconRight.removeClass('tt-disabled');
       this.$hint.css(
         'background',
-        'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)'
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)',
       );
     }
 
@@ -354,7 +340,7 @@ class ZFEMultiAutocomplete {
   setValues(values) {
     this.clear();
     values.forEach(({ id, title, ...data }) =>
-      this.addElement(title, id, data, null, true)
+      this.addElement(title, id, data, null, true),
     );
   }
 

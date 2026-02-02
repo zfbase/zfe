@@ -1,7 +1,7 @@
-import Bloodhound from 'bloodhound-js';
 import $ from 'jquery';
 
 import { keyCode } from '../../js/constants';
+import { getAcEngine } from './acEngine';
 
 const pluginName = 'zfeAutocomplete';
 const defaults = {
@@ -57,51 +57,23 @@ class ZFEAutocomplete {
       );
     }
     this.initPreHandlers();
-    this.initBloodhound();
+    this.initSource();
     this.initTypeahead();
     this.initHandlers();
   }
 
-  initBloodhound() {
-    const { minLength, sourceUrl, exclude } = this.settings;
-    this.engine = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      limit: 1000,
-      remote: {
-        url: sourceUrl,
-        replace: (initialUrl, query) => {
-          let url = initialUrl;
-
-          if (query.length >= minLength) {
-            url += `/?term=${encodeURIComponent(query)}`;
-          } else if (query.length > 0) {
-            return;
-          }
-
-          if (exclude) {
-            url += query.length >= minLength ? '&' : '?';
-            if (typeof exclude === 'function') {
-              url += `exclude=${exclude().join(',')}`;
-            } else {
-              url += `exclude=${exclude.join(',')}`;
-            }
-          }
-
-          return url;
-        },
-      },
-    });
-    this.engine.initialize();
+  initSource() {
+    this.engine = getAcEngine(this.settings);
   }
 
   initTypeahead() {
     const datasetSettings = {
-      source: this.engine.ttAdapter(),
+      source: this.engine.bind(this),
       templates: this.settings.templates,
       display: 'value',
       limit: this.settings.limit,
     };
+
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
       datasetSettings.templates = $.extend(datasetSettings.templates, {
@@ -119,9 +91,7 @@ class ZFEAutocomplete {
     }
     this.$input.typeahead(
       {
-        // Если убрать проверку минимальной длинны в Bloodhound, то return false|null|undefined
-        // не отменяет запрос, а делает некорректный запрос к /false
-        minLength: this.settings.minLength,
+        minLength: 0,
         highlight: true,
       },
       datasetSettings,
