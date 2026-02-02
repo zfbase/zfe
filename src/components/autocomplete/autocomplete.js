@@ -53,7 +53,7 @@ class ZFEAutocomplete {
   init() {
     if (!this.settings.sourceUrl) {
       throw new Error(
-        `No sourceUrl specified for zfeAutocomplete name=${this.settings.name}`
+        `No sourceUrl specified for zfeAutocomplete name=${this.settings.name}`,
       );
     }
     this.initPreHandlers();
@@ -76,7 +76,7 @@ class ZFEAutocomplete {
           if (query.length >= minLength) {
             url += `/?term=${encodeURIComponent(query)}`;
           } else if (query.length > 0) {
-            return false;
+            return;
           }
 
           if (exclude) {
@@ -119,10 +119,12 @@ class ZFEAutocomplete {
     }
     this.$input.typeahead(
       {
-        minLength: 0, // проверка переезжает в Bloodhound
+        // Если убрать проверку минимальной длинны в Bloodhound, то return false|null|undefined
+        // не отменяет запрос, а делает некорректный запрос к /false
+        minLength: this.settings.minLength,
         highlight: true,
       },
-      datasetSettings
+      datasetSettings,
     );
     // this.input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
 
@@ -195,14 +197,14 @@ class ZFEAutocomplete {
       this.$iconRight.addClass('tt-disabled');
       this.$hint.css(
         'background',
-        'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)'
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)',
       );
     } else {
       this.$input.removeClass('disabled');
       this.$iconRight.removeClass('tt-disabled');
       this.$hint.css(
         'background',
-        'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)'
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)',
       );
     }
 
@@ -242,7 +244,7 @@ class ZFEAutocomplete {
 
     if (isNew && !canCreate) {
       throw new Error(
-        'Cannot set a value without id for autocomplete with canCreate === false'
+        'Cannot set a value without id for autocomplete with canCreate === false',
       );
     }
 
