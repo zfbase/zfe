@@ -86,6 +86,15 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      */
     public static $credentialTreatment = 'MD5(CONCAT(?, password_salt))';
 
+    /**
+     * Использовать новый адаптер для паролей.
+     * 
+     * MySQL 9.6 больше не поддерживает MD5, поэтому новый адаптер
+     * проверяет хэш пароля в приложении, а также обновляет
+     * хэши паролей в БД на Argon2id
+     */
+    public static bool $useDoctrine2026Adapter = false;
+
     /** {@inheritdoc} */
     public function fromArray(array $array, $deep = true)
     {
@@ -113,12 +122,17 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      */
     public function setPassword($password, $salt = null)
     {
-        $salt = $salt ?: $this->password_salt ?: uniqid();
-        $pwdEscape = Doctrine_Manager::connection()->quote($password);
-        $pwdExpStr = str_replace('?', $pwdEscape, Editors::$credentialTreatment);
-        $pwdExpStr = str_replace('password_salt', "'{$salt}'", $pwdExpStr);
-        $this->password = new Doctrine_Expression($pwdExpStr);
-        $this->password_salt = $salt;
+        if (static::$useDoctrine2026Adapter) {
+            $this->password = password_hash($password, PASSWORD_ARGON2ID);
+            $this->password_salt = null;
+        } else {
+            $salt = $salt ?: $this->password_salt ?: uniqid();
+            $pwdEscape = Doctrine_Manager::connection()->quote($password);
+            $pwdExpStr = str_replace('?', $pwdEscape, Editors::$credentialTreatment);
+            $pwdExpStr = str_replace('password_salt', "'{$salt}'", $pwdExpStr);
+            $this->password = new Doctrine_Expression($pwdExpStr);
+            $this->password_salt = $salt;
+        }
     }
 
     use ZFE_Model_Default_PersonTrait;

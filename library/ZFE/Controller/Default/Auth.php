@@ -10,16 +10,6 @@
 class ZFE_Controller_Default_Auth extends Controller_Abstract
 {
     /**
-     * Дополнительное условие проверки учетных данных.
-     *
-     * Ограничение по delete не обязательно, т.к. Doctrine и так добавляет его во все запросы,
-     * но учитывая, что это дополнение запросов может отключаться, лучше его указывать явно
-     *
-     * @var string
-     */
-    protected static $_credentialTreatmentAdditional = 'AND status = 0 AND deleted = 0';
-
-    /**
      * Вход в систему.
      */
     public function loginAction()
@@ -48,7 +38,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                     Zend_Session::rememberMe();
                 }
 
-                $authAdapter = $this->getAuthAdapter($formData);
+                $authAdapter = ZFE_Auth::getAdapter($formData);
                 $result = $auth->authenticate($authAdapter);
 
                 if (!$result->isValid()) {
@@ -98,27 +88,6 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
     }
 
     /**
-     * Получить настроенный адаптер авторизации.
-     *
-     * @param array $data
-     *
-     * @return Zend_Auth_Adapter_Interface
-     */
-    protected function getAuthAdapter($data)
-    {
-        $tableConn = Doctrine_Core::getConnectionByTableName('editors');
-        $authAdapter = new ZFE_Auth_Adapter_Doctrine($tableConn);
-        $authAdapter->setTableName('editors')
-            ->setIdentityColumn(Editors::$identityColumn)
-            ->setCredentialColumn('password')
-            ->setCredentialTreatment(Editors::$credentialTreatment . ' ' . self::$_credentialTreatmentAdditional)
-            ->setIdentity($data['login'])
-            ->setCredential($data['password'])
-        ;
-        return $authAdapter;
-    }
-
-    /**
      * Выход из системы.
      */
     public function logoutAction()
@@ -161,7 +130,8 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
      */
     public function forcePasswordChangeAction()
     {
-        $userId = Zend_Registry::get('user')->data->id;
+        $user = Zend_Registry::get('user')->data;
+        $userId = $user->id;
         $passwordCheck = (bool) $this->_getCheckPasswordSession($userId)->code;
 
         $this->view->form = $form = new ZFE_Form_Default_ForcePasswordChange();
@@ -175,12 +145,13 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                 $q = ZFE_Query::create()
                     ->select('*')
                     ->from('Editors')
-                    ->where('id = ?', $userId)
-                ;
+                    ->where('id = ?', $userId);
+                    $authenticated = true;
                 if (!$passwordCheck) {
-                    $q->andWhere('password = ' . Editors::$credentialTreatment, $form->getValue('password'));
+                    $authenticated = ZFE_Auth::authenticate($user->login, $form->getValue('password'));
                 }
-                $user = $q->fetchOne(); /** @var Editors $user */
+                $user = $authenticated ? $q->fetchOne() : null;
+                /** @var Editors $user */
                 if ($user) {
                     $user->setPassword($form->getValue('password_second'));
                     if ($user->contains('request_password_change')) {
@@ -194,7 +165,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
                     }
                     $this->redirect($redirect);
                 } else {
-                    $form->getElement('password')->addError('Не верный пароль');
+                    $form->getElement('password')->addError('Неверный пароль');
                 }
             }
         }
@@ -212,9 +183,7 @@ class ZFE_Controller_Default_Auth extends Controller_Abstract
         return new Zend_Session_Namespace("User_{$userId}_CheckPassword");
     }
 
-    protected function onAuthSuccess($resultRow)
-    {
-    }
+    protected function onAuthSuccess($resultRow) {}
 
     public function init()
     {
