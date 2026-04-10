@@ -94,145 +94,48 @@ trait ZFE_Model_AbstractRecord_Duplicates
         return $q;
     }
 
-    /**
-     * @param Doctrine_Collection<static|AbstractRecord> $slaves
-     */
-    public static function advancedMerge(Doctrine_Collection $slaves, array $map = [])
+    public static function mergeFillMap(Doctrine_Collection $items): array
     {
-        $tableInstance = Doctrine_Core::getTable(static::class);
-        $serviceFields = self::getServiceFields();
-        $columnNames = array_diff($tableInstance->getColumnNames(), $serviceFields);
-
-        // Дополняем карту
-        $missingColumns = array_diff($columnNames, array_keys($map));
-        foreach ($missingColumns as $columnName) {
-            $values = [];
-
-            foreach ($slaves as $slave) {
-                if (null !== $slave->{$columnName}) {
-                    $values[] = $slave->{$columnName};
-                    $map[$columnName] = $slave->id;
+        $res = [];
+        $first = $items->getFirst();
+        if ($first instanceof ZfeFiles_Manageable) {
+            $schemas = $first->getFileSchemas();
+            foreach ($schemas as $schema) {
+                if ($schema->isHidden() || !$schema->getMultiple()) {
+                    continue;
+                }
+                foreach ($items as $item) {
+                    $res[$schema->getCode()][$item['id']] = $item->getAgents($schema);
                 }
             }
-
-            $unique = array_unique($values);
-            if (count($unique) > 1) {
-                new ZFE_Model_Exception('Невозможно объединить: не выбран правильный вариант');
-            }
         }
+        return $res;
+    }
 
-        // Переставляем устаревающие записи, что бы индексы совпадали с id и создаем массив их id-шников
-        $slavesIbi = []; // $slavesIndexById
-        $slaveIds = [];
-        foreach ($slaves as $slave) {
-            $slavesIbi[$slave->id] = $slave;
-            $slaveIds[] = $slave->id;
-        }
-        if (count($slaveIds) === 0) {
-            throw new ZFE_Model_Exception('Невозможно объединить: отсутствуют исходные записи');
-        }
-        $slavesStr = implode(',', $slaveIds);
-
-        $conn = Doctrine_Manager::connection();
-        $conn->beginTransaction(); // Оборачиваем весь процесс перераспределения связей в одну большую транзакцию
-
-        // Создаем новую запись
-        $master = new static();
-        foreach ($map as $columnName => $slaveId) {
-            if ($tableInstance->hasField($columnName)) {
-                $master->{$columnName} = $slavesIbi[$slaveId]->{$columnName};
-            }
-        }
-        $master->saveHistory(false, true);
-        $master->save();
-        $master->saveHistory(true, true);
-
-        // Пишем историю
-        $user = Zend_Registry::get('user')->data;
-        $history = new History();
-        $history->table_name = $master->getTableName();
-        $history->action_type = History::ACTION_TYPE_MERGE;
-        $history->content_id = $master->id;
-        $history->content_old = $slavesStr;
-        $history->user_id = $user ? $user->id : null;
-        $history->datetime_action = new Doctrine_Expression('NOW()');
-        $history->content_version = 1;
-        $history->save();
-
+    public function mergeUpdateRelations(Doctrine_Collection $items, array $map): void
+    {
         // Перепривязываем связанные файлы
-        if ($master instanceof ZfeFiles_Manageable) {
-            $schemas = $master->getFileSchemas();
+        if ($this instanceof ZfeFiles_Manageable) {
+            $schemas = $this->getFileSchemas();
             foreach ($schemas as $schema) {
                 /** @var ZfeFiles_Manager_Interface */
                 $manager = ($schema->getModel())::getManager();
                 $schemaCode = $schema->getCode();
                 $isMultiple = $schema->getMultiple();
                 $selected = array_key_exists($schemaCode, $map) ? $map[$schemaCode] : null;
-                foreach ($slaves as $slave) {
+                foreach ($items as $slave) {
                     if ($isMultiple || $selected == $slave->id) {
                         /** @var ZfeFiles_Agent_Interface[] */
                         $slaveAgents = $slave->getAgents($schema);
                         foreach ($slaveAgents as $slaveAgent) {
                             $agent = $manager->getAgentByFile($slaveAgent->getFile());
-                            $agent->linkManageableItem($schemaCode, $master, $slaveAgent->getData());
+                            $agent->linkManageableItem($schemaCode, $this, $slaveAgent->getData());
                             $agent->save();
-                            $master->addAgent($schemaCode, $agent);
+                            $this->addAgent($schemaCode, $agent);
                         }
                     }
                 }
             }
         }
-
-        // Перепривязываем связанные записи
-        $relations = $master->getTable()->getRelations();
-        foreach ($relations as $relation) {
-            if ($relation instanceof Doctrine_Relation_ForeignKey) {
-                $table = $relation->getTable();
-                $tableName = $table->getTableName();
-                $foreign = $relation->getForeign();
-
-                if ($slavesStr) {
-                    // Изменяем связи со слейв-тегом объекта на связь с мастер-тегом
-                    $q1 = <<<SQL
-UPDATE IGNORE {$tableName}
-SET {$foreign} = {$master->id}
-WHERE {$foreign} IN ({$slavesStr})
-SQL;
-                    $stmt = $conn->prepare($q1);
-                    $stmt->execute([]);
-                }
-
-                // Удаляем оставшиеся связи со слейв-тегом объекта
-                // К сожалению, на уровне запроса определить поддержку мягкого удаления не возможно
-                //
-                // ddemin: выключили 20.08.2025 после случайного удаления множества связанных сущностей в одном проекте.
-                // к тому же непонятно, зачем здесь удаление, если выше уже и так всё обновили
-                //
-                // $q2 = ZFE_Query::create($conn)
-                //     ->from($relation->getClass())
-                //     ->whereIn($foreign, $slaveIds);
-                // if ($table->hasColumn('deleted')) {
-                //     $q2->update()->set('deleted', 1);
-                // } else {
-                //     $q2->setHard(true)->delete();
-                // }
-                // $q2->execute();
-            }
-        }
-
-        $slaves->delete();
-
-        static::_afterMerge($master);
-
-        $conn->commit();
-
-        return $master;
     }
-
-    /**
-     * Функция, выполняющаяся после объединения записи.
-     *
-     * @param Doctrine_Record $master
-     */
-    protected static function _afterMerge(Doctrine_Record $master) {}
 }

@@ -49,26 +49,14 @@ class ZFE_Model_Merge
                 }
             }
         }
-        foreach ($map as $field => $data) {
-            // Тушение предупреждений плохо, но тут действительно вполне может быть и строка и массив
-            // и это норма, а не исключение, и собачка лучше чем раздувать код
-            $data = @array_diff($data, ['']);
-            $map[$field] = array_unique($data, SORT_REGULAR);
-            if (1 < count($map[$field])) {
-                $diff[$field] = $map[$field];
-            }
-        }
 
-        $first = $items->getFirst();
-        if ($first && $first instanceof ZfeFiles_Manageable) {
-            $schemas = $first->getFileSchemas();
-            foreach ($schemas as $schema) {
-                if ($schema->isHidden() || !$schema->getMultiple()) {
-                    continue;
-                }
-                foreach ($items as $item) {
-                    $map[$schema->getCode()][$item['id']] = $item->getAgents($schema);
-                }
+        $map = $map + $modelName::mergeFillMap($items);
+
+        foreach ($map as $field => $data) {
+            $data = array_udiff($data, [''], fn($a, $b) => $a === $b ? 0 : 1);
+            $map[$field] = array_unique($data, SORT_REGULAR);
+            if (count($map[$field]) > 1) {
+                $diff[$field] = $map[$field];
             }
         }
 
@@ -89,9 +77,101 @@ class ZFE_Model_Merge
 
     public function perform(): ?AbstractRecord
     {
-        if ($this->canMerge()) {
-            return ($this->modelName)::advancedMerge($this->items, $this->fieldsMap);
+        if (!$this->canMerge()) {
+            return null;
         }
-        return null;
+
+        $modelName = $this->modelName;
+        $slaves = $this->items;
+        $map = $this->fieldsMap;
+
+        $tableInstance = Doctrine_Core::getTable($modelName);
+        $serviceFields = $modelName::getServiceFields();
+        $columnNames = array_diff($tableInstance->getColumnNames(), $serviceFields);
+
+        // Дополняем карту
+        $missingColumns = array_diff($columnNames, array_keys($map));
+        foreach ($missingColumns as $columnName) {
+            $values = [];
+
+            foreach ($slaves as $slave) {
+                if (null !== $slave->{$columnName}) {
+                    $values[] = $slave->{$columnName};
+                    $map[$columnName] = $slave->id;
+                }
+            }
+
+            $unique = array_unique($values);
+            if (count($unique) > 1) {
+                new ZFE_Model_Exception('Невозможно объединить: не выбран правильный вариант');
+            }
+        }
+
+        // Переставляем устаревающие записи, что бы индексы совпадали с id и создаем массив их id-шников
+        $slavesIbi = []; // $slavesIndexById
+        $slaveIds = [];
+        foreach ($slaves as $slave) {
+            $slavesIbi[$slave->id] = $slave;
+            $slaveIds[] = $slave->id;
+        }
+        if (count($slaveIds) === 0) {
+            throw new ZFE_Model_Exception('Невозможно объединить: отсутствуют исходные записи');
+        }
+        $slavesStr = implode(',', $slaveIds);
+
+        $conn = Doctrine_Manager::connection();
+        $conn->beginTransaction(); // Оборачиваем весь процесс перераспределения связей в одну большую транзакцию
+
+        // Создаем новую запись
+        /** @var AbstractRecord */
+        $master = new ($modelName)();
+        foreach ($map as $columnName => $slaveId) {
+            if ($tableInstance->hasField($columnName)) {
+                $master->{$columnName} = $slavesIbi[$slaveId]->{$columnName};
+            }
+        }
+        $master->saveHistory(false, true);
+        $master->save();
+        $master->saveHistory(true, true);
+
+        // Пишем историю
+        $user = Zend_Registry::get('user')->data;
+        $history = new History();
+        $history->table_name = $master->getTableName();
+        $history->action_type = History::ACTION_TYPE_MERGE;
+        $history->content_id = $master->id;
+        $history->content_old = $slavesStr;
+        $history->user_id = $user ? $user->id : null;
+        $history->datetime_action = new Doctrine_Expression('NOW()');
+        $history->content_version = 1;
+        $history->save();
+
+        $master->mergeUpdateRelations($slaves, $map);
+
+        // Перепривязываем связанные записи
+        $relations = $master->getTable()->getRelations();
+        foreach ($relations as $relation) {
+            if ($relation instanceof Doctrine_Relation_ForeignKey) {
+                $table = $relation->getTable();
+                $tableName = $table->getTableName();
+                $foreign = $relation->getForeign();
+
+                if ($slavesStr) {
+                    // Изменяем связи со слейв-тегом объекта на связь с мастер-тегом
+                    $q1 = <<<SQL
+UPDATE IGNORE {$tableName}
+SET {$foreign} = {$master->id}
+WHERE {$foreign} IN ({$slavesStr})
+SQL;
+                    $stmt = $conn->prepare($q1);
+                    $stmt->execute([]);
+                }
+            }
+        }
+
+        $slaves->delete();
+        $conn->commit();
+
+        return $master;
     }
 }
