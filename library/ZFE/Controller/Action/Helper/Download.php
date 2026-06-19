@@ -67,7 +67,7 @@ class ZFE_Controller_Action_Helper_Download extends Zend_Controller_Action_Helpe
         ;
 
         if ($download) {
-            $response->setHeader('Content-Disposition', 'attachment; filename="' . $name . '"');
+            $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($name));
         }
 
         return $response;
