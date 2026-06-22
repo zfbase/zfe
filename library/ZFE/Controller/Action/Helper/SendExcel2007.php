@@ -46,7 +46,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
 
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->setHeader('Content-Transfer-Encoding', 'binary');
-        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.xlsx"'));
+        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.xlsx'));
         $response->setHeader('Expires', '0');
         $response->setHeader('Cache-Control', 'max-age=0');
         PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save('php://output');
@@ -68,7 +68,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
 
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->setHeader('Content-Transfer-Encoding', 'binary');
-        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.xlsx"'));
+        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.xlsx'));
         $response->setHeader('Expires', '0');
         $response->setHeader('Cache-Control', 'max-age=0');
 

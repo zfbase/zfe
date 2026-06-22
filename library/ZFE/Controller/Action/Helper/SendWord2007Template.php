@@ -31,7 +31,7 @@ class ZFE_Controller_Action_Helper_SendWord2007Template extends Zend_Controller_
 
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         $response->setHeader('Content-Transfer-Encoding', 'binary');
-        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.docx"'));
+        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.docx'));
         $response->setHeader('Expires', '0');
         $response->setHeader('Cache-Control', 'max-age=0');
         $response->sendHeaders();
