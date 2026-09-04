@@ -26,6 +26,21 @@ trait ZFE_Form_Helpers_Frequent
     }
 
     /**
+     * Добавить стандартное скрытое поле версии записи.
+     *
+     * Поле используется для контроля конкурентного редактирования:
+     * контроллер сравнивает пришедшую в запросе версию с актуальной версией записи.
+     *
+     * @return Zend_Form
+     */
+    public function addElementVersion()
+    {
+        return $this->addElement('hidden', 'version', [
+            'decorators' => ['viewHelper'],
+        ]);
+    }
+
+    /**
      * Добавить стандартное поле название записи.
      *
      * @return Zend_Form

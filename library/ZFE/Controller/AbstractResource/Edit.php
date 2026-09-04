@@ -52,15 +52,41 @@ trait ZFE_Controller_AbstractResource_Edit
         }
 
         if ($this->_request->isPost() && !static::$_readonly) {
-            if (!$item->isDeleted()) {
-                $post = $this->_request->getPost();
+            $post = $this->_request->getPost();
 
+            if ($item->isDeleted()) {
+                $this->error('Редактирование удаленных записей запрещено.');
+                $post = [];
+            } elseif (!$this->_isActualVersion($item, $post)) {
+                $editorName = $this->_getEditorName($item);
+
+                $this->error($modelName::decline(
+                    '%s был изменен',
+                    '%s была изменена',
+                    '%s было изменено'
+                ) . ($editorName
+                    ? ' пользователем ' . $this->view->escape($editorName)
+                    : ' другим пользователем')
+                    . ', пока вы работали с формой.'
+                    . ' Изменения не сохранены: обновите страницу, чтобы увидеть актуальные данные,'
+                    . ' или сохраните еще раз, чтобы перезаписать чужие изменения.');
+
+                // Актуализируем версию в форме, чтобы повторное сохранение
+                // осознанно перезаписало чужие изменения.
+                $post['version'] = $item->version;
+            } else {
                 $this->_beforeValid($item, $form, $post);
 
                 $form->setDisabledToIgnore();
                 if ($form->isValidPartial($post)) {
                     try {
-                        $item->fromArray($form->getValues(), false);
+                        $values = $form->getValues();
+
+                        // Версией управляет модель, в форме она нужна
+                        // только для проверки актуальности записи.
+                        unset($values['version']);
+
+                        $item->fromArray($values, false);
 
                         $this->_beforeSave($item, $form, $post);
                         $item->save();
@@ -88,9 +114,6 @@ trait ZFE_Controller_AbstractResource_Edit
                         $this->error('Сохранить не удалось', $ex);
                     }
                 }
-            } else {
-                $this->error('Редактирование удаленных записей запрещено.');
-                $post = [];
             }
 
             // двойное заполнение необходимо для заполнения disabled-полей
@@ -163,6 +186,71 @@ trait ZFE_Controller_AbstractResource_Edit
         }
 
         return $this->view->item;
+    }
+
+    /**
+     * Проверить, что редактировалась актуальная версия записи.
+     *
+     * Форма редактирования отдает версию записи, с которой начиналось редактирование
+     * (см. ZFE_Form_Helpers_Frequent::addElementVersion). Если к моменту сохранения
+     * запись успел изменить кто-то другой, ее версия уже увеличилась, и присланные
+     * данные основаны на устаревшем состоянии.
+     *
+     * Проверка пропускается для новых записей, для моделей без поля версии
+     * и для форм, не передающих версию.
+     *
+     * @param Doctrine_Record $item
+     * @param array           $post
+     *
+     * @return bool
+     */
+    protected function _isActualVersion(Doctrine_Record $item, array $post)
+    {
+        if (!$item->exists() || !$item->contains('version')) {
+            return true;
+        }
+
+        $postVersion = $post['version'] ?? null;
+        if (null === $postVersion || '' === $postVersion) {
+            return true;
+        }
+
+        return (int) $postVersion === (int) $item->version;
+    }
+
+    /**
+     * Получить имя пользователя, последним изменившего запись.
+     *
+     * @param Doctrine_Record $item
+     *
+     * @return null|string NULL, если модель не хранит редактора
+     *                     или пользователь не найден
+     */
+    protected function _getEditorName(Doctrine_Record $item)
+    {
+        if (!$item->contains('editor_id') || empty($item->editor_id)) {
+            return null;
+        }
+
+        if (!$item->getTable()->hasRelation('Editor')) {
+            return null;
+        }
+
+        $editor = $item->Editor;
+        if (empty($editor) || !$editor->exists()) {
+            return null;
+        }
+
+        foreach (['getNameWithContactInfo', 'getFullName', 'getTitle'] as $method) {
+            if (method_exists($editor, $method)) {
+                $name = trim((string) $editor->{$method}());
+                if ('' !== $name) {
+                    return $name;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
