@@ -86,7 +86,7 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
                 $invoker->deleted_at = null;
             }
 
-            if ($invoker->contains('version')) {
+            if ($invoker->contains('version') && !$invoker::hasVersionLocking()) {
                 ++$invoker->version;
             }
 

@@ -120,7 +120,8 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
             $invoker->updated_at = $datetime;
         }
 
-        if ($invoker->contains('version')) {
+        // При оптимистической блокировке начальную версию выставляет Doctrine
+        if ($invoker->contains('version') && !$invoker::hasVersionLocking()) {
             $invoker->version = 1;
         }
     }
@@ -149,7 +150,10 @@ class ZFE_Model_Template_Listener_History extends Doctrine_Record_Listener
             $invoker->updated_at = $datetime;
         }
 
-        if ($invoker->contains('version')) {
+        // При оптимистической блокировке версию увеличивает Doctrine.
+        // Doctrine сверяет версию с последним прежним значением поля,
+        // поэтому повторное изменение версии здесь сломало бы проверку.
+        if ($invoker->contains('version') && !$invoker::hasVersionLocking()) {
             $invoker->version = $invoker->version + 1;
         }
     }

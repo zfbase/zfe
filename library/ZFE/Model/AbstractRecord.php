@@ -382,11 +382,50 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     }
 
     /**
+     * Версией записи управляет оптимистическая блокировка Doctrine?
+     *
+     * По умолчанию блокировка включается для всех моделей с полем version (кроме режима миграции):
+     * Doctrine сам выставляет версию 1 при добавлении, увеличивает ее при каждом изменении
+     * и выбрасывает Doctrine_Locking_Exception, если запись успели изменить в другом процессе.
+     * Чтобы отключить блокировку для модели, укажите в ее setUp():
+     * $this->option('optimisticLocking', false);
+     *
+     * Если блокировка выключена, версию по-старому ведет ZFE_Model_Template_Listener_History.
+     *
+     * @return bool
+     */
+    public static function hasVersionLocking()
+    {
+        $table = Doctrine_Core::getTable(static::class);
+
+        // Настройка определяется лениво: поле version может добавить шаблон (BaseZfeFields),
+        // подключаемый в setUp() наследника уже после ZFE_Model_AbstractRecord::setUp().
+        $option = $table->getOption('optimisticLocking');
+        if (null === $option) {
+            $option = !self::$migrationMode && $table->hasField('version') ? 'version' : false;
+            $table->setOption('optimisticLocking', $option);
+        }
+
+        return 'version' === (true === $option ? 'version' : $option);
+    }
+
+    /**
      * Режим миграции.
      *
      * @var bool
      */
     public static $migrationMode = false;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function construct()
+    {
+        parent::construct();
+
+        // Определяем настройку блокировки до первого сохранения записи
+        static::hasVersionLocking();
+    }
 
     /**
      * {@inheritdoc}

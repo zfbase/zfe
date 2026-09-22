@@ -116,8 +116,16 @@ trait ZFE_Controller_AbstractResource_History
         }
 
         try {
+            // Переносим в актуальную запись только значения полей:
+            // номер версии у состояния из истории старый, а версия записи должна только расти
+            // (при оптимистической блокировке ее увеличивает Doctrine при сохранении).
             $restoreItem = $curItem->getStateForVersion($version);
-            $restoreItem->save();
+            foreach ($restoreItem->getModified() as $field => $value) {
+                if ('version' !== $field) {
+                    $curItem->set($field, $value);
+                }
+            }
+            $curItem->save();
 
             ZFE_Notices::ok($modelName::decline('%s успешно откатан', '%s успешно откатана', '%s успешно откатано') . ' к версии ' . $version);
 

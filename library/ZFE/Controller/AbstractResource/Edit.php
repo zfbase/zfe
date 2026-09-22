@@ -58,22 +58,7 @@ trait ZFE_Controller_AbstractResource_Edit
                 $this->error('Редактирование удаленных записей запрещено.');
                 $post = [];
             } elseif (!$this->_isActualVersion($item, $post)) {
-                $editorName = $this->_getEditorName($item);
-
-                $this->error($modelName::decline(
-                    '%s был изменен',
-                    '%s была изменена',
-                    '%s было изменено'
-                ) . ($editorName
-                    ? ' пользователем ' . $this->view->escape($editorName)
-                    : ' другим пользователем')
-                    . ', пока вы работали с формой.'
-                    . ' Изменения не сохранены: обновите страницу, чтобы увидеть актуальные данные,'
-                    . ' или сохраните еще раз, чтобы перезаписать чужие изменения.');
-
-                // Актуализируем версию в форме, чтобы повторное сохранение
-                // осознанно перезаписало чужие изменения.
-                $post['version'] = $item->version;
+                $this->_versionConflict($item, $post);
             } else {
                 $this->_beforeValid($item, $form, $post);
 
@@ -107,6 +92,21 @@ trait ZFE_Controller_AbstractResource_Edit
                             }
                         } else {
                             $this->abort(500, 'После сохранения в записи отсутствует ID.');
+                        }
+                    } catch (Doctrine_Locking_Exception $ex) {
+                        // Запись изменили в другом процессе уже после проверки версии из формы:
+                        // Doctrine не нашел строку с загруженной версией и отменил сохранение.
+                        $actual = $item->exists()
+                            ? $modelName::hardFind($item->id, Doctrine_Core::HYDRATE_ARRAY)
+                            : null;
+
+                        if ($actual) {
+                            $item->hydrate($actual);
+                            $item->clearRelated();
+
+                            $this->_versionConflict($item, $post);
+                        } else {
+                            $this->error('Сохранить не удалось: запись удалена другим пользователем', $ex);
                         }
                     } catch (Throwable $ex) {
                         ZFE_Utilities::popupException($ex);
@@ -216,6 +216,34 @@ trait ZFE_Controller_AbstractResource_Edit
         }
 
         return (int) $postVersion === (int) $item->version;
+    }
+
+    /**
+     * Сообщить о конкурентном изменении записи.
+     *
+     * Версия в форме актуализируется, чтобы повторное сохранение
+     * осознанно перезаписало чужие изменения.
+     *
+     * @param Doctrine_Record $item актуальное состояние записи
+     * @param array           $post
+     */
+    protected function _versionConflict(Doctrine_Record $item, array &$post)
+    {
+        $modelName = get_class($item);
+        $editorName = $this->_getEditorName($item);
+
+        $this->error($modelName::decline(
+            '%s был изменен',
+            '%s была изменена',
+            '%s было изменено'
+        ) . ($editorName
+            ? ' пользователем ' . $this->view->escape($editorName)
+            : ' другим пользователем')
+            . ', пока вы работали с формой.'
+            . ' Изменения не сохранены: обновите страницу, чтобы увидеть актуальные данные,'
+            . ' или сохраните еще раз, чтобы перезаписать чужие изменения.');
+
+        $post['version'] = $item->version;
     }
 
     /**

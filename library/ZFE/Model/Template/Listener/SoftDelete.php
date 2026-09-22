@@ -45,7 +45,7 @@ class ZFE_Model_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             $invoker = $event->getInvoker();
 
             if ($invoker->contains('deleted') || $invoker->contains('deleted_at')) {
-                if ($invoker->contains('version')) {
+                if ($invoker->contains('version') && !$invoker::hasVersionLocking()) {
                     ++$invoker->version;
                 }
                 if ($invoker->contains('deleted')) {

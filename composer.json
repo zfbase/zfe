@@ -46,7 +46,7 @@
     "php": ">=7.4 || >= 8.0",
     "ext-json": "*",
     "ext-bcmath": "*",
-    "zfbase/doctrine1": "^1.2",
+    "zfbase/doctrine1": "^1.3",
     "zfbase/zend1-bootstrap3": "~1",
     "zfbase/zfe-files": "^1.2.19",
     "jdorn/sql-formatter": "~1",
