@@ -62,10 +62,12 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
 
         $childrenBtns = [];
         foreach ($buttons as $button) {
+            $liClass = $button['class'] ?? null;
+            unset($button['class']);
             $childrenBtns[] = $this->view->tag(
                 'li',
-                ['class' => $button['class'] ?? null],
-                $this->one($button, '')
+                ['class' => $liClass],
+                $this->one($button, 'dropdown-item')
             );
         }
 
