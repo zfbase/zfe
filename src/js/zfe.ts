@@ -3,6 +3,7 @@ import 'inputmask/dist/inputmask/jquery.inputmask';
 import $ from 'jquery';
 import 'zfe-typeahead/dist/typeahead.jquery';
 
+import '../types';
 import bootstrap from './bootstrap';
 
 import '../components/keyboard';
@@ -66,11 +67,14 @@ const ZFE = {
     'initFileAjax',
   ],
 
+  /** Подключаемый приложением визуальный редактор (например, обертка над CKEditor) */
+  htmlEditor: undefined as undefined | { create: (el: HTMLElement, config: object) => void },
+
   autocompleteTemplates: {},
   ckeditorConfig: {},
 
   initRest: (container) => {
-    debug(container);
+    debug();
     historyDiff(container);
   },
 
@@ -173,10 +177,10 @@ const ZFE = {
   /** Всплывающая справка по всем заполненным полям записи */
   initItemDetailsPopover: (container) => {
     $('.item-details-icon', container).popover({
-      content: (el) => $(el)
+      content: ((el: HTMLElement) => $(el)
         .closest('.item-details')
         .find('.item-details-body')
-        .html(),
+        .html()) as any,
       allowList: {
         ...bootstrap.Popover.Default.allowList,
         table: [],
@@ -204,7 +208,7 @@ const ZFE = {
     $('input[type=range]')
       .on('input', (event) => {
         const $input = $(event.currentTarget);
-        $input.attr('data-value', $input.val());
+        $input.attr('data-value', String($input.val()));
       })
       .trigger('input');
   },
@@ -271,6 +275,13 @@ const ZFE = {
 };
 
 ZFE.controllerActionScriptHelper('tasks', 'index', initTasksIndex);
+
+declare global {
+  interface Window {
+    /** Глобальный объект ZFE */
+    ZFE: typeof ZFE;
+  }
+}
 
 window.ZFE = ZFE;
 

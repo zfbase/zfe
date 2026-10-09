@@ -12,6 +12,15 @@ const defaults = {
 };
 
 class ZFEMultiAutocomplete {
+  $input: any;
+  $group: any;
+  $iconRight: any;
+  $wrap: any;
+  settings: any;
+  $hint: any;
+  placeholderWidth: any;
+  engine: any;
+
   constructor(element, options) {
     this.$input = $(element);
     this.$group = this.$input.closest('.multiac-wrap');
@@ -74,7 +83,9 @@ class ZFEMultiAutocomplete {
       })
       .on('sortupdate', (e) => {
         $('.linked-entity input[name$="\\[priority\\]"]', $(e.target)).each(
-          (priority, $input) => $($input).val(priority + 1),
+          (priority, $input) => {
+            $($input).val(priority + 1);
+          },
         );
       })
       .trigger('sortupdate');
@@ -121,7 +132,7 @@ class ZFEMultiAutocomplete {
     return index;
   }
 
-  addElement(title, id, data = {}, replace = null, silent = false) {
+  addElement(title, id?, data = {}, replace = null, silent = false) {
     if (this.hasElement(id)) {
       return this.$wrap.find(`.linked-entity:has([name*="[id]"][value=${id}])`);
     }

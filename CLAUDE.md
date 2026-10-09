@@ -8,7 +8,7 @@ ZFE (`zfbase/zfe` on Composer, `zfe` on npm) is a framework library for building
 
 The repository ships two packages:
 - **PHP** (Composer): `library/`, `resources/`, `bin/`. `src/` and `tests/` are excluded from the Composer archive.
-- **JS/SCSS** (npm): `src/`, with entry point `src/js/zfe.js` and typings in `src/types.d.ts`. The host app bundles it with its own webpack. There is no build step in this repo.
+- **TS/SCSS** (npm): `src/`, with entry point `src/js/zfe.ts`. `tsup` builds it into `dist/` (ESM + CJS + `.d.ts`, gitignored; built on `npm publish` via `prepack`). Dependencies and peer dependencies stay external, so the host app bundles them with its own webpack. SCSS is shipped as source (`src/scss`, `src/components/**/*.scss`, `src/fonts`) and stays importable by path (`zfe/src/scss/zfe`).
 
 Branches are per minor version (`1.27` … `1.36`), with `master` as the main branch. Recent commits use conventional-commit prefixes (`feat:`, `fix:`).
 
@@ -20,6 +20,8 @@ Releases: push a `vX.Y.Z` tag. Packagist takes the Composer version from the tag
 composer lint          # php-cs-fixer dry run with diff (config in .php_cs; v2-style Config::create())
 composer fix           # apply php-cs-fixer
 npm run lint           # eslint src
+npm run typecheck      # tsc --noEmit
+npm run build          # tsup -> dist/ (npm run dev for watch)
 ```
 
 php-cs-fixer and phpunit are not Composer dependencies, so they must be installed globally. The test bootstrap requires `../vendor/autoload.php` relative to the working directory, so run the tests from `tests/`:
@@ -81,6 +83,6 @@ View scripts resolve through a fallback chain: the app's own view, then ZFE's `r
 - `bin/zfe-manage-tasks [--part-size N] [--trait i/n] [performerCodes...]` is an endless worker loop over the `Tasks` table. Performers subclass `ZFE_Tasks_Performer` and are registered in config (`tasks.performers[] = "Class"`). A performer's code is the last PSR-0 segment of its class name. Throw `ZFE_Tasks_Performer_Exception_Permanent` for failures that must not be retried.
 
 ### Frontend (`src/`)
-`src/js/zfe.js` exports a `ZFE` object with a list of `init*` methods run per page, plus controller/action matching. Components under `src/components/*` are jQuery plugins with SCSS. File upload uses React (`initZfeFileElement.jsx`, `zfe-files`). jQuery, React, Bootstrap 5 and Popper are peer dependencies; `src/js/bootstrap.js` registers the jQuery interface of the Bootstrap plugins (`$(el).modal()`, `.popover()`…).
+`src/js/zfe.ts` exports a `ZFE` object with a list of `init*` methods run per page, plus controller/action matching. Components under `src/components/*` are jQuery plugins with SCSS. File upload uses React (`initZfeFileElement.tsx`, `zfe-files`). jQuery, React, Bootstrap 5 and Popper are peer dependencies; `src/js/bootstrap.ts` registers the jQuery interface of the Bootstrap plugins (`$(el).modal()`, `.popover()`…).
 
 Styles: ZFE does not ship a Bootstrap theme. The host app compiles Bootstrap 5 with its own variables (it must set `$enable-caret: false`: ZFE markup uses an explicit `<span class="caret">`), then includes `src/scss/zfe.scss` (or `bootstrap-compat.scss` without ZFE components), then its own theme. `_compat.scss` keeps ZFE's Bootstrap 3 markup working on Bootstrap 5: `.btn-default`, `.btn-xs`, `.caret`, `.form-group`, `.form-inline`, horizontal forms with columns outside `.row`, `has-error`/`has-warning`/`warning-feedback` states of `zend1-bootstrap5`, relatively positioned grid columns; Glyphicons are in `_glyphicons.scss` (`src/fonts`).

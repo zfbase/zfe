@@ -1,6 +1,5 @@
-export function getAcEngine(settings = {}) {
-  /** @type AbortController | null */
-  let ac = null;
+export function getAcEngine(settings: { minLength?: number; sourceUrl?: string; exclude?: any } = {}) {
+  let ac: AbortController | null = null;
   const { minLength, sourceUrl, exclude } = settings;
   return async (query, _, async) => {
     try {

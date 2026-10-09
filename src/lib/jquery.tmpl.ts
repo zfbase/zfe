@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable */
 /*!
  * $ Templates Plugin 1.0.4

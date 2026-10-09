@@ -3,6 +3,17 @@ import $ from 'jquery';
 import { makeModal } from '../modals';
 
 class MergeHelperModal {
+  $form: any;
+  $panel: any;
+  onCancel: any;
+  onSuccess: any;
+  onError: any;
+  mergeHelperUrl: any;
+  $modal: any;
+  submitBtn: any;
+  showEqualBtn: any;
+  hideEqualBtn: any;
+
   constructor($form, $panel, onCancel, onSuccess, onError) {
     this.$form = $form;
     this.$panel = $panel;
@@ -90,7 +101,7 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
     </div>`).append(title);
 
   const onCancel = ($panel) => {
-    $panel.removeClass('panel-loading').attr('disabled', false);
+    $panel.removeClass('panel-loading').prop('disabled', false);
     $('.btn', $panel).show();
   };
 
@@ -104,7 +115,7 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
     });
   };
 
-  const onError = ($panel, message) => {
+  const onError = ($panel, message?) => {
     makeAlert('danger', message || 'Объединение не удалось.').insertAfter(
       $panel
     );
@@ -114,7 +125,7 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
     const $btn = $(event.currentTarget);
     const $panel = $btn.closest('.card');
 
-    $panel.addClass('panel-loading').attr('disabled', true);
+    $panel.addClass('panel-loading').prop('disabled', true);
     $('.btn', $panel).hide();
 
     const $checkboxes = $panel.find('tbody input[type="checkbox"]:checked');

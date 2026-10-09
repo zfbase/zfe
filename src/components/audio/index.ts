@@ -22,6 +22,16 @@ const secToTime = (sec) => {
 };
 
 class ZFEAudio {
+  _audio: any;
+  audio: any;
+  container: any;
+  playPauseBtn: any;
+  track: any;
+  time: any;
+  duration: any;
+  muteBtn: any;
+  allowUpdateTime: any;
+
   constructor(_audio) {
     this._audio = _audio;
     this.audio = $(_audio);
@@ -127,7 +137,7 @@ class ZFEAudio {
     });
 
     this.audio.find('a.zfe-audio-link').each((i, link) => {
-      $('<li>').append($(link)).appendTo(moreContainer);
+      $('<li>').append($(link).addClass('dropdown-item')).appendTo(moreContainer);
     });
 
     if (moreContainer.children().length) {

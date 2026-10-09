@@ -4,7 +4,7 @@
 import $ from 'jquery';
 
 $.fn.zfeMerge = function zfeMerge() {
-  const MergeEngine = {};
+  const MergeEngine: Record<string, any> = {};
   MergeEngine.$input = $('.zfe-merge-search', this); // Поисковое поле
   MergeEngine.$post_clear = $('.zfe-merge-post-clear', this); // Флаг: очищать после выбора результата поиска?
   MergeEngine.$searchResults = $('.zfe-merge-suggest', this); // Поле для результатов поиска
@@ -34,7 +34,7 @@ $.fn.zfeMerge = function zfeMerge() {
     if (ac) {
       ac.abort();
     }
-    let reqAc = new AbortController();
+    const reqAc = new AbortController();
     ac = reqAc;
     const params = new URLSearchParams({
       term,

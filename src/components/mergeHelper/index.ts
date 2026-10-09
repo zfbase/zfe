@@ -1,6 +1,9 @@
 import $ from 'jquery';
 
 class ZFEMergeHelper {
+  $container: any;
+  $slaveIds: any;
+
   constructor(container) {
     this.$container = $(container);
     this.$slaveIds = this.$container.find('.slaves-ids');

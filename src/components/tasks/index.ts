@@ -7,14 +7,14 @@ export default () => {
     const $otherFilters = $('#search, #performer, #related_id', $form);
     $idFilter.on('change', (event) => {
       const value = $(event.currentTarget).val();
-      $otherFilters.attr('disabled', !!value);
+      $otherFilters.prop('disabled', !!value);
     });
-    $otherFilters.attr('disabled', !!$idFilter.val());
+    $otherFilters.prop('disabled', !!$idFilter.val());
   })();
 
   $('.btn-restart').on('click', (e) => {
     const $btn = $(e.currentTarget);
-    $btn.attr('disabled', true);
+    $btn.prop('disabled', true);
   
     $.ajax({
       type: 'POST',
@@ -44,7 +44,7 @@ export default () => {
     event.preventDefault();
   
     const $btn = $(event.currentTarget);
-    $btn.attr('disabled', true);
+    $btn.prop('disabled', true);
   
     $.ajax({
       type: 'POST',

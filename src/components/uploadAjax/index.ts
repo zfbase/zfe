@@ -17,6 +17,16 @@ const defaults = {
 };
 
 class Loader {
+  file: any;
+  settings: any;
+  $loadingContainer: any;
+  $previewContainer: any;
+  $formContainer: any;
+  $loadingWrap: any;
+  xhr: any;
+  $progressBarContainer: any;
+  $progressBar: any;
+
   constructor(
     file,
     settings,
@@ -132,7 +142,7 @@ class Loader {
             'progress',
             (event) => {
               let percent = 0;
-              const position = event.loaded || event.position;
+              const position = event.loaded;
               if (event.lengthComputable) {
                 percent = Math.ceil((position / event.total) * 100);
               }
@@ -173,12 +183,13 @@ class Loader {
         this.warning(this.settings.errorLoad);
         this.restoreForm();
       },
+      // Внимание: `always` не является опцией $.ajax и не вызывается (поведение сохранено как есть).
       always: () => {
         this.$progressBarContainer.slideUp('fast', () => {
           this.$progressBarContainer.remove();
         });
       },
-    });
+    } as JQuery.AjaxSettings);
   }
 
   previewImage(file) {
@@ -283,7 +294,7 @@ class Loader {
     const $title = $('<span>').append(file.title);
 
     if (file.iconClass) {
-      $('<span>', { class: file.iconClass }).prepentTo($title);
+      $('<span>', { class: file.iconClass }).prependTo($title);
     }
 
     if (file.downloadUrl) {
@@ -346,6 +357,12 @@ class Loader {
 }
 
 class ZFEUploadAjax {
+  $input: any;
+  settings: any;
+  $formContainer: any;
+  $loadingContainer: any;
+  $previewContainer: any;
+
   constructor(element, options) {
     this.$input = $(element);
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);

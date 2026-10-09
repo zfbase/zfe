@@ -47,4 +47,12 @@ jobs:
           echo "Publishing $VERSION with tag $TAG (latest: $LATEST)"
           echo "DIST_TAG=$TAG" >> "$GITHUB_ENV"
 
+      - run: npm ci
+
+      - name: Check
+        run: |
+          npm run lint
+          npm run typecheck
+
+      # prepack собирает dist/ (tsup) перед упаковкой
       - run: npm publish --tag "$DIST_TAG"

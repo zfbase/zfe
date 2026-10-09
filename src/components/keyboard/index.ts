@@ -6,7 +6,7 @@ $(document).on('keyup', (e) => {
     return;
   }
 
-  if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+  if (['INPUT', 'TEXTAREA'].includes((e.target as unknown as Element).tagName)) {
     return;
   }
 
@@ -19,7 +19,7 @@ $(document).on('keyup', (e) => {
     const url = $('.btn-history-up').attr('href');
 
     if (url) {
-      window.location = url;
+      window.location.href = url;
       return;
     }
   }
@@ -38,7 +38,7 @@ $(document).on('keyup', (e) => {
     if ($cursor && $cursor.length) {
       const url = $cursor.find('a').attr('href');
       if (url) {
-        window.location = url;
+        window.location.href = url;
       }
     }
     return;
@@ -59,7 +59,7 @@ $(document).on('keyup', (e) => {
     }
 
     if (url) {
-      window.location = url;
+      window.location.href = url;
     }
   }
 });

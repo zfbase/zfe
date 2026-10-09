@@ -15,9 +15,37 @@
     "type": "git",
     "url": "git+https://github.com/zfbase/zfe.git"
   },
-  "main": "src/js/zfe",
-  "module": "src/js/zfe",
-  "types": "src/types.d.ts",
+  "sideEffects": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "/dist",
+    "/src/scss",
+    "/src/fonts",
+    "/src/components/**/*.scss"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc -p . --noEmit",
+    "lint": "eslint src",
+    "prepack": "npm run build"
+  },
   "dependencies": {
     "autosize": "^4.0.2",
     "html5sortable": "^0.9.3",
@@ -25,24 +53,32 @@
     "zfe-files": "^2.0.0",
     "zfe-typeahead": "^0.11.1"
   },
-  "files": [
-    "/src"
-  ],
-  "scripts": {
-    "lint": "eslint src"
-  },
   "peerDependencies": {
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
     "jquery": "^3",
-    "react": "18-19",
-    "react-dom": "18-19"
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@popperjs/core": "^2.11.8",
+    "@types/autosize": "^4.0.3",
+    "@types/bootstrap": "^5.2.11",
+    "@types/inputmask": "^5.0.7",
+    "@types/jquery": "^3.5.34",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "bootstrap": "^5.3.8",
+    "esbuild": "^0.28.2",
     "eslint": "^9.22.0",
     "eslint-plugin-react": "^7.37.4",
     "globals": "^16.0.0",
+    "jquery": "^3.7.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.26.1"
   }
 }

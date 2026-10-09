@@ -11,4 +11,17 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  {
+    settings: { react: { version: "detect" } },
+    rules: {
+      // Постепенная типизация: `any` допустим, пока код не описан точными типами
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
+    // Сторонний код (jquery-tmpl) не типизирован
+    files: ["src/lib/**"],
+    rules: { "@typescript-eslint/ban-ts-comment": "off" },
+  },
+  { ignores: ["dist/**"] },
 ];

@@ -11,6 +11,9 @@ const comparer = (otherArray) => {
 };
 
 class CheckUnsavedFormData {
+  $form: any;
+  freeSnapshot: any;
+
   constructor(form) {
     this.$form = $(form);
     this.freeSnapshot = [];

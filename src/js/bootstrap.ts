@@ -7,7 +7,7 @@ import $ from 'jquery';
  * Bootstrap регистрирует его сам, только если window.jQuery задан к моменту загрузки модуля,
  * что при импорте ES-модулей не гарантировано, поэтому регистрируем явно.
  */
-[
+const plugins: any[] = [
   bootstrap.Alert,
   bootstrap.Button,
   bootstrap.Carousel,
@@ -20,17 +20,20 @@ import $ from 'jquery';
   bootstrap.Tab,
   bootstrap.Toast,
   bootstrap.Tooltip,
-].forEach((plugin) => {
+];
+
+plugins.forEach((plugin) => {
   const name = plugin.NAME;
-  const previous = $.fn[name];
-  $.fn[name] = plugin.jQueryInterface;
-  $.fn[name].Constructor = plugin;
-  $.fn[name].noConflict = () => {
-    $.fn[name] = previous;
+  const fn = $.fn as any;
+  const previous = fn[name];
+  fn[name] = plugin.jQueryInterface;
+  fn[name].Constructor = plugin;
+  fn[name].noConflict = () => {
+    fn[name] = previous;
     return plugin.jQueryInterface;
   };
 });
 
-window.bootstrap = bootstrap;
+(window as any).bootstrap = bootstrap;
 
 export default bootstrap;

@@ -11,6 +11,15 @@ const defaults = {
 };
 
 class ZFEAutocomplete {
+  $input: any;
+  $group: any;
+  $iconRight: any;
+  settings: any;
+  $hint: any;
+  $inlineLink: any;
+  valueData: any;
+  engine: any;
+
   constructor(element, options) {
     this.$input = $(element);
     this.$group = this.$input.closest('.autocomplete-wrap');
