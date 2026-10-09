@@ -1,0 +1,50 @@
+# Публикация пакета zfe в npm при пуше тега версии (v2.0.1 и т.п.); версия npm = тег, как у Composer.
+# Публикация через Trusted Publishing (OIDC): токен npm не нужен, у npmjs.com для пакета
+# настроен доверенный издатель – GitHub Actions, zfbase/zfe, publish.yml.
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      # Trusted Publishing требует npm 11.5.1+
+      - run: npm install -g npm@latest
+
+      # Версия пакета – из тега, как у Composer (Packagist): версия в package.json не используется
+      - name: Version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      # latest – новая версия; next – пре-релиз; v<major> – версия старше latest (например, исправление в 1.36)
+      - name: Choose dist-tag
+        run: |
+          LATEST=$(npm view zfe dist-tags.latest 2>/dev/null || echo 0.0.0)
+          if [[ "$VERSION" == *-* ]]; then
+            TAG=next
+          elif [ "$(printf '%s\n%s\n' "$LATEST" "$VERSION" | sort -V | tail -n1)" != "$VERSION" ]; then
+            TAG="v${VERSION%%.*}"
+          else
+            TAG=latest
+          fi
+          echo "Publishing $VERSION with tag $TAG (latest: $LATEST)"
+          echo "DIST_TAG=$TAG" >> "$GITHUB_ENV"
+
+      - run: npm publish --tag "$DIST_TAG"

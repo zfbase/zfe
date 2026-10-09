@@ -11,6 +11,10 @@
     "Alexey Sumin"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zfbase/zfe.git"
+  },
   "main": "src/js/zfe",
   "module": "src/js/zfe",
   "types": "src/types.d.ts",

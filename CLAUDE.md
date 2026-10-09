@@ -12,6 +12,8 @@ The repository ships two packages:
 
 Branches are per minor version (`1.27` … `1.36`), with `master` as the main branch. Recent commits use conventional-commit prefixes (`feat:`, `fix:`).
 
+Releases: push a `vX.Y.Z` tag. Packagist takes the Composer version from the tag, and `.github/workflows/publish.yml` publishes the npm package with the same version (it sets `package.json` `version` from the tag, so the committed value does not matter) via npm Trusted Publishing. Dist-tags: `latest` for a new version, `next` for a pre-release, `v<major>` for a version older than `latest` (e.g. a fix on the `1.36` branch).
+
 ## Commands
 
 ```bash
