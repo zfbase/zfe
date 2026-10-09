@@ -6,7 +6,7 @@ $item = $this->item;
 $modelName = $this->modelName;
 ?>
 
-<table class="table table-condensed viewTable">
+<table class="table table-sm viewTable">
     <tbody>
         <?php foreach ($modelName::getViewFields() as $field): ?>
             <?= $this->viewRow($item, $field) ?>

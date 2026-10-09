@@ -42,7 +42,7 @@ $downHash = $this->hopsHistory()->getDownHash('К результатам пои�
 
     <?php if (!$this->readonly && $this->canRestore): ?>
         <a href="<?= $modelName::getIndexUrl() . ($this->deleted !== 1 ? '/deleted/1' : '') ?>"
-            class="btn btn-default pull-right<?= $this->deleted === 1 ? ' active' : '' ?>">
+            class="btn btn-default float-end<?= $this->deleted === 1 ? ' active' : '' ?>">
             <span class="glyphicon glyphicon-trash"></span>
             Корзина
         </a>

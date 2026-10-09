@@ -10,10 +10,10 @@ $childrenMap = Tasks::getChildrenMap($this->items);
         <table class="table table-hover table-sticky-header">
             <thead>
                 <tr>
-                    <?= $this->sortableHeadCell('id', null, 'text-right') ?>
+                    <?= $this->sortableHeadCell('id', null, 'text-end') ?>
                     <?= $this->sortableHeadCell('datetime_created', 'Создана') ?>
-                    <?= $this->sortableHeadCell('revision', 'Версия', 'text-right') ?>
-                    <?= $this->sortableHeadCell('worked', 'В работе', 'text-right text-nowrap') ?>
+                    <?= $this->sortableHeadCell('revision', 'Версия', 'text-end') ?>
+                    <?= $this->sortableHeadCell('worked', 'В работе', 'text-end text-nowrap') ?>
                     <th>Задача</th>
                     <th style="width: 85%;">Подробности</th>
                     <th></th>
@@ -22,7 +22,7 @@ $childrenMap = Tasks::getChildrenMap($this->items);
             <tbody>
                 <?php foreach ($this->items as $item): /** @var Tasks $item */ ?>
                     <tr>
-                        <td class="text-right">
+                        <td class="text-end">
                             <div data-copy-to-clipboard="<?= $item->id ?>">
                                 <?= $this->number($item->id) ?>
                             </div>
@@ -31,18 +31,18 @@ $childrenMap = Tasks::getChildrenMap($this->items);
                             <?= $this->dateTime($item->datetime_created) ?>
                             <?php if ($item->datetime_schedule): ?>
                                 <div
-                                    data-toggle="tooltip"
+                                    data-bs-toggle="tooltip"
                                     title="Отсрочка исполнения"
                                     class="schedule">
                                     <?= $this->dateTime($item->datetime_schedule) ?>
                                 </div>
                             <?php endif; ?>
                         </td>
-                        <td class="text-right"><?= $item->revision ?></td>
-                        <td class="text-right text-nowrap">
+                        <td class="text-end"><?= $item->revision ?></td>
+                        <td class="text-end text-nowrap">
                             <span
-                                data-toggle="tooltip"
-                                data-html="html"
+                                data-bs-toggle="tooltip"
+                                data-bs-html="html"
                                 title="
                                 Начало: <?= $this->dateTime($item->datetime_started) ?><br>
                                 Окончание: <?= $this->dateTime($item->datetime_done) ?>">
@@ -88,7 +88,7 @@ $childrenMap = Tasks::getChildrenMap($this->items);
                             <?php if ($childrenMap[$item->id]): ?>
                                 <a
                                     href="/tasks/index/search/all/id/<?= $childrenMap[$item->id] ?>"
-                                    class="label label-info"
+                                    class="badge text-bg-info"
                                     title="ID перезапуска задачи">
                                     <?= $childrenMap[$item->id] ?>
                                 </a>

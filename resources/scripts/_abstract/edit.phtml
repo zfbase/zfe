@@ -10,15 +10,15 @@ $sideHash = $this->hopsHistory()->getSideHash('?');
 <?= $this->abstractRender('_header.phtml') ?>
 
 <form method="POST" enctype="multipart/form-data" class="form-horizontal form-edit <?= $this->form->getAttrib('class') ?>">
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
+    <div class="form-group row">
+        <div class="offset-sm-2 col-sm-10">
             <?= $this->historyMeta($item) ?>
         </div>
     </div>
     <?= $this->abstractRender('_edit_form.phtml') ?>
     <?php if (!$this->readonly): ?>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-10">
                 <?php if (!$item->isDeleted()) : ?>
                     <input type="submit" id="submit" value="Сохранить" class="btn btn-primary" />
                 <?php endif; ?>

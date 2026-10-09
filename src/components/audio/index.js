@@ -96,7 +96,7 @@ class ZFEAudio {
       .on('change', this._onChangeTrack.bind(this));
 
     $('<div>', {
-      class: 'btn btn-default btn-static hidden-xs zfe-audio-track-container',
+      class: 'btn btn-default btn-static zfe-audio-track-container d-none d-sm-inline-block',
     })
       .append(this.track)
       .appendTo(btnGroup);
@@ -123,7 +123,7 @@ class ZFEAudio {
       .on('click', this.toggleMute.bind(this));
 
     const moreContainer = $('<ul>', {
-      class: 'dropdown-menu dropdown-menu-right',
+      class: 'dropdown-menu dropdown-menu-end',
     });
 
     this.audio.find('a.zfe-audio-link').each((i, link) => {
@@ -135,7 +135,7 @@ class ZFEAudio {
         class: 'btn btn-default dropdown-toggle',
         role: 'button',
       })
-        .attr('data-toggle', 'dropdown')
+        .attr('data-bs-toggle', 'dropdown')
         .attr('aria-haspopup', 'true')
         .attr('aria-expanded', 'false')
         .append($('<span>', { class: 'glyphicon glyphicon-option-vertical' }))

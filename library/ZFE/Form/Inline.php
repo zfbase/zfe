@@ -7,7 +7,7 @@
 /**
  * Базовая строковая форма ZFE.
  */
-class ZFE_Form_Inline extends Twitter_Bootstrap3_Form_Inline
+class ZFE_Form_Inline extends Twitter_Bootstrap5_Form_Inline
 {
     use Application_Form_Helpers;
     use Application_Form_Extensions;

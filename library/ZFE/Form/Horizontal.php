@@ -7,7 +7,7 @@
 /**
  * Базовая горизонтальная форма ZFE.
  */
-class ZFE_Form_Horizontal extends Twitter_Bootstrap3_Form_Horizontal
+class ZFE_Form_Horizontal extends Twitter_Bootstrap5_Form_Horizontal
 {
     use Application_Form_Helpers;
     use Application_Form_Extensions;

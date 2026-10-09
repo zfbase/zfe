@@ -20,7 +20,7 @@ $name = $command::getName();
     <form class="form-inline" id="console-manager" style="margin-bottom: 10px;">
         <input type="hidden" id="exec-command" value="<?= $name ?>">
         <div class="input-group">
-            <div class="input-group-addon">$ <?= $name ?></div>
+            <div class="input-group-text">$ <?= $name ?></div>
             <input type="text" id="exec-params" class="form-control" placeholder="параметры">
         </div>
         <input type="button" id="exec-start" class="btn btn-primary" value="Выполнить">

@@ -52,7 +52,7 @@ class ZFE_View_Helper_SearchPages extends Zend_View_Helper_Abstract
      *
      * @return string
      */
-    public function getStepBtns($containerClass = 'pull-right', $btnSize = 'xs')
+    public function getStepBtns($containerClass = 'float-end', $btnSize = 'xs')
     {
         $request = Zend_Controller_Front::getInstance()->getRequest();
 

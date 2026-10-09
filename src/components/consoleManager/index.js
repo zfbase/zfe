@@ -10,8 +10,8 @@ export default () => {
   $('#exec-start').on('click', () => {
     const $log = $('<div>', { class: 'exec-log' }).insertAfter($form);
 
-    $btn.data('loading-text', 'Выполняется...');
-    $btn.button('loading');
+    const btnText = $btn.text();
+    $btn.prop('disabled', true).text('Выполняется...');
 
     $.ajax({
       url: '/console-manager/console',
@@ -25,7 +25,7 @@ export default () => {
         $log.append(log);
       },
       complete: () => {
-        $btn.button('reset');
+        $btn.prop('disabled', false).text(btnText);
       },
     });
   });

@@ -7,7 +7,7 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
     const $table = $(el);
     const $head = $('thead', $table);
 
-    $head.clone().addClass('header-fixed hide').appendTo($table);
+    $head.clone().addClass('header-fixed d-none').appendTo($table);
     $head.addClass('header-original');
   });
 
@@ -16,7 +16,7 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
       // таблица с приклеивающимся заголовком
       const $table = $(el);
       // верхняя навигационная панель (navbar)
-      const $navBar = $('.navbar-fixed-top');
+      const $navBar = $('.fixed-top');
       // величина прокрутки по вертикали
       const scrollTop = $win.scrollTop();
       // приклеивающийся заголовок (фиксированный)
@@ -52,9 +52,9 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
       });
 
       if (scrollTop >= headTop && $(window).width() > 1024) {
-        $headFixed.removeClass('hide');
+        $headFixed.removeClass('d-none');
       } else {
-        $headFixed.addClass('hide');
+        $headFixed.addClass('d-none');
       }
     });
   };

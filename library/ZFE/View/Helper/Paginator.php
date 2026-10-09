@@ -30,14 +30,14 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
      *
      * @var string
      */
-    private $_template = '<li><a href="{%url}">{%page}</a></li>';
+    private $_template = '<li class="page-item"><a class="page-link" href="{%url}">{%page}</a></li>';
 
     /**
      * Шаблон выбранной страницы (ссылки).
      *
      * @var string
      */
-    private $_selectedTemplate = '<li class="active"><a href="{%url}">{%page}</a></li>';
+    private $_selectedTemplate = '<li class="page-item active" aria-current="page"><a class="page-link" href="{%url}">{%page}</a></li>';
 
     /**
      * Разделитель страниц (ссылок).
@@ -51,7 +51,7 @@ class ZFE_View_Helper_Paginator extends Zend_View_Helper_Abstract
      *
      * @var string
      */
-    private $_containerPrefix = '<ul class="pull-right pagination">';
+    private $_containerPrefix = '<ul class="float-end pagination">';
 
     /**
      * Окончание контейнера.

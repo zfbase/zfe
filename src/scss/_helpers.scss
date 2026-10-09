@@ -1,0 +1,37 @@
+// Вспомогательные стили ZFE поверх Bootstrap 5
+
+.form-horizontal {
+  .form-text:first-child {
+    margin-top: add($input-padding-y, $input-border-width);
+  }
+
+  .form-control-plaintext .form-text:first-child {
+    margin-top: 0;
+  }
+}
+
+.form-vertical {
+  label + .form-control-plaintext {
+    padding-top: 0;
+  }
+
+  .form-control-plaintext:last-child {
+    padding-bottom: 0;
+  }
+}
+
+input[type=range]::after {
+  padding-left: .5em;
+  content: attr(data-value);
+}
+
+label.required::after {
+  content: ' *';
+  color: $danger-text-emphasis;
+}
+
+.modal-max {
+  max-width: none;
+  margin-right: 30px;
+  margin-left: 30px;
+}

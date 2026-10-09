@@ -31,12 +31,12 @@ class MergeHelperModal {
       .append('Объединить')
       .on('click', this.onSubmit.bind(this));
 
-    this.showEqualBtn = $('<a>', { class: 'btn btn-default pull-left' })
+    this.showEqualBtn = $('<a>', { class: 'btn btn-default float-start' })
       .append($('<span>', { class: 'glyphicon glyphicon-chevron-down' }))
       .append(' Показать совпадающие поля')
       .on('click', this.showEqual.bind(this));
 
-    this.hideEqualBtn = $('<a>', { class: 'btn btn-default pull-left hide' })
+    this.hideEqualBtn = $('<a>', { class: 'btn btn-default float-start d-none' })
       .append($('<span>', { class: 'glyphicon glyphicon-chevron-up' }))
       .append(' Скрыть совпадающие поля')
       .on('click', this.hideEqual.bind(this));
@@ -46,7 +46,7 @@ class MergeHelperModal {
       .append(this.showEqualBtn)
       .append(this.hideEqualBtn);
 
-    $('[data-dismiss="modal"]', this.$modal).on('click', () => {
+    $('[data-bs-dismiss="modal"]', this.$modal).on('click', () => {
       this.onCancel($panel);
     });
 
@@ -56,14 +56,14 @@ class MergeHelperModal {
 
   showEqual() {
     this.$form.removeClass('hide-equal-rows');
-    this.showEqualBtn.addClass('hide');
-    this.hideEqualBtn.removeClass('hide');
+    this.showEqualBtn.addClass('d-none');
+    this.hideEqualBtn.removeClass('d-none');
   }
 
   hideEqual() {
     this.$form.addClass('hide-equal-rows');
-    this.showEqualBtn.removeClass('hide');
-    this.hideEqualBtn.addClass('hide');
+    this.showEqualBtn.removeClass('d-none');
+    this.hideEqualBtn.addClass('d-none');
   }
 
   onSubmit() {
@@ -85,10 +85,8 @@ class MergeHelperModal {
 
 $.fn.zfeDuplicates = function zfeDuplicates() {
   const makeAlert = (type, title) =>
-    $(`<div class="alert alert-${type} alert-dismissible fade in" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    $(`<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`).append(title);
 
   const onCancel = ($panel) => {
@@ -114,7 +112,7 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
 
   this.on('click', '.btn-merge', (event) => {
     const $btn = $(event.currentTarget);
-    const $panel = $btn.closest('.panel');
+    const $panel = $btn.closest('.card');
 
     $panel.addClass('panel-loading').attr('disabled', true);
     $('.btn', $panel).hide();
@@ -162,7 +160,7 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
 
   this.on('click', '.btn-hide', (event) => {
     const $btn = $(event.currentTarget);
-    const $panel = $btn.closest('.panel');
+    const $panel = $btn.closest('.card');
 
     $panel.slideUp();
   });

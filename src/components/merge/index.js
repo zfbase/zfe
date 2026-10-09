@@ -21,7 +21,7 @@ $.fn.zfeMerge = function zfeMerge() {
 
     if (term === '') {
       MergeEngine.$searchResults.empty();
-      MergeEngine.$selectAll.addClass('hide');
+      MergeEngine.$selectAll.addClass('d-none');
       return;
     }
 
@@ -51,9 +51,9 @@ $.fn.zfeMerge = function zfeMerge() {
       MergeEngine.$searchResults.html(await res.text());
       window.ZFE.initItemDetailsPopover(MergeEngine.$searchResults);
       if (MergeEngine.$searchResults.find('tr.result').length > 1) {
-        MergeEngine.$selectAll.removeClass('hide');
+        MergeEngine.$selectAll.removeClass('d-none');
       } else {
-        MergeEngine.$selectAll.addClass('hide');
+        MergeEngine.$selectAll.addClass('d-none');
       }
     } catch (err) {
       if (!reqAc.signal.aborted) {
@@ -93,7 +93,7 @@ $.fn.zfeMerge = function zfeMerge() {
     $('td.item-details', $newRow).html($row.find('td.item-details').html());
     window.ZFE.initItemDetailsPopover($newRow);
 
-    $row.addClass('hide');
+    $row.addClass('d-none');
 
     if (MergeEngine.$post_clear.is(':checked')) {
       MergeEngine.$input.val('');
@@ -103,13 +103,13 @@ $.fn.zfeMerge = function zfeMerge() {
       MergeEngine.$btnMerge.attr('disabled', false);
     }
 
-    const $resultRows = MergeEngine.$searchResults.find('tr.result:not(.hide)');
+    const $resultRows = MergeEngine.$searchResults.find('tr.result:not(.d-none)');
     switch ($resultRows.length) {
       case 0:
         MergeEngine.$searchResults.find('table').remove();
-        MergeEngine.$searchResults.find('> p.empty').removeClass('hide');
+        MergeEngine.$searchResults.find('> p.empty').removeClass('d-none');
       case 1:
-        MergeEngine.$selectAll.addClass('hide');
+        MergeEngine.$selectAll.addClass('d-none');
         break;
       default:
     }
@@ -131,7 +131,7 @@ $.fn.zfeMerge = function zfeMerge() {
 
   // Добавить все найденные записи в объединяемые
   MergeEngine.selectAll = () => {
-    MergeEngine.$searchResults.find('tr.result:not(.hide)').trigger('click');
+    MergeEngine.$searchResults.find('tr.result:not(.d-none)').trigger('click');
   };
 
   // Перейти на другую страницу выдачи поиска

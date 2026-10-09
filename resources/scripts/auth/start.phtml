@@ -6,7 +6,7 @@ $config = Zend_Registry::get('config');
 ?>
 
 <div class="row">
-    <h1 class="col-sm-offset-2 col-sm-10" style="margin-bottom: .8em;">
+    <h1 class="offset-sm-2 col-sm-10" style="margin-bottom: .8em;">
         <?= is_string($config->brand) ? $config->brand : $config->brand->full ?>
         <small>Создание первого пользователя</small>
     </h1>

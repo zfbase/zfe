@@ -13,7 +13,7 @@ $cntItems = count($this->items);
         <table class="table table-hover">
             <thead>
                 <th style="width: 100%;"><?= $modelName::getFieldName('title') ?></th>
-                <th class="text-right"><abbr title="Число ссылок на <?= $this->itemName ?>">Вес</abbr></th>
+                <th class="text-end"><abbr title="Число ссылок на <?= $this->itemName ?>">Вес</abbr></th>
                 <?php if ($hasEdited): ?>
                     <th class="text-nowrap">Последняя правка</th>
                 <?php endif; ?>
@@ -25,7 +25,7 @@ $cntItems = count($this->items);
                         data-title="<?= $this->escape($item->getTitle()) ?>"
                         data-weight="<?= $item->weight ?>">
                         <td><?= $item ?></td>
-                        <td class="text-right"><?= $item->weight ?></td>
+                        <td class="text-end"><?= $item->weight ?></td>
                         <?= $hasEdited ? $this->lastEditedCell($item, 'text-nowrap') : '' ?>
                     </tr>
                 <?php endforeach; ?>
@@ -39,4 +39,4 @@ $cntItems = count($this->items);
     ]) ?>
 <?php endif; ?>
 
-<p class="empty <?= $cntItems ? 'hide' : '' ?>"><?= $this->listName ?> не найдены.</p>
+<p class="empty <?= $cntItems ? 'd-none' : '' ?>"><?= $this->listName ?> не найдены.</p>

@@ -1,0 +1,341 @@
+// Тема ZFE: переменные Bootstrap 5, воспроизводящие вид Bootstrap 3 (bootstrap + bootstrap-theme).
+// Подключается до bootstrap/scss/bootstrap; все значения !default, чтобы приложение могло переопределить их раньше.
+
+// Опции
+$enable-caret: false !default; // каретка – явный <span class="caret">, как в BS3
+$enable-shadows: true !default;
+$enable-gradients: false !default; // градиенты темы – в _theme.scss
+$enable-rfs: false !default;
+$enable-validation-icons: false !default;
+$enable-smooth-scroll: false !default;
+$enable-negative-margins: true !default;
+$enable-dark-mode: false !default;
+
+// Цвета
+$white: #fff !default;
+$black: #000 !default;
+$gray-100: #f5f5f5 !default;
+$gray-200: #eee !default;
+$gray-300: #ddd !default;
+$gray-400: #ccc !default;
+$gray-500: #999 !default;
+$gray-600: #777 !default;
+$gray-700: #555 !default;
+$gray-800: #333 !default;
+$gray-900: #222 !default;
+
+$primary: #337ab7 !default;
+$secondary: $gray-600 !default;
+$success: #5cb85c !default;
+$info: #5bc0de !default;
+$warning: #f0ad4e !default;
+$danger: #d9534f !default;
+$light: $gray-100 !default;
+$dark: $gray-900 !default;
+
+// Контекстные цвета (alert, text-*-emphasis, *-subtle) – state-цвета BS3
+$primary-text-emphasis: #23527c !default;
+$success-text-emphasis: #3c763d !default;
+$info-text-emphasis: #31708f !default;
+$warning-text-emphasis: #8a6d3b !default;
+$danger-text-emphasis: #a94442 !default;
+$primary-bg-subtle: #d9e6f2 !default;
+$success-bg-subtle: #dff0d8 !default;
+$info-bg-subtle: #d9edf7 !default;
+$warning-bg-subtle: #fcf8e3 !default;
+$danger-bg-subtle: #f2dede !default;
+$primary-border-subtle: #b3cce2 !default;
+$success-border-subtle: #d6e9c6 !default;
+$info-border-subtle: #bce8f1 !default;
+$warning-border-subtle: #faebcc !default;
+$danger-border-subtle: #ebccd1 !default;
+
+$min-contrast-ratio: 1.5 !default; // белый текст на success/info/warning, как в BS3
+
+// Размер шрифта корня, как в BS3: 1rem = 10px (все rem-значения ниже и в стилях приложений – от 10px)
+$font-size-root: 10px !default;
+
+// Отступы утилит (m-*, p-*, gap-*): шкала 1 = .25rem, как в утилитах приложений
+$spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer * .75,
+  4: $spacer,
+  5: $spacer * 1.25,
+  6: $spacer * 1.5,
+  8: $spacer * 2,
+  10: $spacer * 2.5,
+  12: $spacer * 3,
+) !default;
+
+// Body и ссылки
+$body-color: $gray-800 !default;
+$body-bg: $white !default;
+$body-secondary-color: $gray-600 !default;
+$body-tertiary-color: $gray-500 !default;
+$link-color: $primary !default;
+$link-decoration: none !default;
+$link-hover-color: #23527c !default;
+$link-hover-decoration: underline !default;
+
+// Сетка: точки перехода BS3 (col-sm-* – от 768px и т.д.)
+$grid-breakpoints: (
+  xs: 0,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  xl: 1400px,
+  xxl: 1600px
+) !default;
+$container-max-widths: (
+  sm: 750px,
+  md: 970px,
+  lg: 1170px
+) !default; // шире 1200px контейнер остаётся 1170px, как в BS3
+$grid-gutter-width: 30px !default;
+
+// Границы и тени
+$border-color: $gray-300 !default;
+$border-radius: 4px !default;
+$border-radius-sm: 3px !default;
+$border-radius-lg: 6px !default;
+$box-shadow-inset: inset 0 1px 1px rgba($black, .075) !default;
+
+// Типографика
+$font-family-sans-serif: 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-size-base: 1.4rem !default; // 14px
+$font-size-sm: 1.2rem !default; // 12px
+$font-size-lg: 1.8rem !default; // 18px
+$line-height-base: 1.428571429 !default;
+$line-height-sm: 1.5 !default;
+$line-height-lg: 1.3333333 !default;
+$h1-font-size: 3.6rem !default; // 36px
+$h2-font-size: 3rem !default; // 30px
+$h3-font-size: 2.4rem !default; // 24px
+$h4-font-size: 1.8rem !default; // 18px
+$h5-font-size: 1.4rem !default; // 14px
+$h6-font-size: 1.2rem !default; // 12px
+$headings-margin-bottom: 1rem !default;
+$headings-font-weight: 500 !default;
+$headings-line-height: 1.1 !default;
+$small-font-size: 85% !default;
+$paragraph-margin-bottom: 1rem !default;
+$hr-margin-y: 2rem !default;
+$hr-border-color: $gray-200 !default;
+$hr-opacity: 1 !default;
+$legend-margin-bottom: 2rem !default;
+$legend-font-size: 2.1rem !default; // 21px
+$legend-font-weight: normal !default;
+$code-font-size: 90% !default;
+$code-color: #c7254e !default;
+
+// Таблицы
+$table-cell-padding-y: .8rem !default;
+$table-cell-padding-x: .8rem !default;
+$table-cell-padding-y-sm: .5rem !default;
+$table-cell-padding-x-sm: .5rem !default;
+$table-color: inherit !default;
+$table-border-color: $gray-300 !default;
+$table-group-separator-color: $gray-300 !default;
+$table-striped-bg: #f9f9f9 !default;
+$table-hover-bg: $gray-100 !default;
+$table-active-bg: $gray-100 !default;
+$table-th-font-weight: bold !default;
+
+// Кнопки и поля ввода
+$input-btn-padding-y: .6rem !default;
+$input-btn-padding-x: 1.2rem !default;
+$input-btn-line-height: $line-height-base !default;
+$input-btn-padding-y-sm: .5rem !default;
+$input-btn-padding-x-sm: 1rem !default;
+$input-btn-font-size-sm: $font-size-sm !default;
+$input-btn-padding-y-lg: 1rem !default;
+$input-btn-padding-x-lg: 1.6rem !default;
+$input-btn-font-size-lg: $font-size-lg !default;
+
+$btn-white-space: nowrap !default;
+$btn-box-shadow: inset 0 1px 0 rgba($white, .15), 0 1px 1px rgba($black, .075) !default;
+$btn-active-box-shadow: inset 0 .3rem .5rem rgba($black, .125) !default;
+$btn-disabled-opacity: .65 !default;
+$btn-link-color: $link-color !default;
+$btn-link-hover-color: $link-hover-color !default;
+$btn-link-disabled-color: $gray-600 !default;
+
+$input-color: $gray-700 !default;
+$input-border-color: $gray-400 !default;
+$input-box-shadow: $box-shadow-inset !default;
+$input-focus-border-color: #66afe9 !default;
+$input-focus-box-shadow: 0 0 .8rem rgba(102, 175, 233, .6) !default;
+$input-placeholder-color: $gray-500 !default;
+$input-disabled-bg: $gray-200 !default;
+$input-group-addon-color: $gray-700 !default;
+$input-group-addon-bg: $gray-200 !default;
+$input-group-addon-border-color: $gray-400 !default;
+$form-select-box-shadow: $input-box-shadow !default;
+$form-select-focus-box-shadow: $input-focus-box-shadow !default;
+
+$form-label-margin-bottom: .5rem !default;
+$form-label-font-weight: null !default; // жирность – у элемента label, как в BS3
+$form-text-margin-top: .5rem !default;
+$form-text-font-size: inherit !default;
+$form-text-color: #737373 !default;
+$form-feedback-margin-top: .5rem !default;
+$form-feedback-font-size: inherit !default;
+$form-feedback-valid-color: $success-text-emphasis !default;
+$form-feedback-invalid-color: $danger-text-emphasis !default;
+$form-check-inline-margin-end: 1rem !default;
+$form-check-input-border: 1px solid $gray-500 !default;
+
+// Выпадающие меню
+$dropdown-min-width: 160px !default;
+$dropdown-padding-y: .5rem !default;
+$dropdown-spacer: .2rem !default;
+$dropdown-font-size: $font-size-base !default;
+$dropdown-border-color: rgba($black, .15) !default;
+$dropdown-border-radius: $border-radius !default;
+$dropdown-box-shadow: 0 .6rem 1.2rem rgba($black, .175) !default;
+$dropdown-divider-bg: #e5e5e5 !default;
+$dropdown-divider-margin-y: .9rem !default;
+$dropdown-link-color: $gray-800 !default;
+$dropdown-link-hover-color: #262626 !default;
+$dropdown-link-hover-bg: $gray-100 !default;
+$dropdown-link-active-bg: $primary !default;
+$dropdown-item-padding-y: .3rem !default;
+$dropdown-item-padding-x: 2rem !default;
+$dropdown-header-color: $gray-600 !default;
+$dropdown-header-padding-x: 2rem !default;
+$dropdown-header-padding-y: .3rem !default;
+
+// Навигация
+$nav-link-padding-y: 1rem !default;
+$nav-link-padding-x: 1.5rem !default;
+$nav-link-color: $link-color !default;
+$nav-link-hover-color: $link-hover-color !default;
+$nav-link-disabled-color: $gray-600 !default;
+$nav-tabs-border-color: $gray-300 !default;
+$nav-tabs-link-hover-border-color: $gray-200 $gray-200 $gray-300 !default;
+$nav-tabs-link-active-color: $gray-700 !default;
+$nav-tabs-link-active-border-color: $gray-300 $gray-300 $body-bg !default;
+
+$navbar-padding-y: 0 !default;
+$navbar-padding-x: 0 !default;
+$navbar-nav-link-padding-x: 1.5rem !default;
+$navbar-brand-font-size: $font-size-lg !default;
+$navbar-brand-padding-y: 1.5rem !default;
+$navbar-brand-margin-end: 0 !default;
+$navbar-light-color: $gray-600 !default;
+$navbar-light-hover-color: $gray-800 !default;
+$navbar-light-active-color: $gray-700 !default;
+$navbar-light-disabled-color: $gray-400 !default;
+$navbar-light-brand-color: $gray-600 !default;
+$navbar-light-brand-hover-color: #5e5e5e !default;
+$navbar-light-toggler-border-color: $gray-300 !default;
+$navbar-toggler-padding-y: .9rem !default;
+$navbar-toggler-padding-x: 1rem !default;
+
+// Пагинация, хлебные крошки
+$pagination-padding-y: .6rem !default;
+$pagination-padding-x: 1.2rem !default;
+$pagination-padding-y-sm: .5rem !default;
+$pagination-padding-x-sm: 1rem !default;
+$pagination-padding-y-lg: 1rem !default;
+$pagination-padding-x-lg: 1.6rem !default;
+$pagination-border-color: $gray-300 !default;
+$pagination-hover-bg: $gray-200 !default;
+$pagination-hover-border-color: $gray-300 !default;
+$pagination-disabled-color: $gray-600 !default;
+$pagination-disabled-border-color: $gray-300 !default;
+$breadcrumb-padding-y: .8rem !default;
+$breadcrumb-padding-x: 1.5rem !default;
+$breadcrumb-item-padding-x: .5rem !default;
+$breadcrumb-margin-bottom: 2rem !default;
+$breadcrumb-bg: $gray-100 !default;
+$breadcrumb-divider-color: $gray-400 !default;
+$breadcrumb-active-color: $gray-600 !default;
+$breadcrumb-border-radius: $border-radius !default;
+
+// Карточки (panel в BS3)
+$card-spacer-y: 1.5rem !default;
+$card-spacer-x: 1.5rem !default;
+$card-title-spacer-y: 0 !default;
+$card-border-color: $gray-300 !default;
+$card-border-radius: $border-radius !default;
+$card-box-shadow: 0 1px .2rem rgba($black, .05) !default;
+$card-cap-padding-y: 1rem !default;
+$card-cap-padding-x: 1.5rem !default;
+$card-cap-bg: $gray-100 !default;
+$card-cap-color: $gray-800 !default;
+
+// Бейджи (label и badge в BS3)
+$badge-font-size: 75% !default;
+$badge-font-weight: bold !default;
+$badge-padding-y: .2em !default;
+$badge-padding-x: .6em !default;
+$badge-border-radius: .25em !default;
+
+// Уведомления
+$alert-padding-y: 1.5rem !default;
+$alert-padding-x: 1.5rem !default;
+$alert-margin-bottom: 2rem !default;
+$alert-border-radius: $border-radius !default;
+$alert-link-font-weight: bold !default;
+$alert-dismissible-padding-r: 3.5rem !default;
+
+// Прогресс
+$progress-height: 2rem !default;
+$progress-font-size: $font-size-sm !default;
+$progress-bg: $gray-100 !default;
+$progress-border-radius: $border-radius !default;
+$progress-box-shadow: inset 0 1px .2rem rgba($black, .1) !default;
+
+// Списки
+$list-group-border-color: $gray-300 !default;
+$list-group-item-padding-y: 1rem !default;
+$list-group-item-padding-x: 1.5rem !default;
+$list-group-hover-bg: $gray-100 !default;
+$list-group-action-color: $gray-700 !default;
+$list-group-action-hover-color: $gray-700 !default;
+
+// Модальные окна
+$modal-inner-padding: 1.5rem !default;
+$modal-header-padding-y: 1.5rem !default;
+$modal-header-padding-x: 1.5rem !default;
+$modal-dialog-margin: 1rem !default;
+$modal-dialog-margin-y-sm-up: 3rem !default;
+$modal-title-line-height: $line-height-base !default;
+$modal-content-border-color: rgba($black, .2) !default;
+$modal-content-border-radius: $border-radius-lg !default;
+$modal-content-box-shadow-xs: 0 .3rem .9rem rgba($black, .5) !default;
+$modal-content-box-shadow-sm-up: 0 .5rem 1.5rem rgba($black, .5) !default;
+$modal-header-border-color: #e5e5e5 !default;
+$modal-footer-border-color: #e5e5e5 !default;
+$modal-sm: 300px !default;
+$modal-md: 600px !default;
+$modal-lg: 900px !default;
+
+// Всплывающие подсказки
+$tooltip-font-size: $font-size-sm !default;
+$tooltip-max-width: 200px !default;
+$tooltip-padding-y: .3rem !default;
+$tooltip-padding-x: .8rem !default;
+$tooltip-opacity: .9 !default;
+$tooltip-border-radius: $border-radius !default;
+$popover-font-size: $font-size-base !default;
+$popover-max-width: 276px !default;
+$popover-border-color: rgba($black, .2) !default;
+$popover-border-radius: $border-radius-lg !default;
+$popover-box-shadow: 0 .5rem 1rem rgba($black, .2) !default;
+$popover-header-font-size: $font-size-base !default;
+$popover-header-bg: #f7f7f7 !default;
+$popover-header-padding-y: .8rem !default;
+$popover-header-padding-x: 1.4rem !default;
+$popover-body-padding-y: .9rem !default;
+$popover-body-padding-x: 1.4rem !default;
+
+// Миниатюры
+$thumbnail-padding: .4rem !default;
+$thumbnail-border-color: $gray-300 !default;
+$thumbnail-border-radius: $border-radius !default;
+$thumbnail-box-shadow: 0 1px .2rem rgba($black, .075) !default;

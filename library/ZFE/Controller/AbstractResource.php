@@ -234,7 +234,7 @@ abstract class ZFE_Controller_AbstractResource extends Controller_Abstract
                 $btn->setAttrib('escape', false);
                 $counter = $this->view->tag(
                     'span',
-                    ['class' => 'badge'],
+                    ['class' => 'badge rounded-pill text-bg-secondary'],
                     $countUsedFilters . ' ' . ZFE_Utilities::plural($countUsedFilters, ['фильтр', 'фильтра', 'фильтров'])
                 );
                 $btn->setLabel($btn->getLabel() . ' ' . $counter);

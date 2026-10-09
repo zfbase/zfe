@@ -45,12 +45,13 @@ class ZFE_Form_Default_Login extends Zend_Form
         $this->addElement('checkbox', 'remember', [
             'checked' => 'checked',
             'decorators' => ['viewHelper'],
+            'class' => 'form-check-input',
         ]);
 
         $this->addElement('submit', 'submit', [
             'label' => 'Войти',
             'decorators' => ['viewHelper'],
-            'class' => 'btn btn-lg btn-primary btn-block',
+            'class' => 'btn btn-lg btn-primary w-100',
         ]);
     }
 }

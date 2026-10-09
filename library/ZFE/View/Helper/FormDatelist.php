@@ -53,7 +53,7 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
         $emptyFiller = $disable || $readonly ? '' : $this->_hidden($name . '[]');
 
         if (($disable || $readonly) && $curValues === '') {
-            return $this->view->tag('div', ['class' => 'form-control-static empty'], 'Значения не указаны.');
+            return $this->view->tag('div', ['class' => 'form-control-plaintext empty'], 'Значения не указаны.');
         }
 
         $valueDisplay = $this->view->tag('div', ['class' => 'datelist-entities'], $curValues);
@@ -64,11 +64,9 @@ class ZFE_View_Helper_FormDatelist extends Zend_View_Helper_FormElement
             . $this->_htmlAttribs($attribs)
             . $this->getClosingBracket();
 
-        $btnSet = '<span class="input-group-btn">'
-            . '<button class="btn btn-default btn-data-add" type="button">'
+        $btnSet = '<button class="btn btn-default btn-data-add" type="button">'
             . '<span class="glyphicon glyphicon-plus"></span>'
-            . '</button>'
-            . '</span>';
+            . '</button>';
 
         $inputGroup = $disable || $readonly ? '' : $this->view->tag('div', ['class' => 'input-group'], $input . $btnSet);
 

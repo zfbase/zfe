@@ -13,8 +13,8 @@ class ZFEMergeHelper {
       $td.find('input').prop('checked', true);
       const $tr = $td.closest('tr');
       $tr.removeClass('equal-rows');
-      $tr.find('td').removeClass('bg-success user-select');
-      $td.addClass('bg-success');
+      $tr.find('td').removeClass('bg-success-subtle user-select');
+      $td.addClass('bg-success-subtle');
       if (mode !== 'auto') {
         $td.addClass('user-select');
       }

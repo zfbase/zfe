@@ -16,7 +16,7 @@ $modelName = $this->modelName;
 
 <div class="zfe-merge">
 
-    <form method="post" class="form-group clearfix pull-right" action="<?= $modelName::getMergeHelperUrl() ?>">
+    <form method="post" class="form-group clearfix float-end" action="<?= $modelName::getMergeHelperUrl() ?>">
         <?= $this->abstractRender('_merge_selected.phtml') ?>
         <input type="hidden" name="returnTo" value="<?= $modelName::getMergingUrl() ?>" />
         <input type="submit" class="zfe-merge-exec btn btn-primary" value="Объединить выбранное" disabled />
@@ -24,22 +24,22 @@ $modelName = $this->modelName;
 
     <div class="search-group">
         <div class="form-group">
-            <label class="sr-only" for="searchInput">Поиск</label>
+            <label class="visually-hidden" for="searchInput">Поиск</label>
             <input class="form-control zfe-merge-search"
                 id="<?= uniqid('zfe-merge-search-') ?>"
                 placeholder="Название"
                 data-path="<?= $modelName::getMergeSearchUrl() ?>">
         </div>
         <div class="params form-control">
-            <label class="checkbox-inline">
-                <input class="zfe-merge-post-clear" type="checkbox">
-                Очищать после добавления
-            </label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input zfe-merge-post-clear" type="checkbox" id="<?= $postClearId = uniqid('zfe-merge-post-clear-') ?>">
+                <label class="form-check-label" for="<?= $postClearId ?>">Очищать после добавления</label>
+            </div>
         </div>
     </div>
 
     <div class="zfe-merge-suggest"></div>
 
-    <a class="btn btn-default hide zfe-merge-select-all">Выбрать все</a>
+    <a class="btn btn-default d-none zfe-merge-select-all">Выбрать все</a>
 
 </div>

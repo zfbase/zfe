@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-ZFE (`zfbase/zfe` on Composer, `zfe` on npm) is a framework library for building editorial/admin CRUD interfaces. It is **not a runnable application**: it is installed into a host app under `vendor/zfbase/zfe` and relies on that app's configuration, database, and a few app-defined base classes. Stack: Zend Framework 1 (`zfbase/zf1-future`), Doctrine 1 ORM (`zfbase/doctrine1`), Bootstrap 3, jQuery, optional Sphinx full-text search. It runs on PHP 7.4–8.x. Comments, docblocks, and UI strings are in Russian, so keep new ones in Russian too.
+ZFE (`zfbase/zfe` on Composer, `zfe` on npm) is a framework library for building editorial/admin CRUD interfaces. It is **not a runnable application**: it is installed into a host app under `vendor/zfbase/zfe` and relies on that app's configuration, database, and a few app-defined base classes. Stack: Zend Framework 1 (`zfbase/zf1-future`), Doctrine 1 ORM (`zfbase/doctrine1`), Bootstrap 5 (styled to look like Bootstrap 3), jQuery, optional Sphinx full-text search. It runs on PHP 7.4–8.x. Comments, docblocks, and UI strings are in Russian, so keep new ones in Russian too.
 
 The repository ships two packages:
 - **PHP** (Composer): `library/`, `resources/`, `bin/`. `src/` and `tests/` are excluded from the Composer archive.
@@ -72,11 +72,13 @@ View scripts resolve through a fallback chain: the app's own view, then ZFE's `r
 `ZFE_Searcher_*` (Default/Doctrine/Sphinx) plus `Searcher/QueryBuilder/*` turn search form params into queries. The alternative Sphinx path goes through `ZFE_Controller_AbstractResourceSphinx`, `ZFE_Sphinx*`, and `zfbase/sphinxql-query-builder`.
 
 ### Forms
-`ZFE_Form` extends Bootstrap-3 ZF1 forms. `ZFE_Form_Edit_AutoGeneration` builds edit forms from model columns. Custom elements (autocomplete, multi-autocomplete, datelist, duration, files) pair with view helpers in `View/Helper/Form*` and JS components in `src/components/`.
+`ZFE_Form` extends the Bootstrap 5 ZF1 forms from `zfbase/zend1-bootstrap5` (`Twitter_Bootstrap5_Form_*`). `ZFE_Form_Edit_AutoGeneration` builds edit forms from model columns. Custom elements (autocomplete, multi-autocomplete, datelist, duration, files) pair with view helpers in `View/Helper/Form*` and JS components in `src/components/`.
 
 ### Console and background tasks
 - `bin/zfe-tools <command> [args]` runs through `ZFE_Console_Tools` and `ZFE_Console_CommandBroker`. Commands live in `ZFE_Console_Command_*`, and the app can register more via prefix paths. Built-in commands are the classes in `library/ZFE/Console/Command/` (Help, Config, Migrate, Models, ApplySchema, DoctrineCli, SphinxIndexer, UserAdd, Task*).
 - `bin/zfe-manage-tasks [--part-size N] [--trait i/n] [performerCodes...]` is an endless worker loop over the `Tasks` table. Performers subclass `ZFE_Tasks_Performer` and are registered in config (`tasks.performers[] = "Class"`). A performer's code is the last PSR-0 segment of its class name. Throw `ZFE_Tasks_Performer_Exception_Permanent` for failures that must not be retried.
 
 ### Frontend (`src/`)
-`src/js/zfe.js` exports a `ZFE` object with a list of `init*` methods run per page, plus controller/action matching. Components under `src/components/*` are jQuery plugins with SCSS. File upload uses React (`initZfeFileElement.jsx`, `zfe-files`). jQuery and React are peer dependencies.
+`src/js/zfe.js` exports a `ZFE` object with a list of `init*` methods run per page, plus controller/action matching. Components under `src/components/*` are jQuery plugins with SCSS. File upload uses React (`initZfeFileElement.jsx`, `zfe-files`). jQuery, React, Bootstrap 5 and Popper are peer dependencies; `src/js/bootstrap.js` registers the jQuery interface of the Bootstrap plugins (`$(el).modal()`, `.popover()`…).
+
+Styles: host apps include `src/scss/zfe.scss` (or `bootstrap-theme.scss` without ZFE components). `_variables.scss` and `_theme.scss` make Bootstrap 5 look like Bootstrap 3 + bootstrap-theme: 10px root font size (`1rem` = 10px), BS3 colors, gradients and shadows, `.btn-default`, `.btn-xs`, `.caret`, Glyphicons (`src/fonts`), and BS3 layout conventions (`.form-group`, `.form-inline`, horizontal forms with columns outside `.row`).

@@ -13,8 +13,9 @@ $config = Zend_Registry::get('config');
     <?= $this->form->password ?>
     <?= $this->form->submit ?>
     <input type="hidden" name="redirect" value="<?= $this->redirect ?>" />
-    <div class="checkbox">
-        <label><?= $this->form->remember ?> Оставаться в системе</label>
+    <div class="form-check">
+        <?= $this->form->remember ?>
+        <label class="form-check-label" for="remember">Оставаться в системе</label>
     </div>
     <?php if (isset($this->error)): ?>
         <div class="alert alert-danger"><?= $this->error ?></div>

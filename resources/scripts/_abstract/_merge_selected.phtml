@@ -32,13 +32,13 @@ $hasEdited = $tableInstance->hasColumn('datetime_edited');
     <tr data-id="${id}">
         <td class="item-details">
             <span class="glyphicon glyphicon-info-sign item-details-icon"
-                  data-title="${title}"
-                  data-trigger="hover"
-                  data-html="true"></span>
+                  data-bs-title="${title}"
+                  data-bs-trigger="hover"
+                  data-bs-html="true"></span>
             <div class="item-details-body">${details}</div>
         </td>
         <td>${title}</td>
-        <td class="text-right">${weight}</td>
+        <td class="text-end">${weight}</td>
         <?php if ($hasEdited): ?>
             <td class="last-edited text-nowrap">{%html lastEdited %}</td>
         <?php endif; ?>

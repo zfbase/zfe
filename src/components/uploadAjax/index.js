@@ -49,9 +49,9 @@ class Loader {
 
     $('<button>', {
       type: 'button',
-      class: 'close',
+      class: 'btn-close',
+      'aria-label': 'Отменить',
     })
-      .append($('<span>', { 'aria-hidden': 'true' }).append('&times;'))
       .prependTo(this.$loadingWrap)
       .on('click', () => {
         if (this.xhr) {
@@ -64,21 +64,17 @@ class Loader {
   warning(message) {
     const $closeBtn = $('<button>', {
       type: 'button',
-      class: 'close',
-      'data-dismiss': 'alert',
+      class: 'btn-close',
+      'data-bs-dismiss': 'alert',
       'aria-label': 'Закрыть',
     });
 
-    $('<span>', { 'aria-hidden': 'true' })
-      .append('&times;')
-      .appendTo($closeBtn);
-
     $('<div>', {
-      class: 'alert alert-warning',
+      class: 'alert alert-warning alert-dismissible',
       role: 'alert',
     })
       .text(message)
-      .prepend($closeBtn)
+      .append($closeBtn)
       .appendTo(this.$loadingWrap)
       .alert()
       .on('closed.bs.alert', () => {
@@ -187,7 +183,7 @@ class Loader {
 
   previewImage(file) {
     const $preview = $('<p>', {
-      class: 'help-block preview-image image-uploaded',
+      class: 'form-text preview-image image-uploaded',
     });
 
     let $title = null;
@@ -282,7 +278,7 @@ class Loader {
   }
 
   preview(file) {
-    const $preview = $('<p>', { class: 'help-block' });
+    const $preview = $('<p>', { class: 'form-text' });
 
     const $title = $('<span>').append(file.title);
 
@@ -320,7 +316,7 @@ class Loader {
       this.$loadingWrap
     );
     this.$progressBar = $('<div>', {
-      class: 'progress-bar progress-bar-info progress-bar-striped active',
+      class: 'progress-bar bg-info progress-bar-striped progress-bar-animated',
       role: 'progressbar',
       'aria-valuenow': 0,
       'aria-valuemin': 0,

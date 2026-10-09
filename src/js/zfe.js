@@ -3,6 +3,8 @@ import 'inputmask/dist/inputmask/jquery.inputmask';
 import $ from 'jquery';
 import 'zfe-typeahead/dist/typeahead.jquery';
 
+import bootstrap from './bootstrap';
+
 import '../components/keyboard';
 
 import '../components/audio';
@@ -148,7 +150,7 @@ const ZFE = {
   initFormFileHelper: (container) => {
     $(container).on('click', '[data-btn="replace"]', (event) => {
       const $btn = $(event.currentTarget);
-      $($btn.data('new-upload')).removeClass('hide');
+      $($btn.data('new-upload')).removeClass('d-none');
       $($btn.data('current')).remove();
       $btn.hide();
     });
@@ -171,11 +173,18 @@ const ZFE = {
   /** Всплывающая справка по всем заполненным полям записи */
   initItemDetailsPopover: (container) => {
     $('.item-details-icon', container).popover({
-      content: function getBody() {
-        return $(this)
-          .closest('.item-details')
-          .find('.item-details-body')
-          .html();
+      content: (el) => $(el)
+        .closest('.item-details')
+        .find('.item-details-body')
+        .html(),
+      allowList: {
+        ...bootstrap.Popover.Default.allowList,
+        table: [],
+        thead: [],
+        tbody: [],
+        tr: [],
+        th: [],
+        td: [],
       },
     });
   },

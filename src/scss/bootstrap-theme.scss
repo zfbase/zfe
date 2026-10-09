@@ -1,0 +1,6 @@
+// Bootstrap 5 в стиле Bootstrap 3 (тема ZFE) без компонентов ZFE.
+// Переменные Bootstrap и $glyphicons-font-path можно переопределить до подключения этого файла.
+@import 'variables';
+@import 'bootstrap/scss/bootstrap';
+@import 'theme';
+@import 'glyphicons';

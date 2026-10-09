@@ -7,7 +7,7 @@
 /**
  * Базовая простая форма ZFE.
  */
-class ZFE_Form extends Twitter_Bootstrap3_Form
+class ZFE_Form extends Twitter_Bootstrap5_Form
 {
     use Application_Form_Helpers;
     use Application_Form_Extensions;
