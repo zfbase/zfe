@@ -1,0 +1,4 @@
+// Совместимость разметки ZFE (Bootstrap 3) с Bootstrap 5 и Glyphicons, без компонентов ZFE.
+// Подключается после bootstrap/scss/bootstrap.
+@import 'compat';
+@import 'glyphicons';

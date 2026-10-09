@@ -1,0 +1,242 @@
+// Совместимость разметки ZFE (Bootstrap 3) с Bootstrap 5.
+// Подключается после bootstrap/scss/bootstrap. Приложение задаёт $enable-caret: false
+// (каретка – явный <span class="caret">). Вид (цвета, размеры, типографика) – забота приложения.
+
+// Каретка (BS3 .caret); у .dropdown-toggle своей каретки нет ($enable-caret: false)
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid \9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+.dropup .caret,
+.navbar-fixed-bottom .dropdown .caret {
+  content: '';
+  border-top: 0;
+  border-bottom: 4px dashed;
+  border-bottom: 4px solid \9;
+}
+
+.btn .caret {
+  margin-left: 0;
+}
+
+// Кнопки
+// --------------------------------------------------
+
+// .btn-default – белая кнопка BS3 (градиент – если приложение включило $enable-gradients)
+.btn-default {
+  @include button-variant(
+    $white,
+    #ccc,
+    #333,
+    $hover-background: #e6e6e6,
+    $hover-border: #adadad,
+    $hover-color: #333,
+    $active-background: #e6e6e6,
+    $active-border: #adadad,
+    $active-color: #333
+  );
+}
+
+.btn-xs,
+.btn-group-xs > .btn {
+  @include button-size(1px, 5px, $font-size-sm, $border-radius-sm);
+  --#{$prefix}btn-line-height: #{$line-height-sm};
+}
+
+// Формы
+// --------------------------------------------------
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+// Состояния (has-* ставит zend1-bootstrap5 на контейнер элемента)
+@mixin zfe-form-state($color) {
+  .form-label,
+  .col-form-label,
+  .form-check-label,
+  .form-text {
+    color: $color;
+  }
+
+  .form-control,
+  .form-select {
+    border-color: $color;
+
+    &:focus {
+      border-color: $color;
+      box-shadow: $input-box-shadow, 0 0 0 $focus-ring-width rgba($color, $focus-ring-opacity);
+    }
+  }
+
+  .input-group-text {
+    color: $color;
+    background-color: mix($color, $white, 15%);
+    border-color: $color;
+  }
+}
+
+.has-error { @include zfe-form-state($danger-text-emphasis); }
+.has-warning { @include zfe-form-state($warning-text-emphasis); }
+
+.form-control.is-warning,
+.form-select.is-warning {
+  border-color: $warning-text-emphasis;
+}
+
+.warning-feedback {
+  width: 100%;
+  margin-top: $form-feedback-margin-top;
+  color: $warning-text-emphasis;
+}
+
+.invalid-feedback,
+.warning-feedback {
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Горизонтальная форма: подписи справа, как в BS3
+.form-horizontal {
+  .form-check {
+    padding-top: add($input-padding-y, $input-border-width);
+  }
+
+  .col-form-label {
+    padding-bottom: 0;
+  }
+
+  @include media-breakpoint-up(sm) {
+    .col-form-label {
+      text-align: right;
+    }
+  }
+}
+
+// Группа ввода не переносится, как в BS3 (ошибки выводятся после группы)
+.input-group {
+  flex-wrap: nowrap;
+}
+
+// Флажок в дополнении группы ввода
+.input-group-text > .form-check-input {
+  margin-top: 0;
+
+  + .form-check-label {
+    margin-left: .4rem;
+  }
+}
+
+// Строчная форма (BS3 .form-inline)
+.form-inline {
+  @include media-breakpoint-up(sm) {
+    .form-group {
+      display: inline-block;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+
+    .form-control,
+    .form-select {
+      display: inline-block;
+      width: auto;
+      vertical-align: middle;
+    }
+
+    .form-control-plaintext {
+      display: inline-block;
+    }
+
+    .input-group {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      width: auto;
+      vertical-align: middle;
+
+      > .form-control,
+      > .form-select {
+        width: auto;
+      }
+    }
+
+    .form-label,
+    .col-form-label {
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+
+    .form-check {
+      display: inline-block;
+      margin-top: 0;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+  }
+}
+
+// Выпадающие меню правой части навбара – по правому краю, как .navbar-right в BS3
+.navbar-nav-end .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+// Горизонтальная форма: .form-group с колонками – строка сетки (как в BS3), в т.ч. в шаблонах без .row.
+// Колонки – с нулевой специфичностью (:where), чтобы классы col-* задавали ширину.
+.form-horizontal .form-group:has(> [class*='col-']) {
+  @include make-row();
+}
+
+:where(.form-horizontal .form-group) > :where([class*='col-']) {
+  @include make-col-ready();
+}
+
+// Колонки прямо в горизонтальной форме (без .row): в BS3 они были плавающими блоками,
+// в BS5 колонкам нужен flex-контейнер. Нулевая специфичность (:where), чтобы классы col-* задавали ширину.
+:where(.form-horizontal:has(> [class*='col-'])) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  --#{$prefix}gutter-x: #{$grid-gutter-width};
+
+  // остальные элементы – на всю строку (flex-grow поглощает отрицательные поля .row)
+  > :where(*) {
+    flex: 1 0 100%;
+    min-width: 0;
+  }
+
+  > :where([class*='col-']) {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  // отступы – со специфичностью класса, чтобы перекрыть сброс полей fieldset
+  > [class*='col-'] {
+    padding-right: calc(var(--#{$prefix}gutter-x) * .5);
+    padding-left: calc(var(--#{$prefix}gutter-x) * .5);
+  }
+}
+
+// В BS3 колонки сетки – position: relative (от них позиционируются вложенные абсолютные элементы).
+// Нулевая специфичность, чтобы утилиты position-* перекрывали.
+:where(.col, [class^='col-'], [class*=' col-']) {
+  position: relative;
+}
+
+// В BS3 контейнеры и .panel-body были clearfix: обтекаемые элементы внутри и поля заголовков
+// не выходили за их пределы
+.container,
+.container-fluid,
+.card-body {
+  display: flow-root;
+}

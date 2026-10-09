@@ -1,6 +1,6 @@
-// Тема ZFE: Bootstrap 5 в стиле Bootstrap 3.
-// Переменные Bootstrap и $glyphicons-font-path можно переопределить до подключения этого файла.
-@import 'bootstrap-theme';
+// Стили ZFE. Подключаются после Bootstrap 5 (приложение подключает его со своими переменными,
+// $enable-caret: false); $glyphicons-font-path можно переопределить до подключения.
+@import 'bootstrap-compat';
 @import 'helpers';
 @import 'forms';
 @import '../components/audio/index';
