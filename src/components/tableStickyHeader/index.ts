@@ -1,7 +1,8 @@
 import $ from 'jquery';
 
-$.fn.tableStickyHeader = function tableStickyHeader() {
+$.fn.tableStickyHeader = function tableStickyHeader(this: JQuery) {
   const $win = $(window);
+  const offsetOf = ($el: JQuery) => $el.offset() ?? { top: 0, left: 0 };
 
   this.each((_, el) => {
     const $table = $(el);
@@ -18,17 +19,17 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
       // верхняя навигационная панель (navbar)
       const $navBar = $('.fixed-top');
       // величина прокрутки по вертикали
-      const scrollTop = $win.scrollTop();
+      const scrollTop = $win.scrollTop() ?? 0;
       // приклеивающийся заголовок (фиксированный)
       const $headFixed = $('.header-fixed', $table);
       // высота верхней навигационной панели
-      const navBarHeight = $navBar.height();
+      const navBarHeight = $navBar.height() ?? 0;
       // высота заголовка
-      const headHeight = $headFixed.height();
+      const headHeight = $headFixed.height() ?? 0;
       // приклеивающийся заголовок (плавающий оригинал)
       const $headOriginal = $('.header-original', $table);
       // разница между нижней границей (navbar) и величиной прокрутки по вертикали
-      let topOffset = $navBar.offset().top + navBarHeight - scrollTop;
+      let topOffset = offsetOf($navBar).top + navBarHeight - scrollTop;
       // нижняя граница фиксированного заголовка
       const headBottom =
         (topOffset < 0 ? 0 : navBarHeight) + headHeight + scrollTop;
@@ -36,22 +37,22 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
       // на малых высотах
       topOffset = topOffset < 0 ? 0 : topOffset;
       // верхняя граница фиксированного заголовка
-      const headTop = $headOriginal.offset().top - topOffset;
+      const headTop = offsetOf($headOriginal).top - topOffset;
       // разница между нижней границей фиксированного заголовка
       // и верхней границей последней строчки таблицы
-      const b = headBottom - $('tbody tr:last', $table).offset().top;
+      const b = headBottom - offsetOf($('tbody tr:last', $table)).top;
       // итоговый отступ фиксированного заголовка сверху
       topOffset = b > 0 ? topOffset - b : topOffset;
       // итоговый отступ фиксированного заголовка слева
-      const leftOffset = $headOriginal.offset().left - $win.scrollLeft();
+      const leftOffset = offsetOf($headOriginal).left - ($win.scrollLeft() ?? 0);
 
       $headFixed.css({
         top: topOffset,
         left: leftOffset,
-        width: $headOriginal.width(),
+        width: $headOriginal.width() ?? 0,
       });
 
-      if (scrollTop >= headTop && $(window).width() > 1024) {
+      if (scrollTop >= headTop && ($(window).width() ?? 0) > 1024) {
         $headFixed.removeClass('d-none');
       } else {
         $headFixed.addClass('d-none');
@@ -69,7 +70,7 @@ $.fn.tableStickyHeader = function tableStickyHeader() {
       );
 
       $headOriginal.each((tdi, td) => {
-        $headFixed.eq(tdi).width($(td).width());
+        $headFixed.eq(tdi).width($(td).width() ?? 0);
       });
     });
     setPositionValues();

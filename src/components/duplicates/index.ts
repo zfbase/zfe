@@ -14,7 +14,7 @@ class MergeHelperModal {
   showEqualBtn: any;
   hideEqualBtn: any;
 
-  constructor($form, $panel, onCancel, onSuccess, onError) {
+  constructor($form: JQuery, $panel: JQuery, onCancel: any, onSuccess: any, onError: any) {
     this.$form = $form;
     this.$panel = $panel;
     this.onCancel = onCancel;
@@ -95,17 +95,17 @@ class MergeHelperModal {
 }
 
 $.fn.zfeDuplicates = function zfeDuplicates() {
-  const makeAlert = (type, title) =>
+  const makeAlert = (type: string, title: string) =>
     $(`<div class="alert alert-${type} alert-dismissible fade show" role="alert">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`).append(title);
 
-  const onCancel = ($panel) => {
+  const onCancel = ($panel: JQuery) => {
     $panel.removeClass('panel-loading').prop('disabled', false);
     $('.btn', $panel).show();
   };
 
-  const onSuccess = ($panel, message) => {
+  const onSuccess = ($panel: JQuery, message: string) => {
     makeAlert(
       'success',
       message || 'Объединение завершено успешно.'
@@ -115,7 +115,7 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
     });
   };
 
-  const onError = ($panel, message?) => {
+  const onError = ($panel: JQuery, message?: string) => {
     makeAlert('danger', message || 'Объединение не удалось.').insertAfter(
       $panel
     );
@@ -129,7 +129,7 @@ $.fn.zfeDuplicates = function zfeDuplicates() {
     $('.btn', $panel).hide();
 
     const $checkboxes = $panel.find('tbody input[type="checkbox"]:checked');
-    const ids = [];
+    const ids: string[] = [];
     $checkboxes.each((i, checkbox) => {
       const $checkbox = $(checkbox);
       const id = $checkbox.closest('tr').data('item-id');

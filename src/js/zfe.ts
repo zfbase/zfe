@@ -29,7 +29,7 @@ import { initZfeFileElement } from './initZfeFileElement';
 
 const { confirm } = window;
 
-const matchControllerAction = (arg, val) => {
+const matchControllerAction = (arg: any, val: any) => {
   if (typeof arg === 'function') {
     return arg(val);
   }
@@ -73,21 +73,21 @@ const ZFE = {
   autocompleteTemplates: {},
   ckeditorConfig: {},
 
-  initRest: (container) => {
+  initRest: (container: ZfeContainer) => {
     debug();
     historyDiff(container);
   },
 
   /** Включить адаптированные аудио плееры */
-  initAudio: (container) => {
+  initAudio: (container: ZfeContainer) => {
     $('audio.zfe-audio', container).zfeAudio();
   },
 
-  getAutocompleteTemplates: (templateSet) =>
-    (ZFE.autocompleteTemplates && ZFE.autocompleteTemplates[templateSet]) || {},
+  getAutocompleteTemplates: (templateSet: any) =>
+    (ZFE.autocompleteTemplates && (ZFE.autocompleteTemplates as Record<string, any>)[templateSet]) || {},
 
   /** Настроить автодополнение одного значения */
-  initAutocompletes: (container) => {
+  initAutocompletes: (container: ZfeContainer) => {
     $('input.autocomplete:not(.custom-engine)', container).each((i, el) => {
       const $input = $(el);
       $input.zfeAutocomplete({
@@ -97,7 +97,7 @@ const ZFE = {
   },
 
   /** Настроить автодополнение нескольких значений */
-  initMultiAC: (container) => {
+  initMultiAC: (container: ZfeContainer) => {
     $('input.multiac:not(.custom-engine)', container).each((i, el) => {
       const $input = $(el);
       $input.zfeMultiAutocomplete({
@@ -107,7 +107,7 @@ const ZFE = {
   },
 
   /** Флаг для выставления статуса всех дочерних флажков */
-  initCheckAll: (container) => {
+  initCheckAll: (container: ZfeContainer) => {
     $(container).on('click', '[data-action="check-all"]', (event) => {
       const $this = $(event.currentTarget);
       const $checkboxes = $($this.data('target'));
@@ -132,12 +132,12 @@ const ZFE = {
   },
 
   /** Запретить переход со страницы при не сохраненных изменениях */
-  initCheckUnsavedFormData: (container) => {
+  initCheckUnsavedFormData: (container: ZfeContainer) => {
     $('.form-edit', container).checkUnsavedFormData();
   },
 
   /** Настроить автоматическую высоту многострочных текстовых полей */
-  initConfirm: (container) => {
+  initConfirm: (container: ZfeContainer) => {
     if (confirm) {
       $(container).on('click', '[data-confirm]', (event) =>
         confirm($(event.currentTarget).data('confirm'))
@@ -146,12 +146,12 @@ const ZFE = {
   },
 
   /** data-action="merge-duplications" */
-  initDuplicates: (container) => {
+  initDuplicates: (container: ZfeContainer) => {
     $('.zfe-duplications', container).zfeDuplicates();
   },
 
   /** Замена файла для элемента загрузки одного файла */
-  initFormFileHelper: (container) => {
+  initFormFileHelper: (container: ZfeContainer) => {
     $(container).on('click', '[data-btn="replace"]', (event) => {
       const $btn = $(event.currentTarget);
       $($btn.data('new-upload')).removeClass('d-none');
@@ -161,7 +161,7 @@ const ZFE = {
   },
 
   /** Настроить визуальные HTML-редакторы */
-  initHtmlEditors: (container) => {
+  initHtmlEditors: (container: ZfeContainer) => {
     $('.html-editor', container).each((i, el) => {
       if (ZFE.htmlEditor) {
         ZFE.htmlEditor.create(el, ZFE.ckeditorConfig);
@@ -170,12 +170,12 @@ const ZFE = {
   },
 
   /** Подключить маски для полей ввода */
-  initInputMask: (container) => {
+  initInputMask: (container: ZfeContainer) => {
     $(':input', container).inputmask();
   },
 
   /** Всплывающая справка по всем заполненным полям записи */
-  initItemDetailsPopover: (container) => {
+  initItemDetailsPopover: (container: ZfeContainer) => {
     $('.item-details-icon', container).popover({
       content: ((el: HTMLElement) => $(el)
         .closest('.item-details')
@@ -194,12 +194,12 @@ const ZFE = {
   },
 
   /** data-action="merge" */
-  initMerge: (container) => {
+  initMerge: (container: ZfeContainer) => {
     $('.zfe-merge', container).zfeMerge();
   },
 
   /** data-action="merge-helper" */
-  initMergeHelper: (container) => {
+  initMergeHelper: (container: ZfeContainer) => {
     $('.zfe-merge-helper', container).zfeMergeHelper();
   },
 
@@ -214,42 +214,42 @@ const ZFE = {
   },
 
   /** Помощник для наделения строк функционалом ссылок */
-  initTableRowLinkHelper: (container) => {
+  initTableRowLinkHelper: (container: ZfeContainer) => {
     $(container).on('click', 'tr[role="button"]', (event) => {
       window.location = $(event.currentTarget).data('href');
     });
   },
 
   /** Включить прилипание заголовков  */
-  initTableStickyHeader: (container) => {
+  initTableStickyHeader: (container: ZfeContainer) => {
     $('.table-sticky-header', container).tableStickyHeader();
   },
 
   /** Настроить автоматическую высоту многострочных текстовых полей */
-  initTextareaAutosize: (container) => {
+  initTextareaAutosize: (container: ZfeContainer) => {
     setTimeout(() => {
       autosize($('textarea.autosize', container));
     });
   },
 
   /** AJAX загрузчик файлов */
-  initUploadAjax: (container) => {
+  initUploadAjax: (container: ZfeContainer) => {
     $('input[data-ajax-url]', container).zfeUploadAjax();
   },
 
-  initFileAjax: (container) => {
+  initFileAjax: (container: ZfeContainer) => {
     $('.zfe-files-ajax:not(.custom-engine)', container).each((_, el) =>
       initZfeFileElement(el)
     );
   },
 
-  initPlaceholders: (container) => initPlaceholders(container),
+  initPlaceholders: (container: ZfeContainer) => initPlaceholders(container),
 
-  initContainer: (container) =>
-    $.each(ZFE.initialMethods, (i, method) => ZFE[method](container)),
+  initContainer: (container: ZfeContainer) =>
+    $.each(ZFE.initialMethods, (i, method) => (ZFE as Record<string, any>)[method](container)),
 
   /** Инициализация приложения */
-  init: (app) => {
+  init: (app: any) => {
     if (typeof app === 'object' && app !== window) {
       $.extend(ZFE, app);
     }
@@ -257,7 +257,7 @@ const ZFE = {
   },
 
   /** Помощник для инициализации скриптов только для текущего контроллера и экшена */
-  controllerActionScriptHelper: (controller, action, callback) => {
+  controllerActionScriptHelper: (controller: any, action: any, callback: any) => {
     const classes = Array.from(document.body.classList);
     const controllerName = (
       classes.find((c) => c.indexOf('controller-') === 0) || ''

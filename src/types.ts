@@ -1,6 +1,9 @@
 // Глобальные типы: jQuery-плагины ZFE и объекты, которые ZFE публикует в window.
 
 declare global {
+  /** Контекст поиска элементов: контейнер, внутри которого инициализируются компоненты */
+  type ZfeContainer = Element | Document | JQuery;
+
   interface ZfeAutocompleteValue {
     id: number | null;
     title: string;

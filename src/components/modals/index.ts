@@ -31,7 +31,7 @@ let modalUrl: string | null = null;
 const editModal = makeModal({ body: '<form></form>' });
 editModal.appendTo(document.body);
 
-const setModalHtml = (html) => {
+const setModalHtml = (html: string) => {
   const form = editModal.find('form');
   form.html(html);
   window.ZFE.initContainer(form);
@@ -41,7 +41,7 @@ const setModalHtml = (html) => {
 editModal.on('submit', 'form', (e) => {
   e.preventDefault();
   const body = $(e.currentTarget).serialize();
-  $.post(modalUrl, body)
+  $.post(modalUrl ?? '', body)
     .done((data) => {
       if (typeof data === 'string') {
         setModalHtml(data);

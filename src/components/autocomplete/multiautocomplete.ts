@@ -21,7 +21,7 @@ class ZFEMultiAutocomplete {
   placeholderWidth: any;
   engine: any;
 
-  constructor(element, options) {
+  constructor(element: HTMLElement, options: any) {
     this.$input = $(element);
     this.$group = this.$input.closest('.multiac-wrap');
     this.$iconRight = this.$group.find('.tt-icon-right');
@@ -73,7 +73,7 @@ class ZFEMultiAutocomplete {
   startSortable() {
     sortable(this.$wrap);
     this.$wrap
-      .on('dragstart.h5s', (e) => {
+      .on('dragstart.h5s', (e: JQuery.TriggeredEvent) => {
         this.placeholderWidth = $(e.target).width();
       })
       .on('dragenter.h5s', () => {
@@ -81,7 +81,7 @@ class ZFEMultiAutocomplete {
           width: this.placeholderWidth,
         });
       })
-      .on('sortupdate', (e) => {
+      .on('sortupdate', (e: JQuery.TriggeredEvent) => {
         $('.linked-entity input[name$="\\[priority\\]"]', $(e.target)).each(
           (priority, $input) => {
             $($input).val(priority + 1);
@@ -96,7 +96,7 @@ class ZFEMultiAutocomplete {
     if (!renderItem) {
       return;
     }
-    this.$wrap.find('.linked-entity').each((i, entityDom) => {
+    this.$wrap.find('.linked-entity').each((i: number, entityDom: HTMLElement) => {
       const $item = $(entityDom);
       const $title = $item.find('.title');
       const data = {
@@ -107,9 +107,9 @@ class ZFEMultiAutocomplete {
     });
   }
 
-  hasElement(id) {
+  hasElement(id: any) {
     let result = false;
-    this.$wrap.find('.linked-entity').each((i, entityDom) => {
+    this.$wrap.find('.linked-entity').each((i: number, entityDom: HTMLElement) => {
       if (id == $(entityDom).find('[name*="[id]"]').val()) {
         result = true;
       }
@@ -119,7 +119,7 @@ class ZFEMultiAutocomplete {
 
   getNewElementIndex() {
     let index = 1;
-    this.$wrap.children().each((i, el) => {
+    this.$wrap.children().each((i: number, el: HTMLElement) => {
       const name = $(el).find('input').first().attr('name');
       if (!name) {
         return;
@@ -132,7 +132,7 @@ class ZFEMultiAutocomplete {
     return index;
   }
 
-  addElement(title, id?, data = {}, replace = null, silent = false) {
+  addElement(title: string, id?: any, data = {}, replace: JQuery | null = null, silent = false) {
     if (this.hasElement(id)) {
       return this.$wrap.find(`.linked-entity:has([name*="[id]"][value=${id}])`);
     }
@@ -195,11 +195,11 @@ class ZFEMultiAutocomplete {
     const { $wrap } = this;
 
     const exclude = () => {
-      const ids = [];
+      const ids: string[] = [];
       $("input[name$='[id]']", $wrap).each((i, el) => {
         const val = $(el).val();
         if (val) {
-          ids.push(val);
+          ids.push(String(val));
         }
       });
       return ids;
@@ -218,7 +218,7 @@ class ZFEMultiAutocomplete {
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
       datasetSettings.templates = $.extend(datasetSettings.templates, {
-        suggestion: (data) => {
+        suggestion: (data: any) => {
           let content = data.value;
           if (typeof oldSuggestion === 'function') {
             content = oldSuggestion(data);
@@ -257,7 +257,7 @@ class ZFEMultiAutocomplete {
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
-    $input.on('typeahead:close', (e) => {
+    $input.on('typeahead:close', (e: JQuery.TriggeredEvent) => {
       if (e.keyCode !== keyCode.ESCAPE) {
         const newValue = $.trim($input.typeahead('val'));
         if (newValue !== '' && canCreate) {
@@ -269,7 +269,7 @@ class ZFEMultiAutocomplete {
       e.preventDefault();
     });
 
-    $input.on('keypress', (e) => {
+    $input.on('keypress', (e: JQuery.TriggeredEvent) => {
       if (e.keyCode === keyCode.ENTER) {
         if ($input.typeahead('val') !== '') {
           $input.trigger('typeahead:close');
@@ -279,7 +279,7 @@ class ZFEMultiAutocomplete {
     });
 
     // Выбор значения из списка
-    $input.on('typeahead:selected', (e, selected) => {
+    $input.on('typeahead:selected', (e: JQuery.TriggeredEvent, selected: any) => {
       const { key, value, ...rest } = selected;
       this.addElement(value, key, rest);
       this.updateExcluded();
@@ -287,21 +287,21 @@ class ZFEMultiAutocomplete {
     });
 
     // Навешиваем на все существующие и будущие кнопки удаления соответствующий метод
-    $wrap.on('click', '.btn-remove', (e) => {
+    $wrap.on('click', '.btn-remove', (e: JQuery.TriggeredEvent) => {
       $(e.currentTarget).closest('.linked-entity').remove();
       this.updateExcluded();
       e.preventDefault();
       this.onChange();
     });
 
-    $wrap.on('click', '.btn-edit', (e) => {
+    $wrap.on('click', '.btn-edit', (e: JQuery.TriggeredEvent) => {
       e.preventDefault();
       const $item = $(e.currentTarget).closest('.linked-entity');
       const id = $item.find('input[name*="[id]"]').val();
       showEditModal({
         url: this.settings.editUrl + (id ? `/id/${id}` : ''),
         data: { title: $item.find('.title').text() },
-        callback: ({ id: newId, title, ...data }) => {
+        callback: ({ id: newId, title, ...data }: any) => {
           if (id !== data.id) {
             this.addElement(title, newId, data, $item);
           }
@@ -310,7 +310,7 @@ class ZFEMultiAutocomplete {
     });
   }
 
-  disable(disable) {
+  disable(disable: boolean) {
     if (disable) {
       this.$input.addClass('disabled');
       this.$iconRight.addClass('tt-disabled');
@@ -331,7 +331,7 @@ class ZFEMultiAutocomplete {
     this.$hint.attr('disabled', disable);
   }
 
-  addValue(id, title, data = {}) {
+  addValue(id: any, title: string, data = {}) {
     return this.addElement(title, id, data);
   }
 
@@ -339,21 +339,22 @@ class ZFEMultiAutocomplete {
     this.$wrap.empty();
   }
 
-  setValues(values) {
+  setValues(values: any) {
     this.clear();
-    values.forEach(({ id, title, ...data }) =>
+    values.forEach(({ id, title, ...data }: any) =>
       this.addElement(title, id, data, null, true),
     );
   }
 
   currentValue() {
-    const values = {};
-    this.$wrap.find('input').each((i, el) => {
-      const [, n, key] = el.name.split(/[[\]]+/);
+    const values: Record<string, Record<string, string>> = {};
+    this.$wrap.find('input').each((i: number, el: HTMLElement) => {
+      const input = el as HTMLInputElement;
+      const [, n, key] = input.name.split(/[[\]]+/);
       if (!values[n]) {
         values[n] = {};
       }
-      values[n][key] = el.value;
+      values[n][key] = input.value;
     });
     return Object.values(values);
   }
@@ -364,8 +365,12 @@ class ZFEMultiAutocomplete {
   }
 }
 
-$.fn[pluginName] = function zfeMultiAutocomplete(options, ...args) {
-  const results = [];
+$.fn[pluginName] = function zfeMultiAutocomplete(
+  this: JQuery,
+  options?: any,
+  ...args: any[]
+) {
+  const results: any[] = [];
   const $elements = this.each((i, el) => {
     if (!$.data(el, `plugin_${pluginName}`)) {
       $.data(el, `plugin_${pluginName}`, new ZFEMultiAutocomplete(el, options));

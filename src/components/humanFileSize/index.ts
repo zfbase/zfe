@@ -1,9 +1,8 @@
 /**
  * Formats size in bytes
- * @param {number} bytes
- * @returns {string}
+ * @param bytes
  */
-export default function humanFileSize(bytes) {
+export default function humanFileSize(bytes: number): string {
   if (bytes === 0) {
     return '0 байт';
   }

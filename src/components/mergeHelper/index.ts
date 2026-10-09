@@ -4,14 +4,14 @@ class ZFEMergeHelper {
   $container: any;
   $slaveIds: any;
 
-  constructor(container) {
+  constructor(container: ZfeContainer) {
     this.$container = $(container);
     this.$slaveIds = this.$container.find('.slaves-ids');
 
     $('.btn-show-equal', this.$container).on('click', this.showEqual.bind(this));
     $('.btn-hide-equal', this.$container).on('click', this.hideEqual.bind(this));
 
-    this.$container.on('click', 'tbody td', (event, mode) => {
+    this.$container.on('click', 'tbody td', (event: JQuery.TriggeredEvent, mode: string) => {
       const $td = $(event.currentTarget);
       $td.find('input').prop('checked', true);
       const $tr = $td.closest('tr');
@@ -27,7 +27,7 @@ class ZFEMergeHelper {
     this.markEqual();
     this.hideEqual();
 
-    this.$container.on('click', '.btn-remove', (event) => {
+    this.$container.on('click', '.btn-remove', (event: JQuery.TriggeredEvent) => {
       const $btn = $(event.currentTarget);
       const $cell = $btn.closest('td');
       const index = $cell.closest('tr').children().index($cell) + 1;
@@ -37,7 +37,7 @@ class ZFEMergeHelper {
       const slaveIds = this.$slaveIds.val()
         .split(',')
         .map(Number)
-        .filter(id => (id !== itemId))
+        .filter((id: number) => (id !== itemId))
         .join(',');
       this.$slaveIds.val(slaveIds);
 
@@ -48,19 +48,19 @@ class ZFEMergeHelper {
   }
 
   autoSelect() {
-    this.$container.find('tbody tr:not(:has(td.user-select))').each((_, tr) => {
+    this.$container.find('tbody tr:not(:has(td.user-select))').each((_: number, tr: HTMLElement) => {
       $(tr).find('td:not(.null-value)').first().trigger('click', 'auto');
     });
   }
 
   markEqual() {
-    this.$container.find('tbody tr').each((_, tr) => {
+    this.$container.find('tbody tr').each((_: number, tr: HTMLElement) => {
       const $tr = $(tr);
       if ($tr.find('td.user-select').length) {
         return;
       }
 
-      const values = [];
+      const values: string[] = [];
       const $cells = $tr.find('td');
       $cells.each((_, td) => {
         const text = $.trim($(td).text());

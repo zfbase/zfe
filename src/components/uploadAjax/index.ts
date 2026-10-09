@@ -28,11 +28,11 @@ class Loader {
   $progressBar: any;
 
   constructor(
-    file,
-    settings,
-    $loadingContainer,
-    $previewContainer,
-    $formContainer
+    file: any,
+    settings: any,
+    $loadingContainer: JQuery,
+    $previewContainer: JQuery,
+    $formContainer: JQuery
   ) {
     this.file = file;
     this.settings = settings;
@@ -71,7 +71,7 @@ class Loader {
       });
   }
 
-  warning(message) {
+  warning(message: string) {
     const $closeBtn = $('<button>', {
       type: 'button',
       class: 'btn-close',
@@ -114,7 +114,7 @@ class Loader {
     const maxFileSize = $('#MAX_FILE_SIZE').val();
     if (maxFileSize && this.file.size > maxFileSize) {
       this.warning(
-        this.settings.errorSize.replace('%s', humanFileSize(maxFileSize))
+        this.settings.errorSize.replace('%s', humanFileSize(Number(maxFileSize)))
       );
       this.restoreForm();
       return false;
@@ -135,7 +135,7 @@ class Loader {
       processData: false,
       contentType: false,
       xhr: () => {
-        const xhr = $.ajaxSettings.xhr();
+        const xhr = $.ajaxSettings.xhr!();
         this.xhr = xhr;
         if (xhr.upload) {
           xhr.upload.addEventListener(
@@ -192,7 +192,7 @@ class Loader {
     } as JQuery.AjaxSettings);
   }
 
-  previewImage(file) {
+  previewImage(file: any) {
     const $preview = $('<p>', {
       class: 'form-text preview-image image-uploaded',
     });
@@ -232,7 +232,7 @@ class Loader {
     return $preview.append($input).appendTo(this.$previewContainer);
   }
 
-  previewAudio(file) {
+  previewAudio(file: any) {
     const $audio = $('<audio>', {
       class: 'zfe-audio',
       src: file.previewUrl,
@@ -288,7 +288,7 @@ class Loader {
     return $audio.append($input).appendTo(this.$previewContainer).zfeAudio();
   }
 
-  preview(file) {
+  preview(file: any) {
     const $preview = $('<p>', { class: 'form-text' });
 
     const $title = $('<span>').append(file.title);
@@ -336,7 +336,7 @@ class Loader {
     }).appendTo(this.$progressBarContainer);
   }
 
-  setProgress(percent) {
+  setProgress(percent: number) {
     this.$progressBar
       .css('width', `${percent}%`)
       .attr('aria-valuenow', percent)
@@ -363,15 +363,15 @@ class ZFEUploadAjax {
   $loadingContainer: any;
   $previewContainer: any;
 
-  constructor(element, options) {
+  constructor(element: HTMLElement, options: any) {
     this.$input = $(element);
     this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
     this.init();
   }
 
   dataAttrOptions() {
-    const extensions = [];
-    const mimeTypes = [];
+    const extensions: string[] = [];
+    const mimeTypes: string[] = [];
     const acceptStr = this.$input.attr('accept') || '';
     $.each(acceptStr.split(','), (i, acceptRaw) => {
       const accept = $.trim(acceptRaw);

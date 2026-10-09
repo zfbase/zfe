@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-export default (container) => {
+export default (container: ZfeContainer) => {
   const $container = $(container);
   $.each(['date', 'datetime', 'datetime-local'], (i, type) => {
     $container.find(`input[type="${type}"][placeholder]`).each((j, el) => {

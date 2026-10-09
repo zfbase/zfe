@@ -28,9 +28,9 @@ $.fn.zfeMerge = function zfeMerge() {
     MergeEngine.suggest(term, 1);
   };
 
-  let ac;
+  let ac: AbortController | undefined;
   // Поиск
-  MergeEngine.suggest = async (term, page) => {
+  MergeEngine.suggest = async (term: string, page: number) => {
     if (ac) {
       ac.abort();
     }
@@ -38,8 +38,8 @@ $.fn.zfeMerge = function zfeMerge() {
     ac = reqAc;
     const params = new URLSearchParams({
       term,
-      page,
-      exclude: MergeEngine.getSelectedIds(),
+      page: String(page),
+      exclude: String(MergeEngine.getSelectedIds()),
     });
     try {
       const res = await fetch(`${MergeEngine.searchUrl}?${params.toString()}`, {
@@ -64,18 +64,18 @@ $.fn.zfeMerge = function zfeMerge() {
 
   // Получить список идентификаторов выбранных для объединения строк
   MergeEngine.getSelectedIds = () => {
-    const ids = [];
-    MergeEngine.$mergeItems.find('input[name="ids[]"]').each((i, el) => {
+    const ids: string[] = [];
+    MergeEngine.$mergeItems.find('input[name="ids[]"]').each((i: number, el: HTMLElement) => {
       const id = $(el).val();
       if (id) {
-        ids.push(id);
+        ids.push(String(id));
       }
     });
     return ids;
   };
 
   // Событие добавления в выбранные для объединенные
-  MergeEngine.onSelected = (event) => {
+  MergeEngine.onSelected = (event: JQuery.TriggeredEvent) => {
     MergeEngine.$mergeRowEmpty.hide();
 
     const $row = $(event.currentTarget);
@@ -116,7 +116,7 @@ $.fn.zfeMerge = function zfeMerge() {
   };
 
   // Событие удаления из выбранных для объединенных
-  MergeEngine.offSelected = (event) => {
+  MergeEngine.offSelected = (event: JQuery.TriggeredEvent) => {
     $(event.currentTarget).closest('tr').remove();
 
     const len = MergeEngine.$mergeItems.find('tr:not(.zfe-merge-empty)').length;
@@ -135,7 +135,7 @@ $.fn.zfeMerge = function zfeMerge() {
   };
 
   // Перейти на другую страницу выдачи поиска
-  MergeEngine.goToPage = (event) => {
+  MergeEngine.goToPage = (event: JQuery.TriggeredEvent) => {
     MergeEngine.suggest(
       MergeEngine.$input.val(),
       $(event.currentTarget).data('page-num')

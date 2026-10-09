@@ -2,9 +2,9 @@ import $ from 'jquery';
 
 const { alert } = window;
 
-const twodigit = (num) => `0${num}`.slice(-2);
+const twodigit = (num: number) => `0${num}`.slice(-2);
 
-const secToTime = (sec) => {
+const secToTime = (sec: number) => {
   if (Number.isNaN(sec)) {
     return '?';
   }
@@ -32,7 +32,7 @@ class ZFEAudio {
   muteBtn: any;
   allowUpdateTime: any;
 
-  constructor(_audio) {
+  constructor(_audio: any) {
     this._audio = _audio;
     this.audio = $(_audio);
     this.container = null;
@@ -136,7 +136,7 @@ class ZFEAudio {
       class: 'dropdown-menu dropdown-menu-end',
     });
 
-    this.audio.find('a.zfe-audio-link').each((i, link) => {
+    this.audio.find('a.zfe-audio-link').each((i: number, link: any) => {
       $('<li>').append($(link).addClass('dropdown-item')).appendTo(moreContainer);
     });
 
@@ -239,12 +239,12 @@ class ZFEAudio {
     }, 10);
   }
 
-  _setDuration(sec) {
+  _setDuration(sec: number) {
     this.duration.text(secToTime(sec));
     this.track.attr('max', sec).attr('step', sec / 1000);
   }
 
-  _setTime(sec) {
+  _setTime(sec: number) {
     this.time.text(secToTime(sec));
   }
 
@@ -263,7 +263,7 @@ class ZFEAudio {
     }
   }
 
-  _error(message) {
+  _error(message: string) {
     if (message) {
       console.error(message);
     }

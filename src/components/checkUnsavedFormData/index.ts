@@ -1,9 +1,9 @@
 import $ from 'jquery';
 
-const comparer = (otherArray) => {
-  return (current) => {
+const comparer = (otherArray: any) => {
+  return (current: any) => {
     return (
-      otherArray.filter((other) => {
+      otherArray.filter((other: any) => {
         return other.name === current.name && other.value === current.value;
       }).length === 0
     );
@@ -14,7 +14,7 @@ class CheckUnsavedFormData {
   $form: any;
   freeSnapshot: any;
 
-  constructor(form) {
+  constructor(form: any) {
     this.$form = $(form);
     this.freeSnapshot = [];
 
@@ -46,9 +46,9 @@ class CheckUnsavedFormData {
     this.freeSnapshot = this.$form.serializeArray();
   }
 
-  setFreeValue(key, value) {
-    let index = null;
-    this.freeSnapshot.forEach((field, i) => {
+  setFreeValue(key: any, value: any) {
+    let index: number | null = null;
+    this.freeSnapshot.forEach((field: { name: string }, i: number) => {
       if (field.name === key) {
         index = i;
       }
@@ -56,7 +56,7 @@ class CheckUnsavedFormData {
 
     if (value === null) {
       if (index !== null) {
-        this.freeSnapshot = this.freeSnapshot.filter((_, i) => index !== i);
+        this.freeSnapshot = this.freeSnapshot.filter((_: number, i: number) => index !== i);
       }
       return;
     }
@@ -66,7 +66,7 @@ class CheckUnsavedFormData {
         ? this.$form
             .serializeArray()
             .reduce(
-              (result, field) => (field.name === key ? field.value : result),
+              (result: any, field: { name: string; value: string }) => (field.name === key ? field.value : result),
               null
             )
         : value;
@@ -84,10 +84,11 @@ class CheckUnsavedFormData {
 }
 
 $.fn.checkUnsavedFormData = function checkUnsavedFormData(
+  this: JQuery,
   command = '',
   ...args
 ) {
-  const results = [];
+  const results: any[] = [];
   const $elements = this.each((i, el) => {
     const $this = $(this);
 

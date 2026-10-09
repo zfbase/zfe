@@ -1,14 +1,14 @@
 export function getAcEngine(settings: { minLength?: number; sourceUrl?: string; exclude?: any } = {}) {
   let ac: AbortController | null = null;
   const { minLength, sourceUrl, exclude } = settings;
-  return async (query, _, async) => {
+  return async (query: any, _: unknown, async: any) => {
     try {
       if (ac) {
         ac.abort();
         ac = null;
       }
-      let url = sourceUrl;
-      if (query.length > 0 && query.length < minLength) {
+      let url = sourceUrl ?? '';
+      if (query.length > 0 && query.length < (minLength ?? 0)) {
         return;
       }
       const sp = new URLSearchParams();
