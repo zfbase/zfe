@@ -16,5 +16,5 @@ interface ZFE_Searcher_Interface
      *
      * @return array|Doctrine_Collection
      */
-    public function search(array $params = null);
+    public function search(?array $params = null);
 }

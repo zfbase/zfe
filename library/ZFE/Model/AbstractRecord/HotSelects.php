@@ -149,8 +149,7 @@ trait ZFE_Model_AbstractRecord_HotSelects
     ) {
         $query = ZFE_Query::create()
             ->select('x.*')
-            ->from(static::class . ' x')
-        ;
+            ->from(static::class . ' x');
 
         /** @var ZFE_Query $query */
         $query->setHard($hard);
@@ -237,13 +236,16 @@ trait ZFE_Model_AbstractRecord_HotSelects
         $groupBy = null,
         $filterByStatus = null
     ) {
-        if ( // Все параметры по умолчанию и есть в кеше
+        $hasDefaultParams =
             $keyField == 'x.id'
             && $valueField == null
             && $where == null
             && $order == 'VAL_FIELD ASC'
             && $groupBy == null
-            && $filterByStatus == null
+            && $filterByStatus == null;
+
+        if ( // Все параметры по умолчанию и есть в кеше
+            $hasDefaultParams
             && array_key_exists(static::class, static::$keyValueListCache)
         ) {
             return static::$keyValueListCache[static::class];
@@ -313,7 +315,9 @@ trait ZFE_Model_AbstractRecord_HotSelects
             }
         }
 
-        static::$keyValueListCache[static::class] = $map;
+        if ($hasDefaultParams) {
+            static::$keyValueListCache[static::class] = $map;
+        }
 
         return $map;
     }

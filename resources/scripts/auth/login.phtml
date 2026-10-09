@@ -1,7 +1,8 @@
-<?
-    /** @var ZFE_View $this */
-    /** @var Zend_Config $config */
-    $config = Zend_Registry::get('config');
+<?php
+
+/** @var ZFE_View $this */
+/** @var Zend_Config $config */
+$config = Zend_Registry::get('config');
 ?>
 
 <form class="form-signin" action="/auth/login" method="POST">
@@ -12,10 +13,11 @@
     <?= $this->form->password ?>
     <?= $this->form->submit ?>
     <input type="hidden" name="redirect" value="<?= $this->redirect ?>" />
-    <div class="checkbox">
-        <label><?= $this->form->remember ?> Оставаться в системе</label>
+    <div class="form-check">
+        <?= $this->form->remember ?>
+        <label class="form-check-label" for="remember">Оставаться в системе</label>
     </div>
-    <? if (isset($this->error)): ?>
+    <?php if (isset($this->error)): ?>
         <div class="alert alert-danger"><?= $this->error ?></div>
-    <? endif; ?>
+    <?php endif; ?>
 </form>

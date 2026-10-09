@@ -19,22 +19,25 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
      *
      * @throws Zend_Controller_Action_Exception
      */
-    public function direct($excel, $fileName)
+    public function direct($excel, ?string $fileName = null)
     {
         if ($excel instanceof PHPSpreadsheet) {
+            if ($fileName === null) {
+                $fileName = $excel->getProperties()->getTitle() . '.xlsx';
+            }
             $this->sendPhpSpreadsheet($excel, $fileName);
         } elseif ($excel instanceof PHPExcel) {
-            $this->sendPhpExcel($excel, $fileName);
+            $this->sendPhpExcel($excel, $fileName ?? 'Spreadsheet');
         } else {
-            throw new Zend_Controller_Action_Exception('Не поддерживаемый тип документа Excel', 500);
+            throw new Zend_Controller_Action_Exception('Неподдерживаемый тип документа Excel', 500);
         }
     }
 
-    public function sendPhpExcel(PHPExcel $excel, $fileName)
+    public function sendPhpExcel(PHPExcel $excel, string $fileName)
     {
         if ($err = error_get_last()) {
             Zend_Debug::dump($err);
-            die;
+            exit();
         }
 
         $response = $this->getResponse();
@@ -43,20 +46,20 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
 
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->setHeader('Content-Transfer-Encoding', 'binary');
-        $response->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '.xlsx"');
+        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.xlsx'));
         $response->setHeader('Expires', '0');
         $response->setHeader('Cache-Control', 'max-age=0');
         PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save('php://output');
 
         $response->sendResponse();
-        exit;
+        exit();
     }
 
-    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, $fileName)
+    public function sendPhpSpreadsheet(PHPSpreadsheet $spreadsheet, string $fileName)
     {
         if ($err = error_get_last()) {
             Zend_Debug::dump($err);
-            die;
+            exit();
         }
 
         $response = $this->getResponse();
@@ -65,7 +68,7 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
 
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->setHeader('Content-Transfer-Encoding', 'binary');
-        $response->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '.xlsx"');
+        $response->setHeader('Content-Disposition', "attachment; filename*=UTF-8''" . rawurlencode($fileName . '.xlsx'));
         $response->setHeader('Expires', '0');
         $response->setHeader('Cache-Control', 'max-age=0');
 
@@ -73,6 +76,6 @@ class ZFE_Controller_Action_Helper_SendExcel2007 extends Zend_Controller_Action_
         $writer->save('php://output');
 
         $response->sendResponse();
-        exit;
+        exit();
     }
 }

@@ -159,11 +159,16 @@ trait ZFE_Model_AbstractRecord_Autocomplete
             throw new ZFE_Model_Exception('Связь "' . $relAlias . '" не обнаружена в модели "' . static::class . '" при определении свойств автодополнения нескольких значений.');
         }
 
+        $editUrl = $relModel::getEditModalUrl();
+        if (!Editors::isAllowedMe($relModel::getControllerName(), 'edit-modal')) {
+            $editUrl = '';
+        }
+
         $fieldLabel = static::getFieldName($field);
         $default = [
             'label' => $fieldLabel != $field ? $fieldLabel : $relModel::$namePlural,
             'source' => $relModel::getAutocompleteUrl(),
-            'editUrl' => $relModel::getEditModalUrl(),
+            'editUrl' => $editUrl,
             'canCreate' => false,
             'min' => 0,
             'max' => null,
@@ -297,8 +302,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete
                             ->from($modelClassName . ' x')
                             ->where($localFieldName . ' = ?', $this->id)
                             ->andWhere($foreignFieldName . ' = ?', $item->id)
-                            ->execute([], Doctrine_Core::HYDRATE_SINGLE_SCALAR)
-                        ;
+                            ->execute([], Doctrine_Core::HYDRATE_SINGLE_SCALAR);
                     } elseif ($rel instanceof Doctrine_Relation_ForeignKey) {
                         $row['priority'] = $item->{$options['sortable']};
                     }
@@ -402,11 +406,50 @@ trait ZFE_Model_AbstractRecord_Autocomplete
             $this->state($this->exists() ? Doctrine_Record::STATE_DIRTY : Doctrine_Record::STATE_TDIRTY);
         }
 
-        $ids_to_link = array_diff($new_ids, $ids);
+        $ids_to_link = array_diff(array_unique($new_ids), $ids);
+        $ids_to_link = array_diff($ids_to_link, $this->_getExistingLinkIds($alias, $ids_to_link));
         if ($ids_to_link) {
             $this->link($alias, $ids_to_link);
             $this->state($this->exists() ? Doctrine_Record::STATE_DIRTY : Doctrine_Record::STATE_TDIRTY);
         }
+    }
+
+    /**
+     * Отобрать из указанных ID те, связь с которыми уже есть в таблице связи.
+     *
+     * Связь может быть в базе, но не попадать в отношение: например, если запись
+     * на другом конце связи помечена удаленной или ее уже создал параллельный
+     * запрос (двойная отправка формы). Повторная привязка такой записи упирается
+     * в уникальный индекс таблицы связи.
+     *
+     * @param string $alias
+     * @param array  $ids
+     *
+     * @return array
+     */
+    protected function _getExistingLinkIds($alias, array $ids)
+    {
+        if (!$ids || !$this->exists()) {
+            return [];
+        }
+
+        $rel = $this->getTable()->getRelation($alias);
+        if (!($rel instanceof Doctrine_Relation_Association)) {
+            return [];
+        }
+
+        $localFieldName = $rel->getLocalFieldName();
+        $foreignFieldName = $rel->getForeignFieldName();
+
+        $rows = ZFE_Query::create()
+            ->select('x.' . $foreignFieldName)
+            ->from($rel->getAssociationTable()->getComponentName() . ' x')
+            ->where('x.' . $localFieldName . ' = ?', $this->id)
+            ->andWhereIn('x.' . $foreignFieldName, $ids)
+            ->execute([], Doctrine_Core::HYDRATE_SCALAR)
+        ;
+
+        return array_column($rows, 'x_' . $foreignFieldName);
     }
 
     /**

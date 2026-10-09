@@ -95,7 +95,7 @@ class ZFE_Utilities
     public static function mb_ucfirst($string, $encoding = 'UTF-8')
     {
         return mb_strtoupper(mb_substr($string, 0, 1, $encoding), $encoding)
-             . mb_substr($string, 1, mb_strlen($string), $encoding);
+            . mb_substr($string, 1, mb_strlen($string), $encoding);
     }
 
     /**
@@ -219,7 +219,7 @@ class ZFE_Utilities
             return '';
         }
 
-        $timestamp = strtotime($dateTime);
+        $timestamp = $dateTime ? strtotime($dateTime) : null;
         if (!$timestamp) {
             return '';
         }
@@ -277,7 +277,7 @@ class ZFE_Utilities
         if (null === $seconds) {
             return null;
         }
-
+        $seconds = is_float($seconds) ? round($seconds) : intval($seconds);
         return sprintf('%02d', floor($seconds / 3600)) . gmdate(':i:s', $seconds);
     }
 

@@ -1,10 +1,11 @@
-<?
-    /** @var ZfeFiles_Agent_Interface $agent */
-    $agent = $this->agent;
-    $file = $agent->getFile();
+<?php
+
+/** @var ZfeFiles_Agent_Interface $agent */
+$agent = $this->agent;
+$file = $agent->getFile();
 ?>
 
-<span class="label label-default"><?= $file->id ?></span>
+<span class="badge text-bg-secondary"><?= $file->id ?></span>
 
 <span><?= $agent->getFilename() ?></span>
 

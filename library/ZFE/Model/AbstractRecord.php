@@ -25,20 +25,20 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     use ZFE_Model_Decline;                             // Склонения сообщений
     use ZfeFiles_Model_Injection;                      // Вспомогательные методы ZFE Files
 
-    // Пол записи (допустимые варианты)
-    const SEX_MALE   = '1';
-    const SEX_FEMALE = '2';
-    const SEX_NEUTER = '3';
+    // Род записи (допустимые варианты)
+    const GENDER_MASCULINE = 1;
+    const GENDER_FEMININE = 2;
+    const GENDER_NEUTER = 3;
 
     /**
-     * Названия новой записи в зависимости от половой принадлежности записи.
+     * Названия новой записи в зависимости от родовой принадлежности записи.
      *
      * @var array
      */
     protected static $_newTitle = [
-        self::SEX_MALE =>   'Новый',
-        self::SEX_FEMALE => 'Новая',
-        self::SEX_NEUTER => 'Новое',
+        self::GENDER_MASCULINE => 'Новый',
+        self::GENDER_FEMININE => 'Новая',
+        self::GENDER_NEUTER => 'Новое',
     ];
 
     /**
@@ -46,7 +46,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      *
      * @var int
      */
-    public static $sex = self::SEX_MALE;
+    public static $gender = self::GENDER_MASCULINE;
 
     /**
      * Название записи в единственном числе.
@@ -80,11 +80,11 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     /**
      * Имена полей записи модели.
      *
-     * Дополняет self::$_nameBaseFields.
+     * Дополняет self::$_baseFieldNames.
      *
      * @var array
      */
-    public static $nameFields = [];
+    public static $fieldNames = [];
 
     /**
      * Поле (выражение) названия записи.
@@ -122,10 +122,10 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     public static $mergeable = false;
 
     // Статусы записей модели
-    const STATUS_PUBLISHED        = '0';
-    const STATUS_NOT_PUBLISHED    = '1';
-    const STATUS_READY_TO_PUBLISH = '2';
-    const STATUS_UNPUBLISHED      = '3';
+    const STATUS_PUBLISHED        = 0;
+    const STATUS_NOT_PUBLISHED    = 1;
+    const STATUS_READY_TO_PUBLISH = 2;
+    const STATUS_UNPUBLISHED      = 3;
 
     /**
      * Список полей, принимающихся только значения да/нет
@@ -140,19 +140,19 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      * @var array
      */
     public static $status = [
-        self::SEX_MALE => [
+        self::GENDER_MASCULINE => [
             self::STATUS_PUBLISHED        => 'Опубликован',
             self::STATUS_NOT_PUBLISHED    => 'Не опубликован',
             self::STATUS_READY_TO_PUBLISH => 'Готов к публикации',
             self::STATUS_UNPUBLISHED      => 'Снят с публикации',
         ],
-        self::SEX_FEMALE => [
+        self::GENDER_FEMININE => [
             self::STATUS_PUBLISHED        => 'Опубликована',
             self::STATUS_NOT_PUBLISHED    => 'Не опубликована',
             self::STATUS_READY_TO_PUBLISH => 'Готова к публикации',
             self::STATUS_UNPUBLISHED      => 'Снята с публикации',
         ],
-        self::SEX_NEUTER => [
+        self::GENDER_NEUTER => [
             self::STATUS_PUBLISHED        => 'Опубликовано',
             self::STATUS_NOT_PUBLISHED    => 'Не опубликовано',
             self::STATUS_READY_TO_PUBLISH => 'Готово к публикации',
@@ -184,7 +184,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      * @var array
      */
     protected static $_dictionaryFields = [
-        'status' => ['status', 'sex'],
+        'status' => ['status', 'gender'],
     ];
 
     /**
@@ -192,7 +192,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      *
      * @var array
      */
-    protected static $_nameBaseFields = [
+    protected static $_baseFieldNames = [
         'id'           => 'ID',
         'title'        => 'Название',
         'status'       => 'Статус',
@@ -245,7 +245,7 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
                     continue;
                 }
 
-                if ('datetime' === $key || 'datetime_' === mb_substr($key, 0, 9)) {
+                if (str_starts_with($key, 'datetime') || str_ends_with($key, '_at')) {
                     if (empty($value) || '0000-00-00 00:00:00' === $value) {
                         $array[$key] = '';
                     }
@@ -338,7 +338,8 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public static function isRemovable()
     {
-        return Doctrine_Core::getTable(static::class)->hasField('deleted');
+        $table = Doctrine_Core::getTable(static::class);
+        return $table->hasField('deleted') || $table->hasField('deleted_at');
     }
 
     /**
@@ -358,11 +359,15 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
      */
     public function isDeleted()
     {
-        if (!$this->contains('deleted')) {
-            return false;
+        if ($this->contains('deleted')) {
+            return $this->deleted === 1;
         }
 
-        return 0 != $this->deleted;
+        if ($this->contains('deleted_at')) {
+            return $this->deleted_at !== null;
+        }
+
+        return false;
     }
 
     /**
@@ -377,11 +382,50 @@ abstract class ZFE_Model_AbstractRecord extends Doctrine_Record
     }
 
     /**
+     * Версией записи управляет оптимистическая блокировка Doctrine?
+     *
+     * По умолчанию блокировка включается для всех моделей с полем version (кроме режима миграции):
+     * Doctrine сам выставляет версию 1 при добавлении, увеличивает ее при каждом изменении
+     * и выбрасывает Doctrine_Locking_Exception, если запись успели изменить в другом процессе.
+     * Чтобы отключить блокировку для модели, укажите в ее setUp():
+     * $this->option('optimisticLocking', false);
+     *
+     * Если блокировка выключена, версию по-старому ведет ZFE_Model_Template_Listener_History.
+     *
+     * @return bool
+     */
+    public static function hasVersionLocking()
+    {
+        $table = Doctrine_Core::getTable(static::class);
+
+        // Настройка определяется лениво: поле version может добавить шаблон (BaseZfeFields),
+        // подключаемый в setUp() наследника уже после ZFE_Model_AbstractRecord::setUp().
+        $option = $table->getOption('optimisticLocking');
+        if (null === $option) {
+            $option = !self::$migrationMode && $table->hasField('version') ? 'version' : false;
+            $table->setOption('optimisticLocking', $option);
+        }
+
+        return 'version' === (true === $option ? 'version' : $option);
+    }
+
+    /**
      * Режим миграции.
      *
      * @var bool
      */
     public static $migrationMode = false;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function construct()
+    {
+        parent::construct();
+
+        // Определяем настройку блокировки до первого сохранения записи
+        static::hasVersionLocking();
+    }
 
     /**
      * {@inheritdoc}

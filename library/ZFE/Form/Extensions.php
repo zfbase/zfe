@@ -102,16 +102,9 @@ trait ZFE_Form_Extensions
     public function createElement($type, $name, $options = null)
     {
         if (in_array($type, ['range', 'duration'])) {
-            if (null === $options) {
-                $options = ['class' => 'form-control'];
-            } elseif (key_exists('class', $options)) {
-                if (!mb_strstr($options['class'], 'form-control')) {
-                    $options['class'] .= ' form-control';
-                    $options['class'] = trim($options['class']);
-                }
-            } else {
-                $options['class'] = 'form-control';
-            }
+            $controlClass = 'range' === $type ? 'form-range' : 'form-control';
+            $options = (array) $options;
+            $options['class'] = Twitter_Bootstrap5_Form::addClassName($options['class'] ?? null, $controlClass);
         }
 
         // Если форма disabled, то и элементы принудительно тоже

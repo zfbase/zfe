@@ -1,12 +1,13 @@
-<?
-    /** @var ZFE_View $this */
-    /** @var Doctrine_collection<AbstractRecord> */
-    $items = $this->items;
-    $modelName = $this->modelName;
-    $tableInstance = Doctrine_Core::getTable($modelName);
-    $allColumns = $tableInstance->getColumnNames();
-    $serviceFields = $modelName::getServiceFields();
-    $columns = array_diff($allColumns, $serviceFields);
+<?php
+
+/** @var ZFE_View $this */
+/** @var Doctrine_collection<AbstractRecord> */
+$items = $this->items;
+$modelName = $this->modelName;
+$tableInstance = Doctrine_Core::getTable($modelName);
+$allColumns = $tableInstance->getColumnNames();
+$serviceFields = $modelName::getServiceFields();
+$columns = array_diff($allColumns, $serviceFields);
 ?>
 
 <div>
@@ -36,64 +37,64 @@
     </div>
     <table class="table table-bordered">
         <thead>
-            <? if ($tableInstance->hasColumn('editor_id') || $tableInstance->hasColumn('datetime_edited')): ?>
-            <tr>
-                <th>Последнее изменение</th>
-                <? foreach ($items as $item): ?>
-                <?= $this->lastEditedCell($item) ?>
-                <? endforeach; ?>
-            </tr>
-            <? endif; ?>
+            <?php if ($tableInstance->hasColumn('editor_id') || $tableInstance->hasColumn('datetime_edited')): ?>
+                <tr>
+                    <th>Последнее изменение</th>
+                    <?php foreach ($items as $item): ?>
+                        <?= $this->lastEditedCell($item) ?>
+                    <?php endforeach; ?>
+                </tr>
+            <?php endif; ?>
             <tr>
                 <th>Вес</th>
-                <? foreach ($items as $item): ?>
-                <td class="text-center <?= $item->weight ?: 'empty' ?>">
-                    <?= $item->weight ?>
-                </td>
-                <? endforeach; ?>
+                <?php foreach ($items as $item): ?>
+                    <td class="text-center <?= $item->weight ?: 'empty' ?>">
+                        <?= $item->weight ?>
+                    </td>
+                <?php endforeach; ?>
             </tr>
         </thead>
         <tbody>
-            <? foreach ($columns as $columnName): ?>
-            <tr>
-                <th><?= $modelName::getFieldName($columnName) ?></th>
-                <? foreach ($items as $item): ?>
-                <td class="<?= null === $item->{$columnName} ? 'null-value' : '' ?>">
-                    <input type="radio" name="field[<?= $columnName ?>]" value="<?= $item->id ?>" />
-                    <?= $this->autoFormat($item->{$columnName}, $columnName, $modelName) ?>
-                </td>
-                <? endforeach; ?>
-            </tr>
-            <? endforeach; ?>
-
-            <? if (is_a($modelName, ZfeFiles_Manageable::class, true)): ?>
-                <? /** @var ZfeFiles_Schema_Default $schema */ ?>
-                <? foreach ($modelName::getFileSchemas() as $schema): ?>
-                <? if ($schema->getMultiple()) continue; ?>
+            <?php foreach ($columns as $columnName): ?>
                 <tr>
-                    <th><?= $schema->getTitle() ?></th>
-                    <? foreach ($items as $item): ?>
-                    <? $agent = current($item->getAgents($schema)); ?>
-                    <td class="<?= $agent ? '' : 'null-value' ?>">
-                        <input type="radio" name="field[<?= $schema->getCode() ?>]" value="<?= $item->id ?>" />
-                        <?= $agent ? $this->abstractPartial('_merge_file_viewer.phtml', ['agent' => $agent]) : null ?>
-                    </td>
-                    <? endforeach; ?>
+                    <th><?= $modelName::getFieldName($columnName) ?></th>
+                    <?php foreach ($items as $item): ?>
+                        <td class="<?= null === $item->{$columnName} ? 'null-value' : '' ?>">
+                            <input type="radio" name="field[<?= $columnName ?>]" value="<?= $item->id ?>" />
+                            <?= $this->autoFormat($item->{$columnName}, $columnName, $modelName) ?>
+                        </td>
+                    <?php endforeach; ?>
                 </tr>
-                <? endforeach; ?>
-            <? endif; ?>
+            <?php endforeach; ?>
+
+            <?php if (is_a($modelName, ZfeFiles_Manageable::class, true)): ?>
+                <?php /** @var ZfeFiles_Schema_Default $schema */ ?>
+                <?php foreach ($modelName::getFileSchemas() as $schema): ?>
+                    <?php if ($schema->getMultiple()) continue; ?>
+                    <tr>
+                        <th><?= $schema->getTitle() ?></th>
+                        <?php foreach ($items as $item): ?>
+                            <?php $agent = current($item->getAgents($schema)); ?>
+                            <td class="<?= $agent ? '' : 'null-value' ?>">
+                                <input type="radio" name="field[<?= $schema->getCode() ?>]" value="<?= $item->id ?>" />
+                                <?= $agent ? $this->abstractPartial('_merge_file_viewer.phtml', ['agent' => $agent]) : null ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         <tfoot>
             <tr>
                 <th></th>
-                <? foreach ($items as $item): ?>
-                <td class="text-center">
-                    <a class="btn btn-xs btn-default btn-remove" data-id="<?= $item->id ?>">
-                        <i class="glyphicon glyphicon-remove"></i>
-                        Не объединять
-                    </a>
-                </td>
-                <? endforeach; ?>
+                <?php foreach ($items as $item): ?>
+                    <td class="text-center">
+                        <a class="btn btn-xs btn-default btn-remove" data-id="<?= $item->id ?>">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            Не объединять
+                        </a>
+                    </td>
+                <?php endforeach; ?>
             </tr>
         </tfoot>
     </table>

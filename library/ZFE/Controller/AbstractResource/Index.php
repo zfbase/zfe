@@ -194,6 +194,6 @@ trait ZFE_Controller_AbstractResource_Index
      */
     protected function _getIdsParam()
     {
-        return array_filter(array_map('trim', explode(',', $this->getParam('ids'))), 'is_numeric');
+        return array_filter(array_map('trim', explode(',', $this->getParam('ids') || '?')), 'is_numeric');
     }
 }

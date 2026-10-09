@@ -36,8 +36,8 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
      *
      * Бейдж может быть числом, либо массивом:
      * * int     $number    – Число
-     * * ?string $class     – Класс (по умолчанию – `label-default`)
-     * * ?string $baseClass – Базовый класс (по умолчанию – `label`)
+     * * ?string $class     – Класс (по умолчанию – `text-bg-secondary`)
+     * * ?string $baseClass – Базовый класс (по умолчанию – `badge`)
      * * ?string $id        – HTML id
      * * ?string $tag       - HTML тег
      * * ?array  $attr      – HTML атрибуты
@@ -59,7 +59,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         'history' => [
             'action' => 'history',
             'title' => 'История',
-            'class' => 'pull-right',
+            'class' => 'ms-auto order-last',
             'onlyRegistered' => true,
             'onlyValid' => false,
             'order' => 100,
@@ -256,11 +256,11 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             $isDisabled = ($onlyRegistered && !$this->_item->exists())
                        || ($onlyValid && $this->_item->isDeleted());
 
-            $class = [];
+            $class = ['nav-item'];
             $class[] = array_key_exists('class', $tab) ? $tab['class'] : '';
-            $class[] = $isActive ? 'active' : '';
-            $class[] = $isDisabled ? 'disabled' : '';
             $class = array_diff($class, ['']);
+
+            $linkClass = 'nav-link' . ($isActive ? ' active' : '') . ($isDisabled ? ' disabled' : '');
 
             $markup .= '<li';
             if (!empty($tab['id'])) {
@@ -272,7 +272,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
             $markup .= '>';
 
             if ($isActive || $isDisabled) {
-                $markup .= '<a>';
+                $markup .= '<a class="' . $linkClass . '"' . ($isActive ? ' aria-current="page"' : '') . '>';
             } else {
                 $uri = ZFE_Uri_Route::fromRequest($request);
                 $uri->setAction($tab['action']);
@@ -285,7 +285,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
                     $url .= '&rn=' . $rn;
                 }
 
-                $markup .= '<a href="' . $url . '">';
+                $markup .= '<a class="' . $linkClass . '" href="' . $url . '">';
             }
 
             $markup .= $tab['title'];
@@ -315,7 +315,7 @@ class ZFE_View_Helper_ControlTabs extends Zend_View_Helper_Abstract
         $text = $options['number'];
         $tag = $options['tag'] ?? 'span';
         $attrs = array_merge([
-            'class' => ($options['baseClass'] ?? 'label') . ' ' . ($options['class'] ?? 'label-default'),
+            'class' => ($options['baseClass'] ?? 'badge') . ' ' . ($options['class'] ?? 'text-bg-secondary'),
         ], ($options['attr'] ?? []));
         if (!empty($options['id'])) {
             $attrs['id'] = $options['id'];

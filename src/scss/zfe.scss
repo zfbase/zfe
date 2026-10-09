@@ -1,4 +1,7 @@
-@import 'bootstrap';
+// Тема ZFE: Bootstrap 5 в стиле Bootstrap 3.
+// Переменные Bootstrap и $glyphicons-font-path можно переопределить до подключения этого файла.
+@import 'bootstrap-theme';
+@import 'helpers';
 @import 'forms';
 @import '../components/audio/index';
 @import '../components/auth/login';
@@ -14,7 +17,7 @@
 @import '../components/tableStickyHeader/index';
 @import '../components/uploadAjax/index';
 @import '../components/tasks/index';
-@import 'zfe-files/src/index.scss';
+@import 'zfe-files/dist/index.css';
 
 body {
     padding-top: 70px;
@@ -29,9 +32,10 @@ body {
     margin-top: -5px;
 }
 
-$navbar-min-shortcut: $grid-float-breakpoint !default;
-$navbar-max-shortcut: $screen-desktop !default;
+$navbar-min-shortcut: map-get($grid-breakpoints, sm) !default;
+$navbar-max-shortcut: map-get($grid-breakpoints, md) !default;
 @media (min-width: $navbar-min-shortcut) and (max-width: $navbar-max-shortcut) {
+
     .brand-title,
     .navbar-user-name {
         display: none;
@@ -86,7 +90,7 @@ th.sortable a:hover span {
 }
 
 .editedBy .caption {
-    font-weight: bolder;
+    color: #999;
 }
 
 .will-be-created {
@@ -97,7 +101,7 @@ tr[role="button"] {
     cursor: pointer;
 }
 
-.popover-content > table:last-child {
+.popover-body>table:last-child {
     margin-bottom: 0;
 }
 
@@ -105,6 +109,7 @@ tr[role="button"] {
     width: fit-content;
     max-width: 60%;
 }
+
 .item-details-body {
     display: none;
 }
@@ -113,14 +118,14 @@ tr[role="button"] {
     z-index: 1100;
     padding: 5px;
     margin: -2px;
-  }
+}
 
 @media (max-height: 500px) {
-    .navbar-fixed-top {
+    .fixed-top {
         position: absolute;
     }
 
-    .navbar-fixed-bottom {
+    .fixed-bottom {
         position: relative;
     }
 
@@ -128,12 +133,6 @@ tr[role="button"] {
         padding-bottom: 0;
     }
 }
-
-.badge-primary { background-color: $brand-primary; }
-.badge-success { background-color: $brand-success; }
-.badge-info { background-color: $brand-info; }
-.badge-warning { background-color: $brand-warning; }
-.badge-danger { background-color: $brand-danger; }
 
 .small-header {
     display: block;
@@ -152,7 +151,7 @@ tr[role="button"] {
     border-top: 1px solid #ccc;
 }
 
-@media (min-width: 768px) {
+@include media-breakpoint-up(sm) {
     .modal-fluid {
         width: fit-content;
         max-width: 90%;

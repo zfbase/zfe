@@ -17,7 +17,7 @@ class ZFE_Model_Collection extends Doctrine_Collection
      *
      * @return ZFE_Model_Collection
      */
-    public function hardDelete(Doctrine_Connection $conn = null, $clearColl = true)
+    public function hardDelete(?Doctrine_Connection $conn = null, $clearColl = true)
     {
         if (null === $conn) {
             $conn = $this->_table->getConnection();

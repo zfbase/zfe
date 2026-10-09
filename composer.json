@@ -1,76 +1,81 @@
 {
-    "name": "zfbase/zfe",
-    "description": "ZFE – платформа для построения редакторских интерфейсов",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Ilya Serdyuk",
-            "email": "ilya@serdyuk.pro",
-            "role": "Developer"
-        },
-        {
-            "name": "Dmitriy Demin",
-            "email": "dma01x@gmail.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Dmitriy Stepanov",
-            "email": "stepdi@gmail.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Nikita Orlov",
-            "email": "n.dezz.orlov@gmail.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Andrey Polyakov",
-            "email": "webshendor@gmail.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Alexey Sumin",
-            "role": "Developer"
-        }
-    ],
-    "autoload": {
-        "psr-0": {
-            "ZFE_": "library/"
-        },
-        "files": ["library/global.php"]
+  "name": "zfbase/zfe",
+  "description": "ZFE – платформа для построения редакторских интерфейсов",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ilya Serdyuk",
+      "email": "ilya@serdyuk.pro",
+      "role": "Developer"
     },
-    "require": {
-        "php": ">=7.4 || >= 8.0",
-        "ext-json": "*",
-        "ext-bcmath": "*",
-        "shardj/zf1-future": "^1.14",
-        "zfbase/doctrine1": "^1.2",
-        "zfbase/zend1-bootstrap3": "~1",
-        "zfbase/zfe-files": "^1.2.19",
-        "jdorn/sql-formatter": "~1",
-        "judev/php-htmltruncator": "^1.1",
-        "greenlion/php-sql-parser": "^4.3",
-        "ltd-beget/sphinx-configuration-tokenizer": "~1.0.5",
-        "foolz/sphinxql-query-builder": "^3.0"
+    {
+      "name": "Dmitriy Demin",
+      "email": "dma01x@gmail.com",
+      "role": "Developer"
     },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.19@dev"
+    {
+      "name": "Dmitriy Stepanov",
+      "email": "stepdi@gmail.com",
+      "role": "Developer"
     },
-    "suggest": {
-        "phpoffice/phpspreadsheet": "PhpOffice\\PhpSpreadsheet for SendExcel2007 action helper",
-        "phpoffice/phpword": "PhpOffice\\PhpWord dev-FBnil-patch-blocks for SendWord2007 & SendWord2007Template action helpers"
+    {
+      "name": "Nikita Orlov",
+      "email": "n.dezz.orlov@gmail.com",
+      "role": "Developer"
     },
-    "include-path": ["library/"],
-    "archive": {
-        "exclude": ["/assets", "/src", "/test"]
+    {
+      "name": "Andrey Polyakov",
+      "email": "webshendor@gmail.com",
+      "role": "Developer"
     },
-    "scripts": {
-        "lint": "php-cs-fixer fix --diff --dry-run",
-        "fix": "php-cs-fixer fix"
+    {
+      "name": "Alexey Sumin",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "ZFE_": "library/"
     },
-    "bin": [
-        "bin/zfe-manage-tasks",
-        "bin/zfe-tools"
+    "files": [
+      "library/global.php"
     ]
+  },
+  "require": {
+    "php": ">=7.4 || >= 8.0",
+    "ext-json": "*",
+    "ext-bcmath": "*",
+    "zfbase/doctrine1": "^1.3",
+    "zfbase/zend1-bootstrap5": "^1.0",
+    "zfbase/zfe-files": "^1.2.19 || ^2.0",
+    "jdorn/sql-formatter": "~1",
+    "judev/php-htmltruncator": "^1.1",
+    "greenlion/php-sql-parser": "^4.3",
+    "ltd-beget/sphinx-configuration-tokenizer": "~1.0.5",
+    "zfbase/sphinxql-query-builder": "^3.0",
+    "zfbase/zf1-future": "^1.24"
+  },
+  "suggest": {
+    "phpoffice/phpspreadsheet": "PhpOffice\\PhpSpreadsheet for SendExcel2007 action helper",
+    "phpoffice/phpword": "PhpOffice\\PhpWord dev-FBnil-patch-blocks for SendWord2007 & SendWord2007Template action helpers"
+  },
+  "include-path": [
+    "library/"
+  ],
+  "archive": {
+    "exclude": [
+      "/assets",
+      "/src",
+      "/test"
+    ]
+  },
+  "scripts": {
+    "lint": "php-cs-fixer fix --diff --dry-run",
+    "fix": "php-cs-fixer fix"
+  },
+  "bin": [
+    "bin/zfe-manage-tasks",
+    "bin/zfe-tools"
+  ]
 }

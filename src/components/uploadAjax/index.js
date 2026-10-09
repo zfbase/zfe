@@ -17,7 +17,13 @@ const defaults = {
 };
 
 class Loader {
-  constructor(file, settings, $loadingContainer, $previewContainer, $formContainer) {
+  constructor(
+    file,
+    settings,
+    $loadingContainer,
+    $previewContainer,
+    $formContainer
+  ) {
     this.file = file;
     this.settings = settings;
     this.$loadingContainer = $loadingContainer;
@@ -35,8 +41,7 @@ class Loader {
   }
 
   init() {
-    this.$loadingWrap = $('<div>')
-      .appendTo(this.$loadingContainer);
+    this.$loadingWrap = $('<div>').appendTo(this.$loadingContainer);
 
     $('<div>', { class: 'title' })
       .append(this.file.name)
@@ -44,12 +49,14 @@ class Loader {
 
     $('<button>', {
       type: 'button',
-      class: 'close',
+      class: 'btn-close',
+      'aria-label': 'Отменить',
     })
-      .append($('<span>', { 'aria-hidden': 'true' }).append('&times;'))
       .prependTo(this.$loadingWrap)
       .on('click', () => {
-        this.xhr && this.xhr.abort();
+        if (this.xhr) {
+          this.xhr.abort();
+        }
         this.$loadingWrap.remove();
       });
   }
@@ -57,21 +64,17 @@ class Loader {
   warning(message) {
     const $closeBtn = $('<button>', {
       type: 'button',
-      class: 'close',
-      'data-dismiss': 'alert',
+      class: 'btn-close',
+      'data-bs-dismiss': 'alert',
       'aria-label': 'Закрыть',
     });
 
-    $('<span>', { 'aria-hidden': 'true' })
-      .append('&times;')
-      .appendTo($closeBtn);
-
     $('<div>', {
-      class: 'alert alert-warning',
+      class: 'alert alert-warning alert-dismissible',
       role: 'alert',
     })
       .text(message)
-      .prepend($closeBtn)
+      .append($closeBtn)
       .appendTo(this.$loadingWrap)
       .alert()
       .on('closed.bs.alert', () => {
@@ -100,7 +103,9 @@ class Loader {
 
     const maxFileSize = $('#MAX_FILE_SIZE').val();
     if (maxFileSize && this.file.size > maxFileSize) {
-      this.warning(this.settings.errorSize.replace('%s', humanFileSize(maxFileSize)));
+      this.warning(
+        this.settings.errorSize.replace('%s', humanFileSize(maxFileSize))
+      );
       this.restoreForm();
       return false;
     }
@@ -123,14 +128,18 @@ class Loader {
         const xhr = $.ajaxSettings.xhr();
         this.xhr = xhr;
         if (xhr.upload) {
-          xhr.upload.addEventListener('progress', (event) => {
-            let percent = 0;
-            const position = event.loaded || event.position;
-            if (event.lengthComputable) {
-              percent = Math.ceil(position / event.total * 100);
-            }
-            this.setProgress(percent);
-          }, true);
+          xhr.upload.addEventListener(
+            'progress',
+            (event) => {
+              let percent = 0;
+              const position = event.loaded || event.position;
+              if (event.lengthComputable) {
+                percent = Math.ceil((position / event.total) * 100);
+              }
+              this.setProgress(percent);
+            },
+            true
+          );
         }
         return xhr;
       },
@@ -173,7 +182,9 @@ class Loader {
   }
 
   previewImage(file) {
-    const $preview = $('<p>', { class: 'help-block preview-image image-uploaded' });
+    const $preview = $('<p>', {
+      class: 'form-text preview-image image-uploaded',
+    });
 
     let $title = null;
     if (file.previewUrl) {
@@ -186,16 +197,13 @@ class Loader {
     }
 
     if (file.downloadUrl) {
-      $('<a>', { href: file.downloadUrl })
-        .append($title)
-        .appendTo($preview);
+      $('<a>', { href: file.downloadUrl }).append($title).appendTo($preview);
     } else {
       $preview.append($title);
     }
 
     if (file.deleteUrl) {
-      $preview
-        .append(' &nbsp; ');
+      $preview.append(' &nbsp; ');
       $('<a>', {
         href: file.deleteUrl,
         class: 'text-danger',
@@ -210,9 +218,7 @@ class Loader {
       value: file.id,
     });
 
-    return $preview
-      .append($input)
-      .appendTo(this.$previewContainer);
+    return $preview.append($input).appendTo(this.$previewContainer);
   }
 
   previewAudio(file) {
@@ -268,26 +274,20 @@ class Loader {
       value: file.id,
     });
 
-    return $audio
-      .append($input)
-      .appendTo(this.$previewContainer)
-      .zfeAudio();
+    return $audio.append($input).appendTo(this.$previewContainer).zfeAudio();
   }
 
   preview(file) {
-    const $preview = $('<p>', { class: 'help-block' });
+    const $preview = $('<p>', { class: 'form-text' });
 
     const $title = $('<span>').append(file.title);
 
     if (file.iconClass) {
-      $('<span>', { class: file.iconClass })
-        .prepentTo($title);
+      $('<span>', { class: file.iconClass }).prepentTo($title);
     }
 
     if (file.downloadUrl) {
-      $('<a>', { href: file.downloadUrl })
-        .append($title)
-        .appendTo($preview);
+      $('<a>', { href: file.downloadUrl }).append($title).appendTo($preview);
     } else {
       $preview.append($title);
     }
@@ -308,23 +308,21 @@ class Loader {
       value: file.id,
     });
 
-    return $preview
-      .append($input)
-      .appendTo(this.$previewContainer);
+    return $preview.append($input).appendTo(this.$previewContainer);
   }
 
   initProgressBar() {
-    this.$progressBarContainer = $('<div>', { class: 'progress' })
-      .appendTo(this.$loadingWrap);
+    this.$progressBarContainer = $('<div>', { class: 'progress' }).appendTo(
+      this.$loadingWrap
+    );
     this.$progressBar = $('<div>', {
-      class: 'progress-bar progress-bar-info progress-bar-striped active',
+      class: 'progress-bar bg-info progress-bar-striped progress-bar-animated',
       role: 'progressbar',
       'aria-valuenow': 0,
       'aria-valuemin': 0,
       'aria-valuemax': 100,
       style: 'width: 0%;',
-    })
-      .appendTo(this.$progressBarContainer);
+    }).appendTo(this.$progressBarContainer);
   }
 
   setProgress(percent) {
@@ -342,8 +340,7 @@ class Loader {
   restoreForm() {
     if (this.settings.multiple === false) {
       this.$formContainer.fadeIn();
-      $(`[data-new-upload="${this.settings.name}-new-upload"]`)
-        .hide();
+      $(`[data-new-upload="${this.settings.name}-new-upload"]`).hide();
     }
   }
 }
@@ -407,7 +404,7 @@ class ZFEUploadAjax {
         this.settings,
         this.$loadingContainer,
         this.$previewContainer,
-        this.$formContainer,
+        this.$formContainer
       );
     }
 

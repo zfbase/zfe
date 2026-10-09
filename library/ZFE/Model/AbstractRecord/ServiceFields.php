@@ -74,6 +74,9 @@ trait ZFE_Model_AbstractRecord_ServiceFields
             'datetime_created',
             'datetime_edited',
             'version',
+            'created_at',
+            'updated_at',
+            'deleted_at',
         ]);
     }
 

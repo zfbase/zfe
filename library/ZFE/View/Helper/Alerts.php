@@ -40,8 +40,8 @@ class ZFE_View_Helper_Alerts extends Zend_View_Helper_Abstract
     protected function _makeAlert($message, $type = 'info')
     {
         return <<<HTML
-<div class="alert alert-{$type} fade in" role="alert">
-    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Закрыть</span></button>
+<div class="alert alert-{$type} fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
     {$message}
 </div>
 HTML;

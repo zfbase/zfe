@@ -36,7 +36,7 @@ function env(string $name, $default = null)
  *
  * @param null|mixed $default
  */
-function config(string $name = null, $default = null)
+function config(?string $name = null, $default = null)
 {
     /** @var Zend_Config $config */
     $config = Zend_Registry::get('config');

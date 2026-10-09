@@ -21,15 +21,10 @@ class ZFE_Controller_Default_Profile extends Controller_Abstract
             $post = $this->_request->getPost();
             if ($form->isValid($post)) {
                 $data = $form->getValues();
-                $q = ZFE_Query::create()
-                    ->select('id')
-                    ->from('Editors')
-                    ->where('id = ?', $user->id)
-                    ->andWhere('password = ' . Editors::$credentialTreatment, $data['password'])
-                    ->setHydrationMode(Doctrine_Core::HYDRATE_SINGLE_SCALAR)
-                ;
-                if ($q->execute() != $user->id) {
-                    $form->getElement('password')->addError('Не верный пароль');
+                $authenticated = ZFE_Auth::authenticate($user->login, $data['password']);
+
+                if (!$authenticated) {
+                    $form->getElement('password')->addError('Неверный пароль');
                 } else {
                     if ($data['password_new']) {
                         $data['password'] = $data['password_new'];

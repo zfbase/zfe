@@ -51,11 +51,11 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
         $parentBtn = $this->one(array_shift($buttons));
 
         $caret = $this->view->tag('span', ['class' => 'caret']);
-        $label = $this->view->tag('span', ['class' => 'sr-only'], 'развернуть/свернуть');
+        $label = $this->view->tag('span', ['class' => 'visually-hidden'], 'развернуть/свернуть');
 
         $dropdownBtn = $this->view->tag('div', [
             'class' => $class . ' dropdown-toggle',
-            'data-toggle' => 'dropdown',
+            'data-bs-toggle' => 'dropdown',
             'aria-haspopup' => 'true',
             'aria-expanded' => 'false',
         ], $caret . $label);
@@ -65,7 +65,7 @@ class ZFE_View_Helper_CrazyButtons extends Zend_View_Helper_Abstract
             $childrenBtns[] = $this->view->tag(
                 'li',
                 ['class' => $button['class'] ?? null],
-                $this->one($button, 'btn btn-link')
+                $this->one($button, '')
             );
         }
 

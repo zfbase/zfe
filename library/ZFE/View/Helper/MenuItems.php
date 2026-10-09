@@ -20,10 +20,11 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
      * @param bool              $autoActive     автоматически выбирать активный пункт?
      * @param bool              $disabledAcl    игнорировать настройки безопасности?
      * @param bool              $dropdownEnable делать дочерние уровни выпадающими?
+     * @param bool              $inDropdown     пункты внутри выпадающего меню (.dropdown-item), а не навбара (.nav-link)?
      *
      * @return string
      */
-    public function menuItems($pages = null, $autoActive = true, $disabledAcl = false, $dropdownEnable = true)
+    public function menuItems($pages = null, $autoActive = true, $disabledAcl = false, $dropdownEnable = true, $inDropdown = false)
     {
         $html = '';
         foreach ($pages as $id => $page) {
@@ -49,7 +50,7 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             }
 
             if (isset($page->divider)) {
-                $html .= '<li class="divider"></li>';
+                $html .= '<li><hr class="dropdown-divider"></li>';
 
                 // если это не просто разделитель, но еще и с названием раздела, выйдем после названия
                 if (!isset($page->itemsHeader)) {
@@ -64,8 +65,8 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             }
 
             if (isset($page->label) && $page->label instanceof Zend_Config) {
-                $label = '<span class="' . $page->label->ico . ' hidden-xs"></span>'
-                       . '<span class="visible-xs-inline">' . $page->label->text . '</span>';
+                $label = '<span class="' . $page->label->ico . ' d-none d-sm-inline-block"></span>'
+                       . '<span class="d-inline d-sm-none">' . $page->label->text . '</span>';
                 $title = $page->title ?? $page->label->text;
             } else {
                 if (!empty($page->label) && is_string($page->label)) {
@@ -84,14 +85,17 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             }
 
             if (isset($page->badge)) {
-                $badgeClass = 'badge';
+                $badgeClass = 'badge rounded-pill';
                 $badgeValue = '';
+                $badgeColor = 'secondary';
                 if ($page->badge instanceof Zend_Config) {
                     $badgeValue = $page->badge->value;
                     if (isset($page->badge->color)) {
-                        $badgeClass .= ' badge-' . $page->badge->color;
+                        $badgeColor = $page->badge->color;
                     }
+                    $badgeClass .= ' text-bg-' . $badgeColor;
                 } else {
+                    $badgeClass .= ' text-bg-' . $badgeColor;
                     $badgeValue = $page->badge;
                 }
                 $label .= ' <span class="' . $badgeClass . '">' . $badgeValue . '</span>';
@@ -127,11 +131,16 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
             $class = isset($page->class)
                 ? [$page->class]
                 : [];
-            if ($hasChildren && $dropdownEnable) {
-                $class[] = 'dropdown';
+            if (!$inDropdown) {
+                $class[] = 'nav-item';
             }
+            if ($hasChildren && $dropdownEnable) {
+                $class[] = $inDropdown ? 'dropend' : 'dropdown';
+            }
+
+            $linkClass = [$inDropdown ? 'dropdown-item' : 'nav-link'];
             if ($active) {
-                $class[] = 'active';
+                $linkClass[] = 'active';
             }
 
             $dataAttribs = '';
@@ -157,14 +166,15 @@ class ZFE_View_Helper_MenuItems extends Zend_View_Helper_Abstract
                    . $dataAttribs
                    . '>';
 
+            $linkClass = implode(' ', $linkClass);
             if ($hasChildren && $dropdownEnable) {
-                $html .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="' . $title . '">' . $label . ' <b class="caret"></b></a>';
-                $html .= '<ul class="dropdown-menu">' . $this->MenuItems($page->pages, $autoActive, $disabledAcl, $dropdownEnable) . '</ul>';
+                $html .= '<a href="#" class="' . $linkClass . ' dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" title="' . $title . '">' . $label . ' <b class="caret"></b></a>';
+                $html .= '<ul class="dropdown-menu">' . $this->MenuItems($page->pages, $autoActive, $disabledAcl, $dropdownEnable, true) . '</ul>';
             } elseif ($hasChildren) {
-                $html .= '<a title="' . $title . '">' . $label . ' <b class="caret"></b></a>';
-                $html .= '<ul>' . $this->MenuItems($page->pages, $autoActive, $disabledAcl, $dropdownEnable) . '</ul>';
+                $html .= '<a class="' . $linkClass . '" title="' . $title . '">' . $label . ' <b class="caret"></b></a>';
+                $html .= '<ul>' . $this->MenuItems($page->pages, $autoActive, $disabledAcl, $dropdownEnable, $inDropdown) . '</ul>';
             } else {
-                $html .= '<a href="' . $uri . '" title="' . $title . '">' . $label . '</a>';
+                $html .= '<a class="' . $linkClass . '" href="' . $uri . '" title="' . $title . '"' . ($active ? ' aria-current="page"' : '') . '>' . $label . '</a>';
             }
 
             $html .= '</li>';

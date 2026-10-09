@@ -4,22 +4,18 @@
  * ZFE – платформа для построения редакторских интерфейсов.
  */
 
-class ZFE_Form_Decorator_HorizontalControls extends Twitter_Bootstrap3_Form_Decorator_HorizontalControls
+class ZFE_Form_Decorator_HorizontalControls extends Twitter_Bootstrap5_Form_Decorator_HorizontalControls
 {
-    public function render($content)
+    /**
+     * Отступ поля файла по шкале отступов темы ZFE (7.5px, как .form-control-static в BS3).
+     *
+     * @var string
+     */
+    protected $_fileControlsClass = 'pt-3';
+
+    protected function _isFileElement($element)
     {
-        $element = $this->getElement();
-        $class = ' ' . $this->getOption('class');
-
-        if (in_array(mb_substr($element->getType(), -10), ['_FileImage', '_FileAudio'])) {
-            $class .= ' form-control-static';
-        }
-
-        $class = trim($class);
-        if (!empty($class)) {
-            $this->setOption('class', $class);
-        }
-
-        return parent::render($content);
+        return parent::_isFileElement($element)
+            || in_array(mb_substr($element->getType(), -10), ['_FileImage', '_FileAudio']);
     }
 }

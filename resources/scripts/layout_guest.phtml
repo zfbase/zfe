@@ -1,9 +1,11 @@
-<?
-    /** @var ZFE_View $this */
-    trigger_error('layout_guest устарел, используйте layout_auth. ', E_USER_DEPRECATED);
+<?php
+
+/** @var ZFE_View $this */
+trigger_error('layout_guest устарел, используйте layout_auth. ', E_USER_DEPRECATED);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="utf-8" />
     <?= $this->headTitle() ?>
@@ -20,6 +22,7 @@
     <script src="/js/respond.min.js"></script>
     <![endif]-->
 </head>
+
 <body data-version="<?= $this->version ?>" class="controller-<?= $this->controllerName ?> action-<?= $this->actionName ?>">
     <div class="<?= $this->containerClass ?>">
         <?= $this->layout()->content ?>
@@ -30,4 +33,5 @@
     <?= $this->inlineScript() ?>
     <?= $this->render('develtoolbar.phtml') ?>
 </body>
+
 </html>

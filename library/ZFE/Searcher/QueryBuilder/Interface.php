@@ -23,5 +23,5 @@ interface ZFE_Searcher_QueryBuilder_Interface
      *
      * @return mixed
      */
-    public function getQuery(array $params = null);
+    public function getQuery(?array $params = null);
 }

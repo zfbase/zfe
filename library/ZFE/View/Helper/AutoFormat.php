@@ -80,7 +80,8 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
         }
 
         if ($table->isRelationColumn($columnName)) {
-            foreach ($table->getRelations() as $name => $opt) { /** @var Doctrine_Relation $opt */
+            foreach ($table->getRelations() as $name => $opt) {
+                /** @var Doctrine_Relation $opt */
                 if ($columnName === $opt->getLocal()) {
                     $alias = $opt->getClass();
                     break;
@@ -109,7 +110,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
                     return null;
                 }
 
-                return number_format($value, $columnParams['scale'] ?? null, ',', $this->_htmlMode ? '&nbsp;' : '');
+                return number_format($value, $columnParams['scale'] ?? 0, ',', $this->_htmlMode ? '&nbsp;' : '');
             case 'timestamp':
                 if (empty($value) || '0000-00-00 00:00:00' === $value) {
                     return '';
@@ -152,7 +153,7 @@ class ZFE_View_Helper_AutoFormat extends Zend_View_Helper_Abstract
             return date(config('format.date', 'd.m.Y'), strtotime($value));
         }
 
-        if ('datetime' === $columnName || 'datetime_' === mb_substr($columnName, 0, 9)) {
+        if (str_starts_with($columnName, 'datetime') || str_ends_with($columnName, '_at')) {
             if (empty($value) || '0000-00-00 00:00:00' === $value) {
                 return '';
             }

@@ -163,7 +163,7 @@ class ZFE_Console_Tools
      * @param string $command
      * @param array  $params
      */
-    public function run(string $command = null, array $params = null)
+    public function run(?string $command = null, ?array $params = null)
     {
         if ($command) {
             $this->_call = $command;

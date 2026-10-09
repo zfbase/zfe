@@ -225,13 +225,14 @@ class ZFE_Model_Table extends Doctrine_Table
                     }
                     break;
                 case 'date':
-                    $validators[] = ['Date', false, ['format' => 'yyyy-MM-dd']];
+                    $validators[] = ['SqlDate', false, ['time' => false]];
                     break;
                 case 'time':
                     $validators[] = ['Date', false, ['format' => 'HH:mm:ss']];
                     break;
                 case 'datetime':
-                    $validators[] = ['Date', false, ['format' => 'yyyy-MM-ddTHH:mm:ss']];
+                case 'dateTimeLocal':
+                    $validators[] = ['SqlDate', false, ['time' => true]];
                     break;
                 case 'select':
                     $modelName = $this->getClassnameToReturn();
@@ -304,15 +305,20 @@ class ZFE_Model_Table extends Doctrine_Table
                     : 1;
                 break;
             case 'datetime':
-                $options['filters'][] = ['PregReplace', [
-                    'match' => '/T/',
-                    'replace' => ' ',
-                ]];
-                // no break
+            case 'dateTimeLocal':
+                $options['filters'][] = ['DateTime'];
+                // Ограничение года, иначе браузер позволяет ввести шестизначный
+                $options['min'] = ZFE_Validate_SqlDate::getDefaultMinYear() . '-01-01T00:00';
+                $options['max'] = ZFE_Validate_SqlDate::getDefaultMaxYear() . '-12-31T23:59:59';
+                $options['autocomplete'] = 'off';
+                break;
+            case 'date':
+                $options['min'] = ZFE_Validate_SqlDate::getDefaultMinYear() . '-01-01';
+                $options['max'] = ZFE_Validate_SqlDate::getDefaultMaxYear() . '-12-31';
+                $options['autocomplete'] = 'off';
+                break;
             case 'time':
                 $options['filters'][] = ['Time'];
-                // no break
-            case 'date':
                 $options['autocomplete'] = 'off';
                 break;
             case 'select':

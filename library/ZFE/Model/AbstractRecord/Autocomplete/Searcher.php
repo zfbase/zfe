@@ -26,6 +26,11 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
     protected static $acSphinxId = 'id';
 
     /**
+     * Дополнительное поле для поиска
+     */
+    protected static ?string $otherAutocompleteField = null;
+
+    /**
      * Получить список для автокомплита.
      *
      * @param array $params
@@ -78,8 +83,7 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         /** @var \Foolz\SphinxQL\SphinxQL $q */
         $q = ZFE_Sphinx::query()->select(static::$acSphinxId)
             ->from(static::getSphinxIndexName())
-            ->limit(static::$acLimit)
-        ;
+            ->limit(static::$acLimit);
 
         $table = Doctrine_Core::getTable(static::class);
         if (static::$_excludeByStatus && $table->hasField('status')) {
@@ -115,14 +119,21 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
      */
     protected static function _getDoctrineQueryForAutocomplete(array $params = [])
     {
+        $titleField = static::$titleField;
+        $other  = static::$otherAutocompleteField;
+
         // Base query
         $q = ZFE_Query::create()
             ->select('x.id')
-            ->addSelect('x.title' === static::$titleField ? static::$titleField : '(' . static::$titleField . ') title')
+            ->addSelect($titleField === 'x.title' ? $titleField : '(' . $titleField . ') title')
             ->from(static::class . ' x')
-            ->where(static::$titleField . ' IS NOT NULL')
-            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY)
-        ;
+            ->where("{$titleField} IS NOT NULL")
+            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
+
+        if ($other) {
+            $q->addSelect($other);
+        }
+
 
         // Add check Status
         $table = Doctrine_Core::getTable(static::class);
@@ -135,7 +146,11 @@ trait ZFE_Model_AbstractRecord_Autocomplete_Searcher
         if ($term) {
             $safeTerm = addcslashes($term, '%_\'\\');
 
-            $q->addWhere(static::$titleField . ' LIKE ? ', '%' . $safeTerm . '%');
+            if ($other === null) {
+                $q->addWhere("{$titleField} LIKE ?", ["%{$safeTerm}%"]);
+            } else {
+                $q->addWhere("({$titleField} LIKE ? OR {$other} LIKE ?)", ["%{$safeTerm}%", "%{$safeTerm}%"]);
+            }
             // Кажется, парсер Доктрины неверно обрабатывает параметр со скобкой.
             // Например, LIKE `'(%'` превращается в LIKE `'(%)` – скобка вместо кавычки
             // Пришлось удалить ESCAPE '\\\\' т.к. это в ряде случаев ломает счетчик алиасов при преобразование DQL -> SQL

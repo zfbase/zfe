@@ -354,7 +354,9 @@ class ZFE_Uri
 
         $queryParts = [];
         foreach ($queryFragments as $fragment) {
-            [$key, $value] = explode('=', $fragment);
+            $parts = explode('=', $fragment);
+            $key = $parts[0] ?? '';
+            $value = $parts[1] ?? '';
             $queryParts[urldecode($key)] = urldecode($value);
         }
 

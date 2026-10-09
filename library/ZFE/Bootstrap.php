@@ -284,11 +284,15 @@ class ZFE_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $layout->getView();
         $view->addBasePath($zfeResourcesPath);
         $view
-            ->addHelperPath('Twitter/Bootstrap3/View/Helper', 'Twitter_Bootstrap3_View_Helper_')
+            ->addHelperPath('Twitter/Bootstrap5/View/Helper', 'Twitter_Bootstrap5_View_Helper_')
             ->addHelperPath('ZFE/View/Helper', 'ZFE_View_Helper_')
             ->addHelperPath(ZfeFiles_Helpers::getRoot() . '/View/Helper', 'ZfeFiles_View_Helper_')
             ->addHelperPath(APPLICATION_PATH . '/views/helpers', 'Helper_')
         ;
+
+        // Кнопки без явного стиля – .btn-default темы ZFE
+        Twitter_Bootstrap5_View_Helper_FormButton::$defaultClass = 'btn-default';
+        Twitter_Bootstrap5_View_Helper_FormReset::$defaultClass = 'btn-default';
 
         $brand = config('brand');
         $view->headTitle(is_string($brand) ? $brand : $brand->short)

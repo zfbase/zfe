@@ -7,8 +7,8 @@ const initDebug = () => {
 
     html = html.replace(/[[{]\n/g, (s) => {
       let str = s;
-      str = str.replace(/^\[\n/, '[ <span class="glyphicon glyphicon-plus-sign"></span> <span class="hide">\n');
-      str = str.replace(/^\{\n/, '{ <span class="glyphicon glyphicon-plus-sign"></span> <span class="hide">\n');
+      str = str.replace(/^\[\n/, '[ <span class="glyphicon glyphicon-plus-sign"></span> <span class="d-none">\n');
+      str = str.replace(/^\{\n/, '{ <span class="glyphicon glyphicon-plus-sign"></span> <span class="d-none">\n');
       return str;
     });
 
@@ -26,12 +26,12 @@ const initDebug = () => {
     const $this = $(e.currentTarget);
     const $block = $this.next();
 
-    if ($block.hasClass('hide')) {
-      $block.removeClass('hide');
+    if ($block.hasClass('d-none')) {
+      $block.removeClass('d-none');
       $this.removeClass('glyphicon-plus-sign')
         .addClass('glyphicon-minus-sign');
     } else {
-      $block.addClass('hide');
+      $block.addClass('d-none');
       $this.removeClass('glyphicon-minus-sign')
         .addClass('glyphicon-plus-sign');
     }
@@ -39,9 +39,9 @@ const initDebug = () => {
 
   $(() => {
     $('#DevelConfigViewer_Tree ul').each((i, list) => {
-      const $list = $(list).addClass('hide');
+      const $list = $(list).addClass('d-none');
       const $btn = $('<i>', {
-        'data-toggle': 'collapse',
+        'data-bs-toggle': 'collapse',
         class: 'glyphicon glyphicon-chevron-up',
         role: 'button',
       }).insertBefore($list);
@@ -50,11 +50,11 @@ const initDebug = () => {
         if ($btn.hasClass('glyphicon-chevron-up')) {
           $btn.removeClass('glyphicon-chevron-up');
           $btn.addClass('glyphicon-chevron-down');
-          $list.removeClass('hide');
+          $list.removeClass('d-none');
         } else {
           $btn.removeClass('glyphicon-chevron-down');
           $btn.addClass('glyphicon-chevron-up');
-          $list.addClass('hide');
+          $list.addClass('d-none');
         }
       });
     });

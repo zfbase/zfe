@@ -16,7 +16,7 @@ class ZFE_View_Helper_ViewRow extends Zend_View_Helper_Abstract
      *
      * @see ZFE_Model_AbstractRecord::getViewFields()
      */
-    public function viewRow(?AbstractRecord $item, $field, string $class = null)
+    public function viewRow(?AbstractRecord $item, $field, ?string $class = null)
     {
         if ($item === null) {
             return;

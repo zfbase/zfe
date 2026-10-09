@@ -10,7 +10,7 @@
 abstract class ZFE_Model_Default_Editors extends BaseEditors
 {
     /** {@inheritdoc} */
-    public static $sex = self::SEX_MALE;
+    public static $gender = self::GENDER_MASCULINE;
 
     /** {@inheritdoc} */
     public static $nameSingular = 'Редактор';
@@ -28,7 +28,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
     public static $defaultOrderKey = 'title_asc';
 
     /** {@inheritdoc} */
-    public static $nameFields = [
+    public static $fieldNames = [
         'title'       => 'Полное имя',
         'second_name' => 'Фамилия',
         'first_name'  => 'Имя',
@@ -45,17 +45,17 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
 
     /** {@inheritdoc} */
     protected static $_dictionaryFields = [
-        'status' => ['status', 'sex'],
+        'status' => ['status', 'gender'],
         'role' => ['roles'],
     ];
 
     // Статусы
-    const STATUS_ENABLE   = '0';
-    const STATUS_DISABLED = '1';
+    const STATUS_ENABLE   = 0;
+    const STATUS_DISABLED = 1;
 
     /** {@inheritdoc} */
     public static $status = [
-        self::SEX_MALE => [
+        self::GENDER_MASCULINE => [
             self::STATUS_ENABLE   => 'Включен',
             self::STATUS_DISABLED => 'Отключен',
         ],
@@ -86,6 +86,15 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      */
     public static $credentialTreatment = 'MD5(CONCAT(?, password_salt))';
 
+    /**
+     * Использовать новый адаптер для паролей.
+     * 
+     * MySQL 9.6 больше не поддерживает MD5, поэтому новый адаптер
+     * проверяет хэш пароля в приложении, а также обновляет
+     * хэши паролей в БД на Argon2id
+     */
+    public static bool $useDoctrine2026Adapter = false;
+
     /** {@inheritdoc} */
     public function fromArray(array $array, $deep = true)
     {
@@ -113,12 +122,17 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
      */
     public function setPassword($password, $salt = null)
     {
-        $salt = $salt ?: $this->password_salt ?: uniqid();
-        $pwdEscape = Doctrine_Manager::connection()->quote($password);
-        $pwdExpStr = str_replace('?', $pwdEscape, Editors::$credentialTreatment);
-        $pwdExpStr = str_replace('password_salt', "'{$salt}'", $pwdExpStr);
-        $this->password = new Doctrine_Expression($pwdExpStr);
-        $this->password_salt = $salt;
+        if (static::$useDoctrine2026Adapter) {
+            $this->password = password_hash($password, PASSWORD_ARGON2ID);
+            $this->password_salt = null;
+        } else {
+            $salt = $salt ?: $this->password_salt ?: uniqid();
+            $pwdEscape = Doctrine_Manager::connection()->quote($password);
+            $pwdExpStr = str_replace('?', $pwdEscape, Editors::$credentialTreatment);
+            $pwdExpStr = str_replace('password_salt', "'{$salt}'", $pwdExpStr);
+            $this->password = new Doctrine_Expression($pwdExpStr);
+            $this->password_salt = $salt;
+        }
     }
 
     use ZFE_Model_Default_PersonTrait;
@@ -152,7 +166,7 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
             ->addWhere('e.deleted = 0')
             ->addWhere('e.status = 0')
             ->fetchOne()
-       ;
+        ;
     }
 
     /**
@@ -189,5 +203,37 @@ abstract class ZFE_Model_Default_Editors extends BaseEditors
         static::_addHistoryHiddenFields([
             'password',
         ]);
+    }
+
+    /**
+     * Получить текущего пользователя
+     */
+    public static function currentUser(): self
+    {
+        return Zend_Registry::get('user')->data;
+    }
+
+    /**
+     * Получить ID текущего пользователя
+     */
+    public static function currentUserId(): int
+    {
+        return self::currentUser()->id;
+    }
+
+    /**
+     * Получить роль текущего пользователя
+     */
+    public static function currentUserRole(): string
+    {
+        return self::currentUser()->role;
+    }
+
+    /**
+     * Проверить, имеет ли текущий пользователь доступ к ресурсу/привилегии
+     */
+    public static function isAllowedMe(string $resource, ?string $privilege = null): bool
+    {
+        return Zend_Registry::get('acl')->isAllowedMe($resource, $privilege);
     }
 }

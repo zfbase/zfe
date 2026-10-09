@@ -1,7 +1,8 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $config = Zend_Registry::get('config');
+/** @var ZFE_View $this */
+
+$config = Zend_Registry::get('config');
 ?>
 
 <h2><?= is_string($config->brand) ? $config->brand : $config->brand->full ?></h2>

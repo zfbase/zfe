@@ -1,7 +1,7 @@
 import $ from 'jquery';
-import Bloodhound from 'bloodhound-js';
 
 import { keyCode } from '../../js/constants';
+import { getAcEngine } from './acEngine';
 
 const pluginName = 'zfeAutocomplete';
 const defaults = {
@@ -27,10 +27,21 @@ class ZFEAutocomplete {
     const data = $input.data();
     const name = $input.attr('name');
     $input.removeAttr('name');
+
+    const $inputs = $group.find(`[name^=${name}]`);
+    const otherInputs = $inputs
+      .get()
+      .map((i) => {
+        const name = i.name.match(/\[(.+)\]/);
+        return { element: i, name: name ? name[1] : '' };
+      })
+      .filter((i) => i.name && i.name !== 'id' && i.name !== 'title');
+
     return {
       name,
       $idInput: $group.find(`[name="${name}[id]"]`),
       $titleInput: $group.find(`[name="${name}[title]"]`),
+      otherInputs,
       sourceUrl: data.source,
       canCreate: data.create === 'allow',
       itemForm: data.itemForm || data.itemform, // атрибут data-item-form
@@ -41,54 +52,28 @@ class ZFEAutocomplete {
 
   init() {
     if (!this.settings.sourceUrl) {
-      throw new Error(`No sourceUrl specified for zfeAutocomplete name=${this.settings.name}`);
+      throw new Error(
+        `No sourceUrl specified for zfeAutocomplete name=${this.settings.name}`,
+      );
     }
     this.initPreHandlers();
-    this.initBloodhound();
+    this.initSource();
     this.initTypeahead();
     this.initHandlers();
   }
 
-  initBloodhound() {
-    const { minLength, sourceUrl, exclude } = this.settings;
-    this.engine = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      limit: 1000,
-      remote: {
-        url: sourceUrl,
-        replace: (initialUrl, query) => {
-          let url = initialUrl;
-
-          if (query.length >= minLength) {
-            url += `/?term=${encodeURIComponent(query)}`;
-          } else if (query.length > 0) {
-            return false;
-          }
-
-          if (exclude) {
-            url += (query.length >= minLength) ? '&' : '?';
-            if (typeof exclude === 'function') {
-              url += `exclude=${exclude().join(',')}`;
-            } else {
-              url += `exclude=${exclude.join(',')}`;
-            }
-          }
-
-          return url;
-        },
-      },
-    });
-    this.engine.initialize();
+  initSource() {
+    this.engine = getAcEngine(this.settings);
   }
 
   initTypeahead() {
     const datasetSettings = {
-      source: this.engine.ttAdapter(),
+      source: this.engine.bind(this),
       templates: this.settings.templates,
       display: 'value',
       limit: this.settings.limit,
     };
+
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
       datasetSettings.templates = $.extend(datasetSettings.templates, {
@@ -104,10 +89,13 @@ class ZFEAutocomplete {
         },
       });
     }
-    this.$input.typeahead({
-      minLength: 0, // проверка переезжает в Bloodhound
-      highlight: true,
-    }, datasetSettings);
+    this.$input.typeahead(
+      {
+        minLength: 0,
+        highlight: true,
+      },
+      datasetSettings,
+    );
     // this.input.attr('autocomplete', Math.random().toString(36).substr(2, 9));
 
     if (this.$input.typeahead('val')) {
@@ -121,9 +109,7 @@ class ZFEAutocomplete {
     $input.on('keydown', (e) => {
       if (e.keyCode === keyCode.ESCAPE) {
         e.stopImmediatePropagation();
-        $input
-          .typeahead('val', this.getTitle())
-          .typeahead('close');
+        $input.typeahead('val', this.getTitle()).typeahead('close');
       }
     });
   }
@@ -167,7 +153,8 @@ class ZFEAutocomplete {
     // Выбор значения из списка
     $input.on('typeahead:select', (e, selected) => {
       this.setValueData(selected);
-      this.setValue({ id: selected.key, title: selected.value });
+      const { key, value, ...rest } = selected;
+      this.setValue({ id: key, title: value, ...rest });
     });
 
     // Очистка элемента
@@ -178,11 +165,17 @@ class ZFEAutocomplete {
     if (disable) {
       this.$input.addClass('disabled');
       this.$iconRight.addClass('tt-disabled');
-      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)');
+      this.$hint.css(
+        'background',
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 238)',
+      );
     } else {
       this.$input.removeClass('disabled');
       this.$iconRight.removeClass('tt-disabled');
-      this.$hint.css('background', 'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)');
+      this.$hint.css(
+        'background',
+        'none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255)',
+      );
     }
 
     this.$input.attr('disabled', disable);
@@ -210,16 +203,19 @@ class ZFEAutocomplete {
     };
   }
 
-  setValue({ id = '', title = '' } = {}) {
+  setValue({ id = '', title = '', ...rest } = {}) {
     const { $input, $group, $iconRight, $inlineLink } = this;
-    const { $idInput, $titleInput, canCreate, itemForm } = this.settings;
+    const { $idInput, $titleInput, canCreate, itemForm, otherInputs } =
+      this.settings;
     const hasId = !!id;
     const hasTitle = !!title;
     const isNew = !hasId && hasTitle;
     const isEmpty = !hasId && !hasTitle;
 
     if (isNew && !canCreate) {
-      throw new Error('Cannot set a value without id for autocomplete with canCreate === false');
+      throw new Error(
+        'Cannot set a value without id for autocomplete with canCreate === false',
+      );
     }
 
     if ($idInput.val() === id && $titleInput.val() === title) {
@@ -229,6 +225,9 @@ class ZFEAutocomplete {
     $input.typeahead('val', title);
     $idInput.val(id);
     $titleInput.val(title);
+    otherInputs.forEach((i) => {
+      i.element.value = rest[i.name] ?? '';
+    });
     $iconRight.toggleClass('tt-fill', !isEmpty);
     $group.toggleClass('has-warning', isNew);
 
@@ -237,6 +236,7 @@ class ZFEAutocomplete {
     }
 
     this.$input.trigger('zfe.ac.change');
+    this.$input.get('0').dispatchEvent(new Event('zfe.ac.change'));
   }
 
   getValueData() {
@@ -261,8 +261,11 @@ $.fn[pluginName] = function zfeAutocomplete(options, ...args) {
   });
 
   switch (results.length) {
-    case 0: return $elements;
-    case 1: return results.pop();
-    default: return results;
+    case 0:
+      return $elements;
+    case 1:
+      return results.pop();
+    default:
+      return results;
   }
 };

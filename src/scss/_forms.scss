@@ -1,7 +1,7 @@
 form.indexSearch {
   margin: 15px 0;
 
-  @media (min-width: 768px) {
+  @include media-breakpoint-up(sm) {
     float: left;
 
     &.oneStringSearch #term {
@@ -39,6 +39,8 @@ form.indexSearch {
 .btn-default.btn-static:active,
 .btn-default.btn-static:focus,
 .btn-default.btn-static:hover {
+  --bs-btn-hover-bg: #eaeaea;
+  --bs-btn-active-bg: #eaeaea;
   background-color: #eaeaea;
   background-image: none;
   border-color: #ddd;
@@ -50,7 +52,7 @@ form.indexSearch {
 
 legend small {
   font-size: 75%;
-  color: #777;
+  color: $gray-600;
 }
 
 .image-uploaded {

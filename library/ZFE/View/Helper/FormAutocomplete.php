@@ -125,7 +125,7 @@ class ZFE_View_Helper_FormAutocomplete extends Zend_View_Helper_FormElement
         $helpIcon = $this->view->tag('i', ['class' => 'glyphicon glyphicon-warning-sign']);
         $helpBlock = $this->view->tag(
             'span',
-            ['class' => 'help-block will-be-created'],
+            ['class' => 'form-text will-be-created'],
             $helpIcon . ' Будет создана запись'
         );
 

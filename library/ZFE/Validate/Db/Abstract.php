@@ -155,7 +155,7 @@ abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
         if (is_string($where)) {
             $where = [$where];
         } elseif (!is_array($where) && null !== $where) {
-            throw new Zend_Validate_Exception('Не верный формат дополнительных условий');
+            throw new Zend_Validate_Exception('Неверный формат дополнительных условий');
         }
 
         $this->_where = [];
@@ -202,8 +202,7 @@ abstract class ZFE_Validate_Db_Abstract extends Zend_Validate_Abstract
         $q = ZFE_Query::create()
             ->select('COUNT(*) cnt')
             ->from($this->_model)
-            ->where($this->_field . ' = ?', $value)
-        ;
+            ->where($this->_field . ' = ?', $value);
 
         foreach ($this->_where as $where) {
             $q = $q->andWhere($where[0], $where[1]);

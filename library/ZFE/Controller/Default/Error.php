@@ -50,6 +50,7 @@ class ZFE_Controller_Default_Error extends Controller_Abstract
         ZFE_Utilities::logException($errors->exception, $priority);
 
         $this->view->displayException = $this->getInvokeArg('displayExceptions');
+        $this->view->externalExceptionHandler = $this->getInvokeArg('externalExceptionHandler');
         $this->view->exception = $errors->exception;
         $this->view->displayExceptionMessage = Zend_Registry::get('user')->noticeDetails
             || $errors->exception instanceof Zend_Controller_Exception

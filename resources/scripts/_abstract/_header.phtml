@@ -1,20 +1,21 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    /** @var ZFE_Model_AbstractRecord $item */
-    $item = $this->item;
+/** @var ZFE_View $this */
+
+/** @var ZFE_Model_AbstractRecord $item */
+$item = $this->item;
 ?>
 
 <div>
     <?= $this->hopsHistory()->getUpBtn() ?>
     <?= $this->searchPages()->getStepBtns() ?>
-    
-    <? if ($this->canCreate && !$this->readonly): ?>
-    <a role="button" class="btn btn-xs btn-default" href="<?= $item::getNewUrl() . $this->hopsHistory()->getSideHash('?') ?>">
-        Добавить
-        <span class="glyphicon glyphicon-plus">
-    </a>
-    <? endif; ?>
+
+    <?php if ($this->canCreate && !$this->readonly): ?>
+        <a role="button" class="btn btn-xs btn-default" href="<?= $item::getNewUrl() . $this->hopsHistory()->getSideHash('?') ?>">
+            Добавить
+            <span class="glyphicon glyphicon-plus">
+        </a>
+    <?php endif; ?>
 </div>
 
 <h2>

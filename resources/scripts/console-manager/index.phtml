@@ -1,4 +1,6 @@
-<? /** @var ZFE_View $this */ ?>
+<?php
+
+/** @var ZFE_View $this */ ?>
 
 <h2>Консольные команды</h2>
 
@@ -10,11 +12,11 @@
         </tr>
     </thead>
     <tbody>
-    <? foreach ($this->commands as $command): ?>
-        <tr role="button" data-href="/console-manager/execute/command/<?= $command::getName() ?>">
-            <td><?= $command::getName() ?></td>
-            <td><?= $command::getDescription() ?></td>
-        </tr>
-    <? endforeach; ?>
+        <?php foreach ($this->commands as $command): ?>
+            <tr role="button" data-href="/console-manager/execute/command/<?= $command::getName() ?>">
+                <td><?= $command::getName() ?></td>
+                <td><?= $command::getDescription() ?></td>
+            </tr>
+        <?php endforeach; ?>
     </tbody>
 </table>

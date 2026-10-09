@@ -18,7 +18,7 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
      *
      * @return string
      */
-    public function sortableHeadCell($field, $title = null, $cellClass = '')
+    public function sortableHeadCell($field, $title = null, $cellClass = '', ?bool $defaultDesc = null)
     {
         $modelName = $this->view->modelName;
 
@@ -31,6 +31,8 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $raw_order = $request->getParam('order', $modelName::$defaultOrderKey);
 
+        $defaultOrder = ($defaultDesc ?: str_starts_with($field, 'date') || str_ends_with($field, '_at')) ? 'desc' : 'asc';
+
         $pos = mb_strrpos($raw_order, '_');
         if ($pos > 1) {
             $cur_field = mb_substr($raw_order, 0, $pos);
@@ -42,27 +44,33 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
                     : 'asc';
             } else {
                 $cur_order = '';
-                $order = 'asc';
+                $order = $defaultOrder;
             }
         } else {
             $cur_order = '';
-            $order = 'asc';
+            $order = $defaultOrder;
         }
 
         switch ($cur_order) {
-            case 'asc': $caret = '<i class="order dropup"><i class="caret"></i></i>'; break;
-            case 'desc': $caret = '<i class="order"><i class="caret"></i></i>'; break;
-            default: $caret = ''; break;
+            case 'asc':
+                $caret = '<i class="order dropup"><i class="caret"></i></i>';
+                break;
+            case 'desc':
+                $caret = '<i class="order"><i class="caret"></i></i>';
+                break;
+            default:
+                $caret = '';
+                break;
         }
 
         $url = $this->_getBaseUrl() . '/order/' . $field . '_' . $order;
 
         return
             '<th class="sortable ' . $cellClass . '">' .
-                '<a href="' . $url . '">' .
-                    '<span>' . $title . '</span>' .
-                    $caret .
-                '</a>' .
+            '<a href="' . $url . '">' .
+            '<span>' . $title . '</span>' .
+            $caret .
+            '</a>' .
             '</th>';
     }
 
@@ -80,7 +88,8 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
 
         $ignore = [
             'module',                // модули мы не используем
-            'controller', 'action',  // контроллер и экшен подставим позже
+            'controller',
+            'action',  // контроллер и экшен подставим позже
             'page',                  // после сортировки имеет смысл отображать первую страницу
             'order',                  // сортировку будем менять
         ];
@@ -94,13 +103,11 @@ class ZFE_View_Helper_SortableHeadCell extends Zend_View_Helper_Abstract
                 continue;
             }
 
-            if (false !== mb_strpos($value, '/')) {
+            if (mb_strpos($value, '/') !== false) {
                 $get[] = $param . '=' . urlencode($value);
-            } else {
-                if ($value || '0' === $value) {
-                    $ret[] = urlencode($param);
-                    $ret[] = urlencode($value);
-                }
+            } else if ($value || $value === '0') {
+                $ret[] = urlencode($param);
+                $ret[] = urlencode($value);
             }
         }
 

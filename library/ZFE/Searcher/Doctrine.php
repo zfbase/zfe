@@ -51,7 +51,7 @@ class ZFE_Searcher_Doctrine extends ZFE_Searcher_Abstract
     /**
      * {@inheritdoc}
      */
-    public function search(array $params = null)
+    public function search(?array $params = null)
     {
         if (null === $params) {
             $params = $this->getParamsFromRequest();

@@ -7,7 +7,7 @@
 /**
  * Элемент формы для продолжительности в секундах.
  */
-class ZFE_View_Helper_FormDuration extends Twitter_Bootstrap3_View_Helper_FormText
+class ZFE_View_Helper_FormDuration extends Twitter_Bootstrap5_View_Helper_FormText
 {
     public function formDuration($name, $value = null, $attribs = null)
     {

@@ -13,7 +13,7 @@ abstract class ZFE_Model_Default_Tasks extends BaseTasks
     public static $defaultOrderKey = 'datetime_created_desc';
     public static $nameSingular = 'Отложенная задача';
     public static $namePlural = 'Отложенные задачи';
-    public static $nameFields = [
+    public static $fieldNames = [
         'related_id' => 'Субъект',
         'performer_code' => 'Исполнитель',
     ];

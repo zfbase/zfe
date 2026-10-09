@@ -56,7 +56,7 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
                                . ' data-new-upload="#' . $id . '-new-upload"'
                                . '><span class="glyphicon glyphicon-repeat small"></span> Заменить</a>';
             $showHtml = '<span id="' . $id . '-current-file" class="formfile-current-file">' . $html . '</span>';
-            $hideHtml = '<span id="' . $id . '-new-upload" class="hide">' . $content . '</span>';
+            $hideHtml = '<span id="' . $id . '-new-upload" class="d-none">' . $content . '</span>';
 
             return $showHtml . $btnReplace . $hideHtml;
         }
@@ -71,7 +71,7 @@ class ZFE_Form_Decorator_FileValue extends Zend_Form_Decorator_Abstract
     protected function _renderFile(ZFE_File $file, $disabled = false)
     {
         $value = $file->getName();
-        $class = 'help-block';
+        $class = 'form-text';
 
         if ($file->hasPreview()) {
             $value = '<a class="image" style="background-image:url(' . $file->getPreviewUrl() . ');"';

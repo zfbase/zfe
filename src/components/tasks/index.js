@@ -24,7 +24,7 @@ export default () => {
         if (status === '0') {
           $('<a>')
             .attr('href', `/tasks/index/search/all/id/${data.id}`)
-            .addClass('label label-info')
+            .addClass('badge text-bg-info')
             .text(data.id)
             .insertAfter($btn);
           $btn.remove();

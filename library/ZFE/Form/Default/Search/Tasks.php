@@ -42,8 +42,9 @@ class ZFE_Form_Default_Search_Tasks extends ZFE_Form_Search_AbstractInline
 
         $performerCodes = array_keys(ZFE_Tasks_Manager::getInstance()->getPerformers(false));
         $performerOptions = array_combine(
-            array_map(fn ($code) => str_replace('/', '_', $code), $performerCodes),
-            $performerCodes);
+            array_map(fn($code) => str_replace('/', '_', $code), $performerCodes),
+            $performerCodes
+        );
         $this->addElement('select', 'performer', [
             'label' => Tasks::getFieldName('performer_code'),
             'multiOptions' => [null => 'все исполнители'] + $performerOptions,

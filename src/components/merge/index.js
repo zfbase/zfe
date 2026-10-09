@@ -5,15 +5,15 @@ import $ from 'jquery';
 
 $.fn.zfeMerge = function zfeMerge() {
   const MergeEngine = {};
-  MergeEngine.$input =         $('.zfe-merge-search', this);     // Поисковое поле
-  MergeEngine.$post_clear =    $('.zfe-merge-post-clear', this); // Флаг: очищать после выбора результата поиска?
-  MergeEngine.$searchResults = $('.zfe-merge-suggest', this);    // Поле для результатов поиска
-  MergeEngine.$btnMerge =      $('.zfe-merge-exec', this);       // Кнопка запуска процесса объединения
-  MergeEngine.$mergeItems =    $('.zfe-merge-items', this);      // Контейнер для выбранных для объединения записей
-  MergeEngine.$mergeRowEmpty = $('.zfe-merge-empty', this);      // Строка для указания отсутствия выбранных записей для объединения
-  MergeEngine.$mergeRowTmpl =  $('.zfe-merge-tmpl', this);       // Шаблон строки выбранной для объединения записи
-  MergeEngine.$selectAll =     $('.zfe-merge-select-all', this); // Кнопка для выбора всех строк
-  MergeEngine.searchUrl =      MergeEngine.$input.data('path');  // Адрес для поиска записей
+  MergeEngine.$input = $('.zfe-merge-search', this); // Поисковое поле
+  MergeEngine.$post_clear = $('.zfe-merge-post-clear', this); // Флаг: очищать после выбора результата поиска?
+  MergeEngine.$searchResults = $('.zfe-merge-suggest', this); // Поле для результатов поиска
+  MergeEngine.$btnMerge = $('.zfe-merge-exec', this); // Кнопка запуска процесса объединения
+  MergeEngine.$mergeItems = $('.zfe-merge-items', this); // Контейнер для выбранных для объединения записей
+  MergeEngine.$mergeRowEmpty = $('.zfe-merge-empty', this); // Строка для указания отсутствия выбранных записей для объединения
+  MergeEngine.$mergeRowTmpl = $('.zfe-merge-tmpl', this); // Шаблон строки выбранной для объединения записи
+  MergeEngine.$selectAll = $('.zfe-merge-select-all', this); // Кнопка для выбора всех строк
+  MergeEngine.searchUrl = MergeEngine.$input.data('path'); // Адрес для поиска записей
 
   // Событие изменения значения поиковой строки или состояния фильтров
   MergeEngine.search = () => {
@@ -21,27 +21,45 @@ $.fn.zfeMerge = function zfeMerge() {
 
     if (term === '') {
       MergeEngine.$searchResults.empty();
-      MergeEngine.$selectAll.addClass('hide');
+      MergeEngine.$selectAll.addClass('d-none');
       return;
     }
 
     MergeEngine.suggest(term, 1);
   };
 
+  let ac;
   // Поиск
-  MergeEngine.suggest = (term, page) => {
-    MergeEngine.$searchResults.load(MergeEngine.searchUrl, {
+  MergeEngine.suggest = async (term, page) => {
+    if (ac) {
+      ac.abort();
+    }
+    let reqAc = new AbortController();
+    ac = reqAc;
+    const params = new URLSearchParams({
       term,
       page,
       exclude: MergeEngine.getSelectedIds(),
-    }, () => {
+    });
+    try {
+      const res = await fetch(`${MergeEngine.searchUrl}?${params.toString()}`, {
+        signal: reqAc.signal,
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      MergeEngine.$searchResults.html(await res.text());
       window.ZFE.initItemDetailsPopover(MergeEngine.$searchResults);
       if (MergeEngine.$searchResults.find('tr.result').length > 1) {
-        MergeEngine.$selectAll.removeClass('hide');
+        MergeEngine.$selectAll.removeClass('d-none');
       } else {
-        MergeEngine.$selectAll.addClass('hide');
+        MergeEngine.$selectAll.addClass('d-none');
       }
-    });
+    } catch (err) {
+      if (!reqAc.signal.aborted) {
+        console.error('MergeEngine.suggest failed:', err);
+      }
+    }
   };
 
   // Получить список идентификаторов выбранных для объединения строк
@@ -68,14 +86,14 @@ $.fn.zfeMerge = function zfeMerge() {
       item.lastEdited = lastEdited.html();
     }
 
-    const $newRow = MergeEngine.$mergeRowTmpl.tmpl(item)
+    const $newRow = MergeEngine.$mergeRowTmpl
+      .tmpl(item)
       .appendTo(MergeEngine.$mergeItems);
 
-    $('td.item-details', $newRow)
-      .html($row.find('td.item-details').html());
+    $('td.item-details', $newRow).html($row.find('td.item-details').html());
     window.ZFE.initItemDetailsPopover($newRow);
 
-    $row.addClass('hide');
+    $row.addClass('d-none');
 
     if (MergeEngine.$post_clear.is(':checked')) {
       MergeEngine.$input.val('');
@@ -85,13 +103,13 @@ $.fn.zfeMerge = function zfeMerge() {
       MergeEngine.$btnMerge.attr('disabled', false);
     }
 
-    const $resultRows = MergeEngine.$searchResults.find('tr.result:not(.hide)');
+    const $resultRows = MergeEngine.$searchResults.find('tr.result:not(.d-none)');
     switch ($resultRows.length) {
       case 0:
         MergeEngine.$searchResults.find('table').remove();
-        MergeEngine.$searchResults.find('> p.empty').removeClass('hide');
+        MergeEngine.$searchResults.find('> p.empty').removeClass('d-none');
       case 1:
-        MergeEngine.$selectAll.addClass('hide');
+        MergeEngine.$selectAll.addClass('d-none');
         break;
       default:
     }
@@ -113,14 +131,14 @@ $.fn.zfeMerge = function zfeMerge() {
 
   // Добавить все найденные записи в объединяемые
   MergeEngine.selectAll = () => {
-    MergeEngine.$searchResults.find('tr.result:not(.hide)').trigger('click');
+    MergeEngine.$searchResults.find('tr.result:not(.d-none)').trigger('click');
   };
 
   // Перейти на другую страницу выдачи поиска
   MergeEngine.goToPage = (event) => {
     MergeEngine.suggest(
       MergeEngine.$input.val(),
-      $(event.currentTarget).data('page-num'),
+      $(event.currentTarget).data('page-num')
     );
   };
 
@@ -134,7 +152,6 @@ $.fn.zfeMerge = function zfeMerge() {
 
     return true;
   };
-
 
   MergeEngine.$input.on('input', MergeEngine.search);
   MergeEngine.$searchResults.on('click', 'tr.result', MergeEngine.onSelected);

@@ -44,7 +44,7 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
      *
      * @return bool true если успешно
      */
-    public function hardDelete(Doctrine_Connection $conn = null)
+    public function hardDelete(?Doctrine_Connection $conn = null)
     {
         $lastSoftDelete = null;
 
@@ -69,17 +69,24 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
      *
      * @throws ZFE_Model_Exception
      */
-    public function undelete(Doctrine_Connection $conn = null)
+    public function undelete(?Doctrine_Connection $conn = null)
     {
-        if ($this->_table->hasColumn('deleted')) {
+        if ($this->_table->hasColumn('deleted') || $this->_table->hasColumn('deleted_at')) {
             $invoker = $this->_invoker;
 
-            if (0 == $invoker->deleted) {
-                throw new ZFE_Model_Exception('Запись не может быть восстановлена, т.к. не удалена.');
+            if ($invoker->contains('deleted')) {
+                if ($invoker->deleted === 0) {
+                    throw new ZFE_Model_Exception('Запись не может быть восстановлена, т.к. не удалена.');
+                }
+                $invoker->deleted = 0;
+            } else {
+                if ($invoker->deleted_at === null) {
+                    throw new ZFE_Model_Exception('Запись не может быть восстановлена, т.к. не удалена.');
+                }
+                $invoker->deleted_at = null;
             }
 
-            $invoker->deleted = 0;
-            if ($invoker->contains('version')) {
+            if ($invoker->contains('version') && !$invoker::hasVersionLocking()) {
                 ++$invoker->version;
             }
 
@@ -105,14 +112,10 @@ class ZFE_Model_Template_SoftDelete extends Doctrine_Template
     /**
      * Хук, выполняющийся перед восстановлением.
      */
-    public function preUndelete()
-    {
-    }
+    public function preUndelete() {}
 
     /**
      * Хук, выполняющийся после восстановления.
      */
-    public function postUndelete()
-    {
-    }
+    public function postUndelete() {}
 }

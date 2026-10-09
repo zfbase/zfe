@@ -65,6 +65,15 @@ class ZFE_Form_Edit_AutoGeneration extends ZFE_Form_Horizontal
         $fieldMethods = array_merge($this->_defaultFieldMethods, $this->_fieldMethods);
 
         $table = Doctrine_Core::getTable($modelName);
+
+        // Скрытое поле версии нужно для контроля конкурентного редактирования
+        if ($table->hasField('version')
+            && !in_array('version', $this->_ignoreFields)
+            && !$this->getElement('version')
+        ) {
+            $this->addElementVersion();
+        }
+
         foreach ($table->getColumnNames() as $columnName) {
             if (!in_array($columnName, $ignoreFields) && !$this->getElement($columnName)) {
                 $method = $fieldMethods[$columnName] ?? 'addElementForColumn';

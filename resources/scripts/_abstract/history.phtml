@@ -1,12 +1,13 @@
-<?
-    /** @var ZFE_View $this */
+<?php
 
-    $downHash = $this->hopsHistory()->getDownHash('К истории', '?');
+/** @var ZFE_View $this */
+
+$downHash = $this->hopsHistory()->getDownHash('К истории', '?');
 ?>
 
 <?= $this->abstractRender('_header.phtml') ?>
 
-<? if (count($this->history)): ?>
+<?php if (count($this->history)): ?>
     <?= $this->paginator() ?>
     <div class="table-responsive">
         <table class="table table-hover table-sticky-header">
@@ -18,41 +19,41 @@
                 <th>Действия</th>
             </thead>
             <tbody>
-            <? foreach ($this->history as $item): /** @var History $item */ ?>
-                <? $itemModelName = AbstractRecord::getModelNameByTableName($item->table_name); ?>
-                <? $obj = $itemModelName::hardFind($item->content_id); ?>
-                <tr>
-                    <td class="last-edited">
-                        <?= $this->dateTimeCompact($item->datetime_action) ?>
-                        <div class="editor"><?= $item->Editors ?></div>
-                    </td>
-                    <td class="text-center"><?= History::$actionTypes[$item->action_type] ?></td>
-                    <td class="text-center"><?= $item->content_version ?></td>
-                    <td class="text-center"><?= History::ACTION_TYPE_UPDATE === $item->action_type ? $item->cnt : '' ?></td>
-                    <? if (empty($obj)): ?>
-                    <td class="empty">Не доступно</td>
-                    <? else: ?>
-                    <td>
-                        <? if (History::ACTION_TYPE_MERGE === $item->action_type): ?>
-                            <a href="<?= $obj->getHistoryMergeUrl($item->id) . $downHash ?>" class="btn btn-xs btn-primary">
-                                <span class="fa fa-cubes"></span>
-                                Показать объединенные
-                            </a>
-                        <? elseif (History::ACTION_TYPE_INSERT === $item->action_type): ?>
-                        <? else: ?>
-                            <a href="<?= $obj->getHistoryDiffUrl($item->content_version) . $downHash ?>" class="btn btn-xs btn-primary">
-                                <span class="glyphicon glyphicon-transfer"></span>
-                                Сравнить
-                            </a>
-                        <? endif; ?>
-                    </td>
-                    <? endif; ?>
-                </tr>
-            <? endforeach; ?>
+                <?php foreach ($this->history as $item): /** @var History $item */ ?>
+                    <?php $itemModelName = AbstractRecord::getModelNameByTableName($item->table_name); ?>
+                    <?php $obj = $itemModelName::hardFind($item->content_id); ?>
+                    <tr>
+                        <td class="last-edited">
+                            <?= $this->dateTimeCompact($item->datetime_action) ?>
+                            <div class="editor"><?= $item->Editors ?></div>
+                        </td>
+                        <td class="text-center"><?= History::$actionTypes[$item->action_type] ?></td>
+                        <td class="text-center"><?= $item->content_version ?></td>
+                        <td class="text-center"><?= History::ACTION_TYPE_UPDATE === $item->action_type ? $item->cnt : '' ?></td>
+                        <?php if (empty($obj)): ?>
+                            <td class="empty">Не доступно</td>
+                        <?php else: ?>
+                            <td>
+                                <?php if (History::ACTION_TYPE_MERGE === $item->action_type): ?>
+                                    <a href="<?= $obj->getHistoryMergeUrl($item->id) . $downHash ?>" class="btn btn-xs btn-primary">
+                                        <span class="fa fa-cubes"></span>
+                                        Показать объединенные
+                                    </a>
+                                <?php elseif (History::ACTION_TYPE_INSERT === $item->action_type): ?>
+                                <?php else: ?>
+                                    <a href="<?= $obj->getHistoryDiffUrl($item->content_version) . $downHash ?>" class="btn btn-xs btn-primary">
+                                        <span class="glyphicon glyphicon-transfer"></span>
+                                        Сравнить
+                                    </a>
+                                <?php endif; ?>
+                            </td>
+                        <?php endif; ?>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
     <?= $this->paginator() ?>
-<? else: ?>
+<?php else: ?>
     <p class="empty">Нет сведений об изменениях записи.</p>
-<? endif; ?>
+<?php endif; ?>
