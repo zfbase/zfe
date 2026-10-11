@@ -1,7 +1,17 @@
-export function getAcEngine(settings: { minLength?: number; sourceUrl?: string; exclude?: any } = {}) {
+export function getAcEngine(
+  settings: {
+    minLength?: number;
+    sourceUrl?: string;
+    exclude?: ZfeAutocompleteExclude;
+  } = {},
+) {
   let ac: AbortController | null = null;
   const { minLength, sourceUrl, exclude } = settings;
-  return async (query: any, _: unknown, async: any) => {
+  return async (
+    query: string,
+    _: unknown,
+    callback: (items: ZfeAutocompleteItem[]) => void,
+  ) => {
     try {
       if (ac) {
         ac.abort();
@@ -27,7 +37,7 @@ export function getAcEngine(settings: { minLength?: number; sourceUrl?: string; 
       ac = new AbortController();
       const res = await fetch(url, { signal: ac.signal });
       const items = await res.json();
-      async(items);
+      callback(items);
     } catch (err) {
       if (!ac || !ac.signal.aborted) {
         console.error(
@@ -36,7 +46,7 @@ export function getAcEngine(settings: { minLength?: number; sourceUrl?: string; 
           err,
         );
       }
-      async([]);
+      callback([]);
     }
   };
 }

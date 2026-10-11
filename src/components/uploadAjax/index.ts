@@ -6,6 +6,46 @@ const TYPE_DEFAULT = null;
 const TYPE_IMAGES = 'image';
 const TYPE_AUDIOS = 'audio';
 
+/** Файл, загруженный на сервер: данные для отображения превью */
+interface UploadedFile {
+  id: string | number;
+  title?: string;
+  iconClass?: string;
+  previewUrl?: string;
+  downloadUrl?: string;
+  downloadLabel?: string;
+  viewUrl?: string;
+  viewLabel?: string;
+  editUrl?: string;
+  editLabel?: string;
+  deleteUrl?: string;
+  deleteLabel?: string;
+}
+
+/** Ответ сервера на загрузку файла: status === '0' – успех */
+interface UploadResponse {
+  status: string;
+  message?: string;
+  data: UploadedFile;
+}
+
+/** Итоговые настройки: опции плагина поверх данных, прочитанных из атрибутов поля */
+interface UploadSettings {
+  url: string;
+  type: 'image' | 'audio' | null;
+  /** Атрибут multiple поля; false – загружается один файл */
+  multiple: boolean | string;
+  errorLoad: string;
+  errorExtensions: string;
+  errorMimeType: string;
+  errorSize: string;
+  name?: string;
+  /** Заменяет стандартное отображение превью; вызывается с загруженным файлом в качестве this */
+  previewCallback?: (this: UploadedFile) => void;
+  extensions: string[];
+  mimeTypes: string[];
+}
+
 const defaults = {
   url: '/files/upload',
   type: TYPE_DEFAULT,
@@ -17,19 +57,19 @@ const defaults = {
 };
 
 class Loader {
-  file: any;
-  settings: any;
-  $loadingContainer: any;
-  $previewContainer: any;
-  $formContainer: any;
-  $loadingWrap: any;
-  xhr: any;
-  $progressBarContainer: any;
-  $progressBar: any;
+  file: File;
+  settings: UploadSettings;
+  $loadingContainer: JQuery;
+  $previewContainer: JQuery;
+  $formContainer: JQuery;
+  $loadingWrap!: JQuery;
+  xhr: XMLHttpRequest | null;
+  $progressBarContainer!: JQuery;
+  $progressBar!: JQuery;
 
   constructor(
-    file: any,
-    settings: any,
+    file: File,
+    settings: UploadSettings,
     $loadingContainer: JQuery,
     $previewContainer: JQuery,
     $formContainer: JQuery
@@ -39,7 +79,6 @@ class Loader {
     this.$loadingContainer = $loadingContainer;
     this.$previewContainer = $previewContainer;
     this.$formContainer = $formContainer;
-    this.$loadingWrap = null;
     this.xhr = null;
 
     this.init();
@@ -94,7 +133,7 @@ class Loader {
 
   checkFile() {
     if (this.settings.extensions && this.settings.extensions.length > 0) {
-      const extension = this.file.name.split('.').pop().toLowerCase();
+      const extension = this.file.name.split('.').pop()!.toLowerCase();
       if ($.inArray(`.${extension}`, this.settings.extensions) === -1) {
         this.warning(this.settings.errorExtensions);
         this.restoreForm();
@@ -112,7 +151,7 @@ class Loader {
     }
 
     const maxFileSize = $('#MAX_FILE_SIZE').val();
-    if (maxFileSize && this.file.size > maxFileSize) {
+    if (maxFileSize && this.file.size > Number(maxFileSize)) {
       this.warning(
         this.settings.errorSize.replace('%s', humanFileSize(Number(maxFileSize)))
       );
@@ -153,7 +192,7 @@ class Loader {
         }
         return xhr;
       },
-      success: (response) => {
+      success: (response: UploadResponse) => {
         if (response.status === '0') {
           if (this.settings.previewCallback) {
             this.settings.previewCallback.apply(response.data);
@@ -192,19 +231,19 @@ class Loader {
     } as JQuery.AjaxSettings);
   }
 
-  previewImage(file: any) {
+  previewImage(file: UploadedFile) {
     const $preview = $('<p>', {
       class: 'form-text preview-image image-uploaded',
     });
 
-    let $title = null;
+    let $title: JQuery;
     if (file.previewUrl) {
       $title = $('<a>', {
         class: 'image',
         style: `background-image: url(${file.previewUrl});`,
       });
     } else {
-      $title = $('<span>').append(file.title);
+      $title = $('<span>').append(file.title ?? '');
     }
 
     if (file.downloadUrl) {
@@ -232,7 +271,7 @@ class Loader {
     return $preview.append($input).appendTo(this.$previewContainer);
   }
 
-  previewAudio(file: any) {
+  previewAudio(file: UploadedFile) {
     const $audio = $('<audio>', {
       class: 'zfe-audio',
       src: file.previewUrl,
@@ -288,10 +327,10 @@ class Loader {
     return $audio.append($input).appendTo(this.$previewContainer).zfeAudio();
   }
 
-  preview(file: any) {
+  preview(file: UploadedFile) {
     const $preview = $('<p>', { class: 'form-text' });
 
-    const $title = $('<span>').append(file.title);
+    const $title = $('<span>').append(file.title ?? '');
 
     if (file.iconClass) {
       $('<span>', { class: file.iconClass }).prependTo($title);
@@ -357,15 +396,15 @@ class Loader {
 }
 
 class ZFEUploadAjax {
-  $input: any;
-  settings: any;
-  $formContainer: any;
-  $loadingContainer: any;
-  $previewContainer: any;
+  $input: JQuery<HTMLInputElement>;
+  settings: UploadSettings;
+  $formContainer!: JQuery;
+  $loadingContainer!: JQuery;
+  $previewContainer!: JQuery;
 
-  constructor(element: HTMLElement, options: any) {
-    this.$input = $(element);
-    this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
+  constructor(element: HTMLElement, options?: ZfeUploadAjaxOptions) {
+    this.$input = $(element) as JQuery<HTMLInputElement>;
+    this.settings = $.extend({}, defaults, this.dataAttrOptions(), options) as UploadSettings;
     this.init();
   }
 
@@ -409,7 +448,7 @@ class ZFEUploadAjax {
   }
 
   onSelectFile() {
-    const fileList = this.$input.get(0).files;
+    const fileList = this.$input[0].files!;
 
     if (this.settings.multiple === false && fileList.length === 1) {
       this.$formContainer.fadeOut();
@@ -430,7 +469,7 @@ class ZFEUploadAjax {
   }
 }
 
-$.fn.zfeUploadAjax = function zfeAudio(options) {
+$.fn.zfeUploadAjax = function zfeUploadAjax(this: JQuery, options?: ZfeUploadAjaxOptions) {
   return this.each((i, el) => {
     if (!$.data(el, 'plugin_zfeUploadAjax')) {
       $.data(el, 'plugin_zfeUploadAjax', new ZFEUploadAjax(el, options));

@@ -22,25 +22,20 @@ const secToTime = (sec: number) => {
 };
 
 class ZFEAudio {
-  _audio: any;
-  audio: any;
-  container: any;
-  playPauseBtn: any;
-  track: any;
-  time: any;
-  duration: any;
-  muteBtn: any;
-  allowUpdateTime: any;
+  _audio: HTMLAudioElement;
+  audio: JQuery<HTMLAudioElement>;
+  // Элементы плеера создаются в _buildPlayer()
+  container!: JQuery;
+  playPauseBtn!: JQuery;
+  track!: JQuery;
+  time!: JQuery;
+  duration!: JQuery;
+  muteBtn!: JQuery;
+  allowUpdateTime: boolean;
 
-  constructor(_audio: any) {
+  constructor(_audio: HTMLAudioElement) {
     this._audio = _audio;
     this.audio = $(_audio);
-    this.container = null;
-    this.playPauseBtn = null;
-    this.track = null;
-    this.time = null;
-    this.duration = null;
-    this.muteBtn = null;
     this.allowUpdateTime = true;
 
     this._buildPlayer();
@@ -136,7 +131,7 @@ class ZFEAudio {
       class: 'dropdown-menu dropdown-menu-end',
     });
 
-    this.audio.find('a.zfe-audio-link').each((i: number, link: any) => {
+    this.audio.find('a.zfe-audio-link').each((i, link) => {
       $('<li>').append($(link).addClass('dropdown-item')).appendTo(moreContainer);
     });
 
@@ -231,7 +226,7 @@ class ZFEAudio {
   }
 
   _onChangeTrack() {
-    this._audio.currentTime = this.track.val();
+    this._audio.currentTime = Number(this.track.val());
     this._updateTime(true);
 
     setTimeout(() => {
@@ -269,7 +264,7 @@ class ZFEAudio {
     }
 
     this.playPauseBtn.addClass('disabled');
-    this.track.attr('disabled', true);
+    this.track.attr('disabled', 'disabled');
     this.muteBtn.addClass('disabled');
   }
 }
@@ -277,7 +272,7 @@ class ZFEAudio {
 $.fn.zfeAudio = function zfeAudio() {
   return this.each((i, el) => {
     if (!$.data(el, 'plugin_zfeAudio')) {
-      $.data(el, 'plugin_zfeAudio', new ZFEAudio(el));
+      $.data(el, 'plugin_zfeAudio', new ZFEAudio(el as HTMLAudioElement));
     }
   });
 };

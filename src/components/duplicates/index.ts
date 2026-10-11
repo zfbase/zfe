@@ -2,19 +2,23 @@ import $ from 'jquery';
 
 import { makeModal } from '../modals';
 
-class MergeHelperModal {
-  $form: any;
-  $panel: any;
-  onCancel: any;
-  onSuccess: any;
-  onError: any;
-  mergeHelperUrl: any;
-  $modal: any;
-  submitBtn: any;
-  showEqualBtn: any;
-  hideEqualBtn: any;
+type OnCancel = ($panel: JQuery) => void;
+type OnSuccess = ($panel: JQuery, message: string) => void;
+type OnError = ($panel: JQuery, message?: string) => void;
 
-  constructor($form: JQuery, $panel: JQuery, onCancel: any, onSuccess: any, onError: any) {
+class MergeHelperModal {
+  $form: JQuery;
+  $panel: JQuery;
+  onCancel: OnCancel;
+  onSuccess: OnSuccess;
+  onError: OnError;
+  mergeHelperUrl: string;
+  $modal: JQuery;
+  submitBtn: JQuery;
+  showEqualBtn: JQuery;
+  hideEqualBtn: JQuery;
+
+  constructor($form: JQuery, $panel: JQuery, onCancel: OnCancel, onSuccess: OnSuccess, onError: OnError) {
     this.$form = $form;
     this.$panel = $panel;
     this.onCancel = onCancel;

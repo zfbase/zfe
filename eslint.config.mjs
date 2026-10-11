@@ -11,6 +11,8 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  // Автоматический JSX runtime (tsconfig: jsx = react-jsx): импорт React в файле не нужен
+  pluginReact.configs.flat['jsx-runtime'],
   {
     settings: { react: { version: "detect" } },
     rules: {

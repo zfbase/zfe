@@ -1,4 +1,4 @@
-import React, { type ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 import { createRoot } from 'react-dom/client';
 import { FileAjaxElement, getFileAjaxProps } from 'zfe-files';
 

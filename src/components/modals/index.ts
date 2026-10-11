@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-export const makeModal = ({ title = '', body, size = 'lg' }: { title?: string; body?: string; size?: string }) => {
+export const makeModal = ({ title = '', body, size = 'lg' }: ZfeModalOptions): JQuery => {
   const sizeClass = ['lg', 'sm', 'max', 'fluid'].includes(size) ? `modal-${size}` : size;
   const modal = $(
     '<div class="modal fade" tabindex="-1" role="dialog">'
@@ -25,7 +25,7 @@ export const makeModal = ({ title = '', body, size = 'lg' }: { title?: string; b
 
 window.makeModal = makeModal;
 
-let modalCallback: ((data?: any) => void) | null = null;
+let modalCallback: ((data: unknown) => void) | null = null;
 let modalUrl: string | null = null;
 
 const editModal = makeModal({ body: '<form></form>' });
@@ -59,16 +59,16 @@ submitButton.appendTo(editModal.find('.modal-footer'));
 
 submitButton.on('click', () => editModal.find('form').trigger('submit'));
 
-export const showEditModal = ({
+export const showEditModal = <T = unknown>({
   url,
   callback,
   title,
   data,
   formClass,
   onload,
-}: ZfeEditModalOptions) => {
+}: ZfeEditModalOptions<T>): void => {
   modalUrl = url;
-  modalCallback = callback;
+  modalCallback = (callback as ((data: unknown) => void) | undefined) ?? null;
 
   editModal.find('.modal-title')
     .text(title || 'Редактирование');
@@ -81,7 +81,7 @@ export const showEditModal = ({
     }));
 
   onload = onload || (form => form);
-  $.get(url, data)
+  $.get(url, data ?? {})
     .done(res => onload(setModalHtml(res)));
   editModal.modal('show');
 };

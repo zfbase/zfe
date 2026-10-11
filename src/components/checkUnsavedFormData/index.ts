@@ -1,9 +1,9 @@
 import $ from 'jquery';
 
-const comparer = (otherArray: any) => {
-  return (current: any) => {
+const comparer = (otherArray: ZfeFormField[]) => {
+  return (current: ZfeFormField) => {
     return (
-      otherArray.filter((other: any) => {
+      otherArray.filter((other) => {
         return other.name === current.name && other.value === current.value;
       }).length === 0
     );
@@ -11,10 +11,10 @@ const comparer = (otherArray: any) => {
 };
 
 class CheckUnsavedFormData {
-  $form: any;
-  freeSnapshot: any;
+  $form: JQuery;
+  freeSnapshot: ZfeFormField[];
 
-  constructor(form: any) {
+  constructor(form: JQuery) {
     this.$form = $(form);
     this.freeSnapshot = [];
 
@@ -46,17 +46,17 @@ class CheckUnsavedFormData {
     this.freeSnapshot = this.$form.serializeArray();
   }
 
-  setFreeValue(key: any, value: any) {
-    let index: number | null = null;
-    this.freeSnapshot.forEach((field: { name: string }, i: number) => {
+  setFreeValue(key: string, value?: string | null) {
+    let index = -1;
+    this.freeSnapshot.forEach((field, i) => {
       if (field.name === key) {
         index = i;
       }
     });
 
     if (value === null) {
-      if (index !== null) {
-        this.freeSnapshot = this.freeSnapshot.filter((_: number, i: number) => index !== i);
+      if (index !== -1) {
+        this.freeSnapshot = this.freeSnapshot.filter((_, i) => index !== i);
       }
       return;
     }
@@ -65,16 +65,16 @@ class CheckUnsavedFormData {
       typeof value === 'undefined'
         ? this.$form
             .serializeArray()
-            .reduce(
-              (result: any, field: { name: string; value: string }) => (field.name === key ? field.value : result),
+            .reduce<string | null>(
+              (result, field) => (field.name === key ? field.value : result),
               null
             )
         : value;
 
-    if (index !== null) {
-      this.freeSnapshot[index].value = newValue;
+    if (index !== -1) {
+      this.freeSnapshot[index].value = newValue as string;
     } else {
-      this.freeSnapshot.push({ name: key, value: newValue });
+      this.freeSnapshot.push({ name: key, value: newValue as string });
     }
   }
 
@@ -83,12 +83,14 @@ class CheckUnsavedFormData {
   }
 }
 
+type CheckUnsavedFormDataCommand = (...args: unknown[]) => unknown;
+
 $.fn.checkUnsavedFormData = function checkUnsavedFormData(
   this: JQuery,
-  command = '',
-  ...args
-) {
-  const results: any[] = [];
+  command: string = '',
+  ...args: unknown[]
+): JQuery | unknown[] {
+  const results: unknown[] = [];
   const $elements = this.each((i, el) => {
     const $this = $(this);
 
@@ -106,9 +108,10 @@ $.fn.checkUnsavedFormData = function checkUnsavedFormData(
     }
 
     if (command) {
-      results.push($element[command](...args));
+      const instance = $element as unknown as Record<string, CheckUnsavedFormDataCommand>;
+      results.push(instance[command](...args));
     }
   });
 
   return results.length ? results : $elements;
-};
+} as JQuery['checkUnsavedFormData'];
