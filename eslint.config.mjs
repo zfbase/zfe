@@ -21,6 +21,15 @@ export default [
     },
   },
   {
+    // Устаревшие API (по тегам @deprecated в типах jQuery, DOM и Bootstrap); нужна информация о типах
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/lib/**"],
+    languageOptions: {
+      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+    },
+    rules: { "@typescript-eslint/no-deprecated": "error" },
+  },
+  {
     // Сторонний код (jquery-tmpl) не типизирован
     files: ["src/lib/**"],
     rules: { "@typescript-eslint/ban-ts-comment": "off" },

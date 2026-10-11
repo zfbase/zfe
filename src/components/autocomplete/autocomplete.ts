@@ -100,7 +100,8 @@ class ZFEAutocomplete {
 
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
-      datasetSettings.templates = $.extend(datasetSettings.templates, {
+      // Копия: набор шаблонов общий для всех полей, его нельзя дополнять на месте
+      datasetSettings.templates = $.extend({}, datasetSettings.templates, {
         suggestion: (data: ZfeAutocompleteItem) => {
           let content = data.value;
           if (typeof oldSuggestion === 'function') {
@@ -131,7 +132,7 @@ class ZFEAutocomplete {
     const { $input } = this;
 
     $input.on('keydown', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode === keyCode.ESCAPE) {
+      if (e.key === 'Escape') {
         e.stopImmediatePropagation();
         $input.typeahead('val', this.getTitle()).typeahead('close');
       }
@@ -144,13 +145,14 @@ class ZFEAutocomplete {
 
     // Обработка клика по иконке
     $('i', $group).on('click', () => {
-      $input.trigger($.Event('keydown', { keyCode: 40 }));
-      $input.focus();
+      // typeahead определяет клавишу по keyCode/which, поэтому событие создается с keyCode
+      $input.trigger($.Event('keydown', { keyCode: keyCode.DOWN }));
+      $input.trigger('focus');
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
     $input.on('typeahead:close', () => {
-      const title = $.trim($input.typeahead('val'));
+      const title = $input.typeahead('val').trim();
       if (title === '') {
         this.clear();
       } else if (title !== this.getTitle()) {
@@ -164,7 +166,7 @@ class ZFEAutocomplete {
     });
 
     $input.on('keypress', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode === keyCode.ENTER) {
+      if (e.key === 'Enter') {
         const lastValue = this.getValue();
         const freshValue = $input.typeahead('val');
         if (lastValue.title !== freshValue) {

@@ -145,8 +145,8 @@ declare global {
     value: string;
   }
 
-  /** Условие совпадения контроллера или действия: значение, список значений, предикат или `*`/null (любое) */
-  type ZfeRouteMatcher = string | readonly string[] | ((value: string) => boolean) | null;
+  /** Условие совпадения контроллера или действия: значение, список значений, предикат или `*`/null/undefined (любое) */
+  type ZfeRouteMatcher = string | readonly string[] | ((value: string) => boolean) | null | undefined;
 
   /** Подключаемый приложением визуальный редактор (например, обертка над CKEditor) */
   interface ZfeHtmlEditor {

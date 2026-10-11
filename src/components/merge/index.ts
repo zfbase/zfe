@@ -39,7 +39,7 @@ $.fn.zfeMerge = function zfeMerge() {
 
   // Событие изменения значения поиковой строки или состояния фильтров
   MergeEngine.search = () => {
-    const term = $.trim(MergeEngine.$input.val() as string);
+    const term = ((MergeEngine.$input.val() as string | undefined) ?? '').trim();
 
     if (term === '') {
       MergeEngine.$searchResults.empty();

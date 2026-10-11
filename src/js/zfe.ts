@@ -36,7 +36,7 @@ const matchControllerAction = (arg: ZfeRouteMatcher, val: string): boolean => {
   if (Array.isArray(arg)) {
     return arg.indexOf(val) !== -1;
   }
-  if (arg === null || arg === 'undefined' || arg === '*') {
+  if (arg === null || arg === undefined || arg === '*') {
     return true;
   }
   return arg === val;
@@ -270,10 +270,10 @@ const ZFE = {
     const classes = Array.from(document.body.classList);
     const controllerName = (
       classes.find((c) => c.indexOf('controller-') === 0) || ''
-    ).substr(11);
+    ).slice(11);
     const actionName = (
       classes.find((c) => c.indexOf('action-') === 0) || ''
-    ).substr(7);
+    ).slice(7);
     if (
       matchControllerAction(controller, controllerName) &&
       matchControllerAction(action, actionName)

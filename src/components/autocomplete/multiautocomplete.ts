@@ -25,6 +25,8 @@ class ZFEMultiAutocomplete {
   settings: MultiAutocompleteSettings;
   $hint!: JQuery;
   placeholderWidth: number | undefined;
+  /** Нажата ли сейчас Esc: событие typeahead:close не содержит сведений о клавише */
+  escapePressed = false;
   engine!: ReturnType<typeof getAcEngine>;
 
   constructor(element: HTMLElement, options?: ZfeMultiAutocompleteOptions) {
@@ -67,6 +69,7 @@ class ZFEMultiAutocomplete {
 
     this.startSortable();
     this.initSource();
+    this.initPreHandlers();
     this.initTypeahead();
     this.initHandlers();
     this.renderItems();
@@ -231,7 +234,8 @@ class ZFEMultiAutocomplete {
     };
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
-      datasetSettings.templates = $.extend(datasetSettings.templates, {
+      // Копия: набор шаблонов общий для всех полей, его нельзя дополнять на месте
+      datasetSettings.templates = $.extend({}, datasetSettings.templates, {
         suggestion: (data: ZfeAutocompleteItem) => {
           let content = data.value;
           if (typeof oldSuggestion === 'function') {
@@ -260,20 +264,34 @@ class ZFEMultiAutocomplete {
     this.$input.typeahead('val', v);
   }
 
+  /** Обработчики, которые должны сработать раньше обработчиков typeahead */
+  initPreHandlers() {
+    // typeahead закрывает меню по Esc синхронно в своем keydown, поэтому запоминаем клавишу заранее
+    this.$input
+      .on('keydown', (e) => {
+        this.escapePressed = e.key === 'Escape';
+      })
+      .on('keyup', () => {
+        this.escapePressed = false;
+      });
+  }
+
   initHandlers() {
     const { $input, $group, $wrap } = this;
     const { canCreate } = this.settings;
 
     // Обработка клика по иконке
     $('i', $group).on('click', () => {
+      // typeahead определяет клавишу по keyCode/which, поэтому событие создается с keyCode
       $input.trigger($.Event('keydown', { keyCode: keyCode.DOWN }));
-      $input.focus();
+      $input.trigger('focus');
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
     $input.on('typeahead:close', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode !== keyCode.ESCAPE) {
-        const newValue = $.trim($input.typeahead('val'));
+      // Esc отменяет ввод: новое значение не создается
+      if (!this.escapePressed) {
+        const newValue = $input.typeahead('val').trim();
         if (newValue !== '' && canCreate) {
           this.addElement(newValue);
         }
@@ -284,7 +302,7 @@ class ZFEMultiAutocomplete {
     });
 
     $input.on('keypress', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode === keyCode.ENTER) {
+      if (e.key === 'Enter') {
         if ($input.typeahead('val') !== '') {
           $input.trigger('typeahead:close');
           e.preventDefault();
@@ -293,7 +311,7 @@ class ZFEMultiAutocomplete {
     });
 
     // Выбор значения из списка
-    $input.on('typeahead:selected', (e: JQuery.TriggeredEvent, selected: ZfeAutocompleteItem) => {
+    $input.on('typeahead:select', (e: JQuery.TriggeredEvent, selected: ZfeAutocompleteItem) => {
       const { key, value, ...rest } = selected;
       this.addElement(value, key, rest);
       this.updateExcluded();
@@ -316,7 +334,7 @@ class ZFEMultiAutocomplete {
         url: this.settings.editUrl + (id ? `/id/${id}` : ''),
         data: { title: $item.find('.title').text() },
         callback: ({ id: newId, title, ...data }) => {
-          if (id !== data.id) {
+          if (String(id ?? '') !== String(newId ?? '')) {
             this.addElement(title, newId, data, $item);
           }
         },

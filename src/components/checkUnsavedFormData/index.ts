@@ -92,7 +92,7 @@ $.fn.checkUnsavedFormData = function checkUnsavedFormData(
 ): JQuery | unknown[] {
   const results: unknown[] = [];
   const $elements = this.each((i, el) => {
-    const $this = $(this);
+    const $this = $(el);
 
     let $element = $this.data('plugin_checkUnsavedFormData');
     if (!$element) {

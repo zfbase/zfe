@@ -174,7 +174,7 @@ class Loader {
       processData: false,
       contentType: false,
       xhr: () => {
-        const xhr = $.ajaxSettings.xhr!();
+        const xhr = new window.XMLHttpRequest();
         this.xhr = xhr;
         if (xhr.upload) {
           xhr.upload.addEventListener(
@@ -222,13 +222,12 @@ class Loader {
         this.warning(this.settings.errorLoad);
         this.restoreForm();
       },
-      // Внимание: `always` не является опцией $.ajax и не вызывается (поведение сохранено как есть).
-      always: () => {
+      complete: () => {
         this.$progressBarContainer.slideUp('fast', () => {
           this.$progressBarContainer.remove();
         });
       },
-    } as JQuery.AjaxSettings);
+    });
   }
 
   previewImage(file: UploadedFile) {
@@ -413,8 +412,8 @@ class ZFEUploadAjax {
     const mimeTypes: string[] = [];
     const acceptStr = this.$input.attr('accept') || '';
     $.each(acceptStr.split(','), (i, acceptRaw) => {
-      const accept = $.trim(acceptRaw);
-      if (accept.substr(0, 1) === '.') {
+      const accept = acceptRaw.trim();
+      if (accept.startsWith('.')) {
         extensions.push(accept);
       } else if (accept.indexOf('/') !== -1) {
         mimeTypes.push(accept);
@@ -465,7 +464,7 @@ class ZFEUploadAjax {
     }
 
     this.$input.val('');
-    this.$input.blur();
+    this.$input.trigger('blur');
   }
 }
 

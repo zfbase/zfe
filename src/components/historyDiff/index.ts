@@ -1,8 +1,8 @@
 import $ from 'jquery';
 
 const initHistoryDiff = (container: ZfeContainer) => {
-  $('#diff select', container).change((event) => {
-    $(event.currentTarget).closest('#diff').submit();
+  $('#diff select', container).on('change', (event) => {
+    $(event.currentTarget).closest('#diff').trigger('submit');
   });
 };
 

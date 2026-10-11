@@ -63,7 +63,7 @@ class ZFEMergeHelper {
       const values: string[] = [];
       const $cells = $tr.find('td');
       $cells.each((_, td) => {
-        const text = $.trim($(td).text());
+        const text = $(td).text().trim();
         if (text !== '') {
           values.push(text);
         }
