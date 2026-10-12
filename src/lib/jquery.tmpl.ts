@@ -19,17 +19,15 @@
     {%= js call %}
     {%html js call %}
 */
+import jQuery from 'jquery';
+
+// Исходная UMD-обертка (define / module.exports = factory(require('jquery')) / глобальный jQuery)
+// заменена прямым импортом: tsup оборачивает файл в CommonJS-модуль, в нем срабатывала ветка
+// require('jquery'), которая в сборке превращалась в заглушку __require и падала в браузере
+// с «Dynamic require of "jquery" is not supported».
 (function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define('typeahead.js', ['jquery'], function (a0) {
-      return factory(a0);
-    });
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('jquery'));
-  } else {
-    factory(jQuery);
-  }
-})(this, function ($) {
+  factory(jQuery);
+})(window, function ($) {
   var oldManip = $.fn.domManip,
     tmplItmAtt = '_tmplitem',
     newTmplItems = {},
