@@ -11,22 +11,30 @@ const defaults = {
   limit: 7,
 };
 
-class ZFEMultiAutocomplete {
-  $input: any;
-  $group: any;
-  $iconRight: any;
-  $wrap: any;
-  settings: any;
-  $hint: any;
-  placeholderWidth: any;
-  engine: any;
+/** Итоговые настройки: опции плагина поверх данных, прочитанных из атрибутов поля */
+interface MultiAutocompleteSettings extends ZfeMultiAutocompleteOptions {
+  name: string | undefined;
+  templates: ZfeAutocompleteTemplates;
+}
 
-  constructor(element: HTMLElement, options: any) {
-    this.$input = $(element);
+class ZFEMultiAutocomplete {
+  $input: JQuery<HTMLInputElement>;
+  $group: JQuery;
+  $iconRight: JQuery;
+  $wrap: JQuery;
+  settings: MultiAutocompleteSettings;
+  $hint!: JQuery;
+  placeholderWidth: number | undefined;
+  /** Нажата ли сейчас Esc: событие typeahead:close не содержит сведений о клавише */
+  escapePressed = false;
+  engine!: ReturnType<typeof getAcEngine>;
+
+  constructor(element: HTMLElement, options?: ZfeMultiAutocompleteOptions) {
+    this.$input = $(element) as JQuery<HTMLInputElement>;
     this.$group = this.$input.closest('.multiac-wrap');
     this.$iconRight = this.$group.find('.tt-icon-right');
     this.$wrap = this.$group.find('.multiac-linked-wrap');
-    this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
+    this.settings = $.extend({}, defaults, this.dataAttrOptions(), options) as MultiAutocompleteSettings;
     this.init();
     this.$hint = this.$group.find('.tt-hint');
   }
@@ -61,6 +69,7 @@ class ZFEMultiAutocomplete {
 
     this.startSortable();
     this.initSource();
+    this.initPreHandlers();
     this.initTypeahead();
     this.initHandlers();
     this.renderItems();
@@ -77,9 +86,11 @@ class ZFEMultiAutocomplete {
         this.placeholderWidth = $(e.target).width();
       })
       .on('dragenter.h5s', () => {
-        $('.sortable-placeholder', this.$wrap).css({
-          width: this.placeholderWidth,
-        });
+        if (this.placeholderWidth !== undefined) {
+          $('.sortable-placeholder', this.$wrap).css({
+            width: this.placeholderWidth,
+          });
+        }
       })
       .on('sortupdate', (e: JQuery.TriggeredEvent) => {
         $('.linked-entity input[name$="\\[priority\\]"]', $(e.target)).each(
@@ -96,7 +107,7 @@ class ZFEMultiAutocomplete {
     if (!renderItem) {
       return;
     }
-    this.$wrap.find('.linked-entity').each((i: number, entityDom: HTMLElement) => {
+    this.$wrap.find('.linked-entity').each((i, entityDom) => {
       const $item = $(entityDom);
       const $title = $item.find('.title');
       const data = {
@@ -107,9 +118,9 @@ class ZFEMultiAutocomplete {
     });
   }
 
-  hasElement(id: any) {
+  hasElement(id?: string | number | null) {
     let result = false;
-    this.$wrap.find('.linked-entity').each((i: number, entityDom: HTMLElement) => {
+    this.$wrap.find('.linked-entity').each((i, entityDom) => {
       if (id == $(entityDom).find('[name*="[id]"]').val()) {
         result = true;
       }
@@ -119,7 +130,7 @@ class ZFEMultiAutocomplete {
 
   getNewElementIndex() {
     let index = 1;
-    this.$wrap.children().each((i: number, el: HTMLElement) => {
+    this.$wrap.children().each((i, el) => {
       const name = $(el).find('input').first().attr('name');
       if (!name) {
         return;
@@ -132,7 +143,13 @@ class ZFEMultiAutocomplete {
     return index;
   }
 
-  addElement(title: string, id?: any, data = {}, replace: JQuery | null = null, silent = false) {
+  addElement(
+    title: string,
+    id?: string | number | null,
+    data: Record<string, unknown> = {},
+    replace: JQuery | null = null,
+    silent = false,
+  ): JQuery {
     if (this.hasElement(id)) {
       return this.$wrap.find(`.linked-entity:has([name*="[id]"][value=${id}])`);
     }
@@ -209,7 +226,7 @@ class ZFEMultiAutocomplete {
   }
 
   initTypeahead() {
-    const datasetSettings = {
+    const datasetSettings: ZfeTypeaheadDataset & { templates: ZfeAutocompleteTemplates } = {
       source: this.engine.bind(this),
       templates: this.settings.templates,
       display: 'value',
@@ -217,13 +234,14 @@ class ZFEMultiAutocomplete {
     };
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
-      datasetSettings.templates = $.extend(datasetSettings.templates, {
-        suggestion: (data: any) => {
+      // Копия: набор шаблонов общий для всех полей, его нельзя дополнять на месте
+      datasetSettings.templates = $.extend({}, datasetSettings.templates, {
+        suggestion: (data: ZfeAutocompleteItem) => {
           let content = data.value;
           if (typeof oldSuggestion === 'function') {
             content = oldSuggestion(data);
           }
-          const href = this.settings.itemForm.replace('%d', data.key);
+          const href = this.settings.itemForm!.replace('%d', String(data.key));
           return `<div><a style="float: right;" href="${href}"
             onclick="event.stopPropagation();" target="_blank">
             <i class="glyphicon glyphicon-share-alt"></i></a>${content}</div>`;
@@ -246,20 +264,34 @@ class ZFEMultiAutocomplete {
     this.$input.typeahead('val', v);
   }
 
+  /** Обработчики, которые должны сработать раньше обработчиков typeahead */
+  initPreHandlers() {
+    // typeahead закрывает меню по Esc синхронно в своем keydown, поэтому запоминаем клавишу заранее
+    this.$input
+      .on('keydown', (e) => {
+        this.escapePressed = e.key === 'Escape';
+      })
+      .on('keyup', () => {
+        this.escapePressed = false;
+      });
+  }
+
   initHandlers() {
     const { $input, $group, $wrap } = this;
     const { canCreate } = this.settings;
 
     // Обработка клика по иконке
     $('i', $group).on('click', () => {
+      // typeahead определяет клавишу по keyCode/which, поэтому событие создается с keyCode
       $input.trigger($.Event('keydown', { keyCode: keyCode.DOWN }));
-      $input.focus();
+      $input.trigger('focus');
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
     $input.on('typeahead:close', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode !== keyCode.ESCAPE) {
-        const newValue = $.trim($input.typeahead('val'));
+      // Esc отменяет ввод: новое значение не создается
+      if (!this.escapePressed) {
+        const newValue = $input.typeahead('val').trim();
         if (newValue !== '' && canCreate) {
           this.addElement(newValue);
         }
@@ -270,7 +302,7 @@ class ZFEMultiAutocomplete {
     });
 
     $input.on('keypress', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode === keyCode.ENTER) {
+      if (e.key === 'Enter') {
         if ($input.typeahead('val') !== '') {
           $input.trigger('typeahead:close');
           e.preventDefault();
@@ -279,7 +311,7 @@ class ZFEMultiAutocomplete {
     });
 
     // Выбор значения из списка
-    $input.on('typeahead:selected', (e: JQuery.TriggeredEvent, selected: any) => {
+    $input.on('typeahead:select', (e: JQuery.TriggeredEvent, selected: ZfeAutocompleteItem) => {
       const { key, value, ...rest } = selected;
       this.addElement(value, key, rest);
       this.updateExcluded();
@@ -298,11 +330,11 @@ class ZFEMultiAutocomplete {
       e.preventDefault();
       const $item = $(e.currentTarget).closest('.linked-entity');
       const id = $item.find('input[name*="[id]"]').val();
-      showEditModal({
+      showEditModal<ZfeMultiAutocompleteItemData>({
         url: this.settings.editUrl + (id ? `/id/${id}` : ''),
         data: { title: $item.find('.title').text() },
-        callback: ({ id: newId, title, ...data }: any) => {
-          if (id !== data.id) {
+        callback: ({ id: newId, title, ...data }) => {
+          if (String(id ?? '') !== String(newId ?? '')) {
             this.addElement(title, newId, data, $item);
           }
         },
@@ -327,11 +359,12 @@ class ZFEMultiAutocomplete {
       );
     }
 
-    this.$input.attr('disabled', disable);
-    this.$hint.attr('disabled', disable);
+    // jQuery: attr('disabled', true) выставляет атрибут, attr('disabled', false) удаляет его
+    this.$input.attr('disabled', disable ? 'disabled' : null);
+    this.$hint.attr('disabled', disable ? 'disabled' : null);
   }
 
-  addValue(id: any, title: string, data = {}) {
+  addValue(id: string | number | null | undefined, title: string, data: Record<string, unknown> = {}) {
     return this.addElement(title, id, data);
   }
 
@@ -339,16 +372,16 @@ class ZFEMultiAutocomplete {
     this.$wrap.empty();
   }
 
-  setValues(values: any) {
+  setValues(values: ZfeMultiAutocompleteInput[]) {
     this.clear();
-    values.forEach(({ id, title, ...data }: any) =>
+    values.forEach(({ id, title, ...data }) =>
       this.addElement(title, id, data, null, true),
     );
   }
 
-  currentValue() {
+  currentValue(): ZfeMultiAutocompleteValue[] {
     const values: Record<string, Record<string, string>> = {};
-    this.$wrap.find('input').each((i: number, el: HTMLElement) => {
+    this.$wrap.find('input').each((i, el) => {
       const input = el as HTMLInputElement;
       const [, n, key] = input.name.split(/[[\]]+/);
       if (!values[n]) {
@@ -361,21 +394,27 @@ class ZFEMultiAutocomplete {
 
   onChange() {
     this.$input.trigger('zfe.ac.change', [this.currentValue()]);
-    this.$input.get(0).dispatchEvent(new Event('zfe.ac.change'));
+    this.$input[0].dispatchEvent(new Event('zfe.ac.change'));
   }
 }
 
+type PluginMethod = (...args: unknown[]) => unknown;
+
 $.fn[pluginName] = function zfeMultiAutocomplete(
   this: JQuery,
-  options?: any,
-  ...args: any[]
-) {
-  const results: any[] = [];
+  options?: ZfeMultiAutocompleteOptions | string,
+  ...args: unknown[]
+): unknown {
+  const results: unknown[] = [];
   const $elements = this.each((i, el) => {
     if (!$.data(el, `plugin_${pluginName}`)) {
-      $.data(el, `plugin_${pluginName}`, new ZFEMultiAutocomplete(el, options));
+      $.data(
+        el,
+        `plugin_${pluginName}`,
+        new ZFEMultiAutocomplete(el, typeof options === 'string' ? undefined : options),
+      );
     }
-    const item = $.data(el, `plugin_${pluginName}`);
+    const item = $.data(el, `plugin_${pluginName}`) as Record<string, PluginMethod>;
     if (typeof options === 'string' && typeof item[options] === 'function') {
       results.push(item[options](...args));
     }
@@ -389,4 +428,4 @@ $.fn[pluginName] = function zfeMultiAutocomplete(
     default:
       return results;
   }
-};
+} as JQuery['zfeMultiAutocomplete'];

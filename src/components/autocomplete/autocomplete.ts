@@ -10,21 +10,36 @@ const defaults = {
   exclude: null,
 };
 
-class ZFEAutocomplete {
-  $input: any;
-  $group: any;
-  $iconRight: any;
-  settings: any;
-  $hint: any;
-  $inlineLink: any;
-  valueData: any;
-  engine: any;
+/** Связанное поле формы `name[поле]`, значение которого берется из выбранной подсказки */
+interface OtherInput {
+  element: HTMLInputElement;
+  name: string;
+}
 
-  constructor(element: HTMLElement, options: any) {
-    this.$input = $(element);
+/** Итоговые настройки: опции плагина поверх данных, прочитанных из атрибутов поля */
+interface AutocompleteSettings extends ZfeAutocompleteOptions {
+  name: string | undefined;
+  $idInput: JQuery;
+  $titleInput: JQuery;
+  otherInputs: OtherInput[];
+  templates: ZfeAutocompleteTemplates;
+}
+
+class ZFEAutocomplete {
+  $input: JQuery<HTMLInputElement>;
+  $group: JQuery;
+  $iconRight: JQuery;
+  settings: AutocompleteSettings;
+  $hint: JQuery;
+  $inlineLink: JQuery;
+  valueData: unknown;
+  engine!: ReturnType<typeof getAcEngine>;
+
+  constructor(element: HTMLElement, options?: ZfeAutocompleteOptions) {
+    this.$input = $(element) as JQuery<HTMLInputElement>;
     this.$group = this.$input.closest('.autocomplete-wrap');
     this.$iconRight = this.$group.find('.tt-icon-right');
-    this.settings = $.extend({}, defaults, this.dataAttrOptions(), options);
+    this.settings = $.extend({}, defaults, this.dataAttrOptions(), options) as AutocompleteSettings;
     this.init();
     this.$hint = this.$group.find('.tt-hint');
     this.$inlineLink = this.$group.find('.tt-link');
@@ -38,13 +53,13 @@ class ZFEAutocomplete {
     $input.removeAttr('name');
 
     const $inputs = $group.find(`[name^=${name}]`);
-    const otherInputs = $inputs
+    const otherInputs: OtherInput[] = $inputs
       .get()
-      .map((i: HTMLElement) => {
+      .map((i) => {
         const name = (i as HTMLInputElement).name.match(/\[(.+)\]/);
         return { element: i as HTMLInputElement, name: name ? name[1] : '' };
       })
-      .filter((i: { name: string }) => i.name && i.name !== 'id' && i.name !== 'title');
+      .filter((i) => i.name && i.name !== 'id' && i.name !== 'title');
 
     return {
       name,
@@ -76,7 +91,7 @@ class ZFEAutocomplete {
   }
 
   initTypeahead() {
-    const datasetSettings = {
+    const datasetSettings: ZfeTypeaheadDataset & { templates: ZfeAutocompleteTemplates } = {
       source: this.engine.bind(this),
       templates: this.settings.templates,
       display: 'value',
@@ -85,13 +100,14 @@ class ZFEAutocomplete {
 
     if (this.settings.itemForm) {
       const oldSuggestion = datasetSettings.templates.suggestion;
-      datasetSettings.templates = $.extend(datasetSettings.templates, {
-        suggestion: (data: any) => {
+      // Копия: набор шаблонов общий для всех полей, его нельзя дополнять на месте
+      datasetSettings.templates = $.extend({}, datasetSettings.templates, {
+        suggestion: (data: ZfeAutocompleteItem) => {
           let content = data.value;
           if (typeof oldSuggestion === 'function') {
             content = oldSuggestion(data);
           }
-          const href = this.settings.itemForm.replace('%d', data.key);
+          const href = this.settings.itemForm!.replace('%d', String(data.key));
           return `<div><a style="float: right;" href="${href}"
             onclick="event.stopPropagation();" target="_blank">
             <i class="glyphicon glyphicon-share-alt"></i></a>${content}</div>`;
@@ -116,7 +132,7 @@ class ZFEAutocomplete {
     const { $input } = this;
 
     $input.on('keydown', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode === keyCode.ESCAPE) {
+      if (e.key === 'Escape') {
         e.stopImmediatePropagation();
         $input.typeahead('val', this.getTitle()).typeahead('close');
       }
@@ -129,13 +145,14 @@ class ZFEAutocomplete {
 
     // Обработка клика по иконке
     $('i', $group).on('click', () => {
-      $input.trigger($.Event('keydown', { keyCode: 40 }));
-      $input.focus();
+      // typeahead определяет клавишу по keyCode/which, поэтому событие создается с keyCode
+      $input.trigger($.Event('keydown', { keyCode: keyCode.DOWN }));
+      $input.trigger('focus');
     });
 
     // Событие завершения работы автокомплита (значение выбрано/указано)
     $input.on('typeahead:close', () => {
-      const title = $.trim($input.typeahead('val'));
+      const title = $input.typeahead('val').trim();
       if (title === '') {
         this.clear();
       } else if (title !== this.getTitle()) {
@@ -149,7 +166,7 @@ class ZFEAutocomplete {
     });
 
     $input.on('keypress', (e: JQuery.TriggeredEvent) => {
-      if (e.keyCode === keyCode.ENTER) {
+      if (e.key === 'Enter') {
         const lastValue = this.getValue();
         const freshValue = $input.typeahead('val');
         if (lastValue.title !== freshValue) {
@@ -160,7 +177,7 @@ class ZFEAutocomplete {
     });
 
     // Выбор значения из списка
-    $input.on('typeahead:select', (e: JQuery.TriggeredEvent, selected: any) => {
+    $input.on('typeahead:select', (e: JQuery.TriggeredEvent, selected: ZfeAutocompleteItem) => {
       this.setValueData(selected);
       const { key, value, ...rest } = selected;
       this.setValue({ id: key, title: value, ...rest });
@@ -187,32 +204,33 @@ class ZFEAutocomplete {
       );
     }
 
-    this.$input.attr('disabled', disable);
-    this.$hint.attr('disabled', disable);
+    // jQuery: attr('disabled', true) выставляет атрибут, attr('disabled', false) удаляет его
+    this.$input.attr('disabled', disable ? 'disabled' : null);
+    this.$hint.attr('disabled', disable ? 'disabled' : null);
   }
 
   clear() {
     this.setValue();
   }
 
-  getId() {
+  getId(): string | null {
     const { $idInput } = this.settings;
-    return $idInput.val() || null;
+    return ($idInput.val() as string) || null;
   }
 
-  getTitle() {
+  getTitle(): string {
     const { $titleInput } = this.settings;
-    return $titleInput.val();
+    return $titleInput.val() as string;
   }
 
-  getValue() {
+  getValue(): ZfeAutocompleteValue {
     return {
       id: this.getId(),
       title: this.getTitle(),
     };
   }
 
-  setValue({ id = '', title = '', ...rest } = {}) {
+  setValue({ id = '', title = '', ...rest }: ZfeAutocompleteSetValue = {}) {
     const { $input, $group, $iconRight, $inlineLink } = this;
     const { $idInput, $titleInput, canCreate, itemForm, otherInputs } =
       this.settings;
@@ -232,42 +250,48 @@ class ZFEAutocomplete {
     }
 
     $input.typeahead('val', title);
-    $idInput.val(id);
+    $idInput.val(id ?? '');
     $titleInput.val(title);
-    otherInputs.forEach((i: { element: HTMLInputElement; name: string }) => {
-      i.element.value = (rest as Record<string, any>)[i.name] ?? '';
+    otherInputs.forEach((i) => {
+      i.element.value = String(rest[i.name] ?? '');
     });
     $iconRight.toggleClass('tt-fill', !isEmpty);
     $group.toggleClass('has-warning', isNew);
 
     if (itemForm) {
-      $inlineLink.attr('href', id ? itemForm.replace('%d', id) : null);
+      $inlineLink.attr('href', id ? itemForm.replace('%d', String(id)) : null);
     }
 
     this.$input.trigger('zfe.ac.change');
-    this.$input.get('0').dispatchEvent(new Event('zfe.ac.change'));
+    this.$input[0].dispatchEvent(new Event('zfe.ac.change'));
   }
 
   getValueData() {
     return this.valueData;
   }
 
-  setValueData(data: any) {
+  setValueData(data: unknown) {
     this.valueData = data;
   }
 }
 
+type PluginMethod = (...args: unknown[]) => unknown;
+
 $.fn[pluginName] = function zfeAutocomplete(
   this: JQuery,
-  options?: any,
-  ...args: any[]
-) {
-  const results: any[] = [];
+  options?: ZfeAutocompleteOptions | string,
+  ...args: unknown[]
+): unknown {
+  const results: unknown[] = [];
   const $elements = this.each((i, el) => {
     if (!$.data(el, `plugin_${pluginName}`)) {
-      $.data(el, `plugin_${pluginName}`, new ZFEAutocomplete(el, options));
+      $.data(
+        el,
+        `plugin_${pluginName}`,
+        new ZFEAutocomplete(el, typeof options === 'string' ? undefined : options),
+      );
     }
-    const item = $.data(el, `plugin_${pluginName}`);
+    const item = $.data(el, `plugin_${pluginName}`) as Record<string, PluginMethod>;
     if (typeof options === 'string' && typeof item[options] === 'function') {
       results.push(item[options](...args));
     }
@@ -281,4 +305,4 @@ $.fn[pluginName] = function zfeAutocomplete(
     default:
       return results;
   }
-};
+} as JQuery['zfeAutocomplete'];

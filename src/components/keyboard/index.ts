@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import { keyCode } from '../../js/constants';
 
 $(document).on('keyup', (e) => {
   if (!e.altKey && !e.ctrlKey) {
@@ -15,7 +14,7 @@ $(document).on('keyup', (e) => {
     return;
   }
 
-  if (e.keyCode === keyCode.UP) {
+  if (e.key === 'ArrowUp') {
     const url = $('.btn-history-up').attr('href');
 
     if (url) {
@@ -29,9 +28,9 @@ $(document).on('keyup', (e) => {
     const $active = $('li.active', paginator);
     let $cursor;
 
-    if (e.keyCode === keyCode.LEFT) {
+    if (e.key === 'ArrowLeft') {
       $cursor = $active.prev();
-    } else if (e.keyCode === keyCode.RIGHT) {
+    } else if (e.key === 'ArrowRight') {
       $cursor = $active.next();
     }
 
@@ -52,9 +51,9 @@ $(document).on('keyup', (e) => {
   if (btnSteps.length === 1) {
     let url;
 
-    if (e.keyCode === keyCode.LEFT) {
+    if (e.key === 'ArrowLeft') {
       url = $('.btn-steps-prev', btnSteps).attr('href');
-    } else if (e.keyCode === keyCode.RIGHT) {
+    } else if (e.key === 'ArrowRight') {
       url = $('.btn-steps-next', btnSteps).attr('href');
     }
 

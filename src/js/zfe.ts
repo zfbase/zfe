@@ -18,7 +18,7 @@ import '../components/duplicates';
 import historyDiff from '../components/historyDiff';
 import '../components/merge';
 import '../components/mergeHelper';
-import '../components/modals';
+import { makeModal, showEditModal } from '../components/modals';
 import '../components/onePress';
 import initPlaceholders from '../components/placeholders';
 import '../components/tableStickyHeader';
@@ -29,21 +29,21 @@ import { initZfeFileElement } from './initZfeFileElement';
 
 const { confirm } = window;
 
-const matchControllerAction = (arg: any, val: any) => {
+const matchControllerAction = (arg: ZfeRouteMatcher, val: string): boolean => {
   if (typeof arg === 'function') {
     return arg(val);
   }
   if (Array.isArray(arg)) {
     return arg.indexOf(val) !== -1;
   }
-  if (arg === null || arg === 'undefined' || arg === '*') {
+  if (arg === null || arg === undefined || arg === '*') {
     return true;
   }
   return arg === val;
 };
 
 const ZFE = {
-  initialMethods: [
+  initialMethods: <string[]>[
     'initAudio',
     'initAutocompletes',
     'initMultiAC',
@@ -68,10 +68,10 @@ const ZFE = {
   ],
 
   /** Подключаемый приложением визуальный редактор (например, обертка над CKEditor) */
-  htmlEditor: undefined as undefined | { create: (el: HTMLElement, config: object) => void },
+  htmlEditor: undefined as ZfeHtmlEditor | undefined,
 
-  autocompleteTemplates: {},
-  ckeditorConfig: {},
+  autocompleteTemplates: {} as Record<string, ZfeAutocompleteTemplates>,
+  ckeditorConfig: {} as Record<string, unknown>,
 
   initRest: (container: ZfeContainer) => {
     debug();
@@ -83,8 +83,9 @@ const ZFE = {
     $('audio.zfe-audio', container).zfeAudio();
   },
 
-  getAutocompleteTemplates: (templateSet: any) =>
-    (ZFE.autocompleteTemplates && (ZFE.autocompleteTemplates as Record<string, any>)[templateSet]) || {},
+  /** Набор шаблонов автодополнения по имени (атрибут data-templateset) */
+  getAutocompleteTemplates: (templateSet?: string): ZfeAutocompleteTemplates =>
+    (templateSet !== undefined && ZFE.autocompleteTemplates?.[templateSet]) || {},
 
   /** Настроить автодополнение одного значения */
   initAutocompletes: (container: ZfeContainer) => {
@@ -136,7 +137,7 @@ const ZFE = {
     $('.form-edit', container).checkUnsavedFormData();
   },
 
-  /** Настроить автоматическую высоту многострочных текстовых полей */
+  /** Запрашивать подтверждение действия по атрибуту data-confirm */
   initConfirm: (container: ZfeContainer) => {
     if (confirm) {
       $(container).on('click', '[data-confirm]', (event) =>
@@ -177,10 +178,12 @@ const ZFE = {
   /** Всплывающая справка по всем заполненным полям записи */
   initItemDetailsPopover: (container: ZfeContainer) => {
     $('.item-details-icon', container).popover({
-      content: ((el: HTMLElement) => $(el)
-        .closest('.item-details')
-        .find('.item-details-body')
-        .html()) as any,
+      content(this: HTMLElement) {
+        return $(this)
+          .closest('.item-details')
+          .find('.item-details-body')
+          .html() ?? '';
+      },
       allowList: {
         ...bootstrap.Popover.Default.allowList,
         table: [],
@@ -245,26 +248,32 @@ const ZFE = {
 
   initPlaceholders: (container: ZfeContainer) => initPlaceholders(container),
 
-  initContainer: (container: ZfeContainer) =>
-    $.each(ZFE.initialMethods, (i, method) => (ZFE as Record<string, any>)[method](container)),
+  /** Инициализировать все компоненты из initialMethods внутри контейнера */
+  initContainer: (container: ZfeContainer): void => {
+    $.each(ZFE.initialMethods, (i, method) => (ZFE as unknown as Record<string, ZfeInitMethod>)[method](container));
+  },
 
   /** Инициализация приложения */
-  init: (app: any) => {
-    if (typeof app === 'object' && app !== window) {
+  init: (app?: ZfeAppConfig): void => {
+    if (typeof app === 'object' && (app as unknown) !== window) {
       $.extend(ZFE, app);
     }
     ZFE.initContainer(document.body);
   },
 
   /** Помощник для инициализации скриптов только для текущего контроллера и экшена */
-  controllerActionScriptHelper: (controller: any, action: any, callback: any) => {
+  controllerActionScriptHelper: (
+    controller: ZfeRouteMatcher,
+    action: ZfeRouteMatcher,
+    callback: () => void,
+  ): void => {
     const classes = Array.from(document.body.classList);
     const controllerName = (
       classes.find((c) => c.indexOf('controller-') === 0) || ''
-    ).substr(11);
+    ).slice(11);
     const actionName = (
       classes.find((c) => c.indexOf('action-') === 0) || ''
-    ).substr(7);
+    ).slice(7);
     if (
       matchControllerAction(controller, controllerName) &&
       matchControllerAction(action, actionName)
@@ -285,4 +294,5 @@ declare global {
 
 window.ZFE = ZFE;
 
+export { makeModal, showEditModal };
 export default ZFE;

@@ -1,8 +1,8 @@
 import $ from 'jquery';
 
 class ZFEMergeHelper {
-  $container: any;
-  $slaveIds: any;
+  $container: JQuery<ZfeContainer>;
+  $slaveIds: JQuery;
 
   constructor(container: ZfeContainer) {
     this.$container = $(container);
@@ -34,10 +34,10 @@ class ZFEMergeHelper {
       const itemId = Number($btn.data('id'));
       this.$container.find(`tr > *:nth-child(${index})`).remove();
 
-      const slaveIds = this.$slaveIds.val()
+      const slaveIds = (this.$slaveIds.val() as string)
         .split(',')
         .map(Number)
-        .filter((id: number) => (id !== itemId))
+        .filter((id) => (id !== itemId))
         .join(',');
       this.$slaveIds.val(slaveIds);
 
@@ -48,13 +48,13 @@ class ZFEMergeHelper {
   }
 
   autoSelect() {
-    this.$container.find('tbody tr:not(:has(td.user-select))').each((_: number, tr: HTMLElement) => {
+    this.$container.find('tbody tr:not(:has(td.user-select))').each((_, tr) => {
       $(tr).find('td:not(.null-value)').first().trigger('click', 'auto');
     });
   }
 
   markEqual() {
-    this.$container.find('tbody tr').each((_: number, tr: HTMLElement) => {
+    this.$container.find('tbody tr').each((_, tr) => {
       const $tr = $(tr);
       if ($tr.find('td.user-select').length) {
         return;
@@ -63,7 +63,7 @@ class ZFEMergeHelper {
       const values: string[] = [];
       const $cells = $tr.find('td');
       $cells.each((_, td) => {
-        const text = $.trim($(td).text());
+        const text = $(td).text().trim();
         if (text !== '') {
           values.push(text);
         }
