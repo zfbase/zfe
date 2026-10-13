@@ -167,13 +167,13 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
             $q->execute([$id]);
             ZFE_Sphinx::query()->transactionBegin();
             if ($this->_useSimpleCommonIndex) {
-                ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionBegin();
+                ZFE_Sphinx::query(ZFE_Sphinx::commonIndexConnection())->transactionBegin();
             }
             while ($row = $q->fetch(PDO::FETCH_ASSOC)) {
                 $data = $model::filterIndexData($row);
                 ZFE_Sphinx::replaceIndexData($indexName, $data);
                 if ($this->_useSimpleCommonIndex) {
-                    Utils_Sphinx::updateCommonIndexByModelAndData($model, $data);
+                    ZFE_Sphinx::updateCommonIndexByModelAndData($model, $data);
                 }
                 $id = $row['attr_id'];
 
@@ -182,7 +182,7 @@ class ZFE_Console_Command_SphinxIndexer extends ZFE_Console_Command_Abstract
                 }
             }
             if ($this->_useSimpleCommonIndex) {
-                ZFE_Sphinx::query(Utils_Sphinx::commonIndexConnection())->transactionCommit();
+                ZFE_Sphinx::query(ZFE_Sphinx::commonIndexConnection())->transactionCommit();
             }
             ZFE_Sphinx::query()->transactionCommit();
         } while ($prevId != $id);

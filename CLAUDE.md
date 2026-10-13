@@ -75,6 +75,8 @@ View scripts resolve through a fallback chain: the app's own view, then ZFE's `r
 ### Search
 `ZFE_Searcher_*` (Default/Doctrine/Sphinx) plus `Searcher/QueryBuilder/*` turn search form params into queries. The alternative Sphinx path goes through `ZFE_Controller_AbstractResourceSphinx`, `ZFE_Sphinx*`, and `zfbase/sphinxql-query-builder`.
 
+`ZFE_Sphinx` also holds the indexing helpers: RT-index schemas are parsed from `sphinx.config` once per process (`clearRtIndexSchemaCache()` for long-lived workers), `filterIndexData()` casts a row to the attribute types, and `replaceIndexDataBatch()` sends many rows in one `REPLACE`. The optional "simple common index" (`sphinx.index.Common`, tags from `sphinx.tags.<Model>`) is fed by `updateCommonIndexByModelAndData[Batch]()` over its own connection, `commonIndexConnection()`; `ZFE_Console_Command_SphinxIndexer` uses it when `$_useSimpleCommonIndex` is on.
+
 ### Forms
 `ZFE_Form` extends the Bootstrap 5 ZF1 forms from `zfbase/zend1-bootstrap5` (`Twitter_Bootstrap5_Form_*`). `ZFE_Form_Edit_AutoGeneration` builds edit forms from model columns. Custom elements (autocomplete, multi-autocomplete, datelist, duration, files) pair with view helpers in `View/Helper/Form*` and JS components in `src/components/`.
 

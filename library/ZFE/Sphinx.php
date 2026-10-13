@@ -15,6 +15,25 @@ class ZFE_Sphinx
     protected static $_connectionLastUsedAt = 0;
     protected static $_connectionMaxAge = 5;
 
+    /**
+     * Соединение для общего индекса.
+     *
+     * Отдельное соединение позволяет вести транзакции в общем и в основном индексах независимо.
+     *
+     * @var null|ConnectionInterface
+     */
+    protected static $_commonIndexConnection;
+
+    /**
+     * Кеш схем RT-индексов по имени индекса.
+     *
+     * Разбор sphinx.conf занимает ~4 мс, а схема нужна на каждую строку при индексации,
+     * поэтому результат кешируется в пределах процесса.
+     *
+     * @var array<string, array>
+     */
+    protected static $_schemas = [];
+
     public static function setConnectionMaxAge(int $seconds)
     {
         self::$_connectionMaxAge = $seconds;
@@ -134,6 +153,8 @@ class ZFE_Sphinx
     }
 
     /**
+     * Получить схему RT-индекса (с кешированием в пределах процесса).
+     *
      * @param string $indexName
      *
      * @throws ZFE_Exception
@@ -141,6 +162,34 @@ class ZFE_Sphinx
      * @return array
      */
     public static function getRtIndexSchema($indexName)
+    {
+        if (!isset(self::$_schemas[$indexName])) {
+            self::$_schemas[$indexName] = static::_loadRtIndexSchema($indexName);
+        }
+
+        return self::$_schemas[$indexName];
+    }
+
+    /**
+     * Сбросить кеш схем RT-индексов.
+     *
+     * Нужен долгоживущим процессам, если sphinx.conf изменился после их запуска.
+     */
+    public static function clearRtIndexSchemaCache()
+    {
+        self::$_schemas = [];
+    }
+
+    /**
+     * Прочитать схему RT-индекса из конфигурации Sphinx.
+     *
+     * @param string $indexName
+     *
+     * @throws ZFE_Exception
+     *
+     * @return array
+     */
+    protected static function _loadRtIndexSchema($indexName)
     {
         $config = config('sphinx.config');
         if (is_array($config)) {
@@ -166,10 +215,18 @@ class ZFE_Sphinx
             }
         }
 
-        throw new ZFE_Exception("Индекс {$indexName} не найден в конфигурации {$config}.");
+        if ($config instanceof Zend_Config) {
+            $config = $config->toArray();
+        }
+        $source = is_array($config) ? implode(', ', $config) : $config;
+        throw new ZFE_Exception("Индекс {$indexName} не найден в конфигурации {$source}.");
     }
 
     /**
+     * Привести сырые данные к типам атрибутов индекса.
+     *
+     * Колонки, которых нет в схеме индекса, остаются без изменений.
+     *
      * @param string $indexName
      * @param array  $data
      *
@@ -180,7 +237,7 @@ class ZFE_Sphinx
         $schema = static::getRtIndexSchema($indexName);
 
         foreach ($data as $key => $value) {
-            switch ($schema[$key]) {
+            switch ($schema[$key] ?? null) {
                 case 'rt_attr_multi':
                 case 'rt_attr_multi_64':
                     $data[$key] = empty($data[$key]) ? [] : array_map('intval', explode(',', $data[$key]));
@@ -218,5 +275,114 @@ class ZFE_Sphinx
             ->set($data)
             ->execute()
         ;
+    }
+
+    /**
+     * Обновить записи в индексе одним запросом.
+     *
+     * Строки одной выборки имеют одинаковый набор колонок, но на всякий случай
+     * они группируются по набору колонок: на каждую группу уходит свой запрос.
+     *
+     * @param string                   $indexName
+     * @param array                    $rows      список строк (ассоциативных массивов)
+     * @param null|ConnectionInterface $conn
+     */
+    public static function replaceIndexDataBatch($indexName, array $rows, ?ConnectionInterface $conn = null)
+    {
+        if (empty($rows)) {
+            return;
+        }
+
+        $groups = [];
+        foreach ($rows as $row) {
+            $groups[implode(',', array_keys($row))][] = $row;
+        }
+
+        foreach ($groups as $group) {
+            $columns = array_keys(reset($group));
+
+            $query = static::query($conn)->replace()->into($indexName)->columns($columns);
+            foreach ($group as $row) {
+                $query->values(array_values($row));
+            }
+            $query->execute();
+        }
+    }
+
+    /**
+     * Получить соединение для общего индекса.
+     *
+     * @return ConnectionInterface
+     */
+    public static function commonIndexConnection()
+    {
+        if (self::$_commonIndexConnection === null) {
+            self::$_commonIndexConnection = static::newConnection();
+        }
+
+        return self::$_commonIndexConnection;
+    }
+
+    /**
+     * Собрать строку общего индекса по модели и данным индекса модели.
+     *
+     * Теги модели берутся из конфигурации `sphinx.tags.<Модель>`.
+     *
+     * @param string $model
+     * @param array  $data
+     *
+     * @return array
+     */
+    public static function commonIndexRow($model, $data)
+    {
+        return [
+            'id' => $data['id'],
+            'attr_id' => $data['attr_id'],
+            'attr_deleted' => $data['attr_deleted'],
+            'model' => $model,
+            'tags' => config("sphinx.tags.{$model}"),
+            'title' => $data['title'],
+            'code' => empty($data['code']) ? '' : $data['code'],
+            'details' => empty($data['details']) ? '' : $data['details'],
+            'persons' => empty($data['persons']) ? '' : $data['persons'],
+            'id_number' => empty($data['id_number']) ? '' : $data['id_number'],
+        ];
+    }
+
+    /**
+     * Обновить запись в общем индексе (`sphinx.index.Common`).
+     *
+     * @param string $model
+     * @param array  $data  данные индекса модели
+     *
+     * @return ResultSetInterface
+     */
+    public static function updateCommonIndexByModelAndData($model, $data)
+    {
+        return static::replaceIndexData(
+            config('sphinx.index.Common'),
+            static::commonIndexRow($model, $data),
+            static::commonIndexConnection()
+        );
+    }
+
+    /**
+     * Обновить записи в общем индексе (`sphinx.index.Common`) одним запросом.
+     *
+     * @param string $model
+     * @param array  $rows  список массивов данных индекса модели
+     */
+    public static function updateCommonIndexByModelAndDataBatch($model, array $rows)
+    {
+        $commonRows = [];
+        foreach ($rows as $data) {
+            $commonRows[] = static::commonIndexRow($model, $data);
+        }
+
+        static::replaceIndexDataBatch(
+            config('sphinx.index.Common'),
+            $commonRows,
+            static::commonIndexConnection()
+        );
     }
 }
